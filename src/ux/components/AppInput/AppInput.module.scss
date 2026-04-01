@@ -1,0 +1,90 @@
+@use "../../styles/vars" as v;
+@use "../../styles/helpers/mixins" as m;
+
+// ─── Wrapper ──────────────────────────────────────────────────────────────────
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+// ─── Label ────────────────────────────────────────────────────────────────────
+.label {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-500;
+  color: v.$color-text-secondary;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.leftIcon {
+  position: absolute;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  color: v.$color-text-muted;
+  pointer-events: none;
+  transition: color v.$transition-fast;
+}
+
+// ─── Input ────────────────────────────────────────────────────────────────────
+.input {
+  width: 100%;
+  height: v.$auth-input-height;
+  padding: 0 v.$space-4;
+  font-size: v.$font-size-base;
+  color: v.$color-text-dark;
+  background: v.$color-bg-secondary;
+  border: 1.5px solid v.$auth-input-border;
+  border-radius: v.$border-radius-l;
+  box-sizing: border-box;
+  transition: border-color v.$transition-fast, background v.$transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: v.$color-primary;
+    background: v.$color-white;
+  }
+
+  &.withLeft  { padding-left: 44px; }
+  &.withRight { padding-right: 44px; }
+
+  &.inputError {
+    border-color: v.$color-error;
+    &:focus { outline: none; background: v.$color-white; }
+  }
+}
+
+// ─── Eye button ───────────────────────────────────────────────────────────────
+.eyeBtn {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: v.$color-text-muted;
+  padding: 4px;
+  border-radius: v.$border-radius-s;
+  transition: color v.$transition-fast;
+
+  &:hover { color: v.$color-text-primary; }
+}
+
+// ─── Ошибка валидации ─────────────────────────────────────────────────────────
+.error {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: v.$font-size-xs;
+  color: v.$color-error;
+  line-height: v.$line-height-normal;
+}
+
+

@@ -1,0 +1,129 @@
+@use "../../styles/vars" as v;
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+.card {
+  width: 100%;
+  max-width: v.$auth-form-width;
+  background: v.$color-bg-primary;
+  border-radius: v.$border-radius-l;
+  box-shadow: v.$shadow-modal;
+  padding: 40px 40px 32px;
+
+  @media (max-width: v.$breakpoint-sm) {
+    padding: 28px 20px 24px;
+    border-radius: v.$border-radius-m;
+  }
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────────
+.header { text-align: start; margin-bottom: 1.5rem; }
+
+.title {
+  font-size: v.$font-size-h2;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-text-dark;
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  font-size: v.$font-size-sm;
+  color: v.$color-text-muted;
+  margin: 0;
+}
+
+// ─── Form ─────────────────────────────────────────────────────────────────────
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// ─── API Error ────────────────────────────────────────────────────────────────
+.apiError {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: v.$border-radius-s;
+  background: v.$color-error-bg;
+  color: v.$color-error;
+  font-size: v.$font-size-sm;
+  line-height: v.$line-height-normal;
+}
+
+// ─── Remember Me ──────────────────────────────────────────────────────────────
+.rememberMe {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: v.$font-size-sm;
+  color: v.$color-text-secondary;
+  user-select: none;
+}
+
+.checkBox {
+  width: 16px;
+  height: 16px;
+  accent-color: v.$color-primary;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+// ─── Submit Button ────────────────────────────────────────────────────────────
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: v.$auth-input-height;
+  background: v.$color-btn-primary;
+  color: v.$color-white;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-medium;
+  border: none;
+  border-radius: v.$border-radius-l;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: opacity v.$transition-fast, transform 0.1s ease, box-shadow v.$transition-fast;
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+    box-shadow: 0 6px 18px rgba(22, 213, 124, 0.4);
+  }
+
+  &:active:not(:disabled) { transform: scale(0.98); opacity: 1; }
+
+  &:disabled { opacity: 0.65; cursor: not-allowed; }
+}
+
+// ─── Spinner ──────────────────────────────────────────────────────────────────
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: v.$color-white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// ─── Footer ───────────────────────────────────────────────────────────────────
+.footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: v.$font-size-sm;
+  color: v.$color-text-muted;
+}
+
+.link {
+  color: v.$color-primary;
+  font-weight: v.$font-weight-500;
+  text-decoration: none;
+  transition: color v.$transition-fast;
+
+  &:hover { text-decoration: underline; }
+}
+
+

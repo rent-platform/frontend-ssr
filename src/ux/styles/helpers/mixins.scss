@@ -1,0 +1,93 @@
+@use '../vars' as *;
+@use "sass:map";
+
+// ─── Responsive Breakpoints ───────────────────────────────────────────────────
+
+@mixin respond-to($bp) {
+  $breakpoints: (
+    'xs':  $bp-xs,
+    'sm':  $bp-sm,
+    'md':  $bp-md,
+    'lg':  $bp-lg,
+    'xl':  $bp-xl,
+    '2xl': $bp-2xl,
+  );
+  @if map-has-key($breakpoints, $bp) {
+    @media (width >= map.get($breakpoints, $bp)) { @content; }
+  } @else {
+    @warn "Unknown breakpoint `#{$bp}`.";
+  }
+}
+
+@mixin respond-below($bp) {
+  $breakpoints: (
+    'xs':  $bp-xs,
+    'sm':  $bp-sm,
+    'md':  $bp-md,
+    'lg':  $bp-lg,
+    'xl':  $bp-xl,
+    '2xl': $bp-2xl,
+  );
+  @if map-has-key($breakpoints, $bp) {
+    @media (width < map.get($breakpoints, $bp)) { @content; }
+  }
+}
+
+// ─── Typography ───────────────────────────────────────────────────────────────
+
+@mixin text-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  overflow: hidden;
+}
+
+// ─── Layout ───────────────────────────────────────────────────────────────────
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin overlay($z-index: $z-overlay) {
+  position: absolute;
+  inset: 0;
+  z-index: $z-index;
+}
+
+@mixin square($size) {
+  width: $size;
+  height: $size;
+}
+
+// ─── Visuals ──────────────────────────────────────────────────────────────────
+
+@mixin scrollbar($width: 6px, $thumb: $color-primary, $track: $color-surface-muted) {
+  &::-webkit-scrollbar              { width: $width; }
+  &::-webkit-scrollbar-track        { background: $track; border-radius: $radius-full; }
+  &::-webkit-scrollbar-thumb        { background: $thumb; border-radius: $radius-full; }
+  &::-webkit-scrollbar-thumb:hover  { background: $color-primary-hover; }
+}
+
+@mixin focus-ring($color: $color-border-focus) {
+  outline: 1px solid $color;
+}
+
+@mixin hover-transition($props: all, $speed: $transition-normal) {
+  transition: $props $speed;
+  &:hover { @content; }
+}
+

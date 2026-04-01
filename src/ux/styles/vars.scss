@@ -1,0 +1,133 @@
+// ─── Color Palette ────────────────────────────────────────────────────────────
+$color-primary:        rgb(46, 166, 80);
+$color-primary-hover:  #1d4ed8;
+$color-secondary:      #7c3aed;
+$color-accent:         #f59e0b;
+
+$color-bg:             #f8fafc;
+$color-surface:        #ffffff;
+$color-surface-muted:  #f1f5f9;
+$color-btn-primary:    linear-gradient(rgb(22, 213, 124), rgb(0, 203, 108));
+$color-text:           #0f172a;
+$color-text-secondary: #64748b;
+$color-text-inverse:   #ffffff;
+
+$color-border:         #e2e8f0;
+$color-border-focus:   $color-primary;
+
+$color-success:        #16a34a;
+$color-warning:        #d97706;
+$color-error:          #dc2626;
+
+// ─── Typography ───────────────────────────────────────────────────────────────
+$font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+$font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+$font-size-xs:   0.75rem;
+$font-size-sm:   0.875rem;
+$font-size-base: 1rem;
+$font-size-lg:   1.125rem;
+$font-size-xl:   1.25rem;
+$font-size-h2:   1.5rem;
+$font-size-3xl:  1.875rem;
+$font-size-4xl:  2.25rem;
+
+$font-weight-regular: 400;
+$font-weight-medium:  500;
+$font-weight-500:     500;
+$font-weight-semi:    600;
+$font-weight-bold:    700;
+
+$line-height-tight:  1.25;
+$line-height-normal: 1.5;
+$line-height-loose:  1.75;
+
+// ─── Spacing ──────────────────────────────────────────────────────────────────
+$space-1:  0.25rem;
+$space-2:  0.5rem;
+$space-3:  0.75rem;
+$space-4:  1rem;
+$space-6:  1.5rem;
+$space-8:  2rem;
+$space-12: 3rem;
+$space-16: 4rem;
+
+// ─── Border Radius ────────────────────────────────────────────────────────────
+$radius-sm:   0.25rem;
+$radius-md:   0.5rem;
+$radius-lg:   0.75rem;
+$radius-xl:   1rem;
+$radius-full: 9999px;
+
+// ─── Shadows ──────────────────────────────────────────────────────────────────
+$shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+$shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+$shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+// ─── Z-index ──────────────────────────────────────────────────────────────────
+$z-dropdown: 100;
+$z-sticky:   200;
+$z-overlay:  300;
+$z-modal:    400;
+$z-toast:    500;
+
+// ─── Transitions ──────────────────────────────────────────────────────────────
+$transition-fast:   150ms ease;
+$transition-normal: 250ms ease;
+$transition-slow:   400ms ease;
+
+// ─── Breakpoints ──────────────────────────────────────────────────────────────
+$bp-xs:  480px;
+$bp-sm:  640px;
+$bp-md:  768px;
+$bp-lg:  1024px;
+$bp-xl:  1280px;
+$bp-2xl: 1536px;
+
+// ─── Component Aliases ────────────────────────────────────────────────────────
+$auth-form-width:   480px;
+$auth-input-height: 48px;
+$auth-input-border: $color-border;
+
+$color-bg-primary:   $color-surface;
+$color-bg-secondary: $color-surface-muted;
+$color-white:        #ffffff;
+$color-text-dark:    $color-text;
+$color-text-muted:   $color-text-secondary;
+$color-text-primary: $color-primary;
+$color-error-bg:     rgba(220, 38, 38, 0.08);
+
+$border-radius-s: $radius-sm;
+$border-radius-m: $radius-md;
+$border-radius-l: $radius-lg;
+
+$shadow-modal:    $shadow-lg;
+$breakpoint-sm:   $bp-sm;
+
+// ─── CSS Custom Properties ────────────────────────────────────────────────────
+:root {
+  --color-primary:        #{$color-primary};
+  --color-primary-hover:  #{$color-primary-hover};
+  --color-secondary:      #{$color-secondary};
+  --color-accent:         #{$color-accent};
+  --color-bg:             #{$color-bg};
+  --color-surface:        #{$color-surface};
+  --color-surface-muted:  #{$color-surface-muted};
+  --color-text:           #{$color-text};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-inverse:   #{$color-text-inverse};
+  --color-border:         #{$color-border};
+  --color-success:        #{$color-success};
+  --color-warning:        #{$color-warning};
+  --color-error:          #{$color-error};
+  --font-family-base:     #{$font-family-base};
+  --font-family-mono:     #{$font-family-mono};
+  --radius-sm:  #{$radius-sm};
+  --radius-md:  #{$radius-md};
+  --radius-lg:  #{$radius-lg};
+  --radius-xl:  #{$radius-xl};
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+}
+
