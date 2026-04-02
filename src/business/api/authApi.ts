@@ -1,28 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {AuthPayload,AuthResponse, RegisterPayload} from "@/business/types/api-dto";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// login/register/me/sessions/logout.
 
-export interface User {
-  id: number;
-  name: string;
-  tel: string;
-}
-
-export interface AuthPayload {
-  tel: string;
-  password: string;
-}
-
-export interface RegisterPayload extends AuthPayload {
-  name: string;
-}
-
-export interface AuthResponse {
-  accessToken: string;
-  user: User;
-}
-
-// ─── API Slice ────────────────────────────────────────────────────────────────
 
 export const authApi = createApi({
   reducerPath: "authApi",

@@ -8,9 +8,6 @@ import { useLoginMutation } from "@/business/api";
 import { useSession } from "./useSession";
 import { loginSchema, type LoginFormValues } from "@/business/utils/authSchemas";
 import { ROUTE_PATHS } from "@/business/utils/routes";
-
-/** Инкапсулирует всю логику формы входа.
- *  UI-компонент не знает про RTK Query, Redux или схему валидации. */
 export function useLoginForm() {
   const router = useRouter();
   const { saveCredentials } = useSession();

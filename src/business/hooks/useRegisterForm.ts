@@ -9,8 +9,7 @@ import { useSession } from "./useSession";
 import { registerSchema, type RegisterFormValues } from "@/business/utils/authSchemas";
 import { ROUTE_PATHS } from "@/business/utils/routes";
 
-/** Инкапсулирует всю логику формы регистрации.
- *  UI-компонент не знает про RTK Query, Redux или схему валидации. */
+
 export function useRegisterForm() {
   const router = useRouter();
   const { saveCredentials } = useSession();
