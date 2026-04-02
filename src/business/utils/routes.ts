@@ -6,6 +6,7 @@ export const ROUTE_PATHS = {
   CART: "/cart",
   LOGIN: "/login",
   REGISTER: "/register",
+  devUi: "/dev-ui",
 } as const;
 
 export type RoutePath = (typeof ROUTE_PATHS)[keyof typeof ROUTE_PATHS];
