@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import AppInput from "@/ux/components/AppInput";
 import { useLoginForm } from "@/business/hooks";
-import { ROUTE_PATHS } from "@/business/utils/routes";
+import { ROUTE_PATHS } from "@/business/utils/routes/routes";
 import styles from "@/ux/layouts/AuthLayout/AuthForm.module.scss";
 
 /** "Глупый" UI-компонент — вся логика делегирована в useLoginForm() */
@@ -19,7 +19,11 @@ export const LoginForm = () => {
         <p className={styles.subtitle}>Войдите в свой аккаунт</p>
       </div>
 
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form
+        className={styles.form}
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+      >
         <AppInput
           id="tel"
           label="Телефон"
@@ -57,7 +61,11 @@ export const LoginForm = () => {
           <label htmlFor="rememberMe">Запомнить пароль</label>
         </div>
 
-        <button type="submit" className={styles.submitBtn} disabled={isSubmitting}>
+        <button
+          type="submit"
+          className={styles.submitBtn}
+          disabled={isSubmitting}
+        >
           {isSubmitting && <span className={styles.spinner} />}
           {isSubmitting ? "Входим…" : "Войти"}
         </button>
@@ -72,4 +80,3 @@ export const LoginForm = () => {
     </div>
   );
 };
-

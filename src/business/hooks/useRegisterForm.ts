@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -6,11 +6,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRegisterMutation } from "@/business/api";
 import { useSession } from "./useSession";
-import { registerSchema, type RegisterFormValues } from "@/business/utils/authSchemas";
-import { ROUTE_PATHS } from "@/business/utils/routes";
+import {
+  registerSchema,
+  type RegisterFormValues,
+} from "@/business/utils/authShecmas/authSchemas";
+import { ROUTE_PATHS } from "@/business/utils/routes/routes";
 
-/** Инкапсулирует всю логику формы регистрации.
- *  UI-компонент не знает про RTK Query, Redux или схему валидации. */
 export function useRegisterForm() {
   const router = useRouter();
   const { saveCredentials } = useSession();
@@ -52,4 +53,3 @@ export function useRegisterForm() {
     watch,
   };
 }
-

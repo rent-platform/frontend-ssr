@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import AppInput from "@/ux/components/AppInput";
 import { useRegisterForm } from "@/business/hooks";
-import { ROUTE_PATHS } from "@/business/utils/routes";
+import { ROUTE_PATHS } from "@/business/utils/routes/routes";
 import styles from "@/ux/layouts/AuthLayout/AuthForm.module.scss";
 
 /** "Глупый" UI-компонент — вся логика делегирована в useRegisterForm() */
@@ -19,7 +19,11 @@ export const RegisterForm = () => {
         <p className={styles.subtitle}>Создайте аккаунт, чтобы начать</p>
       </div>
 
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form
+        className={styles.form}
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+      >
         <AppInput
           id="reg-name"
           label="Имя"
@@ -67,7 +71,11 @@ export const RegisterForm = () => {
           </div>
         )}
 
-        <button type="submit" className={styles.submitBtn} disabled={isSubmitting}>
+        <button
+          type="submit"
+          className={styles.submitBtn}
+          disabled={isSubmitting}
+        >
           {isSubmitting && <span className={styles.spinner} />}
           {isSubmitting ? "Регистрируем…" : "Зарегистрироваться"}
         </button>
@@ -82,4 +90,3 @@ export const RegisterForm = () => {
     </div>
   );
 };
-

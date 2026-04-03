@@ -1,4 +1,3 @@
-/** Централизованный реестр маршрутов приложения */
 export const ROUTE_PATHS = {
   HOME: "/",
   PROFILE: "/profile",
@@ -10,4 +9,3 @@ export const ROUTE_PATHS = {
 } as const;
 
 export type RoutePath = (typeof ROUTE_PATHS)[keyof typeof ROUTE_PATHS];
-

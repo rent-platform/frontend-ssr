@@ -1,16 +1,18 @@
-'use client';
+"use client";
 
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/business/store";
+import {
+  useAppSelector,
+  useAppDispatch,
+  getToken,
+  getUser,
+} from "@/business/store";
 import { logout, setCredentials } from "@/business/store/sessionSlice";
-import type { User } from "@/business/api";
+import type { User } from "@/business/types/entity";
 
-/** Хук-абстракция над sessionSlice.
- *  UI-разработчик работает только с этим хуком — без прямого доступа к Redux. */
 export function useSession() {
-  const dispatch = useDispatch<AppDispatch>();
-  const token = useSelector((state: RootState) => state.session.token);
-  const user = useSelector((state: RootState) => state.session.user);
+  const dispatch = useAppDispatch();
+  const token = useAppSelector(getToken);
+  const user = useAppSelector(getUser);
   const isAuthenticated = Boolean(token);
 
   const signOut = () => dispatch(logout());
@@ -19,4 +21,3 @@ export function useSession() {
 
   return { user, token, isAuthenticated, signOut, saveCredentials };
 }
-

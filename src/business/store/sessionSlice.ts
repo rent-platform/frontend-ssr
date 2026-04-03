@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { User } from "@/business/api";
+import type { User } from "@/business/types/entity"; //TODO: здесь другой будет
 
 const TOKEN_KEY = "authToken";
 const USER_KEY = "authUser";
@@ -9,12 +9,11 @@ export interface SessionState {
   user: User | null;
 }
 
-// SSR-safe: читаем localStorage только на клиенте
 function getInitialState(): SessionState {
   if (typeof window === "undefined") {
     return { token: null, user: null };
   }
-  const token = localStorage.getItem(TOKEN_KEY);
+  const token = localStorage.getItem(TOKEN_KEY); //TODO: на куки
   let user: User | null = null;
   try {
     const raw = localStorage.getItem(USER_KEY);
@@ -28,6 +27,10 @@ function getInitialState(): SessionState {
 const sessionSlice = createSlice({
   name: "session",
   initialState: getInitialState,
+  selectors: {
+    getToken: (state) => state.token,
+    getUser: (state) => state.user,
+  },
   reducers: {
     setCredentials: (
       state,
@@ -52,5 +55,5 @@ const sessionSlice = createSlice({
 });
 
 export const { setCredentials, logout } = sessionSlice.actions;
+export { sessionSlice };
 export default sessionSlice.reducer;
-
