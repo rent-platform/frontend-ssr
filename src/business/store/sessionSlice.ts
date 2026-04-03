@@ -1,12 +1,12 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { SessionUser } from "@/business/types/api-dto";
+import type { User } from "@/business/types/entity"; //TODO: здесь другой будет
 
 const TOKEN_KEY = "authToken";
 const USER_KEY = "authUser";
 
 export interface SessionState {
   token: string | null;
-  user: SessionUser | null;
+  user: User | null;
 }
 
 function getInitialState(): SessionState {
@@ -14,10 +14,10 @@ function getInitialState(): SessionState {
     return { token: null, user: null };
   }
   const token = localStorage.getItem(TOKEN_KEY); //TODO: на куки
-  let user: SessionUser | null = null;
+  let user: User | null = null;
   try {
     const raw = localStorage.getItem(USER_KEY);
-    user = raw ? (JSON.parse(raw) as SessionUser) : null;
+    user = raw ? (JSON.parse(raw) as User) : null;
   } catch {
     user = null;
   }
@@ -34,7 +34,7 @@ const sessionSlice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ token: string; user: SessionUser | null }>,
+      action: PayloadAction<{ token: string; user: User | null }>,
     ) => {
       state.token = action.payload.token;
       state.user = action.payload.user;

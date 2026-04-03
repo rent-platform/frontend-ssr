@@ -1,8 +1,13 @@
-'use client';
+"use client";
 
-import { useAppSelector, useAppDispatch, getToken, getUser } from "@/business/store";
+import {
+  useAppSelector,
+  useAppDispatch,
+  getToken,
+  getUser,
+} from "@/business/store";
 import { logout, setCredentials } from "@/business/store/sessionSlice";
-import type { SessionUser } from "@/business/types/api-dto";
+import type { User } from "@/business/types/entity";
 
 export function useSession() {
   const dispatch = useAppDispatch();
@@ -11,9 +16,8 @@ export function useSession() {
   const isAuthenticated = Boolean(token);
 
   const signOut = () => dispatch(logout());
-  const saveCredentials = (payload: { token: string; user: SessionUser | null }) =>
+  const saveCredentials = (payload: { token: string; user: User | null }) =>
     dispatch(setCredentials(payload));
 
   return { user, token, isAuthenticated, signOut, saveCredentials };
 }
-

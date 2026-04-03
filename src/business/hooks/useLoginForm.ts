@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -6,8 +6,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoginMutation } from "@/business/api";
 import { useSession } from "./useSession";
-import { loginSchema, type LoginFormValues } from "@/business/utils/authSchemas";
-import { ROUTE_PATHS } from "@/business/utils/routes";
+import {
+  loginSchema,
+  type LoginFormValues,
+} from "@/business/utils/authShecmas/authSchemas";
+import { ROUTE_PATHS } from "@/business/utils/routes/routes";
 export function useLoginForm() {
   const router = useRouter();
   const { saveCredentials } = useSession();
@@ -43,4 +46,3 @@ export function useLoginForm() {
     apiError,
   };
 }
-

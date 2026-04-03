@@ -1,7 +1,10 @@
-export { ROUTE_PATHS } from "./routes";
-export type { RoutePath } from "./routes";
-export { loginSchema, registerSchema } from "./authSchemas";
-export type { LoginFormValues, RegisterFormValues } from "./authSchemas";
+export { ROUTE_PATHS } from "./routes/routes";
+export type { RoutePath } from "./routes/routes";
+export { loginSchema, registerSchema } from "./authShecmas/authSchemas";
+export type {
+  LoginFormValues,
+  RegisterFormValues,
+} from "./authShecmas/authSchemas";
 export type {
   DeepPartial,
   RequiredFields,
@@ -9,5 +12,4 @@ export type {
   ApiResponse,
   PaginatedResponse,
   LoadingStatus,
-} from "./types";
-
+} from "./utilityTypes";

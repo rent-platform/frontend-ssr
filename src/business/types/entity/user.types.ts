@@ -14,13 +14,8 @@ export type User = {
   avatar_url: string | null;         // TEXT
   bio: string | null;                // TEXT
   role: UserRole;                    // VARCHAR(20) NOT NULL DEFAULT 'user'
-  email_verified_at: string | null;  // TIMESTAMPTZ
-  phone_verified_at: string | null;  // TIMESTAMPTZ
   is_active: boolean;                // BOOLEAN NOT NULL DEFAULT TRUE
-  last_login_at: string | null;      // TIMESTAMPTZ
-  created_at: string;                // TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  updated_at: string;                // TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  deleted_at: string | null;         // TIMESTAMPTZ (soft delete)
+  last_login_at: string | null;      //
 };
 
 // ─── Table: sessions ─────────────────────────────────────────────────────────

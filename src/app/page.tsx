@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { ROUTE_PATHS } from "@/business/utils/routes";
+import { ROUTE_PATHS } from "@/business/utils/routes/routes";
 
 /** Главная страница — редиректит на /login.
  *  Когда появится защищённый контент — заменить на реальный Dashboard. */
