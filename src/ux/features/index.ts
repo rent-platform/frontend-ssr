@@ -1,1 +1,1 @@
-export { default as Catalog } from "./Catalog";
+export { CatalogExperience } from './Catalog';

@@ -1,5 +1,5 @@
-import type { PropsWithChildren } from "react";
+import type { PropsWithChildren } from 'react';
 
-export default function DevUiLayout({ children }: PropsWithChildren<unknown>) {
+export default function DevUiLayout({ children }: PropsWithChildren) {
   return children;
 }

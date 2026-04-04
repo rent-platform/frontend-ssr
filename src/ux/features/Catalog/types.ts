@@ -1,35 +1,38 @@
-import type { CatalogItemCardVM } from "@/business/types";
+import type { CatalogItemCardVM } from '@/business/types';
 
-export type CatalogCategory =
-  | "Электроника"
-  | "Фото и видео"
-  | "Для спорта"
-  | "Для дома"
-  | "Инструменты"
-  | "Путешествия";
-
-export type CatalogSort =
-  | "popular"
-  | "newest"
-  | "price-asc"
-  | "price-desc"
-  | "rating";
-
-export type AvailabilityFilter = "all" | "available" | "soon";
-export type PriceModeFilter = "all" | "day" | "hour";
-export type QuickFilterKey = "instantBook" | "noDeposit" | "newArrival" | "delivery";
-
-export type CatalogCardViewModel = CatalogItemCardVM & {
-  category: CatalogCategory;
+export type CatalogUiItem = CatalogItemCardVM & {
+  category: string;
+  city: string;
   ownerName: string;
   ownerAvatar: string;
-  rating: number;
-  reviewsCount: number;
-  instantBook: boolean;
-  delivery: boolean;
-  isNewArrival: boolean;
-  featured?: boolean;
+  ownerRating: number;
+  responseTime: string;
+  images: string[];
   tags: string[];
+  pickupWindow: string;
+  rentalTerms: string[];
+  specs: Array<{ label: string; value: string }>;
+  description: string[];
+  featured?: boolean;
+  quickFilters: string[];
 };
 
-export type CatalogQuickFiltersState = Record<QuickFilterKey, boolean>;
+export type CatalogSortKey =
+  | 'popular'
+  | 'priceAsc'
+  | 'priceDesc'
+  | 'newest';
+
+export type CatalogViewMode = 'catalog' | 'detail';
+
+export type CatalogFilterState = {
+  search: string;
+  city: string;
+  category: string;
+  minPrice: string;
+  maxPrice: string;
+  onlyAvailable: boolean;
+  pricingMode: 'day' | 'hour';
+  sortBy: CatalogSortKey;
+  quickFilter: string | null;
+};

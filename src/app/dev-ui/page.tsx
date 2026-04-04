@@ -1,5 +1,5 @@
-import Catalog from "@/ux/features/Catalog";
+import { CatalogExperience } from '@/ux/features';
 
-export default function DevUiPage() {
-  return <Catalog />;
+export default function DevPage() {
+  return <CatalogExperience />;
 }
