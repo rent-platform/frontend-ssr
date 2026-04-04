@@ -1,12 +1,5 @@
-'use client'
-import { redirect } from "next/navigation";
-import { ROUTE_PATHS } from "@/business/utils/routes";
+import Catalog from "@/ux/features/Catalog";
 
-export default function DevPage() {
-    redirect(ROUTE_PATHS.LOGIN); //сразу редирект на логин(потом убрать), раскоментируй снизу чтобы свое вставлять
-    // return (
-    //     <>
-    //     <div></div>
-    //     </>
-    // )
+export default function DevUiPage() {
+  return <Catalog />;
 }

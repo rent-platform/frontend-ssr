@@ -1,0 +1,105 @@
+@use "../../../styles/vars" as v;
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@mixin skeleton-block {
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.7) 0%,
+    rgba(248, 250, 252, 0.95) 50%,
+    rgba(226, 232, 240, 0.7) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.card {
+  border-radius: 30px;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 22px 50px rgba(15, 23, 42, 0.08);
+}
+
+.media {
+  min-height: 260px;
+  @include skeleton-block;
+}
+
+.body {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+}
+
+.lineShort,
+.lineTitle,
+.lineTitleSmall,
+.lineText,
+.linePrice,
+.tags span,
+.actions span {
+  display: block;
+  height: 14px;
+  border-radius: 999px;
+  @include skeleton-block;
+}
+
+.lineShort {
+  width: 35%;
+}
+
+.lineTitle {
+  height: 18px;
+  width: 80%;
+}
+
+.lineTitleSmall {
+  height: 18px;
+  width: 58%;
+}
+
+.lineText {
+  width: 100%;
+}
+
+.linePrice {
+  width: 45%;
+  height: 18px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  span {
+    width: 110px;
+  }
+}
+
+.priceBox {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 24px;
+  background: rgba(248, 250, 252, 0.95);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  span {
+    width: 132px;
+    height: 42px;
+  }
+}
