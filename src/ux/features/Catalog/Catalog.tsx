@@ -185,8 +185,7 @@ export default function Catalog() {
               <h1 className={styles.title}>Современный каталог для шеринг-сервиса</h1>
               <p className={styles.subtitle}>
                 Находите вещи на пару часов, день или уикенд: техника, спорт, путешествия,
-                инструменты и товары для дома. Интерфейс собран как UI-модуль и готов к
-                подключению реальных данных.
+                инструменты и товары для дома. 
               </p>
 
               <div className={styles.stats}>
@@ -230,7 +229,7 @@ export default function Catalog() {
                   <span className={styles.panelIcon}>
                     <ShieldCheck size={18} />
                   </span>
-                  Контракт через props без входа в business-слой
+                  Контракт через props
                 </li>
               </ul>
             </div>
@@ -312,8 +311,8 @@ export default function Catalog() {
                 <PackageSearch size={36} />
                 <h3>Ничего не найдено</h3>
                 <p>
-                  В UI всё готово для пустого состояния: экран подсказывает, что изменить,
-                  и остаётся совместимым с будущей business-интеграцией.
+                  В UI готово для пустого состояния - экран подсказывает, что изменить,
+                  и остаётся совместимым с будущей биз интгр.
                 </p>
                 <button type="button" className={styles.emptyButton} onClick={resetFilters}>
                   Сбросить фильтры
@@ -342,8 +341,8 @@ export default function Catalog() {
                   <div ref={sentinelRef} aria-hidden="true" />
                 ) : (
                   <div className={styles.endCap}>
-                    Ты дошёл до конца UI-ленты. Реальную постраничную загрузку и API потом
-                    подключит Илья.
+                    Ты дошёл до конца UI-ленты - реал постраничную загрузку и апи потом
+                    подключишь 
                   </div>
                 )}
               </>

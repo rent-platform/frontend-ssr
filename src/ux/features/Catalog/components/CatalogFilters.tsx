@@ -81,8 +81,7 @@ export function CatalogFilters({ filters, onChange, onReset }: CatalogFiltersPro
         <div className={styles.filterGroup}>
           <span className={styles.filterLabel}>Подсказка по интеграции</span>
           <div className={styles.integrationHint}>
-            UI ждёт вью-модель карточки и параметры фильтрации. (Данные, query и store потом
-            подключаешь ты).
+            UI ждёт вью-модель карточки и параметры фильтрации - потом подкл query и store 
           </div>
         </div>
       </div>

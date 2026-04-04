@@ -1,6 +1,10 @@
+'use client';
+
+import { useMemo, useState } from 'react';
 import type { CatalogUiItem } from '../types';
 import { CatalogCard } from './CatalogCard';
-import { formatPrice, formatRelativeDate, formatViews, getSecondaryPrice } from '../utils';
+import { BookingCard } from './BookingCard';
+import { formatRelativeDate, formatViews } from '../utils';
 import styles from '../Catalog.module.scss';
 
 type ProductDetailProps = {
@@ -11,6 +15,17 @@ type ProductDetailProps = {
 };
 
 export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: ProductDetailProps) {
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const activeImage = useMemo(
+    () => item.images[activeImageIndex] ?? item.images[0],
+    [activeImageIndex, item.images],
+  );
+  const normalizedDescription = useMemo(
+    () => item.description.map((paragraph) => paragraph.trim()).filter(Boolean),
+    [item.description],
+  );
+  const [descriptionLead, ...descriptionPoints] = normalizedDescription;
+
   return (
     <section className={styles.detailPage}>
       <div className={styles.detailBreadcrumbs}>
@@ -22,62 +37,69 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
         <span>{item.category}</span>
       </div>
 
-      <div className={styles.detailHero}>
-        <div className={styles.detailGallery}>
-          <div className={styles.detailMainImageWrap}>
-            <img src={item.images[0]} alt={item.title} className={styles.detailMainImage} />
-            <div className={styles.detailFloatingMeta}>
-              <span>{item.dateAvailable}</span>
-              <span>{formatViews(item.views_count)}</span>
-              <span>{formatRelativeDate(item.created_at)}</span>
+      <div className={styles.detailTopMeta}>
+        <div>
+          <h1>{item.title}</h1>
+          <p>
+            {item.location} · {formatViews(item.views_count)} · {formatRelativeDate(item.created_at)}
+          </p>
+        </div>
+        <div className={styles.detailActionIcons}>
+          <button type="button">♡ В избранное</button>
+          <button type="button">↗ Поделиться</button>
+        </div>
+      </div>
+
+      <div className={styles.detailShell}>
+        <div className={styles.detailPrimaryColumn}>
+          <div className={styles.detailGalleryCard}>
+            <div className={styles.detailMainImageWrap}>
+              <img src={activeImage} alt={item.title} className={styles.detailMainImage} />
+            </div>
+
+            <div className={styles.detailThumbs}>
+              {item.images.map((image, index) => (
+                <button
+                  type="button"
+                  key={`${item.id}-${index}`}
+                  className={index === activeImageIndex ? styles.detailThumbButtonActive : styles.detailThumbButton}
+                  onClick={() => setActiveImageIndex(index)}
+                >
+                  <img src={image} alt={`${item.title} ${index + 1}`} className={styles.detailThumb} />
+                </button>
+              ))}
             </div>
           </div>
-          <div className={styles.detailThumbs}>
-            {item.images.map((image, index) => (
-              <img
-                key={`${item.id}-${index}`}
-                src={image}
-                alt={`${item.title} ${index + 1}`}
-                className={styles.detailThumb}
-              />
-            ))}
-          </div>
-        </div>
 
-        <aside className={styles.detailSidebar}>
-          <div className={styles.detailSidebarCardPrimary}>
+          <section className={styles.detailSection}>
             <div className={styles.detailTags}>
-              <span>{item.category}</span>
-              <span>{item.city}</span>
-              {item.tags.slice(0, 2).map((tag) => (
+              {item.tags.map((tag) => (
                 <span key={tag}>{tag}</span>
               ))}
             </div>
 
-            <h1>{item.title}</h1>
-            <p className={styles.detailLead}>{item.item_description}</p>
-
-            <div className={styles.detailPriceBlock}>
-              <strong>{formatPrice(item.price_per_day, '/сутки')}</strong>
-              <span>{getSecondaryPrice(item)}</span>
-            </div>
+            <p className={styles.detailLead}>{item.item_description.trim()}</p>
 
             <dl className={styles.detailFacts}>
               <div>
-                <dt>Залог</dt>
-                <dd>{formatPrice(item.deposit_amount, '')}</dd>
+                <dt>Владелец</dt>
+                <dd>{item.ownerName}</dd>
               </div>
               <div>
-                <dt>Получение</dt>
-                <dd>{item.pickup_location}</dd>
+                <dt>Рейтинг</dt>
+                <dd>★ {item.ownerRating}</dd>
               </div>
               <div>
                 <dt>Выдача</dt>
+                <dd>{item.pickup_location}</dd>
+              </div>
+              <div>
+                <dt>Окно выдачи</dt>
                 <dd>{item.pickupWindow}</dd>
               </div>
             </dl>
 
-            <div className={styles.detailActionRow}>
+            <div className={styles.detailActionRowInline}>
               <button type="button" className={styles.primaryAction}>
                 Забронировать
               </button>
@@ -85,29 +107,8 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
                 Написать владельцу
               </button>
             </div>
-          </div>
+          </section>
 
-          <div className={styles.detailSidebarCardSecondary}>
-            <div className={styles.sellerHeader}>
-              <div className={styles.sellerAvatarLarge}>{item.ownerAvatar}</div>
-              <div>
-                <strong>{item.ownerName}</strong>
-                <p>
-                  ★ {item.ownerRating} · {item.responseTime}
-                </p>
-              </div>
-            </div>
-            <ul className={styles.sellerList}>
-              <li>Проверенный профиль и понятные условия аренды</li>
-              <li>Отвечает в чате и помогает с выдачей</li>
-              <li>Можно обсудить продление и доставку</li>
-            </ul>
-          </div>
-        </aside>
-      </div>
-
-      <div className={styles.detailContentGrid}>
-        <div className={styles.detailContentMain}>
           <section className={styles.detailSection}>
             <div className={styles.sectionHeading}>
               <div>
@@ -115,14 +116,20 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
                 <h2>Что входит в аренду</h2>
               </div>
             </div>
+
             <div className={styles.detailDescription}>
-              {item.description.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
+              {descriptionLead ? <p className={styles.detailDescriptionLead}>{descriptionLead}</p> : null}
+              {descriptionPoints.length ? (
+                <ul className={styles.detailDescriptionList}>
+                  {descriptionPoints.map((paragraph) => (
+                    <li key={paragraph}>{paragraph}</li>
+                  ))}
+                </ul>
+              ) : null}
             </div>
             <ul className={styles.detailTerms}>
               {item.rentalTerms.map((term) => (
-                <li key={term}>{term}</li>
+                <li key={term}>{term.trim()}</li>
               ))}
             </ul>
           </section>
@@ -146,7 +153,26 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
           </section>
         </div>
 
-        <aside className={styles.detailContentAside}>
+        <aside className={styles.detailSidebar}>
+          <BookingCard item={item} />
+
+          <div className={styles.detailSidebarCardSecondary}>
+            <div className={styles.sellerHeader}>
+              <div className={styles.sellerAvatarLarge} aria-hidden="true">{item.ownerAvatar}</div>
+              <div>
+                <strong>{item.ownerName}</strong>
+                <p>
+                  ★ {item.ownerRating} · {item.responseTime}
+                </p>
+              </div>
+            </div>
+            <ul className={styles.sellerList}>
+              <li>Проверенный профиль и прозрачные условия аренды</li>
+              <li>Можно согласовать доставку и продление</li>
+              <li>Интерфейс готовиться к подключению чата и бронирования</li>
+            </ul>
+          </div>
+
           <section className={styles.detailSection}>
             <div className={styles.sectionHeading}>
               <div>
@@ -157,15 +183,15 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
             <div className={styles.trustCardList}>
               <div className={styles.trustCard}>
                 <strong>Осмотр при выдаче</strong>
-                <p>Интерфейс показывает сценарий проверки вещи до начала аренды.</p>
+                <p>Понятный интерфейс проверки вещи до начала аренды.</p>
               </div>
               <div className={styles.trustCard}>
                 <strong>Прозрачная стоимость</strong>
-                <p>Цена, залог и окно получения видны до подключения business-логики.</p>
+                <p>Цена, залог и окно получения показаны заранее.</p>
               </div>
               <div className={styles.trustCard}>
-                <strong>Чат и бронирование</strong>
-                <p>Кнопки и CTA готовы — Илья позже подключит данные и интеграцию.</p>
+                <strong>Сценарий бронирования</strong>
+                <p>UI-модуль для подключения к реальной бизнес логике.</p>
               </div>
             </div>
           </section>

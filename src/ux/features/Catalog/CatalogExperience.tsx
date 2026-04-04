@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { CatalogHeader } from './components/CatalogHeader';
+import { BrandIcon, CatalogHeader } from './components/CatalogHeader';
 import { CatalogSearchBar } from './components/CatalogSearchBar';
 import { CategoryRail } from './components/CategoryRail';
 import { CatalogFilters } from './components/CatalogFilters';
@@ -14,7 +14,8 @@ import type { CatalogUiItem } from './types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from './utils';
 import styles from './Catalog.module.scss';
 
-const BATCH_SIZE = 6;
+const BATCH_SIZE = 8;
+
 
 export function CatalogExperience() {
   const [filters, setFilters] = useState(INITIAL_FILTERS);
@@ -33,7 +34,7 @@ export function CatalogExperience() {
   const similarItems = selectedItem
     ? mockCatalogItems
         .filter((item) => item.id !== selectedItem.id && item.category === selectedItem.category)
-        .slice(0, 3)
+        .slice(0, 4)
     : [];
   const hasMore = visibleCount < filteredItems.length;
 
@@ -43,7 +44,7 @@ export function CatalogExperience() {
 
     const timeoutId = window.setTimeout(() => {
       setCatalogLoading(false);
-    }, 550);
+    }, 450);
 
     return () => window.clearTimeout(timeoutId);
   }, [filters]);
@@ -60,7 +61,7 @@ export function CatalogExperience() {
           setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length));
         }
       },
-      { rootMargin: '400px 0px' },
+      { rootMargin: '360px 0px' },
     );
 
     observer.observe(node);
@@ -80,7 +81,7 @@ export function CatalogExperience() {
     window.setTimeout(() => {
       setSelectedItem(item);
       setDetailLoading(false);
-    }, 320);
+    }, 280);
   };
 
   const handleBackToCatalog = () => {
@@ -104,39 +105,40 @@ export function CatalogExperience() {
             />
 
             <section className={styles.hero}>
-              <div className={styles.heroContent}>
-                <p className={styles.heroEyebrow}>Каталог аренды</p>
-                <h1>Бери вещи тогда, когда они действительно нужны</h1>
-                <p>
-                  Современный каталог в духе маркетплейса: быстрый поиск, фильтры, карточки,
-                  skeleton-состояния и бесконечная лента для сценариев аренды.
-                </p>
-                <div className={styles.heroStats}>
-                  <div>
-                    <strong>1 500+</strong>
-                    <span>объявлений в активной витрине</span>
-                  </div>
-                  <div>
-                    <strong>15 мин</strong>
-                    <span>среднее время ответа владельца</span>
-                  </div>
-                  <div>
-                    <strong>4.9 / 5</strong>
-                    <span>рейтинг по повторным арендам</span>
+              <div className={styles.heroPromoBanner}>
+                <div className={styles.heroPromoContent}>
+                  <p className={styles.heroEyebrow}>Арендай для твоего города</p>
+                  <h1>Выбирайте вещи по‑умному и арендуйте только на нужный срок</h1>
+                  <p>
+                    Вот тут можно чёт придумать  
+                  </p>
+                </div>
+                <div className={styles.heroPromoVisual} aria-hidden="true">
+                  <div className={styles.heroVisualStage}>
+                    <div className={styles.heroOrbitCenter}>
+                      <BrandIcon className={styles.heroCenterBrandSymbol} />
+                      <div className={styles.heroOrbitText}>
+                        <strong>Арендай</strong>
+                        <span>Аренда вещей</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className={styles.heroPromo}>
-                <div className={styles.heroPromoCard}>
-                  <span className={styles.heroPromoBadge}>Сегодня в тренде</span>
-                  <strong>Техника, инструменты, вещи для путешествий и мероприятий</strong>
-                  <p>
-                    Авито-подобная витрина, но сфокусированная на шеринг-сценариях: удобный
-                    выбор, доверие и прозрачная выдача.
-                  </p>
+              <aside className={styles.businessCard}>
+                <h3>Блок для чего нибудь ещё</h3>
+                <p>Для каких-нибудь доп сценариев.</p>
+                <div className={styles.businessGrid}>
+                  <span>бла-бла</span>
+                  <span>бла-бла</span>
+                  <span>бла-бла</span>
+                  <span>бла-бла</span>
                 </div>
-              </div>
+                <button type="button" className={styles.businessButton}>
+                  Искать в другом бла-бла
+                </button>
+              </aside>
             </section>
           </>
         )}
@@ -183,8 +185,8 @@ export function CatalogExperience() {
                   <div className={styles.emptyIcon}>🔎</div>
                   <h3>Ничего не найдено</h3>
                   <p>
-                    Попробуй убрать часть фильтров или изменить поисковый запрос. UI already
-                    готов к подключению реальных данных и сторонички пагинации.
+                    Попробуй убрать часть фильтров или изменить поисковый запрос. Этот UI-модуль
+                    к подключению реальных данных и серверной пагинации.
                   </p>
                   <button type="button" onClick={() => setFilters(INITIAL_FILTERS)}>
                     Сбросить фильтры
@@ -205,25 +207,24 @@ export function CatalogExperience() {
 
                   <div ref={sentinelRef} className={styles.infiniteSentinel} aria-hidden />
 
-                  {hasMore ? (
-                    <div className={styles.loadMoreWrap}>
-                      <p>Бесконечная лента включена — можно и докрутить, и нажать вручную.</p>
-                      <button
-                        type="button"
-                        className={styles.loadMoreButton}
-                        onClick={() =>
-                          setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length))
-                        }
-                      >
-                        Показать ещё
-                      </button>
-                    </div>
-                  ) : (
-                    <div className={styles.feedEnd}>
-                      <strong>Лента закончилась</strong>
-                      <p>Все найденные объявления уже показаны.</p>
-                    </div>
-                  )}
+                  <div className={styles.loadMoreWrap}>
+                    {hasMore ? (
+                      <>
+                        <p>Бесконечная лента активна — можно докрутить список или загрузить вручную.</p>
+                        <button
+                          type="button"
+                          className={styles.loadMoreButton}
+                          onClick={() =>
+                            setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length))
+                          }
+                        >
+                          Показать ещё
+                        </button>
+                      </>
+                    ) : (
+                      <p className={styles.catalogEndMessage}>Вы дошли до конца</p>
+                    )}
+                  </div>
                 </>
               )}
             </div>

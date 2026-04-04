@@ -9,49 +9,49 @@ const makeDate = (daysAgo: number) => {
 export const mockCatalogItems: CatalogUiItem[] = [
   {
     id: 'cam-sony-a7c',
-    title: 'Sony A7C + 28-60mm для съёмок и поездок',
+    title: 'Nikon D3100 + 18-55mm для съёмок и поездок',
     imageUrl:
-      'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80',
+      'https://80.img.avito.st/image/1/1.IQ9A4ba4jeZ2Vg_rDqEiNXNBj-D-QA_wdk2P5PBIhez2.rTcnUszc63e9AvIduoimmMraH7WlUfiGfLeGOXmPKtk',
     images: [
-      'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1516724562728-afc824a36e84?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1200&q=80',
+      'https://80.img.avito.st/image/1/1.IQ9A4ba4jeZ2Vg_rDqEiNXNBj-D-QA_wdk2P5PBIhez2.rTcnUszc63e9AvIduoimmMraH7WlUfiGfLeGOXmPKtk',
+      'https://20.img.avito.st/image/1/1.8gcq9raSSu4cQdzjQtm_PxlWHNuvYGzVrjRt1P80Pdj4YzjV_WVo1K02a93_ZWvbqjc57J5dXg.e9xyzj31QwUDSUZ1OXU4C6ln0xMoSPAxGYXB7i0RORs?cqp=2.1knsiTxPufH1SBh69vbZjVcwCORzzcj1-MOCwyWdGsPwNCmP_N-thpgCJLr6',
+      'https://90.img.avito.st/image/1/1.ynF9v7aScphLCOSVZazIT04fJKqoLAau-CVXrK99Ba75fVP7-StSq_5_VaOufQGt8noBmskUZg.LEvdgLHl8HD4TCtzZH0PAb9WjPA8X2H5fdTVl73pEPA?',
+      'https://sun9-60.userapi.com/s/v1/ig2/Bvpn_25A0s_i_3AE9Tjn3-8gtKwVpftvihaDKvKVdj2JY6JzUS0wZNGnzVs8Vdu5QMZub5tejH73yU8nVh85j2a8.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x106,240x160,360x239,480x319,540x359,640x425,720x479,1080x718,1280x851,1440x957,2560x1702&from=bu&cs=2560x0',
     ],
     item_description:
-      'Компактная full-frame камера для тревел, контента и съёмок интервью. В комплекте батареи и сумка.',
-    price_per_day: '2500',
-    price_per_hour: '450',
-    deposit_amount: '15000',
-    pickup_location: 'м. Площадь Ленина, самовывоз или курьер',
+      'Камера для тревел, контента и съёмок. Можно заснять аблакетку. В комплекте батарея, зарядник и сумка.',
+    price_per_day: '1000000',
+    price_per_hour: '66666',
+    deposit_amount: '1,500,000',
+    pickup_location: 'м. Студенческая, самовывоз или курьер',
     status: 'active',
     views_count: 382,
     created_at: makeDate(1),
-    location: 'Центральный район',
+    location: 'Ленинский район',
     isAvailable: true,
     dateAvailable: 'Сегодня с 14:00',
     category: 'Фото и видео',
     city: 'Новосибирск',
-    ownerName: 'Артём',
+    ownerName: 'Санёк',
     ownerAvatar: 'А',
-    ownerRating: 4.9,
+    ownerRating: 5,
     responseTime: 'отвечает за 9 минут',
-    tags: ['Проверенный арендодатель', 'Без доставки', 'Full-frame'],
+    tags: ['Проверенный арендодатель', 'Без доставки', 'APS-C'],
     pickupWindow: 'ежедневно 09:00–22:00',
     rentalTerms: [
       'Паспорт для договора аренды',
       'Проверка техники на месте выдачи',
-      'Скидка 10% при аренде от 3 суток',
+      'Скидка 0,001% при аренде от 3 суток',
     ],
     specs: [
-      { label: 'Матрица', value: '24.2 МП' },
-      { label: 'Видео', value: '4K 30fps' },
+      { label: 'Матрица', value: '1024 МП' },
+      { label: 'Видео', value: '8K 500fps' },
       { label: 'Вес', value: '509 г' },
       { label: 'Аккумулятор', value: '2 шт. в комплекте' },
     ],
     description: [
       'Отличный вариант для съёмки рилсов, интервью, мероприятий и поездок. Камера лёгкая, тихая и не привлекает лишнего внимания.',
-      'В комплекте: тушка Sony A7C, китовый объектив 28-60mm, 2 аккумулятора, ремень, карта памяти 128 ГБ и сумка.'
+      'В комплекте: б/у зарядка, китовый объектив-телескоп, 1 аккумулятор (на ядерном топливе), ремень чтоб драть кого-нибудь, карта памяти 128 ТБ и мешок на 120 литров с магнита.'
     ],
     featured: true,
     quickFilters: ['Рядом сегодня', 'Топ-рейтинг', 'Новинки'],
@@ -60,10 +60,10 @@ export const mockCatalogItems: CatalogUiItem[] = [
     id: 'ps5-white',
     title: 'PlayStation 5 Slim + 2 геймпада',
     imageUrl:
-      'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?auto=format&fit=crop&w=1200&q=80',
+      'https://i.ytimg.com/vi/-eZbYhtsYgE/maxresdefault.jpg',
     images: [
-      'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?auto=format&fit=crop&w=1200&q=80',
+      'https://i.ytimg.com/vi/-eZbYhtsYgE/maxresdefault.jpg',
+      'https://static.tengrinews.kz/userdata/u289/2026-01/resize/1731a3374aeed431297670253364b758.jpg',
       'https://images.unsplash.com/photo-1622297845775-5ff3fef71d13?auto=format&fit=crop&w=1200&q=80',
     ],
     item_description:
@@ -273,10 +273,10 @@ export const mockCatalogItems: CatalogUiItem[] = [
     id: 'tent-4p',
     title: 'Палатка 4-местная + спальники и коврики',
     imageUrl:
-      'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+      'https://i.pinimg.com/736x/ac/f9/93/acf993143cfc6eefa0d19feeb861e8db.jpg',
     images: [
-      'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=1200&q=80',
+      'https://i.pinimg.com/736x/ac/f9/93/acf993143cfc6eefa0d19feeb861e8db.jpg',
+      'https://i.pinimg.com/736x/74/e0/9d/74e09d8b982f659224b1df9274186b19.jpg',
     ],
     item_description: 'Набор для выезда на природу с друзьями или семьёй. Сухая и лёгкая сборка.',
     price_per_day: '1600',
@@ -437,10 +437,10 @@ export const mockCatalogItems: CatalogUiItem[] = [
     id: 'sup-board',
     title: 'SUP-борд для прогулок по воде',
     imageUrl:
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
+      'https://main-cdn.sbermegamarket.ru/big2/hlr-system/743/105/134/111/319/54/600022422559b1.jpg',
     images: [
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1200&q=80',
+      'https://main-cdn.sbermegamarket.ru/big2/hlr-system/743/105/134/111/319/54/600022422559b1.jpg',
+      'https://main-cdn.sbermegamarket.ru/big2/hlr-system/-43/017/037/867/175/5/100032014797b8.jpg',
     ],
     item_description: 'Надувной SUP для прогулок, фотосессий и выездов на Обское море. Насос и жилет в комплекте.',
     price_per_day: '1400',
@@ -478,9 +478,9 @@ export const mockCatalogItems: CatalogUiItem[] = [
     id: 'macbook-air',
     title: 'MacBook Air M2 для командировки и учёбы',
     imageUrl:
-      'https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=1200&q=80',
+      'https://i.pinimg.com/originals/e9/16/c6/e916c6d5e940ac9de0c28325c217ae93.jpg?nii=t',
     images: [
-      'https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=1200&q=80',
+      'https://i.pinimg.com/originals/e9/16/c6/e916c6d5e940ac9de0c28325c217ae93.jpg?nii=t',
       'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1200&q=80',
     ],
     item_description: 'Тонкий ноутбук для работы, презентаций и поездок. Зарядка и чехол в комплекте.',

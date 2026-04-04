@@ -23,15 +23,20 @@ export function CatalogCard({ item, pricingMode, onOpen }: CatalogCardProps) {
       <button type="button" className={styles.cardImageButton} onClick={() => onOpen(item)}>
         <div className={styles.cardImageWrap}>
           <img src={item.imageUrl ?? item.images[0]} alt={item.title} className={styles.cardImage} />
-          {item.featured ? <span className={styles.cardFeatured}>Топ аренда</span> : null}
-          <span className={styles.cardAvailability}>{item.dateAvailable}</span>
+          <div className={styles.cardImageMeta}>
+            {item.featured ? <span className={styles.cardFeatured}>Топ</span> : null}
+            <span className={styles.cardAvailability}>{item.dateAvailable}</span>
+          </div>
         </div>
       </button>
 
       <div className={styles.cardBody}>
-        <div className={styles.cardPriceBlock}>
-          <strong>{getPrimaryPrice(item, pricingMode)}</strong>
-          <span>{getSecondaryPrice(item)}</span>
+        <div className={styles.cardPriceRow}>
+          <div className={styles.cardPriceBlock}>
+            <strong>{getPrimaryPrice(item, pricingMode)}</strong>
+            <span>{getSecondaryPrice(item)}</span>
+          </div>
+          <span className={styles.cardDepositBadge}>Залог {item.deposit_amount ?? 'по запросу'} ₽</span>
         </div>
 
         <button type="button" onClick={() => onOpen(item)} className={styles.cardTitleButton}>
@@ -47,19 +52,25 @@ export function CatalogCard({ item, pricingMode, onOpen }: CatalogCardProps) {
         </div>
 
         <div className={styles.cardMeta}>
-          <span>{item.city}</span>
+          <span>{item.location}</span>
           <span>{formatViews(item.views_count)}</span>
           <span>{formatRelativeDate(item.created_at)}</span>
         </div>
 
-        <div className={styles.cardOwner}>
-          <div className={styles.ownerAvatar}>{item.ownerAvatar}</div>
-          <div>
-            <strong>{item.ownerName}</strong>
-            <p>
-              ★ {item.ownerRating} · {item.responseTime}
-            </p>
+        <div className={styles.cardFooter}>
+          <div className={styles.cardOwner}>
+            <div className={styles.ownerAvatar} aria-hidden="true">{item.ownerAvatar}</div>
+            <div className={styles.cardOwnerMeta}>
+              <strong>{item.ownerName}</strong>
+              <p>
+                ★ {item.ownerRating} · {item.responseTime}
+              </p>
+            </div>
           </div>
+
+          <button type="button" className={styles.cardCtaButton} onClick={() => onOpen(item)}>
+            Смотреть
+          </button>
         </div>
       </div>
     </article>

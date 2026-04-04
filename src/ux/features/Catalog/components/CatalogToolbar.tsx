@@ -1,4 +1,5 @@
 import type { CatalogFilterState } from '../types';
+import { GlassSelect, type GlassSelectOption } from './GlassSelect';
 import styles from '../Catalog.module.scss';
 
 type CatalogToolbarProps = {
@@ -7,6 +8,13 @@ type CatalogToolbarProps = {
   filters: CatalogFilterState;
   onChange: (patch: Partial<CatalogFilterState>) => void;
 };
+
+const sortOptions: GlassSelectOption[] = [
+  { value: 'popular', label: 'Сначала популярные' },
+  { value: 'newest', label: 'Сначала новые' },
+  { value: 'priceAsc', label: 'Сначала дешевле' },
+  { value: 'priceDesc', label: 'Сначала дороже' },
+];
 
 export function CatalogToolbar({ total, visible, filters, onChange }: CatalogToolbarProps) {
   return (
@@ -21,17 +29,14 @@ export function CatalogToolbar({ total, visible, filters, onChange }: CatalogToo
       <div className={styles.toolbarActions}>
         <label className={styles.sortSelectWrap}>
           <span>Сортировка</span>
-          <select
+          <GlassSelect
+            label="Сортировка"
             value={filters.sortBy}
-            onChange={(event) =>
-              onChange({ sortBy: event.target.value as CatalogFilterState['sortBy'] })
-            }
-          >
-            <option value="popular">Сначала популярные</option>
-            <option value="newest">Сначала новые</option>
-            <option value="priceAsc">Сначала дешевле</option>
-            <option value="priceDesc">Сначала дороже</option>
-          </select>
+            options={sortOptions}
+            onChange={(value) => onChange({ sortBy: value as CatalogFilterState['sortBy'] })}
+            triggerClassName={styles.sortGlassTrigger}
+            dropdownClassName={styles.sortDropdown}
+          />
         </label>
       </div>
     </div>
