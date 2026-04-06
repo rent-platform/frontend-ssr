@@ -39,5 +39,5 @@ export async function mockRegisterUser(
 
   addMockUser(newUser);
 
-  return { success: true, userId: newUser.id };
+  return { success: true, userId: newUser.id! };
 }

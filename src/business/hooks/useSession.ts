@@ -12,11 +12,18 @@ export function useSession() {
   const { data: session, status } = useNextAuthSession();
 
   const login = async (tel: string, password: string): Promise<LoginResult> => {
-    const res = await signIn("credentials", { tel, password, redirect: false });
-    return {
-      ok: res?.ok ?? false,
-      error: res?.error ?? null,
-    };
+    try {
+      const res = await signIn("credentials", {
+        tel,
+        password,
+        redirect: false,
+      });
+      const error = res?.error ?? null;
+      return { ok: !error, error };
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "CredentialsSignin";
+      return { ok: false, error: message };
+    }
   };
 
   const logout = async () => {

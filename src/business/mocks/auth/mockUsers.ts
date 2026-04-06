@@ -6,8 +6,8 @@ export const MOCK_USERS: MockUser[] = [
   {
     id: "mock-user-1",
     email: "admin@rent.ru",
-    phone: "+79001234567",
-    password: "admin123",
+    phone: "12345678",
+    password: "123456",
     full_name: "Администратор Системы",
     nickname: "admin",
     avatar_url: null,
