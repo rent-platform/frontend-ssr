@@ -1,21 +1,19 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRegisterMutation } from "@/business/api";
 import { useSession } from "./useSession";
+import { mockRegisterUser } from "@/business/mocks/auth/mockAuthService";
 import {
   registerSchema,
   type RegisterFormValues,
 } from "@/business/utils/authShecmas/authSchemas";
-import { ROUTE_PATHS } from "@/business/utils/routes/routes";
+import ROUTE_PATHS from "@/business/utils/routes/routes";
 
 export function useRegisterForm() {
   const router = useRouter();
-  const { saveCredentials } = useSession();
-  const [register_api, { isLoading }] = useRegisterMutation();
+  const { login } = useSession();
   const [apiError, setApiError] = useState<string | null>(null);
 
   const {
@@ -30,16 +28,28 @@ export function useRegisterForm() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     setApiError(null);
-    try {
-      const { accessToken, user } = await register_api({
-        name: data.name,
-        tel: data.tel,
-        password: data.password,
-      }).unwrap();
-      saveCredentials({ token: accessToken, user });
+
+    const registerResult = await mockRegisterUser({
+      name: data.name,
+      tel: data.tel,
+      password: data.password,
+    });
+
+    if (!registerResult.success) {
+      setApiError(registerResult.error);
+      return;
+    }
+
+    const { ok, error } = await login(data.tel, data.password);
+
+    if (ok) {
       router.replace(ROUTE_PATHS.HOME);
-    } catch {
-      setApiError("Пользователь с таким телефоном уже существует.");
+    } else {
+      setApiError(
+        error === "CredentialsSignin"
+          ? "Аккаунт создан, но войти не удалось. Попробуйте войти вручную."
+          : "Ошибка при входе. Попробуйте позже.",
+      );
     }
   };
 
@@ -48,7 +58,7 @@ export function useRegisterForm() {
     handleSubmit,
     onSubmit,
     errors,
-    isSubmitting: isSubmitting || isLoading,
+    isSubmitting,
     apiError,
     watch,
   };

@@ -4,10 +4,9 @@ import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import AppInput from "@/ux/components/AppInput";
 import { useLoginForm } from "@/business/hooks";
-import { ROUTE_PATHS } from "@/business/utils/routes/routes";
+import ROUTE_PATHS from "@/business/utils/routes/routes";
 import styles from "@/ux/layouts/AuthLayout/AuthForm.module.scss";
 
-/** "Глупый" UI-компонент — вся логика делегирована в useLoginForm() */
 export const LoginForm = () => {
   const { register, handleSubmit, onSubmit, errors, isSubmitting, apiError } =
     useLoginForm();

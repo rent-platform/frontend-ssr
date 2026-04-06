@@ -1,23 +1,33 @@
 "use client";
 
 import {
-  useAppSelector,
-  useAppDispatch,
-  getToken,
-  getUser,
-} from "@/business/store";
-import { logout, setCredentials } from "@/business/store/sessionSlice";
-import type { User } from "@/business/types/entity";
+  signIn,
+  signOut,
+  useSession as useNextAuthSession,
+} from "next-auth/react";
+
+export type LoginResult = { ok: boolean; error: string | null };
 
 export function useSession() {
-  const dispatch = useAppDispatch();
-  const token = useAppSelector(getToken);
-  const user = useAppSelector(getUser);
-  const isAuthenticated = Boolean(token);
+  const { data: session, status } = useNextAuthSession();
 
-  const signOut = () => dispatch(logout());
-  const saveCredentials = (payload: { token: string; user: User | null }) =>
-    dispatch(setCredentials(payload));
+  const login = async (tel: string, password: string): Promise<LoginResult> => {
+    const res = await signIn("credentials", { tel, password, redirect: false });
+    return {
+      ok: res?.ok ?? false,
+      error: res?.error ?? null,
+    };
+  };
 
-  return { user, token, isAuthenticated, signOut, saveCredentials };
+  const logout = async () => {
+    await signOut({ redirect: false });
+  };
+
+  return {
+    user: session?.user ?? null,
+    isAuthenticated: status === "authenticated", //куки валидны нет
+    isLoading: status === "loading",
+    login,
+    logout,
+  };
 }

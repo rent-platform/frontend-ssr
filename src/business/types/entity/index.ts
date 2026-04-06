@@ -1,5 +1,10 @@
 // ─── User domain ─────────────────────────────────────────────────────────────
-export type { User, Session, UserBillingProfile, UserRole } from "./user.types";
+export type {
+  UserUpdate,
+  Session,
+  UserBillingProfile,
+  UserRole,
+} from "./user.types";
 
 // ─── Catalog domain ───────────────────────────────────────────────────────────
 export type {

@@ -4,17 +4,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLoginMutation } from "@/business/api";
 import { useSession } from "./useSession";
 import {
   loginSchema,
   type LoginFormValues,
 } from "@/business/utils/authShecmas/authSchemas";
-import { ROUTE_PATHS } from "@/business/utils/routes/routes";
+import ROUTE_PATHS from "@/business/utils/routes/routes";
+
 export function useLoginForm() {
   const router = useRouter();
-  const { saveCredentials } = useSession();
-  const [login, { isLoading }] = useLoginMutation();
+  const { login } = useSession();
   const [apiError, setApiError] = useState<string | null>(null);
 
   const {
@@ -28,12 +27,17 @@ export function useLoginForm() {
 
   const onSubmit = async (data: LoginFormValues) => {
     setApiError(null);
-    try {
-      const { accessToken, user } = await login(data).unwrap();
-      saveCredentials({ token: accessToken, user });
+
+    const { ok, error } = await login(data.tel, data.password);
+
+    if (ok) {
       router.replace(ROUTE_PATHS.HOME);
-    } catch {
-      setApiError("Неверный телефон или пароль. Попробуйте снова.");
+    } else {
+      setApiError(
+        error === "CredentialsSignin"
+          ? "Неверный телефон или пароль. Попробуйте снова."
+          : "Ошибка входа. Попробуйте позже.",
+      );
     }
   };
 
@@ -42,7 +46,7 @@ export function useLoginForm() {
     handleSubmit,
     onSubmit,
     errors,
-    isSubmitting: isSubmitting || isLoading,
+    isSubmitting,
     apiError,
   };
 }
