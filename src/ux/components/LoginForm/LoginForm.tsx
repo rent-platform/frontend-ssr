@@ -53,9 +53,10 @@ export const LoginForm = () => {
         <div className={styles.rememberMe}>
           <input
             type="checkbox"
-            className={styles.checkBox}
+            className={styles.checkBox} // TODO: обработчик
             disabled={isSubmitting}
             id="rememberMe"
+            {...register("rememberMe")}
           />
           <label htmlFor="rememberMe">Запомнить пароль</label>
         </div>

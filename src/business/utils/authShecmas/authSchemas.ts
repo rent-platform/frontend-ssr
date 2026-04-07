@@ -5,10 +5,12 @@ export const loginSchema = z.object({
     .string()
     .min(1, "Телефон обязателен")
     .regex(/^\+?[0-9\s()\-]{7,15}$/, "Введите корректный номер телефона"),
+
   password: z
     .string()
     .min(1, "Пароль обязателен")
     .min(6, "Пароль должен содержать минимум 6 символов"),
+  rememberMe: z.boolean().optional(),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
@@ -43,4 +45,3 @@ export const registerSchema = z
   });
 
 export type RegisterFormValues = z.infer<typeof registerSchema>;
-

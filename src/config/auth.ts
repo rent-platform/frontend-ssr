@@ -6,7 +6,7 @@ import {
 } from "@/business/mocks/auth/mockUsers";
 import NextAuth from "next-auth";
 import type { User } from "next-auth";
-
+const SESSION_MAX_AGE = 30 * 24 * 60 * 60;
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
@@ -14,11 +14,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const parsed = loginSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
-        const { tel, password } = parsed.data;
+        const { tel, password, rememberMe } = parsed.data;
 
         const mockUser = findMockUserByPhone(tel); // TODO: отправка на серв
 
-        console.log(mockUser);
         if (!mockUser) {
           return null;
         }
@@ -33,12 +32,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           nickname: mockUser.nickname ?? null,
           role: mockUser.role!,
           avatar_url: mockUser.avatar_url ?? null,
+          rememberMe: rememberMe ?? false,
         };
       },
     }),
   ],
 
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+    maxAge: SESSION_MAX_AGE,
+    updateAge: 24 * 60 * 60,
+  },
+
+  cookies: {
+    sessionToken: {
+      name: "ilyha-next-auth.session-token",
+      options: {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+      },
+    },
+  },
 
   callbacks: {
     async jwt({ token, user }) {
@@ -49,6 +64,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.full_name = user.full_name;
         token.nickname = user.nickname;
         token.avatar_url = user.avatar_url;
+      }
+      if (!user.rememberMe) {
+        token.exp = Math.floor(Date.now() / 1000) + SESSION_MAX_AGE;
       }
       return token;
     },

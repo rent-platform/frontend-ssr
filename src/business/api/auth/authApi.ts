@@ -12,11 +12,6 @@ export const authApi = createApi({
   }),
   tagTypes: ["Session"],
   endpoints: (builder) => ({
-    login: builder.mutation<AuthResponseDTO, LoginRequestDTO>({
-      query: (body) => ({ url: "/auth/login", method: "POST", body }),
-      invalidatesTags: ["Session"],
-    }),
-
     register: builder.mutation<AuthResponseDTO, RegisterRequestDTO>({
       query: (body) => ({ url: "/auth/register", method: "POST", body }),
       invalidatesTags: ["Session"],
@@ -24,4 +19,4 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const { useRegisterMutation } = authApi;

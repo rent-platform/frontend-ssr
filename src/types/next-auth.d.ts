@@ -1,8 +1,6 @@
 import type { UserRole } from "@/business/types/entity/user.types";
 import type { DefaultSession } from "next-auth";
 
-
-
 declare module "next-auth" {
   interface User {
     id: string;
@@ -11,6 +9,7 @@ declare module "next-auth" {
     full_name?: string | null;
     nickname?: string | null;
     avatar_url?: string | null;
+    rememberMe: boolean;
   }
 
   interface Session {
@@ -35,4 +34,3 @@ declare module "@auth/core/jwt" {
     avatar_url?: string | null;
   }
 }
-

@@ -7,7 +7,7 @@ export const proxy = auth((req) => {
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(ROUTE_PATHS.authorization);
   const isPublicRoute = [
-    ROUTE_PATHS.HOME,
+    // ROUTE_PATHS.HOME, // TODO: add
     ROUTE_PATHS.LOGIN,
     ROUTE_PATHS.REGISTER,
   ].includes(nextUrl.pathname);
@@ -35,4 +35,3 @@ export const proxy = auth((req) => {
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
-

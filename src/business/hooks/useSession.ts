@@ -11,11 +11,16 @@ export type LoginResult = { ok: boolean; error: string | null };
 export function useSession() {
   const { data: session, status } = useNextAuthSession();
 
-  const login = async (tel: string, password: string): Promise<LoginResult> => {
+  const login = async (
+    tel: string,
+    password: string,
+    rememberMe = false,
+  ): Promise<LoginResult> => {
     try {
       const res = await signIn("credentials", {
         tel,
         password,
+        rememberMe,
         redirect: false,
       });
       const error = res?.error ?? null;

@@ -19,15 +19,16 @@ export function useLoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isLoading },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+    defaultValues: { rememberMe: false },
     shouldFocusError: false,
   });
 
   const onSubmit = async (data: LoginFormValues) => {
     setApiError(null);
-    const { ok, error } = await login(data.tel, data.password);
+    const { ok, error } = await login(data.tel, data.password, data.rememberMe);
     if (ok) {
       router.replace(ROUTE_PATHS.HOME); // TODO: idk if its should be like that
     } else {
@@ -41,6 +42,7 @@ export function useLoginForm() {
 
   return {
     register,
+    isLoading,
     handleSubmit,
     onSubmit,
     errors,
