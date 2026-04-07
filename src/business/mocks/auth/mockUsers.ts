@@ -1,6 +1,11 @@
 import type { UserUpdate } from "@/business/types/entity";
+import { normalizePhone } from "@/business/utils/authShecmas/authSchemas";
 
 export type MockUser = Omit<UserUpdate, "password_hash"> & { password: string };
+
+type GlobalMockUsers = typeof globalThis & {
+  __RENT_PLATFORM_MOCK_USERS__?: MockUser[];
+};
 
 export const MOCK_USERS: MockUser[] = [
   {
@@ -31,10 +36,20 @@ export const MOCK_USERS: MockUser[] = [
   },
 ];
 
-const _runtimeUsers: MockUser[] = [...MOCK_USERS];
+const globalMockUsers = globalThis as GlobalMockUsers;
+
+const _runtimeUsers: MockUser[] =
+  globalMockUsers.__RENT_PLATFORM_MOCK_USERS__ ??
+  (globalMockUsers.__RENT_PLATFORM_MOCK_USERS__ = MOCK_USERS.map((user) => ({
+    ...user,
+    phone: normalizePhone(user.phone ?? ""),
+  })));
 
 export function findMockUserByPhone(phone: string): MockUser | undefined {
-  return _runtimeUsers.find((u) => u.phone === phone);
+  const normalizedPhone = normalizePhone(phone);
+  return _runtimeUsers.find(
+    (user) => normalizePhone(user.phone ?? "") === normalizedPhone,
+  );
 }
 
 export function validateMockPassword(
@@ -45,5 +60,12 @@ export function validateMockPassword(
 }
 
 export function addMockUser(user: MockUser): void {
-  _runtimeUsers.push(user);
+  if (findMockUserByPhone(user.phone ?? "")) {
+    throw new Error("Пользователь с таким номером телефона уже существует.");
+  }
+
+  _runtimeUsers.push({
+    ...user,
+    phone: normalizePhone(user.phone ?? ""),
+  });
 }

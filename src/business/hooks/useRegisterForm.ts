@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "./useSession";
-import { mockRegisterUser } from "@/business/mocks/auth/mockAuthService";
 import {
   registerSchema,
   type RegisterFormValues,
@@ -13,7 +12,7 @@ import ROUTE_PATHS from "@/business/utils/routes/routes";
 
 export function useRegisterForm() {
   const router = useRouter();
-  const { login } = useSession();
+  const { signUp } = useSession();
   const [apiError, setApiError] = useState<string | null>(null);
 
   const {
@@ -29,26 +28,15 @@ export function useRegisterForm() {
   const onSubmit = async (data: RegisterFormValues) => {
     setApiError(null);
 
-    const registerResult = await mockRegisterUser({
-      name: data.name,
-      tel: data.tel,
-      password: data.password,
-    });
-
-    if (!registerResult.success) {
-      setApiError(registerResult.error);
-      return;
-    }
-
-    const { ok, error } = await login(data.tel, data.password);
-
+    const { ok, error } = await signUp(data.name, data.tel, data.password);
+    console.log(ok, error);
     if (ok) {
       router.replace(ROUTE_PATHS.HOME);
     } else {
       setApiError(
-        error === "CredentialsSignin"
+        error === "REGISTERED_BUT_LOGIN_FAILED"
           ? "Аккаунт создан, но войти не удалось. Попробуйте войти вручную."
-          : "Ошибка при входе. Попробуйте позже.",
+          : (error ?? "Ошибка регистрации. Попробуйте позже."),
       );
     }
   };

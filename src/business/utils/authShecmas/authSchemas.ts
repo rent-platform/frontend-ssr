@@ -1,16 +1,32 @@
 import { z } from "zod";
 
+export const normalizePhone = (value: string): string => value.replace(/\D/g, "");
+
+const phoneSchema = z
+  .string()
+  .trim()
+  .min(1, "Телефон обязателен")
+  .transform(normalizePhone)
+  .refine((value) => /^\d{7,15}$/.test(value), "Введите корректный номер телефона");
+
+const rememberMeSchema = z.preprocess((value) => {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === "true") return true;
+    if (normalized === "false" || normalized === "") return false;
+  }
+  return value;
+}, z.boolean().optional());
+
 export const loginSchema = z.object({
-  tel: z
-    .string()
-    .min(1, "Телефон обязателен")
-    .regex(/^\+?[0-9\s()\-]{7,15}$/, "Введите корректный номер телефона"),
+  tel: phoneSchema,
 
   password: z
     .string()
     .min(1, "Пароль обязателен")
     .min(6, "Пароль должен содержать минимум 6 символов"),
-  rememberMe: z.boolean().optional(),
+  rememberMe: rememberMeSchema,
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
@@ -26,13 +42,8 @@ export const registerSchema = z
         /^[а-яёА-ЯЁa-zA-Z]+(?:[ -][а-яёА-ЯЁa-zA-Z]+)*$/,
         "Имя может содержать только буквы, пробелы и дефис",
       ),
-    tel: z
-      .string()
-      .min(1, "Телефон обязателен")
-      .regex(
-        /^[A-Za-z\\d@#$%^&+=!]{6,20}$/,
-        "Введите корректный номер телефона",
-      ),
+    tel: phoneSchema,
+
     password: z
       .string()
       .min(1, "Пароль обязателен")
@@ -45,3 +56,15 @@ export const registerSchema = z
   });
 
 export type RegisterFormValues = z.infer<typeof registerSchema>;
+
+// серверные поля
+export const registerApiSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Имя должно содержать минимум 2 символа")
+    .max(50, "Имя не может быть длиннее 50 символов"),
+  tel: phoneSchema,
+  password: z.string().min(6, "Пароль должен содержать минимум 6 символов"),
+});
+
+export type RegisterApiPayload = z.infer<typeof registerApiSchema>;

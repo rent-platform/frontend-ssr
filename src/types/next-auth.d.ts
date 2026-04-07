@@ -32,5 +32,6 @@ declare module "@auth/core/jwt" {
     full_name?: string | null;
     nickname?: string | null;
     avatar_url?: string | null;
+    rememberMe?: boolean;
   }
 }

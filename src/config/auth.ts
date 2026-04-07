@@ -6,8 +6,11 @@ import {
 } from "@/business/mocks/auth/mockUsers";
 import NextAuth from "next-auth";
 import type { User } from "next-auth";
+
 const SESSION_MAX_AGE = 30 * 24 * 60 * 60;
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   providers: [
     Credentials({
       async authorize(credentials): Promise<User | null> {
@@ -49,7 +52,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       name: "ilyha-next-auth.session-token",
       options: {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
       },
     },
@@ -64,10 +67,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.full_name = user.full_name;
         token.nickname = user.nickname;
         token.avatar_url = user.avatar_url;
+        token.rememberMe = user.rememberMe;
       }
-      if (!user.rememberMe) {
+
+      if (token.rememberMe === false) {
         token.exp = Math.floor(Date.now() / 1000) + SESSION_MAX_AGE;
       }
+
       return token;
     },
 
