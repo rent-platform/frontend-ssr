@@ -16,6 +16,7 @@ type ProductDetailProps = {
 
 export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: ProductDetailProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const hasImageNavigation = item.images.length > 1;
   const activeImage = useMemo(
     () => item.images[activeImageIndex] ?? item.images[0],
     [activeImageIndex, item.images],
@@ -25,6 +26,12 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
     [item.description],
   );
   const [descriptionLead, ...descriptionPoints] = normalizedDescription;
+  const handlePrevImage = () => {
+    setActiveImageIndex((prev) => (prev === 0 ? item.images.length - 1 : prev - 1));
+  };
+  const handleNextImage = () => {
+    setActiveImageIndex((prev) => (prev + 1) % item.images.length);
+  };
 
   return (
     <section className={styles.detailPage}>
@@ -55,6 +62,26 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
           <div className={styles.detailGalleryCard}>
             <div className={styles.detailMainImageWrap}>
               <img src={activeImage} alt={item.title} className={styles.detailMainImage} />
+              {hasImageNavigation ? (
+                <>
+                  <button
+                    type="button"
+                    className={styles.detailMainImageNavLeft}
+                    aria-label="Предыдущее фото"
+                    onClick={handlePrevImage}
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.detailMainImageNavRight}
+                    aria-label="Следующее фото"
+                    onClick={handleNextImage}
+                  >
+                    ›
+                  </button>
+                </>
+              ) : null}
             </div>
 
             <div className={styles.detailThumbs}>
