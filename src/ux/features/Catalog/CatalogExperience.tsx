@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { BrandIcon, CatalogHeader } from './components/CatalogHeader';
 import { CatalogSearchBar } from './components/CatalogSearchBar';
 import { CategoryRail } from './components/CategoryRail';
-import { CatalogFilters } from './components/CatalogFilters';
 import { CatalogToolbar } from './components/CatalogToolbar';
 import { CatalogCard } from './components/CatalogCard';
 import { CatalogSkeletonCard } from './components/CatalogSkeletonCard';
@@ -94,7 +93,11 @@ export function CatalogExperience() {
       <CatalogHeader cityLabel={filters.city} />
 
       <main className={styles.main}>
-        <CatalogSearchBar filters={filters} onChange={updateFilters} />
+        <CatalogSearchBar
+          filters={filters}
+          onChange={updateFilters}
+          onResetFilters={() => setFilters(INITIAL_FILTERS)}
+        />
 
         {selectedItem ? null : (
           <>
@@ -159,13 +162,7 @@ export function CatalogExperience() {
             onOpenSimilar={handleOpenItem}
           />
         ) : (
-          <section id="catalog" className={styles.catalogSection}>
-            <CatalogFilters
-              filters={filters}
-              onChange={updateFilters}
-              onReset={() => setFilters(INITIAL_FILTERS)}
-            />
-
+          <section id="catalog" className={styles.catalogContentOnly}>
             <div className={styles.catalogContent}>
               <CatalogToolbar
                 total={filteredItems.length}

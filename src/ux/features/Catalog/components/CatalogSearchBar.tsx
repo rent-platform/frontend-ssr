@@ -1,12 +1,15 @@
+import { useEffect, useRef, useState } from 'react';
 import type { CatalogFilterState } from '../types';
 import { CATEGORY_OPTIONS } from '../utils';
 import { RUSSIAN_CITY_OPTIONS } from '../russianCities';
 import { GlassSelect, type GlassSelectOption } from './GlassSelect';
+import { CatalogFilters } from './CatalogFilters';
 import styles from '../Catalog.module.scss';
 
 type CatalogSearchBarProps = {
   filters: CatalogFilterState;
   onChange: (patch: Partial<CatalogFilterState>) => void;
+  onResetFilters: () => void;
 };
 
 const categoryOptions: GlassSelectOption[] = CATEGORY_OPTIONS.map((option) => ({
@@ -29,9 +32,23 @@ const cityOptions: GlassSelectOption[] = [
   })),
 ];
 
-export function CatalogSearchBar({ filters, onChange }: CatalogSearchBarProps) {
+export function CatalogSearchBar({ filters, onChange, onResetFilters }: CatalogSearchBarProps) {
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const shellRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!shellRef.current?.contains(event.target as Node)) {
+        setIsFiltersOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
-    <section className={styles.searchShell}>
+    <section ref={shellRef} className={styles.searchShell}>
       <div className={styles.searchBar}>
         <GlassSelect
           label="Категория"
@@ -41,11 +58,12 @@ export function CatalogSearchBar({ filters, onChange }: CatalogSearchBarProps) {
           triggerClassName={styles.categoryGlassTrigger}
         />
 
-        <label className={styles.searchInputWrap}>
+        <label className={styles.searchInputWrap} onClick={() => setIsFiltersOpen(true)}>
           <span className={styles.searchIcon}>⌕</span>
           <input
             value={filters.search}
             onChange={(event) => onChange({ search: event.target.value })}
+            onFocus={() => setIsFiltersOpen(true)}
             className={styles.searchInput}
             placeholder="Поиск по объявлениям"
           />
@@ -73,24 +91,13 @@ export function CatalogSearchBar({ filters, onChange }: CatalogSearchBarProps) {
         <p>
           Арендуй технику, инструменты, вещи для дома через удобный сервис
         </p>
-
-        <div className={styles.pricingSwitch}>
-          <button
-            type="button"
-            className={filters.pricingMode === 'day' ? styles.switchActive : styles.switchButton}
-            onClick={() => onChange({ pricingMode: 'day' })}
-          >
-            За сутки
-          </button>
-          <button
-            type="button"
-            className={filters.pricingMode === 'hour' ? styles.switchActive : styles.switchButton}
-            onClick={() => onChange({ pricingMode: 'hour' })}
-          >
-            За час
-          </button>
-        </div>
       </div>
+
+      {isFiltersOpen ? (
+        <div className={styles.searchFiltersPanel}>
+          <CatalogFilters filters={filters} onChange={onChange} onReset={onResetFilters} />
+        </div>
+      ) : null}
     </section>
   );
 }
