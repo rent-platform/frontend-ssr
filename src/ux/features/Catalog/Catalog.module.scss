@@ -391,6 +391,12 @@
   &:hover {
     transform: translateY(-1px);
     border-color: rgba(22, 213, 124, 0.28);
+    background: #16d57c;
+    color: #fff;
+  }
+
+  &:hover .categoryHint {
+    color: rgba(255, 255, 255, 0.92);
   }
 }
 
@@ -1671,6 +1677,7 @@
   transform: translateY(-1px);
   box-shadow: 0 16px 34px rgba(22, 213, 124, 0.28);
   background: #18e184;
+  color: #fff;
 }
 
 .linkButtonSecondary:hover,
@@ -2545,6 +2552,7 @@
   gap: 12px;
   font: inherit;
   text-align: left;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1), color 220ms ease;
 }
 
 .categoryGlassTrigger {
@@ -2568,6 +2576,7 @@
 }
 
 .categoryGlassTrigger:hover {
+  color: #fff;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 18px 34px rgba(22, 213, 124, 0.28);
 }
 

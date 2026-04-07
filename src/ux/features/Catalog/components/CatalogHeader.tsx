@@ -62,23 +62,6 @@ function ChatIcon({ className }: IconProps) {
   );
 }
 
-function CartIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
-      <path
-        d="M4 5h2.1c.46 0 .85.32.96.77L7.6 8h11.27c.64 0 1.1.62.9 1.23l-1.4 4.34a1 1 0 0 1-.95.69H9.1"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="10" cy="18" r="1.6" fill="currentColor" />
-      <circle cx="17" cy="18" r="1.6" fill="currentColor" />
-    </svg>
-  );
-}
-
 export function BrandIcon({ className }: BrandIconProps) {
   return (
     <svg viewBox="0 0 44 44" aria-hidden="true" className={className ?? styles.brandSymbol}>
@@ -101,7 +84,6 @@ const actionIcons = [
   { label: 'Избранное', count: 2, Icon: HeartIcon },
   { label: 'Уведомления', count: 5, Icon: BellIcon },
   { label: 'Сообщения', count: 9, Icon: ChatIcon },
-  { label: 'Корзина', count: 1, Icon: CartIcon },
 ] as const;
 
 export function CatalogHeader({ cityLabel }: CatalogHeaderProps) {
