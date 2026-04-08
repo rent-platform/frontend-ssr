@@ -69,3 +69,10 @@ export function addMockUser(user: MockUser): void {
     phone: normalizePhone(user.phone ?? ""),
   });
 }
+
+export function generateMockAccessToken(userId: string): string {
+  const payload = Buffer.from(
+    JSON.stringify({ sub: userId, iat: Date.now(), mock: true }),
+  ).toString("base64");
+  return `mock-header.${payload}.mocks-Ilyha`;
+}

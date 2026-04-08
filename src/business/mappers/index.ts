@@ -1,1 +1,1 @@
-//123
+export { mapCatalogItemToVM } from "./catalog/catalog.mapper";

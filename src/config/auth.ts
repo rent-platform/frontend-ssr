@@ -2,6 +2,7 @@ import Credentials from "next-auth/providers/credentials";
 import { loginSchema } from "@/business/utils/authShecmas/authSchemas";
 import {
   findMockUserByPhone,
+  generateMockAccessToken,
   validateMockPassword,
 } from "@/business/mocks/auth/mockUsers";
 import NextAuth from "next-auth";
@@ -36,12 +37,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           role: mockUser.role!,
           avatar_url: mockUser.avatar_url ?? null,
           rememberMe: rememberMe ?? false,
+          accessToken: generateMockAccessToken(mockUser.id!),
         };
       },
     }),
   ],
 
   session: {
+    // возможно это для бека, не тут
     strategy: "jwt",
     maxAge: SESSION_MAX_AGE,
     updateAge: 24 * 60 * 60,
@@ -68,10 +71,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.nickname = user.nickname;
         token.avatar_url = user.avatar_url;
         token.rememberMe = user.rememberMe;
+        token.accessToken = user.accessToken;
       }
 
       if (token.rememberMe === false) {
-        token.exp = Math.floor(Date.now() / 1000) + SESSION_MAX_AGE;
+        token.exp = Math.floor(Date.now() / 1000) + 24 * 60 * 60;
       }
 
       return token;
@@ -84,6 +88,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.full_name = token.full_name;
       session.user.nickname = token.nickname;
       session.user.avatar_url = token.avatar_url;
+      session.accessToken = token.accessToken;
       return session;
     },
   },

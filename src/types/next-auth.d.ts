@@ -10,9 +10,11 @@ declare module "next-auth" {
     nickname?: string | null;
     avatar_url?: string | null;
     rememberMe: boolean;
+    accessToken: string;
   }
 
   interface Session {
+    accessToken: string;
     user: {
       id: string;
       phone: string;
@@ -33,5 +35,6 @@ declare module "@auth/core/jwt" {
     nickname?: string | null;
     avatar_url?: string | null;
     rememberMe?: boolean;
+    accessToken: string;
   }
 }

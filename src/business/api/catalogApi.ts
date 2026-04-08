@@ -1,1 +1,0 @@
-// categories/items/photos/availability.

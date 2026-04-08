@@ -1,15 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
-import uiReducer from "./uiSlice";
+import uiReducer from "./features/Ui/uiSlice";
+import { baseApi } from "@/business/api/baseApi";
 
 export const store = configureStore({
   reducer: {
     ui: uiReducer,
-    // некст стайсы
-    // catalogFilters: catalogFiltersReducer,
-    // createItemDraft: createItemDraftReducer,
-    // [catalogApi.reducerPath]: catalogApi.reducer,
+    [baseApi.reducerPath]: baseApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(baseApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

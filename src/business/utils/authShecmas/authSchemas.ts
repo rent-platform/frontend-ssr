@@ -9,27 +9,35 @@ const phoneSchema = z
   .transform(normalizePhone)
   .refine((value) => /^\d{7,15}$/.test(value), "Введите корректный номер телефона");
 
-const rememberMeSchema = z.preprocess((value) => {
+const passwordSchema = z
+  .string()
+  .min(1, "Пароль обязателен")
+  .min(6, "Пароль должен содержать минимум 6 символов");
+
+export const loginFormSchema = z.object({
+  tel: phoneSchema,
+  password: passwordSchema,
+  rememberMe: z.boolean().optional(),
+});
+
+export type LoginFormValues = z.infer<typeof loginFormSchema>;
+
+
+const rememberMeCredentials = z.preprocess((value) => {
   if (typeof value === "boolean") return value;
   if (typeof value === "string") {
-    const normalized = value.trim().toLowerCase();
-    if (normalized === "true") return true;
-    if (normalized === "false" || normalized === "") return false;
+    const v = value.trim().toLowerCase();
+    if (v === "true") return true;
+    if (v === "false" || v === "") return false;
   }
-  return value;
-}, z.boolean().optional());
+  return false;
+}, z.boolean().default(false));
 
 export const loginSchema = z.object({
   tel: phoneSchema,
-
-  password: z
-    .string()
-    .min(1, "Пароль обязателен")
-    .min(6, "Пароль должен содержать минимум 6 символов"),
-  rememberMe: rememberMeSchema,
+  password: passwordSchema,
+  rememberMe: rememberMeCredentials,
 });
-
-export type LoginFormValues = z.infer<typeof loginSchema>;
 
 export const registerSchema = z
   .object({

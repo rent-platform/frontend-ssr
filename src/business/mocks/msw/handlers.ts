@@ -1,3 +1,4 @@
+import { MOCK_CATALOG_ITEMS } from "@/business/mocks/catalog/mockCatalog";
 import { http, HttpResponse, delay } from "msw";
 
 // TODO: заменить на реальный URL
@@ -33,37 +34,29 @@ const catalogHandlers = [
     const page = Number(url.searchParams.get("page") ?? 1);
     const limit = Number(url.searchParams.get("limit") ?? 10);
 
-    const items = Array.from({ length: limit }, (_, i) => ({
-      id: `item-${(page - 1) * limit + i + 1}`,
-      title: `Объявление #${(page - 1) * limit + i + 1}`,
-      price_per_day: Math.floor(Math.random() * 5000) + 500,
-      status: "active",
-      created_at: new Date().toISOString(),
-    }));
+    const start = (page - 1) * limit;
+    const items = MOCK_CATALOG_ITEMS.slice(start, start + limit);
 
-    return HttpResponse.json({ items, total: 100, page, limit });
+    return HttpResponse.json({
+      items,
+      total: MOCK_CATALOG_ITEMS.length,
+      page,
+      limit,
+    });
   }),
 
   http.get(`${API}/catalog/:id`, async ({ params }) => {
     await delay(200);
     const { id } = params;
+    const item = MOCK_CATALOG_ITEMS.find((i) => i.id === id);
 
-    if (id === "not-found") {
-      return HttpResponse.json<ApiError>(
+    if (!item) {
+      return HttpResponse.json(
         { success: false, error: "Объявление не найдено" },
         { status: 404 },
       );
     }
-
-    return HttpResponse.json({
-      id,
-      title: `Объявление ${id}`,
-      description: "Мок-описание объявления",
-      price_per_day: 1500,
-      status: "active",
-      owner_id: "mock-user-1",
-      created_at: new Date().toISOString(),
-    });
+    return HttpResponse.json(item);
   }),
 ];
 

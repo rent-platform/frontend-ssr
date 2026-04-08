@@ -1,3 +1,4 @@
-export { authApi, useRegisterMutation } from "./auth/authApi";
-
-
+export {
+  useFetchCatalogQuery,
+  useFetchCatalogItemQuery,
+} from "./catalog/endpoints";

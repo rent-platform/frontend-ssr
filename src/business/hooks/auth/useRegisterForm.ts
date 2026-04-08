@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "./useSession";
+import { useSession } from "@/business/hooks";
 import {
   registerSchema,
   type RegisterFormValues,

@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "./useSession";
+import { useSession } from "@/business/hooks";
 import {
-  loginSchema,
+  loginFormSchema,
   type LoginFormValues,
 } from "@/business/utils/authShecmas/authSchemas";
 import ROUTE_PATHS from "@/business/utils/routes/routes";
@@ -21,7 +21,7 @@ export function useLoginForm() {
     handleSubmit,
     formState: { errors, isSubmitting, isLoading },
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginFormSchema),
     defaultValues: { rememberMe: false },
     shouldFocusError: false,
   });

@@ -61,8 +61,8 @@ export function useSession() {
         };
       }
 
-      // Когда появится RTK Query, accessToken из data.accessToken можно
-      // положить в redux store для последующих запросов к внешнему API
+      // Когда появится RTK Query, accessToken из data.accessToken
+      // положить в redux store из jwt callback(get session)
       const autoLoginResult = await login(tel, password);
 
       if (!autoLoginResult.ok) {
