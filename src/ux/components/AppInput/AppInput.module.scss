@@ -1,14 +1,12 @@
 @use "../../styles/vars" as v;
 @use "../../styles/helpers/mixins" as m;
 
-// ─── Wrapper ──────────────────────────────────────────────────────────────────
 .field {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-// ─── Label ────────────────────────────────────────────────────────────────────
 .label {
   font-size: v.$font-size-sm;
   font-weight: v.$font-weight-500;
@@ -19,11 +17,18 @@
   position: relative;
   display: flex;
   align-items: center;
+  color: v.$color-text-dark;
+}
+
+.passwordWrapper {
+  .leftIcon {
+    z-index: 2;
+  }
 }
 
 .leftIcon {
   position: absolute;
-  left: 14px;
+  left: 19px;
   display: flex;
   align-items: center;
   color: v.$color-text-muted;
@@ -31,18 +36,32 @@
   transition: color v.$transition-fast;
 }
 
-// ─── Input ────────────────────────────────────────────────────────────────────
+.phonePrefix {
+  position: absolute;
+  left: 44px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  color: currentColor;
+  font-size: v.$font-size-base;
+  font-weight:400;
+  pointer-events: none;
+}
+
 .input {
   width: 100%;
   height: v.$auth-input-height;
   padding: 0 v.$space-4;
   font-size: v.$font-size-base;
-  color: v.$color-text-dark;
+  color: currentColor;
   background: v.$color-bg-secondary;
   border: 1.5px solid v.$auth-input-border;
   border-radius: v.$border-radius-l;
   box-sizing: border-box;
-  transition: border-color v.$transition-fast, background v.$transition-fast;
+  transition:
+    border-color v.$transition-fast,
+    background v.$transition-fast,
+    box-shadow v.$transition-fast;
 
   &:focus {
     outline: none;
@@ -50,16 +69,59 @@
     background: v.$color-white;
   }
 
-  &.withLeft  { padding-left: 44px; }
-  &.withRight { padding-right: 44px; }
+  &::placeholder {
+    color: rgba(100, 116, 139, 0.5);
+  }
+
+  &.withLeft {
+    padding-left: 44px;
+  }
+
+  &.withRight {
+    padding-right: 48px;
+  }
+
+  &.withPhonePrefix {
+    padding-left: 68px;
+  }
 
   &.inputError {
     border-color: v.$color-error;
-    &:focus { outline: none; background: v.$color-white; }
+
+    &:focus {
+      outline: none;
+      background: v.$color-white;
+    }
   }
 }
 
-// ─── Eye button ───────────────────────────────────────────────────────────────
+.floatingLabel {
+  position: absolute;
+  top: 50%;
+  left: 44px;
+  max-width: calc(100% - 92px);
+  color: rgba(100, 116, 139, 0.62);
+  font-size: 16px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transform-origin: left center;
+  transition:
+    transform 190ms ease,
+    color 190ms ease,
+    opacity 190ms ease;
+}
+
+.floatingActive {
+  .floatingLabel {
+    color: rgba(100, 116, 139, 0.82);
+    transform: translateY(-24.5px) scale(0.89);
+  }
+}
+
 .eyeBtn {
   position: absolute;
   right: 12px;
@@ -74,10 +136,11 @@
   border-radius: v.$border-radius-s;
   transition: color v.$transition-fast;
 
-  &:hover { color: v.$color-text-primary; }
+  &:hover {
+    color: v.$color-text-primary;
+  }
 }
 
-// ─── Ошибка валидации ─────────────────────────────────────────────────────────
 .error {
   display: flex;
   align-items: center;
@@ -86,5 +149,3 @@
   color: v.$color-error;
   line-height: v.$line-height-normal;
 }
-
-
