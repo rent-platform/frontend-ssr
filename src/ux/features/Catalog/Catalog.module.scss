@@ -3398,3 +3398,126 @@
   min-width: 96px;
   padding: 0 12px;
 }
+
+
+/* ===== step 4: unified search and filters UX ===== */
+.searchShell {
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.searchBar {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.searchInputWrap {
+  min-height: 60px;
+  padding: 0 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 18px 36px rgba(15, 23, 42, 0.05);
+}
+
+.searchInputWrap:focus-within {
+  border-color: rgba(22, 213, 124, 0.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 0 0 4px rgba(22, 213, 124, 0.08),
+    0 18px 36px rgba(15, 23, 42, 0.05);
+}
+
+.searchButton {
+  min-width: 204px;
+  padding: 0 20px;
+  white-space: nowrap;
+}
+
+.searchMetaRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.searchSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.searchSummaryChip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(17, 24, 39, 0.07);
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.searchResultsNote {
+  margin: 0;
+  color: #5b6472;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: right;
+}
+
+.searchFiltersPanel {
+  top: calc(100% + 10px);
+}
+
+.searchFiltersPanel .sidebarCard {
+  box-shadow: 0 24px 44px rgba(15, 23, 42, 0.12);
+}
+
+.filtersFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.filtersFooter .clearButton,
+.filtersFooter .primaryAction {
+  min-width: 0;
+}
+
+@media (max-width: 1180px) {
+  .searchBar {
+    grid-template-columns: minmax(0, 1fr) 196px;
+  }
+}
+
+@media (max-width: 900px) {
+  .searchBar {
+    grid-template-columns: 1fr;
+  }
+
+  .searchButton {
+    width: 100%;
+  }
+
+  .searchMetaRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchResultsNote {
+    text-align: left;
+  }
+
+  .filtersFooter {
+    flex-direction: column;
+  }
+
+  .filtersFooter .clearButton,
+  .filtersFooter .primaryAction {
+    width: 100%;
+  }
+}

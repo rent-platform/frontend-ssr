@@ -18,6 +18,7 @@ export function CatalogExperience() {
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const filteredItems = useMemo(
@@ -40,12 +41,11 @@ export function CatalogExperience() {
   }, [filters]);
 
   useEffect(() => {
-    if (!hasMore || !sentinelRef.current) {
+    if (!hasMore || !sentinelRef.current || selectedItem) {
       return undefined;
     }
 
     const node = sentinelRef.current;
-
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
@@ -58,13 +58,14 @@ export function CatalogExperience() {
     observer.observe(node);
 
     return () => observer.disconnect();
-  }, [filteredItems.length, hasMore]);
+  }, [filteredItems.length, hasMore, selectedItem]);
 
   const updateFilters = (patch: Partial<typeof filters>) => {
     setFilters((prev) => ({ ...prev, ...patch }));
   };
 
   const handleOpenItem = (item: CatalogUiItem) => {
+    setIsFiltersOpen(false);
     setSelectedItem(item);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -80,6 +81,10 @@ export function CatalogExperience() {
       <main className={styles.main}>
         <CatalogSearchBar
           filters={filters}
+          resultsCount={filteredItems.length}
+          isFiltersOpen={isFiltersOpen}
+          onToggleFilters={() => setIsFiltersOpen((prev) => !prev)}
+          onCloseFilters={() => setIsFiltersOpen(false)}
           onChange={updateFilters}
           onResetFilters={() => setFilters(INITIAL_FILTERS)}
         />
@@ -102,7 +107,6 @@ export function CatalogExperience() {
                     только на тот срок, который действительно нужен.
                   </p>
                 </div>
-
                 <div className={styles.heroPromoVisual} aria-hidden="true">
                   <div className={styles.heroVisualStage}>
                     <div className={styles.heroOrbitCenter}>
@@ -118,7 +122,10 @@ export function CatalogExperience() {
 
               <aside className={styles.businessCard}>
                 <h3>Быстрый подбор по ключевым параметрам</h3>
-                <p>Используйте фильтры, чтобы быстрее найти подходящее предложение по категории, городу и стоимости.</p>
+                <p>
+                  Используйте поиск и фильтры, чтобы быстрее найти подходящее предложение по
+                  категории, городу и стоимости аренды.
+                </p>
                 <div className={styles.businessGrid}>
                   <span>Популярные категории</span>
                   <span>Город и район</span>
@@ -129,8 +136,10 @@ export function CatalogExperience() {
                   type="button"
                   className={styles.businessButton}
                   onClick={() => {
-                    const catalogSection = document.getElementById('catalog');
-                    catalogSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.getElementById('catalog')?.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'start',
+                    });
                   }}
                 >
                   Перейти к объявлениям
@@ -187,19 +196,26 @@ export function CatalogExperience() {
                   <div className={styles.loadMoreWrap}>
                     {hasMore ? (
                       <>
-                        <p>Прокрутите ниже, чтобы загрузить больше объявлений, или откройте следующую подборку вручную.</p>
+                        <p>
+                          Прокрутите ниже, чтобы загрузить больше объявлений, или откройте
+                          следующую подборку вручную.
+                        </p>
                         <button
                           type="button"
                           className={styles.loadMoreButton}
                           onClick={() =>
-                            setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length))
+                            setVisibleCount((prev) =>
+                              Math.min(prev + BATCH_SIZE, filteredItems.length),
+                            )
                           }
                         >
                           Показать ещё
                         </button>
                       </>
                     ) : (
-                      <p className={styles.catalogEndMessage}>Вы посмотрели все доступные объявления.</p>
+                      <p className={styles.catalogEndMessage}>
+                        Вы посмотрели все доступные объявления.
+                      </p>
                     )}
                   </div>
                 </>
