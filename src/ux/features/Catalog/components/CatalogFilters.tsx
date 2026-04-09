@@ -1,5 +1,9 @@
 import type { CatalogFilterState } from '../types';
-import { CATEGORY_OPTIONS, QUICK_FILTER_OPTIONS } from '../utils';
+import {
+  CATEGORY_OPTIONS,
+  QUICK_FILTER_OPTIONS,
+  getAnnouncementsLabel,
+} from '../utils';
 import { RUSSIAN_CITY_OPTIONS } from '../russianCities';
 import { GlassSelect, type GlassSelectOption } from './GlassSelect';
 import styles from './CatalogFilters.module.scss';
@@ -37,21 +41,6 @@ const cityOptions: GlassSelectOption[] = [
     searchText: city.searchText,
   })),
 ];
-
-function getResultsLabel(count: number) {
-  const mod10 = count % 10;
-  const mod100 = count % 100;
-
-  if (mod10 === 1 && mod100 !== 11) {
-    return 'объявление';
-  }
-
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
-    return 'объявления';
-  }
-
-  return 'объявлений';
-}
 
 export function CatalogFilters({
   filters,
@@ -233,7 +222,7 @@ export function CatalogFilters({
             Закрыть
           </button>
           <button type="button" className={styles.primaryAction} onClick={onClose}>
-            Показать {resultsCount} {getResultsLabel(resultsCount)}
+            Показать {resultsCount} {getAnnouncementsLabel(resultsCount)}
           </button>
         </div>
       </div>

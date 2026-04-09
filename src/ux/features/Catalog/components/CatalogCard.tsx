@@ -1,7 +1,7 @@
 import type { CatalogUiItem } from '../types';
 import {
+  formatDepositAmount,
   formatRelativeDate,
-  formatViews,
   getPrimaryPrice,
   getSecondaryPrice,
 } from '../utils';
@@ -36,7 +36,7 @@ export function CatalogCard({ item, pricingMode, onOpen }: CatalogCardProps) {
             <strong>{getPrimaryPrice(item, pricingMode)}</strong>
             <span>{getSecondaryPrice(item)}</span>
           </div>
-          <span className={styles.cardDepositBadge}>Залог {item.deposit_amount ?? 'по запросу'} ₽</span>
+          <span className={styles.cardDepositBadge}>Залог {formatDepositAmount(item.deposit_amount)}</span>
         </div>
 
         <button type="button" onClick={() => onOpen(item)} className={styles.cardTitleButton}>
@@ -53,7 +53,6 @@ export function CatalogCard({ item, pricingMode, onOpen }: CatalogCardProps) {
 
         <div className={styles.cardMeta}>
           <span>{item.location}</span>
-          <span>{formatViews(item.views_count)}</span>
           <span>{formatRelativeDate(item.created_at)}</span>
         </div>
 

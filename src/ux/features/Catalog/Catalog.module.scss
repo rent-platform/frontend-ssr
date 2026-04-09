@@ -1896,6 +1896,9 @@
 .pricingSwitch {
   padding: 5px;
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+  width: fit-content;
+  max-width: 100%;
+  align-self: start;
 }
 
 .switchButton,
@@ -3519,5 +3522,216 @@
   .filtersFooter .clearButton,
   .filtersFooter .primaryAction {
     width: 100%;
+  }
+}
+
+/* ===== commercial scale system pass ===== */
+.page {
+  font-size: clamp(12px, 0.12vw + 11.8px, 14px);
+}
+
+.main,
+.topbarInner,
+.headerMain {
+  width: min(1140px, calc(100% - 36px));
+}
+
+.main {
+  padding: clamp(10px, 0.8vw, 14px) 0 clamp(22px, 2vw, 34px);
+}
+
+.searchShell,
+.catalogContent,
+.detailPage,
+.detailContentMain,
+.detailContentAside {
+  gap: clamp(8px, 0.85vw, 12px);
+}
+
+.hero {
+  gap: clamp(10px, 0.95vw, 14px);
+  margin-bottom: clamp(10px, 1.2vw, 18px);
+}
+
+.searchInputWrap,
+.searchButton,
+.primaryAction,
+.loadMoreButton,
+.clearButton,
+.secondaryAction,
+.sortGlassTrigger,
+.businessButton,
+.linkButton,
+.linkButtonSecondary {
+  min-height: clamp(36px, 1vw, 42px);
+}
+
+.searchInput,
+.searchButton,
+.clearButton,
+.primaryAction,
+.secondaryAction,
+.priceFields input,
+.sortSelectWrap span,
+.sortSelectWrap select,
+.quickFilter,
+.quickFilterActive,
+.pricePreset,
+.pricePresetActive {
+  font-size: clamp(11px, 0.1vw + 10.9px, 13px);
+}
+
+.heroPromoContent h1,
+.detailTopMeta h1 {
+  font-size: clamp(21px, 1.2vw, 28px);
+  line-height: 1.12;
+}
+
+.toolbar h2 {
+  font-size: clamp(16px, 0.5vw, 19px);
+}
+
+.card {
+  border-radius: 14px;
+}
+
+.cardBody {
+  gap: 8px;
+  padding: clamp(9px, 0.65vw, 12px);
+}
+
+.cardPriceBlock strong,
+.detailPriceBlock strong {
+  font-size: clamp(16px, 0.55vw, 19px);
+}
+
+.cardTitleButton {
+  font-size: clamp(13px, 0.2vw, 15px);
+  line-height: 1.3;
+}
+
+.cardDescription {
+  font-size: clamp(11px, 0.14vw, 13px);
+}
+
+.grid,
+.similarGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(8px, 0.75vw, 12px);
+}
+
+.detailHero {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+  gap: clamp(10px, 0.9vw, 14px);
+}
+
+.detailMainImageWrap,
+.detailSidebarCardPrimary,
+.detailSidebarCardSecondary,
+.detailSection,
+.sidebarCard,
+.bookingCard,
+.toolbar {
+  border-radius: 14px;
+  padding: clamp(10px, 0.75vw, 13px);
+}
+
+.bookingCardHeader h3 {
+  font-size: clamp(17px, 0.7vw, 20px);
+}
+
+.bookingFieldGrid {
+  gap: 6px;
+}
+
+.bookingCalendarDay,
+.bookingCalendarDayDisabled,
+.bookingCalendarDaySelected,
+.bookingCalendarDayInRange {
+  min-height: clamp(30px, 0.95vw, 36px);
+  font-size: clamp(11px, 0.09vw + 10.8px, 13px);
+}
+
+.bookingSummaryTotal strong {
+  font-size: clamp(16px, 0.6vw, 19px);
+}
+
+.emptyState {
+  min-height: clamp(220px, 23vw, 280px);
+  padding: clamp(12px, 1vw, 16px);
+}
+
+@media (max-width: 1180px) {
+  .main,
+  .topbarInner,
+  .headerMain {
+    width: min(100%, calc(100% - 28px));
+  }
+
+  .grid,
+  .similarGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .main,
+  .topbarInner,
+  .headerMain {
+    width: min(100%, calc(100% - 20px));
+  }
+
+  .grid,
+  .similarGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .categoryRail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .detailHero,
+  .detailContentGrid,
+  .catalogSection {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar,
+  .searchMetaRow {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid,
+  .similarGrid,
+  .categoryRail,
+  .detailThumbs,
+  .specGrid,
+  .businessGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardFooter {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .cardCtaButton,
+  .searchButton,
+  .primaryAction,
+  .clearButton,
+  .secondaryAction {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .searchInputWrap {
+    min-height: 46px;
+    padding: 0 14px;
   }
 }

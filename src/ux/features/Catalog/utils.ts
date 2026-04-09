@@ -45,6 +45,34 @@ export const formatPrice = (value: string | null, suffix: string) => {
   return `${new Intl.NumberFormat('ru-RU').format(Number(value))} ₽${suffix}`;
 };
 
+const normalizeNumberish = (value: string | null) => {
+  if (!value) return null;
+  const normalized = value.replace(/\s/g, '').replace(',', '.');
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
+export const formatDepositAmount = (value: string | null) => {
+  const amount = normalizeNumberish(value);
+  if (amount === null) return 'по запросу';
+  return `${new Intl.NumberFormat('ru-RU').format(amount)} ₽`;
+};
+
+export const getAnnouncementsLabel = (count: number) => {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+
+  if (mod10 === 1 && mod100 !== 11) {
+    return 'объявление';
+  }
+
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+    return 'объявления';
+  }
+
+  return 'объявлений';
+};
+
 export const getPrimaryPrice = (
   item: CatalogUiItem,
   pricingMode: CatalogFilterState['pricingMode'],

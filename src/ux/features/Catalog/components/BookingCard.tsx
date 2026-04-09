@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { CatalogUiItem } from '../types';
-import { formatPrice } from '../utils';
+import { formatPrice, formatDepositAmount } from '../utils';
 import styles from '../Catalog.module.scss';
 
 type BookingCardProps = {
@@ -8,7 +8,6 @@ type BookingCardProps = {
 };
 
 const WEEK_DAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'] as const;
-const DURATIONS = [1, 3, 7] as const;
 
 const monthFormatter = new Intl.DateTimeFormat('ru-RU', {
   month: 'long',
@@ -19,6 +18,11 @@ const shortDateFormatter = new Intl.DateTimeFormat('ru-RU', {
   day: 'numeric',
   month: 'short',
 });
+
+function getDaysLabel(days: number) {
+  if (days === 1) return 'сутки';
+  return 'суток';
+}
 
 function toMidnight(date: Date) {
   const value = new Date(date);
@@ -37,12 +41,27 @@ function differenceInDays(start: Date, end: Date) {
   return Math.max(1, Math.round(diff / (1000 * 60 * 60 * 24)));
 }
 
+function hasUnavailableDaysBetween(start: Date, end: Date, bookedDays: Set<number>) {
+  const cursor = new Date(start);
+  cursor.setDate(cursor.getDate() + 1);
+
+  while (cursor < end) {
+    if (bookedDays.has(cursor.getDate())) {
+      return true;
+    }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  return false;
+}
+
 export function BookingCard({ item }: BookingCardProps) {
   const today = useMemo(() => toMidnight(new Date()), []);
   const initialStart = useMemo(() => addDays(today, 2), [today]);
   const initialEnd = useMemo(() => addDays(today, 5), [today]);
   const [selectedStart, setSelectedStart] = useState(initialStart);
   const [selectedEnd, setSelectedEnd] = useState(initialEnd);
+  const [selectionStep, setSelectionStep] = useState<'start' | 'end'>('start');
 
   const rentalDays = differenceInDays(selectedStart, selectedEnd);
   const dailyPrice = Number(item.price_per_day ?? item.price_per_hour ?? 0);
@@ -79,11 +98,6 @@ export function BookingCard({ item }: BookingCardProps) {
     return cells;
   }, [bookedDays, selectedEnd, selectedStart, today]);
 
-  const handlePresetClick = (duration: (typeof DURATIONS)[number]) => {
-    setSelectedStart(initialStart);
-    setSelectedEnd(addDays(initialStart, duration));
-  };
-
   const handleDayClick = (day: number) => {
     const nextDate = new Date(today.getFullYear(), today.getMonth(), day);
 
@@ -91,13 +105,31 @@ export function BookingCard({ item }: BookingCardProps) {
       return;
     }
 
-    if (nextDate <= selectedStart || nextDate <= selectedEnd) {
+    if (selectionStep === 'start') {
       setSelectedStart(nextDate);
-      setSelectedEnd(addDays(nextDate, rentalDays));
+      if (nextDate >= selectedEnd) {
+        setSelectedEnd(addDays(nextDate, 1));
+      }
+      setSelectionStep('end');
+      return;
+    }
+
+    if (nextDate <= selectedStart) {
+      setSelectedStart(nextDate);
+      setSelectedEnd(addDays(nextDate, 1));
+      setSelectionStep('end');
+      return;
+    }
+
+    if (hasUnavailableDaysBetween(selectedStart, nextDate, bookedDays)) {
+      setSelectedStart(nextDate);
+      setSelectedEnd(addDays(nextDate, 1));
+      setSelectionStep('end');
       return;
     }
 
     setSelectedEnd(nextDate);
+    setSelectionStep('start');
   };
 
   return (
@@ -132,7 +164,11 @@ export function BookingCard({ item }: BookingCardProps) {
       <div className={styles.bookingCalendarCard}>
         <div className={styles.bookingCalendarHeader}>
           <strong>{monthFormatter.format(today)}</strong>
-          <span>Выбери дату начала или окончания аренды</span>
+          <span>
+            {selectionStep === 'start'
+              ? 'Выберите дату начала аренды'
+              : 'Выберите дату окончания аренды'}
+          </span>
         </div>
 
         <div className={styles.bookingWeekdays}>
@@ -158,25 +194,14 @@ export function BookingCard({ item }: BookingCardProps) {
                 type="button"
                 className={className.join(' ')}
                 onClick={() => handleDayClick(cell.day)}
+                disabled={cell.disabled}
+                aria-disabled={cell.disabled}
               >
                 {cell.day}
               </button>
             );
           })}
         </div>
-      </div>
-
-      <div className={styles.bookingPresets}>
-        {DURATIONS.map((duration) => (
-          <button
-            key={duration}
-            type="button"
-            className={duration === rentalDays ? styles.bookingPresetActive : styles.bookingPreset}
-            onClick={() => handlePresetClick(duration)}
-          >
-            {duration} {duration === 1 ? 'сутки' : duration < 5 ? 'суток' : 'суток'}
-          </button>
-        ))}
       </div>
 
       <div className={styles.bookingSummary}>
@@ -190,7 +215,7 @@ export function BookingCard({ item }: BookingCardProps) {
         </div>
         <div className={styles.bookingSummaryRow}>
           <span>Залог</span>
-          <strong>{formatPrice(item.deposit_amount, '')}</strong>
+          <strong>{formatDepositAmount(item.deposit_amount)}</strong>
         </div>
         <div className={styles.bookingSummaryTotal}>
           <span>К оплате сейчас</span>
