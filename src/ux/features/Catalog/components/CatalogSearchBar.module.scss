@@ -1,60 +1,43 @@
-@use "../../../styles/vars" as v;
-@use "../../../styles/helpers/mixins" as m;
+.searchShell {
+  composes: searchShell from '../Catalog.module.scss';
+}
 
 .searchBar {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-
-  @include m.respond-below("md") {
-    grid-template-columns: 1fr;
-  }
+  composes: searchBar from '../Catalog.module.scss';
 }
 
-.inputWrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 60px;
-  padding: 0 18px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.07);
-  color: v.$color-text-secondary;
+.searchInputWrap {
+  composes: searchInputWrap from '../Catalog.module.scss';
 }
 
-.input {
-  width: 100%;
-  border: none;
-  background: transparent;
-  font-size: v.$font-size-base;
-  color: v.$color-text;
-
-  &::placeholder {
-    color: rgba(100, 116, 139, 0.9);
-  }
-
-  &:focus {
-    outline: none;
-  }
+.searchIcon {
+  composes: searchIcon from '../Catalog.module.scss';
 }
 
-.filterTrigger {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 52px;
-  padding: 0 18px;
-  border: none;
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(46, 166, 80, 1), rgba(12, 183, 115, 1));
-  color: v.$color-white;
-  font-weight: v.$font-weight-semi;
-  box-shadow: 0 18px 40px rgba(22, 163, 74, 0.24);
+.searchInput {
+  composes: searchInput from '../Catalog.module.scss';
+}
 
-  @include m.respond-below("md") {
-    display: inline-flex;
-  }
+.searchButton {
+  composes: searchButton from '../Catalog.module.scss';
+}
+
+.searchMetaRow {
+  composes: searchMetaRow from '../Catalog.module.scss';
+}
+
+.searchSummary {
+  composes: searchSummary from '../Catalog.module.scss';
+}
+
+.searchSummaryChip {
+  composes: searchSummaryChip from '../Catalog.module.scss';
+}
+
+.searchResultsNote {
+  composes: searchResultsNote from '../Catalog.module.scss';
+}
+
+.searchFiltersPanel {
+  composes: searchFiltersPanel from '../Catalog.module.scss';
 }

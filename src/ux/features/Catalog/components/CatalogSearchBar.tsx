@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import type { CatalogFilterState } from '../types';
 import { CatalogFilters } from './CatalogFilters';
-import styles from '../Catalog.module.scss';
+import styles from './CatalogSearchBar.module.scss';
 
 type CatalogSearchBarProps = {
   filters: CatalogFilterState;

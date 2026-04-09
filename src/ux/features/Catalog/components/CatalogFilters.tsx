@@ -2,7 +2,7 @@ import type { CatalogFilterState } from '../types';
 import { CATEGORY_OPTIONS, QUICK_FILTER_OPTIONS } from '../utils';
 import { RUSSIAN_CITY_OPTIONS } from '../russianCities';
 import { GlassSelect, type GlassSelectOption } from './GlassSelect';
-import styles from '../Catalog.module.scss';
+import styles from './CatalogFilters.module.scss';
 
 type CatalogFiltersProps = {
   filters: CatalogFilterState;

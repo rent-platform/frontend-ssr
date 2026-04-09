@@ -1,159 +1,91 @@
-@use "../../../styles/vars" as v;
-@use "../../../styles/helpers/mixins" as m;
-
 .sidebar {
-  position: sticky;
-  top: 24px;
-  align-self: start;
-
-  @include m.respond-below("md") {
-    display: none;
-    position: static;
-  }
+  composes: sidebar from '../Catalog.module.scss';
 }
 
-.mobileOpen {
-  @include m.respond-below("md") {
-    display: block;
-  }
+.sidebarCard {
+  composes: sidebarCard from '../Catalog.module.scss';
 }
 
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 24px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  border-radius: 28px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 252, 0.95));
-  box-shadow: 0 26px 60px rgba(15, 23, 42, 0.08);
+.sidebarTitleRow {
+  composes: sidebarTitleRow from '../Catalog.module.scss';
 }
 
-.heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
+.sidebarEyebrow {
+  composes: sidebarEyebrow from '../Catalog.module.scss';
 }
 
-.eyebrow {
-  margin: 0 0 6px;
-  font-size: v.$font-size-xs;
-  font-weight: v.$font-weight-semi;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(46, 166, 80, 0.85);
+.clearButton {
+  composes: clearButton from '../Catalog.module.scss';
 }
 
-.title {
-  margin: 0;
-  font-size: 1.25rem;
-  line-height: 1.2;
+.activeFilters {
+  composes: activeFilters from '../Catalog.module.scss';
 }
 
-.resetButton {
-  border: none;
-  background: rgba(46, 166, 80, 0.1);
-  color: rgba(34, 94, 56, 1);
-  border-radius: 999px;
-  padding: 10px 14px;
-  font-weight: v.$font-weight-semi;
-  cursor: pointer;
+.filterHint {
+  composes: filterHint from '../Catalog.module.scss';
 }
 
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-
-  div {
-    padding: 14px 16px;
-    border-radius: 20px;
-    background: rgba(241, 245, 249, 0.92);
-    border: 1px solid rgba(148, 163, 184, 0.12);
-  }
-
-  span {
-    display: block;
-    margin-bottom: 6px;
-    color: v.$color-text-secondary;
-    font-size: v.$font-size-xs;
-  }
-
-  strong {
-    font-size: 1.25rem;
-    color: v.$color-text;
-  }
+.filterGroup {
+  composes: filterGroup from '../Catalog.module.scss';
 }
 
-.section {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.filterLabel {
+  composes: filterLabel from '../Catalog.module.scss';
 }
 
-.sectionTitle {
-  margin: 0;
-  font-size: v.$font-size-sm;
-  font-weight: v.$font-weight-bold;
+.cityDropdown {
+  composes: cityDropdown from '../Catalog.module.scss';
 }
 
-.quickList,
-.optionGrid,
-.segmented {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.pricingSwitch {
+  composes: pricingSwitch from '../Catalog.module.scss';
 }
 
-.quickChip,
-.optionChip,
-.segment {
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  background: rgba(255, 255, 255, 0.92);
-  color: v.$color-text;
-  border-radius: 999px;
-  padding: 10px 14px;
-  font-size: v.$font-size-sm;
-  font-weight: v.$font-weight-medium;
-  cursor: pointer;
-  transition:
-    border-color v.$transition-fast,
-    transform v.$transition-fast,
-    box-shadow v.$transition-fast,
-    background v.$transition-fast;
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 12px 25px rgba(15, 23, 42, 0.08);
-  }
+.switchButton {
+  composes: switchButton from '../Catalog.module.scss';
 }
 
-.quickChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.switchActive {
+  composes: switchActive from '../Catalog.module.scss';
 }
 
-.quickChipActive,
-.optionChipActive,
-.segmentActive {
-  border-color: rgba(46, 166, 80, 0.35);
-  background: linear-gradient(135deg, rgba(220, 252, 231, 0.95), rgba(240, 253, 244, 1));
-  color: rgba(22, 101, 52, 1);
+.quickFilters {
+  composes: quickFilters from '../Catalog.module.scss';
 }
 
-.note {
-  display: grid;
-  gap: 6px;
-  padding: 16px;
-  border-radius: 20px;
-  background: rgba(15, 23, 42, 0.04);
-  color: v.$color-text-secondary;
-  font-size: v.$font-size-sm;
+.quickFilter {
+  composes: quickFilter from '../Catalog.module.scss';
+}
 
-  strong {
-    color: v.$color-text;
-  }
+.quickFilterActive {
+  composes: quickFilterActive from '../Catalog.module.scss';
+}
+
+.pricePresets {
+  composes: pricePresets from '../Catalog.module.scss';
+}
+
+.pricePreset {
+  composes: pricePreset from '../Catalog.module.scss';
+}
+
+.pricePresetActive {
+  composes: pricePresetActive from '../Catalog.module.scss';
+}
+
+.priceFields {
+  composes: priceFields from '../Catalog.module.scss';
+}
+
+.checkboxRow {
+  composes: checkboxRow from '../Catalog.module.scss';
+}
+
+.filtersFooter {
+  composes: filtersFooter from '../Catalog.module.scss';
+}
+
+.primaryAction {
+  composes: primaryAction from '../Catalog.module.scss';
 }

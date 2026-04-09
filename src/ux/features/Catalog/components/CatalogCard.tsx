@@ -5,7 +5,7 @@ import {
   getPrimaryPrice,
   getSecondaryPrice,
 } from '../utils';
-import styles from '../Catalog.module.scss';
+import styles from './CatalogCard.module.scss';
 
 type CatalogCardProps = {
   item: CatalogUiItem;

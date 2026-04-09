@@ -1,4 +1,4 @@
-import styles from '../Catalog.module.scss';
+import styles from './CatalogSkeletonCard.module.scss';
 
 export function CatalogSkeletonCard() {
   return (
