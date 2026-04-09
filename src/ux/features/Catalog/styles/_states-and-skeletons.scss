@@ -1,0 +1,138 @@
+@use '../../../styles/vars' as v;
+@use '../../../styles/helpers/mixins' as *;
+
+.skeletonCard {
+  padding: 0 0 16px;
+}
+
+.skeletonImage,
+.detailSkeletonHero,
+.detailSkeletonMain,
+.detailSkeletonAside,
+.skeletonLineLg,
+.skeletonLineMd,
+.skeletonLineSm,
+.skeletonTagRow span {
+  background: linear-gradient(90deg, #edf1f5 25%, #f7f8fa 50%, #edf1f5 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s infinite linear;
+}
+
+.skeletonImage {
+  aspect-ratio: 1 / 1;
+}
+
+.skeletonLineLg,
+.skeletonLineMd,
+.skeletonLineSm,
+.skeletonTagRow {
+  margin: 0 16px;
+}
+
+.skeletonLineLg {
+  height: 22px;
+  border-radius: 10px;
+  margin-top: 16px;
+}
+
+.skeletonLineMd {
+  height: 16px;
+  border-radius: 10px;
+  margin-top: 12px;
+  width: 76%;
+}
+
+.skeletonLineSm {
+  height: 14px;
+  border-radius: 10px;
+  margin-top: 10px;
+  width: 58%;
+}
+
+.skeletonTagRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+
+  span {
+    display: block;
+    height: 30px;
+    width: 96px;
+    border-radius: 999px;
+  }
+}
+
+.emptyState {
+  @include flex-center;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 360px;
+  padding: 32px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  text-align: center;
+
+  h3,
+  p {
+    margin: 0;
+  }
+
+  p {
+    max-width: 520px;
+    color: #6b7280;
+    line-height: 1.55;
+  }
+}
+
+.emptyIcon {
+  font-size: 42px;
+}
+
+.infiniteSentinel {
+  height: 1px;
+}
+
+.loadMoreWrap {
+  @include flex-center;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 0 0;
+
+  p {
+    margin: 0;
+    color: #6b7280;
+  }
+}
+
+.catalogEndMessage {
+  font-weight: 600;
+  color: #374151;
+}
+
+.detailLoadingState {
+  display: grid;
+  gap: 18px;
+}
+
+.detailSkeletonHero {
+  height: 420px;
+  border-radius: 28px;
+}
+
+.detailSkeletonGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 18px;
+}
+
+.detailSkeletonMain,
+.detailSkeletonAside {
+  min-height: 260px;
+  border-radius: 24px;
+}
+
+.emptyState {
+  min-height: clamp(220px, 23vw, 280px);
+  padding: clamp(12px, 1vw, 16px);
+}

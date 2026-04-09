@@ -1,0 +1,414 @@
+@use '../../../styles/vars' as v;
+@use '../../../styles/helpers/mixins' as *;
+
+@include respond-below('lg') {
+  .topbarInner,
+  .headerMain,
+  .main {
+    width: min(100%, calc(100% - 28px));
+  }
+
+  .topbarInner,
+  .headerMain,
+  .searchMetaRow,
+  .toolbar,
+  .detailTopMeta,
+  .detailContentGrid,
+  .hero,
+  .catalogSection,
+  .detailHero,
+  .detailSkeletonGrid {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchBar,
+  .grid,
+  .similarGrid,
+  .categoryRail,
+  .businessGrid,
+  .detailThumbs,
+  .specGrid,
+  .detailFacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sidebar {
+    position: static;
+  }
+
+  .heroPromoBanner {
+    grid-template-columns: 1fr;
+  }
+
+  .heroPromoVisual {
+    min-height: 220px;
+  }
+}
+
+@include respond-below('md') {
+  .topbarLinks,
+  .topbarActions,
+  .searchMetaRow,
+  .toolbar,
+  .detailTopMeta {
+    gap: 12px;
+  }
+
+  .searchBar,
+  .grid,
+  .similarGrid,
+  .categoryRail,
+  .businessGrid,
+  .detailThumbs,
+  .specGrid,
+  .detailFacts,
+  .priceFields {
+    grid-template-columns: 1fr;
+  }
+
+  .heroPromoContent h1,
+  .detailTopMeta h1 {
+    font-size: 30px;
+  }
+
+  .cardTitleButton {
+    font-size: 17px;
+  }
+}
+
+@include respond-below('lg') {
+  .topbarInner {
+    min-height: auto;
+    padding: 14px 0;
+  }
+
+  .headerMain {
+    min-height: auto;
+    padding-bottom: 14px;
+  }
+
+  .topbarActions {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .topbarLead {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .searchBar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .detailSidebar {
+    position: static;
+  }
+}
+
+@include respond-below('md') {
+  .topbarLead,
+  .iconActionRow,
+  .accountMeta,
+  .bookingFieldGrid,
+  .cardFooter {
+    width: 100%;
+    grid-template-columns: 1fr;
+    flex-wrap: wrap;
+  }
+
+  .topbarLead {
+    display: grid;
+  }
+
+  .iconActionRow {
+    display: flex;
+  }
+
+  .linkButton,
+  .linkButtonSecondary,
+  .cardCtaButton,
+  .detailActionIcons button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .headerCaption span {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .searchBar,
+  .bookingWeekdays,
+  .bookingCalendarGrid {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .searchBar {
+    grid-template-columns: 1fr;
+  }
+
+  .cardFooter {
+    display: grid;
+  }
+
+  .bookingFieldGrid {
+    display: grid;
+  }
+}
+
+@media (max-width: 1180px) {
+  .searchBar {
+    grid-template-columns: 180px minmax(0, 1fr) 120px 200px;
+  }
+
+  .detailShell {
+    grid-template-columns: 1fr;
+  }
+
+  .detailSidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 900px) {
+  .searchBar {
+    grid-template-columns: 1fr;
+  }
+
+  .cityDropdown,
+  .sortDropdown,
+  .glassSelectDropdown {
+    width: 100%;
+    min-width: 0;
+    right: auto;
+  }
+
+  .detailActionRowInline {
+    grid-template-columns: 1fr;
+  }
+
+  .businessGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1180px) {
+  .heroPromoVisual {
+    min-height: 280px;
+  }
+
+  .heroVisualStage {
+    width: min(100%, 340px);
+  }
+
+  .heroOrbitItem {
+    width: 88px;
+    min-height: 80px;
+    padding-inline: 8px;
+  }
+}
+
+@media (max-width: 900px) {
+  .heroVisualStage {
+    width: min(100%, 300px);
+  }
+
+  .heroOrbitCenter {
+    width: 164px;
+    height: 164px;
+  }
+
+  .heroCenterBrandSymbol {
+    width: 52px;
+    height: 52px;
+  }
+
+  .heroOrbitText strong {
+    font-size: 26px;
+  }
+
+  .heroOrbitItem {
+    width: 76px;
+    min-height: 72px;
+    padding: 8px;
+    border-radius: 18px;
+  }
+
+  .heroOrbitItem small {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .heroVisualStage {
+    width: min(100%, 320px);
+  }
+
+  .heroOrbitCenter {
+    width: 162px;
+    height: 162px;
+  }
+
+  .heroOrbitItem {
+    width: 70px;
+    min-height: 64px;
+  }
+
+  .cardFooter {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .cardCtaButton {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .heroVisualStage {
+    width: min(100%, 300px);
+  }
+
+  .heroOrbitCenter {
+    width: 172px;
+    height: 172px;
+  }
+
+  .heroCenterBrandSymbol {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .searchBar {
+    grid-template-columns: minmax(0, 1fr) 196px;
+  }
+}
+
+@media (max-width: 900px) {
+  .searchBar {
+    grid-template-columns: 1fr;
+  }
+
+  .searchButton {
+    width: 100%;
+  }
+
+  .searchMetaRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchResultsNote {
+    text-align: left;
+  }
+
+  .filtersFooter {
+    flex-direction: column;
+  }
+
+  .filtersFooter .clearButton,
+  .filtersFooter .primaryAction {
+    width: 100%;
+  }
+}
+
+@media (max-width: 1180px) {
+  .main,
+  .topbarInner,
+  .headerMain {
+    width: min(100%, calc(100% - 28px));
+  }
+
+  .grid,
+  .similarGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .main,
+  .topbarInner,
+  .headerMain {
+    width: min(100%, calc(100% - 20px));
+  }
+
+  .grid,
+  .similarGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .categoryRail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .detailHero,
+  .detailContentGrid,
+  .catalogSection {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar,
+  .searchMetaRow {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid,
+  .similarGrid,
+  .categoryRail,
+  .detailThumbs,
+  .specGrid,
+  .businessGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardFooter {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .cardCtaButton,
+  .searchButton,
+  .primaryAction,
+  .clearButton,
+  .secondaryAction {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .searchInputWrap {
+    min-height: 46px;
+    padding: 0 14px;
+  }
+}
+
+@media (max-width: 900px) {
+  .cardBody {
+    padding: 11px;
+  }
+
+  .cardPriceBlock strong {
+    font-size: 17px;
+  }
+
+  .cardTitleButton {
+    font-size: 13px;
+  }
+
+  .cardDescription {
+    font-size: 11px;
+  }
+}

@@ -1,0 +1,788 @@
+@use '../../../styles/vars' as v;
+@use '../../../styles/helpers/mixins' as *;
+
+.detailPage {
+  display: grid;
+  gap: 18px;
+}
+
+.detailBreadcrumbs,
+.detailTopMeta,
+.detailActionIcons {
+  display: flex;
+  align-items: center;
+}
+
+.detailBreadcrumbs {
+  gap: 10px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.backButton {
+  font-weight: 700;
+  color: #16d57c;
+}
+
+.detailTopMeta {
+  justify-content: space-between;
+  gap: 18px;
+
+  h1 {
+    font-size: clamp(30px, 3vw, 42px);
+  }
+
+  p {
+    margin: 10px 0 0;
+    color: #6b7280;
+  }
+}
+
+.detailActionIcons {
+  gap: 10px;
+}
+
+.detailHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) 360px;
+  gap: 20px;
+}
+
+.detailGallery {
+  display: grid;
+  gap: 14px;
+}
+
+.detailMainImageWrap,
+.detailSidebarCardPrimary,
+.detailSidebarCardSecondary,
+.detailSection {
+  padding: 18px;
+}
+
+.detailMainImageWrap {
+  position: relative;
+  border-radius: 26px;
+  background: transparent;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+.detailMainImage {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 460px;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 20px;
+  display: block;
+}
+
+.detailMainImageNavLeft,
+.detailMainImageNavRight {
+  @include flex-center;
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(15, 23, 42, 0.38);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.detailMainImageNavLeft {
+  left: 12px;
+}
+
+.detailMainImageNavRight {
+  right: 12px;
+}
+
+.detailMainImageNavLeft:hover,
+.detailMainImageNavRight:hover {
+  background: rgba(15, 23, 42, 0.55);
+  transform: translateY(-50%) scale(1.04);
+}
+
+.detailThumbs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.detailThumbButton,
+.detailThumbButtonActive {
+  border-radius: 18px;
+  padding: 4px;
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.detailThumbButtonActive {
+  border-color: #16d57c;
+}
+
+.detailThumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+}
+
+.detailSidebar {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+}
+
+.detailTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+
+  span {
+    background: #f5f7f6;
+  }
+}
+
+.detailFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 18px;
+  margin: 22px 0 0;
+
+  div {
+    display: grid;
+    gap: 6px;
+  }
+
+  dt {
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+.detailActionRow {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.secondaryAction {
+  min-height: 52px;
+}
+
+.sellerList,
+.detailTerms {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  color: #374151;
+}
+
+.detailContentGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+.detailContentMain,
+.detailContentAside,
+.trustCardList {
+  display: grid;
+  gap: 16px;
+}
+
+.detailDescription {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.detailDescriptionLead {
+  margin: 0;
+  line-height: 1.72;
+  color: #334155;
+}
+
+.detailDescriptionList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.detailDescriptionList li {
+  position: relative;
+  padding-left: 18px;
+  line-height: 1.68;
+  color: #374151;
+}
+
+.detailDescriptionList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(22, 213, 124, 0.9);
+  box-shadow: 0 0 0 6px rgba(22, 213, 124, 0.08);
+}
+
+.specGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.specCard,
+.trustCard {
+  padding: 16px;
+  border-radius: 18px;
+  background: #f8faf9;
+}
+
+.specCard {
+  display: grid;
+  gap: 8px;
+
+  span {
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  strong {
+    font-size: 17px;
+  }
+}
+
+.trustCard {
+  strong {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 0;
+    color: #4b5563;
+    line-height: 1.5;
+  }
+}
+
+.similarSection {
+  display: grid;
+  gap: 16px;
+}
+
+.detailLoadingState {
+  display: grid;
+  gap: 18px;
+}
+
+.detailSkeletonHero {
+  height: 420px;
+  border-radius: 28px;
+}
+
+.detailSkeletonGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 18px;
+}
+
+.detailSkeletonMain,
+.detailSkeletonAside {
+  min-height: 260px;
+  border-radius: 24px;
+}
+
+.detailPage {
+  gap: 22px;
+}
+
+.detailBreadcrumbs {
+  gap: 8px;
+}
+
+.backButton {
+  padding-right: 6px;
+}
+
+.detailTopMeta {
+  padding: 4px 0 2px;
+}
+
+.detailTopMeta h1 {
+  max-width: 980px;
+  line-height: 1.02;
+}
+
+.detailActionIcons button {
+  min-height: 46px;
+  padding: 0 16px;
+  white-space: nowrap;
+}
+
+.detailHero {
+  grid-template-columns: minmax(0, 1fr) 392px;
+  align-items: start;
+}
+
+.detailGallery,
+.detailSidebar {
+  min-width: 0;
+}
+
+.detailMainImageWrap {
+  padding: 20px;
+  border-radius: 28px;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.05);
+}
+
+.detailMainImage {
+  aspect-ratio: 1.2 / 1;
+}
+
+.detailThumbButton,
+.detailThumbButtonActive {
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+}
+
+.detailThumbButton:hover,
+.detailThumbButtonActive:hover {
+  transform: translateY(-1px);
+}
+
+.detailSidebar {
+  position: sticky;
+  top: 142px;
+}
+
+.bookingCard {
+  padding: 22px;
+  display: grid;
+  gap: 18px;
+  background: linear-gradient(180deg, #ffffff, #fbfcfc);
+}
+
+.bookingCardHeader {
+  display: grid;
+  gap: 12px;
+}
+
+.bookingCardHeader h3 {
+  margin: 6px 0 0;
+  font-size: 24px;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.bookingStatusRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bookingStatusActive,
+.bookingStatusNeutral {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.bookingStatusActive {
+  background: rgba(22, 213, 124, 0.14);
+  color: #0e8a52;
+}
+
+.bookingStatusNeutral {
+  background: #f5f7f6;
+  color: #4b5563;
+}
+
+.bookingFieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.bookingFieldCard,
+.bookingCalendarCard {
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  border-radius: 18px;
+  background: #f9fbfa;
+}
+
+.bookingFieldCard {
+  padding: 14px;
+  display: grid;
+  gap: 6px;
+}
+
+.bookingFieldCard span,
+.bookingCalendarHeader span,
+.bookingSummaryRow span,
+.bookingMetaList {
+  color: #667085;
+}
+
+.bookingFieldCard strong {
+  font-size: 16px;
+}
+
+.bookingCalendarCard {
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+}
+
+.bookingCalendarHeader {
+  display: grid;
+  gap: 4px;
+}
+
+.bookingCalendarHeader strong {
+  font-size: 16px;
+  text-transform: capitalize;
+}
+
+.bookingWeekdays,
+.bookingCalendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.bookingWeekdays span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+  color: #8b95a5;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bookingCalendarEmpty {
+  display: block;
+  min-height: 42px;
+}
+
+.bookingCalendarDay,
+.bookingCalendarDayDisabled,
+.bookingCalendarDaySelected,
+.bookingCalendarDayInRange {
+  min-height: 42px;
+  border-radius: 14px;
+  border: 0;
+  background: #fff;
+  font: inherit;
+  font-weight: 700;
+  color: #111827;
+  cursor: pointer;
+}
+
+.bookingCalendarDay {
+  box-shadow: inset 0 0 0 1px rgba(17, 24, 39, 0.06);
+}
+
+.bookingCalendarDay:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1px rgba(22, 213, 124, 0.3), 0 8px 18px rgba(22, 213, 124, 0.14);
+}
+
+.bookingCalendarDayDisabled {
+  background: #f4f5f7;
+  color: #b0b7c3;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.bookingCalendarDayInRange {
+  background: rgba(22, 213, 124, 0.12);
+  color: #0e8a52;
+}
+
+.bookingCalendarDaySelected {
+  background: #16d57c;
+  color: #052e1c;
+  box-shadow: 0 12px 24px rgba(22, 213, 124, 0.24);
+}
+
+.bookingPresets {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bookingPreset,
+.bookingPresetActive {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #fff;
+  font: inherit;
+  font-weight: 700;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.bookingPreset:hover {
+  background: #f4fff9;
+  color: #0e8a52;
+}
+
+.bookingPresetActive {
+  background: rgba(22, 213, 124, 0.14);
+  color: #0e8a52;
+  border-color: rgba(22, 213, 124, 0.2);
+}
+
+.bookingSummary {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #f9fbfa;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+.bookingSummaryRow,
+.bookingSummaryTotal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bookingSummaryRow strong,
+.bookingSummaryTotal strong {
+  white-space: nowrap;
+}
+
+.bookingSummaryTotal {
+  padding-top: 12px;
+  margin-top: 2px;
+  border-top: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.bookingSummaryTotal span {
+  font-weight: 700;
+  color: #111827;
+}
+
+.bookingSummaryTotal strong {
+  font-size: 20px;
+  color: #111827;
+}
+
+.bookingMetaList {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  line-height: 1.5;
+}
+
+.detailSidebarCardSecondary {
+  padding: 20px;
+}
+
+.detailSection {
+  padding: 20px;
+}
+
+.detailDescription {
+  margin-top: 20px;
+}
+
+.specGrid {
+  gap: 14px;
+}
+
+.specCard,
+.trustCard {
+  border: 1px solid rgba(17, 24, 39, 0.05);
+}
+
+.specCard:hover,
+.trustCard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.05);
+}
+
+.detailShell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 392px;
+  gap: 20px;
+  align-items: start;
+}
+
+.detailPrimaryColumn {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+.detailGalleryCard {
+  display: grid;
+  gap: 14px;
+}
+
+.detailMainImageWrap {
+  padding: 18px;
+}
+
+.detailActionRowInline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.detailSidebar {
+  position: sticky;
+  top: 136px;
+  align-self: start;
+}
+
+.detailSection {
+  scroll-margin-top: 136px;
+}
+
+.businessCard p,
+.detailDescriptionLead,
+.detailDescriptionList li,
+.sellerList li,
+.detailTerms li {
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.sellerList li,
+.detailTerms li {
+  position: relative;
+  padding-left: 18px;
+  line-height: 1.65;
+}
+
+.sellerList li::before,
+.detailTerms li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(22, 213, 124, 0.9);
+  box-shadow: 0 0 0 6px rgba(22, 213, 124, 0.08);
+}
+
+.detailDescription {
+  gap: 12px;
+}
+
+.detailDescriptionLead {
+  margin: 0;
+  line-height: 1.72;
+}
+
+.detailSection {
+  padding: 22px;
+}
+
+.sellerHeader {
+  align-items: flex-start;
+}
+
+.sellerHeader > div {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.sellerHeader strong {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  line-height: 1.18;
+}
+
+.sellerHeader p {
+  margin-top: 3px;
+}
+
+.detailDescription {
+  gap: 10px;
+}
+
+.detailDescriptionLead,
+.detailDescriptionList li,
+.sellerList li,
+.detailTerms li {
+  font-size: 15px;
+  line-height: 1.62;
+}
+
+.detailHero {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+  gap: clamp(10px, 0.9vw, 14px);
+}
+
+.detailMainImageWrap,
+.detailSidebarCardPrimary,
+.detailSidebarCardSecondary,
+.detailSection,
+.sidebarCard,
+.bookingCard,
+.toolbar {
+  border-radius: 14px;
+  padding: clamp(10px, 0.75vw, 13px);
+}
+
+.bookingCardHeader h3 {
+  font-size: clamp(17px, 0.7vw, 20px);
+}
+
+.bookingFieldGrid {
+  gap: 6px;
+}
+
+.bookingCalendarDay,
+.bookingCalendarDayDisabled,
+.bookingCalendarDaySelected,
+.bookingCalendarDayInRange {
+  min-height: clamp(30px, 0.95vw, 36px);
+  font-size: clamp(11px, 0.09vw + 10.8px, 13px);
+}
+
+.bookingSummaryTotal strong {
+  font-size: clamp(16px, 0.6vw, 19px);
+}
