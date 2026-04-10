@@ -1,8 +1,7 @@
 import { MOCK_CATALOG_ITEMS } from "@/business/mocks/catalog/mockCatalog";
 import { http, HttpResponse, delay } from "msw";
 
-// TODO: заменить на реальный URL
-const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+const API = "http://localhost:3000/api";
 
 interface ApiError {
   success: false;

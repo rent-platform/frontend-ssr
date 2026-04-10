@@ -33,10 +33,10 @@ export const useFilters = () => {
       color: searchParams.get("color") || "",
       startDate: searchParams.get("startDate") || "",
       endDate: searchParams.get("endDate") || "",
-      search: searchParams.get("search") || "", // поиск по названию
+      search: searchParams.get("search") || "",
       sortBy: searchParams.get("sortBy") || "",
-      condition: searchParams.get("condition") || "", // Состояние
-      city: searchParams.get("city") || "", // Город
+      condition: searchParams.get("condition") || "",
+      city: searchParams.get("city") || "",
     },
     setFilter,
     setFilters,

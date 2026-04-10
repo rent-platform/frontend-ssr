@@ -20,5 +20,5 @@ export async function fetchApi<T = UserUpdate>({
     throw new Error(`API error ${res.status}: ${res.statusText}`);
   }
 
-  return (await res.json()) as Promise<T>;
+  return await res.json();
 }

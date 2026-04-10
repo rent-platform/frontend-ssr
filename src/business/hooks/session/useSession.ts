@@ -63,7 +63,7 @@ export function useSession() {
 
       // Когда появится RTK Query, accessToken из data.accessToken
       // положить в redux store из jwt callback(get session)
-      const autoLoginResult = await login(tel, password);
+      const autoLoginResult = await login(tel, password); // два запроса получается в итоге
 
       if (!autoLoginResult.ok) {
         return {

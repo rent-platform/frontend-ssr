@@ -5,9 +5,9 @@ import type {
   CatalogItemResponseDto,
 } from "@/business/types/dto/catalog.dto";
 
-export const catalogApi = baseApi.injectEndpoints({
+export const adsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    fetchCatalog: build.query<CatalogListResponseDto, CatalogQueryParams>({
+    fetchAds: build.query<CatalogListResponseDto, CatalogQueryParams>({
       query: ({ page = 1, limit = 10, category_id, search } = {}) => ({
         url: "/catalog",
         params: {
@@ -20,7 +20,7 @@ export const catalogApi = baseApi.injectEndpoints({
       providesTags: ["Catalog"],
     }),
 
-    fetchCatalogItem: build.query<CatalogItemResponseDto, string>({
+    fetchAd: build.query<CatalogItemResponseDto, string>({
       query: (id) => ({ url: `/catalog/${id}` }),
       providesTags: (_result, _err, id) => [{ type: "CatalogItem", id }],
     }),
@@ -28,4 +28,4 @@ export const catalogApi = baseApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useFetchCatalogQuery, useFetchCatalogItemQuery } = catalogApi;
+export const { useFetchAdQuery, useFetchAdsQuery } = adsApi;

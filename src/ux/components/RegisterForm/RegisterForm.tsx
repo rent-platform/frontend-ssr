@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import AppInput from "@/ux/components/AppInput";
@@ -7,7 +6,6 @@ import { useRegisterForm } from "@/business/hooks";
 import ROUTE_PATHS from "@/business/utils/routes/routes";
 import styles from "@/ux/layouts/AuthLayout/AuthForm.module.scss";
 
-/** "Глупый" UI-компонент — вся логика делегирована в useRegisterForm() */
 export const RegisterForm = () => {
   const { register, handleSubmit, onSubmit, errors, isSubmitting, apiError } =
     useRegisterForm();

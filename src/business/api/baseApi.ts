@@ -16,7 +16,7 @@ export const baseApi = createApi({
   tagTypes: [
     "Catalog",
     "CatalogItem",
-    "Session",
+    "Session", // пусть будет
     "User",
     "Deals",
     "Notifications",

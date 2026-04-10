@@ -1,4 +1,1 @@
-export {
-  useFetchCatalogQuery,
-  useFetchCatalogItemQuery,
-} from "./catalog/endpoints";
+export { useFetchAdQuery, useFetchAdsQuery } from "./ads/endpoints";
