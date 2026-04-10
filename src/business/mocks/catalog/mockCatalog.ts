@@ -1,6 +1,6 @@
-import type { CatalogItemResponseDto } from "@/business/types/dto/catalog.dto";
+import type { AdsItemResponseDto } from "@/business/types/dto/ads.dto";
 
-export const MOCK_CATALOG_ITEMS: CatalogItemResponseDto[] = [
+export const MOCK_CATALOG_ITEMS: AdsItemResponseDto[] = [
   {
     id: "cat-item-1",
     owner_id: "mock-user-1",

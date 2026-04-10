@@ -1,3 +1,4 @@
 infinite query
 merge branches
+add to favorites
 

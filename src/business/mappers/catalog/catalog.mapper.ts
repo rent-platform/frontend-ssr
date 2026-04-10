@@ -1,9 +1,7 @@
-import type { CatalogItemResponseDto } from "@/business/types/dto/catalog.dto";
+import type { AdsItemResponseDto } from "@/business/types/dto/ads.dto";
 import type { CatalogItemCardVM } from "@/business/types/view/catalog.view";
 
-export function mapCatalogItemToVM(
-  dto: CatalogItemResponseDto,
-): CatalogItemCardVM {
+export function mapCatalogItemToVM(dto: AdsItemResponseDto): CatalogItemCardVM {
   const sortedPhotos = [...dto.photos].sort(
     (a, b) => a.sort_order - b.sort_order,
   );

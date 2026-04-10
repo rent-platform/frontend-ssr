@@ -14,8 +14,8 @@ export const baseApi = createApi({
     },
   }),
   tagTypes: [
-    "Catalog",
-    "CatalogItem",
+    "Ads",
+    "AdsItem",
     "Session", // пусть будет
     "User",
     "Deals",

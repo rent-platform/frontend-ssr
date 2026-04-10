@@ -1,1 +1,7 @@
-export { useFetchAdQuery, useFetchAdsQuery } from "./ads/endpoints";
+export {
+  useFetchAdQuery,
+  useFetchAdsQuery,
+  useCreateAdMutation,
+  useDeleteAdMutation,
+  useUpdateAdMutation,
+} from "./ads/endpoints";
