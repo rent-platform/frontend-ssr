@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useRef } from 'react';
 import type { CatalogFilterState } from '../types';
 import { getAnnouncementsLabel } from '../utils';
@@ -86,17 +87,32 @@ export function CatalogSearchBar({
   };
 
   return (
-    <section ref={shellRef} className={styles.searchShell}>
+    <motion.section
+      ref={shellRef}
+      className={styles.searchShell}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className={styles.searchBar}>
-        <label className={styles.searchInputWrap}>
-          <span className={styles.searchIcon}>⌕</span>
+        <motion.label
+          className={styles.searchInputWrap}
+          whileFocusWithin={{ scale: 1.01 }}
+          transition={{ type: 'spring', stiffness: 300 }}
+        >
+          <motion.span
+            className={styles.searchIcon}
+            animate={{ rotate: filters.search ? 90 : 0 }}
+          >
+            ⌕
+          </motion.span>
           <input
             value={filters.search}
             onChange={(event) => onChange({ search: event.target.value })}
             className={styles.searchInput}
             placeholder="Поиск по объявлениям"
           />
-        </label>
+        </motion.label>
 
         <button
           type="button"
@@ -131,17 +147,26 @@ export function CatalogSearchBar({
         </p>
       </div>
 
-      {isFiltersOpen ? (
-        <div id="catalog-filters-panel" className={styles.searchFiltersPanel}>
-          <CatalogFilters
-            filters={filters}
-            resultsCount={resultsCount}
-            onChange={onChange}
-            onReset={onResetFilters}
-            onClose={onCloseFilters}
-          />
-        </div>
-      ) : null}
-    </section>
+      <AnimatePresence>
+        {isFiltersOpen && (
+          <motion.div
+            id="catalog-filters-panel"
+            className={styles.searchFiltersPanel}
+            initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+          >
+            <CatalogFilters
+              filters={filters}
+              resultsCount={resultsCount}
+              onChange={onChange}
+              onReset={onResetFilters}
+              onClose={onCloseFilters}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.section>
   );
 }

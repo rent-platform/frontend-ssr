@@ -1,5 +1,6 @@
 'use client';
 
+import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { BrandIcon, CatalogHeader } from './components/CatalogHeader';
 import { CatalogSearchBar } from './components/CatalogSearchBar';
@@ -149,80 +150,101 @@ export function CatalogExperience() {
           </>
         )}
 
+      <AnimatePresence mode="wait">
         {selectedItem ? (
-          <ProductDetail
-            item={selectedItem}
-            similarItems={similarItems}
-            onBack={handleBackToCatalog}
-            onOpenSimilar={handleOpenItem}
-          />
+          <motion.div
+            key="product-detail"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ProductDetail
+              item={selectedItem}
+              similarItems={similarItems}
+              onBack={handleBackToCatalog}
+              onOpenSimilar={handleOpenItem}
+            />
+          </motion.div>
         ) : (
-          <section id="catalog" className={styles.catalogContentOnly}>
-            <div className={styles.catalogContent}>
-              <CatalogToolbar
-                total={filteredItems.length}
-                visible={visibleItems.length}
-                filters={filters}
-                onChange={updateFilters}
-              />
+          <motion.div
+            key="catalog-list"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <section id="catalog" className={styles.catalogContentOnly}>
+              <div className={styles.catalogContent}>
+                <CatalogToolbar
+                  total={filteredItems.length}
+                  visible={visibleItems.length}
+                  filters={filters}
+                  onChange={updateFilters}
+                />
 
-              {filteredItems.length === 0 ? (
-                <div className={styles.emptyState}>
-                  <div className={styles.emptyIcon}>🔎</div>
-                  <h3>По выбранным параметрам ничего не найдено</h3>
-                  <p>
-                    Попробуйте изменить категорию, город или поисковый запрос. Иногда достаточно
-                    убрать часть фильтров, чтобы увидеть больше подходящих предложений.
-                  </p>
-                  <button type="button" onClick={() => setFilters(INITIAL_FILTERS)}>
-                    Сбросить фильтры
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <div className={styles.grid}>
-                    {visibleItems.map((item) => (
-                      <CatalogCard
-                        key={item.id}
-                        item={item}
-                        pricingMode={filters.pricingMode}
-                        onOpen={handleOpenItem}
-                      />
-                    ))}
+                {filteredItems.length === 0 ? (
+                  <div className={styles.emptyState}>
+                    <div className={styles.emptyIcon}>🔎</div>
+                    <h3>По выбранным параметрам ничего не найдено</h3>
+                    <p>
+                      Попробуйте изменить категорию, город или поисковый запрос. Иногда достаточно
+                      убрать часть фильтров, чтобы увидеть больше подходящих предложений.
+                    </p>
+                    <button type="button" onClick={() => setFilters(INITIAL_FILTERS)}>
+                      Сбросить фильтры
+                    </button>
                   </div>
+                ) : (
+                  <>
+                    <div className={styles.grid}>
+                      <AnimatePresence mode="popLayout">
+                        {visibleItems.map((item, index) => (
+                          <CatalogCard
+                            key={item.id}
+                            item={item}
+                            pricingMode={filters.pricingMode}
+                            onOpen={handleOpenItem}
+                            index={index}
+                          />
+                        ))}
+                      </AnimatePresence>
+                    </div>
 
-                  <div ref={sentinelRef} className={styles.infiniteSentinel} aria-hidden />
+                    <div ref={sentinelRef} className={styles.infiniteSentinel} aria-hidden />
 
-                  <div className={styles.loadMoreWrap}>
-                    {hasMore ? (
-                      <>
-                        <p>
-                          Прокрутите ниже, чтобы загрузить больше объявлений, или откройте
-                          следующую подборку вручную.
+                    <div className={styles.loadMoreWrap}>
+                      {hasMore ? (
+                        <>
+                          <p>
+                            Прокрутите ниже, чтобы загрузить больше объявлений, или откройте
+                            следующую подборку вручную.
+                          </p>
+                          <button
+                            type="button"
+                            className={styles.loadMoreButton}
+                            onClick={() =>
+                              setVisibleCount((prev) =>
+                                Math.min(prev + BATCH_SIZE, filteredItems.length),
+                              )
+                            }
+                          >
+                            Показать ещё
+                          </button>
+                        </>
+                      ) : (
+                        <p className={styles.catalogEndMessage}>
+                          Вы посмотрели все доступные объявления.
                         </p>
-                        <button
-                          type="button"
-                          className={styles.loadMoreButton}
-                          onClick={() =>
-                            setVisibleCount((prev) =>
-                              Math.min(prev + BATCH_SIZE, filteredItems.length),
-                            )
-                          }
-                        >
-                          Показать ещё
-                        </button>
-                      </>
-                    ) : (
-                      <p className={styles.catalogEndMessage}>
-                        Вы посмотрели все доступные объявления.
-                      </p>
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
-          </section>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            </section>
+          </motion.div>
         )}
+      </AnimatePresence>
       </main>
     </div>
   );

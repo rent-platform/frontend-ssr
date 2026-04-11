@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Grid2X2, PackageSearch, ShieldCheck, Sparkles, TimerReset, TrendingUp } from "lucide-react";
 import { CatalogSearchBar } from "./components/CatalogSearchBar";
@@ -151,7 +152,12 @@ export default function Catalog() {
 
   if (isPageLoading) {
     return (
-      <section className={styles.page}>
+      <motion.section
+        className={styles.page}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
         <div className={styles.container}>
           <div className={styles.loadingShell}>
             <div className={styles.loadingHero} />
@@ -168,12 +174,17 @@ export default function Catalog() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
     );
   }
 
   return (
-    <section className={styles.page}>
+    <motion.section
+      className={styles.page}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className={styles.container}>
         <header className={styles.hero}>
           <div className={styles.heroTop}>
@@ -321,9 +332,11 @@ export default function Catalog() {
             ) : (
               <>
                 <div className={styles.resultsGrid}>
-                  {visibleItems.map((item) => (
-                    <CatalogCard key={item.id} item={item} />
-                  ))}
+                  <AnimatePresence mode="popLayout">
+                    {visibleItems.map((item, index) => (
+                      <CatalogCard key={item.id} item={item} index={index} />
+                    ))}
+                  </AnimatePresence>
                 </div>
 
                 {isLoadingMore && (
@@ -350,6 +363,6 @@ export default function Catalog() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

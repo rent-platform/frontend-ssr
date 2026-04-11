@@ -1,5 +1,6 @@
 'use client';
 
+import { motion, AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import type { CatalogUiItem } from '../types';
 import { CatalogCard } from './CatalogCard';
@@ -61,7 +62,18 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
         <div className={styles.detailPrimaryColumn}>
           <div className={styles.detailGalleryCard}>
             <div className={styles.detailMainImageWrap}>
-              <img src={activeImage} alt={item.title} className={styles.detailMainImage} />
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={activeImage}
+                  src={activeImage}
+                  alt={item.title}
+                  className={styles.detailMainImage}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                />
+              </AnimatePresence>
               {hasImageNavigation ? (
                 <>
                   <button
@@ -234,14 +246,17 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
         </div>
 
         <div className={styles.similarGrid}>
-          {similarItems.map((similarItem) => (
-            <CatalogCard
-              key={similarItem.id}
-              item={similarItem}
-              pricingMode="day"
-              onOpen={onOpenSimilar}
-            />
-          ))}
+          <AnimatePresence mode="popLayout">
+            {similarItems.map((similarItem, index) => (
+              <CatalogCard
+                key={similarItem.id}
+                item={similarItem}
+                pricingMode="day"
+                onOpen={onOpenSimilar}
+                index={index}
+              />
+            ))}
+          </AnimatePresence>
         </div>
       </section>
     </section>

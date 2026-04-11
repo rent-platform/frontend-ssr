@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from 'framer-motion';
 import type { CatalogFilterState } from '../types';
 import {
   CATEGORY_OPTIONS,
@@ -14,6 +15,7 @@ type CatalogFiltersProps = {
   onChange: (patch: Partial<CatalogFilterState>) => void;
   onReset: () => void;
   onClose: () => void;
+  isMobileOpen?: boolean;
 };
 
 const PRICE_PRESETS = [
@@ -48,6 +50,7 @@ export function CatalogFilters({
   onChange,
   onReset,
   onClose,
+  isMobileOpen = false,
 }: CatalogFiltersProps) {
   const hasActiveFilters =
     filters.category !== 'Все категории' ||
@@ -69,8 +72,13 @@ export function CatalogFilters({
   ].filter(Boolean) as string[];
 
   return (
-    <aside className={styles.sidebar}>
-      <div className={styles.sidebarCard}>
+    <aside className={`${styles.sidebar} ${isMobileOpen ? styles.mobileOpen : ''}`}>
+      <motion.div
+        className={styles.sidebarCard}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4 }}
+      >
         <div className={styles.sidebarTitleRow}>
           <div>
             <p className={styles.sidebarEyebrow}>Фильтры</p>
@@ -86,18 +94,42 @@ export function CatalogFilters({
           </button>
         </div>
 
-        {activeFilterLabels.length ? (
-          <div className={styles.activeFilters}>
-            {activeFilterLabels.map((label) => (
-              <span key={label}>{label}</span>
-            ))}
-          </div>
-        ) : (
-          <p className={styles.filterHint}>
-            Выберите категорию, город и бюджет — результаты обновляются сразу без отдельного
-            подтверждения.
-          </p>
-        )}
+        <AnimatePresence mode="wait">
+          {activeFilterLabels.length ? (
+            <motion.div
+              key="active-filters"
+              className={styles.activeFilters}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+            >
+              <AnimatePresence>
+                {activeFilterLabels.map((label) => (
+                  <motion.span
+                    key={label}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {label}
+                  </motion.span>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          ) : (
+            <motion.p
+              key="hint"
+              className={styles.filterHint}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              Выберите категорию, город и бюджет — результаты обновляются сразу без отдельного
+              подтверждения.
+            </motion.p>
+          )}
+        </AnimatePresence>
 
         <div className={styles.filterGroup}>
           <span className={styles.filterLabel}>Категория</span>
@@ -225,7 +257,7 @@ export function CatalogFilters({
             Показать {resultsCount} {getAnnouncementsLabel(resultsCount)}
           </button>
         </div>
-      </div>
+      </motion.div>
     </aside>
   );
 }
