@@ -39,6 +39,11 @@ export const INITIAL_FILTERS: CatalogFilterState = {
   quickFilter: null,
 };
 
+export const getNumericPrice = (value: string | null) => {
+  if (!value) return 0;
+  return Number(value.replace(/\s/g, '').replace(',', '.'));
+};
+
 export const formatPrice = (value: string | null, suffix: string) => {
   if (!value) return 'По запросу';
 

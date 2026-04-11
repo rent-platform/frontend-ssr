@@ -58,12 +58,14 @@ export function GlassSelect({
     const handleClickOutside = (event: MouseEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) {
         setOpen(false);
+        setQuery('');
       }
     };
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setOpen(false);
+        setQuery('');
       }
     };
 
@@ -75,12 +77,6 @@ export function GlassSelect({
       document.removeEventListener('keydown', handleEscape);
     };
   }, []);
-
-  useEffect(() => {
-    if (!open) {
-      setQuery('');
-    }
-  }, [open]);
 
   const filteredOptions = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -124,7 +120,10 @@ export function GlassSelect({
         aria-expanded={open}
         aria-label={label}
         className={triggerClassName ?? styles.glassSelectTrigger}
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() => {
+          setOpen((prev) => !prev);
+          if (open) setQuery('');
+        }}
       >
         <span className={styles.glassSelectTriggerText}>{selectedOption?.label ?? placeholder}</span>
         <ChevronIcon />

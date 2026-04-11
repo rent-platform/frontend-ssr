@@ -37,9 +37,10 @@ export function CatalogExperience() {
 
   const hasMore = visibleCount < filteredItems.length;
 
-  useEffect(() => {
+  const updateFilters = (patch: Partial<typeof filters>) => {
+    setFilters((prev) => ({ ...prev, ...patch }));
     setVisibleCount(BATCH_SIZE);
-  }, [filters]);
+  };
 
   useEffect(() => {
     if (!hasMore || !sentinelRef.current || selectedItem) {
@@ -60,10 +61,6 @@ export function CatalogExperience() {
 
     return () => observer.disconnect();
   }, [filteredItems.length, hasMore, selectedItem]);
-
-  const updateFilters = (patch: Partial<typeof filters>) => {
-    setFilters((prev) => ({ ...prev, ...patch }));
-  };
 
   const handleOpenItem = (item: CatalogUiItem) => {
     setIsFiltersOpen(false);

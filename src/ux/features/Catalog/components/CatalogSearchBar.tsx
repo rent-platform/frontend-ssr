@@ -97,7 +97,7 @@ export function CatalogSearchBar({
       <div className={styles.searchBar}>
         <motion.label
           className={styles.searchInputWrap}
-          whileFocusWithin={{ scale: 1.01 }}
+          whileTap={{ scale: 1.01 }}
           transition={{ type: 'spring', stiffness: 300 }}
         >
           <motion.span

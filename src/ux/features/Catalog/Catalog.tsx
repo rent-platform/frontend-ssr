@@ -75,10 +75,10 @@ export default function Catalog() {
         (priceMode === "hour" && Boolean(item.price_per_hour));
 
       const matchesQuickFilters =
-        (!quickFilters.instantBook || item.instantBook) &&
-        (!quickFilters.noDeposit || Number(item.deposit_amount) === 0) &&
-        (!quickFilters.newArrival || item.isNewArrival) &&
-        (!quickFilters.delivery || item.delivery);
+        (!quickFilters.instantBook || item.quickFilters.includes('Рядом сегодня')) &&
+        (!quickFilters.noDeposit || item.quickFilters.includes('Без залога')) &&
+        (!quickFilters.newArrival || item.quickFilters.includes('Новинки')) &&
+        (!quickFilters.delivery || item.quickFilters.includes('С доставкой'));
 
       return (
         matchesQuery &&
@@ -93,12 +93,12 @@ export default function Catalog() {
       switch (sort) {
         case "newest":
           return new Date(right.created_at).getTime() - new Date(left.created_at).getTime();
-        case "price-asc":
+        case "priceAsc":
           return getNumericPrice(left.price_per_day) - getNumericPrice(right.price_per_day);
-        case "price-desc":
+        case "priceDesc":
           return getNumericPrice(right.price_per_day) - getNumericPrice(left.price_per_day);
         case "rating":
-          return right.rating - left.rating;
+          return right.ownerRating - left.ownerRating;
         case "popular":
         default:
           return right.views_count - left.views_count;
@@ -106,9 +106,43 @@ export default function Catalog() {
     });
   }, [availability, priceMode, query, quickFilters, selectedCategory, sort]);
 
-  useEffect(() => {
+  const resetFilters = () => {
+    setQuery("");
+    setSelectedCategory("Все");
+    setAvailability("all");
+    setPriceMode("all");
+    setSort("popular");
+    setQuickFilters(initialQuickFilters);
     setVisibleCount(INITIAL_BATCH);
-  }, [query, selectedCategory, availability, priceMode, sort, quickFilters]);
+  };
+
+  const updateQuery = (newQuery: string) => {
+    setQuery(newQuery);
+    setVisibleCount(INITIAL_BATCH);
+  };
+
+  const updateCategory = (newCategory: CatalogCategory | "Все") => {
+    setSelectedCategory(newCategory);
+    setVisibleCount(INITIAL_BATCH);
+  };
+
+  const updatePriceMode = (newMode: PriceModeFilter) => {
+    setPriceMode(newMode);
+    setVisibleCount(INITIAL_BATCH);
+  };
+
+  const updateSort = (newSort: CatalogSort) => {
+    setSort(newSort);
+    setVisibleCount(INITIAL_BATCH);
+  };
+
+  const toggleQuickFilter = (key: QuickFilterKey) => {
+    setQuickFilters((current) => ({
+      ...current,
+      [key]: !current[key],
+    }));
+    setVisibleCount(INITIAL_BATCH);
+  };
 
   const visibleItems = filteredItems.slice(0, visibleCount);
   const hasMore = visibleItems.length < filteredItems.length;
@@ -132,23 +166,7 @@ export default function Catalog() {
 
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
-  }, [filteredItems.length, hasMore, isLoadingMore]);
-
-  const resetFilters = () => {
-    setQuery("");
-    setSelectedCategory("Все");
-    setAvailability("all");
-    setPriceMode("all");
-    setSort("popular");
-    setQuickFilters(initialQuickFilters);
-  };
-
-  const toggleQuickFilter = (key: QuickFilterKey) => {
-    setQuickFilters((current) => ({
-      ...current,
-      [key]: !current[key],
-    }));
-  };
+  }, [filteredItems.length, hasMore, isLoadingMore, sentinelRef]);
 
   if (isPageLoading) {
     return (
@@ -248,10 +266,35 @@ export default function Catalog() {
 
           <div className={styles.searchSection}>
             <CatalogSearchBar
-              value={query}
-              onChange={setQuery}
+              filters={{
+                search: query,
+                city: "Новосибирск",
+                category: selectedCategory === "Все" ? "Все категории" : selectedCategory,
+                minPrice: "",
+                maxPrice: "",
+                onlyAvailable: availability === "available",
+                pricingMode: priceMode === "day" ? "day" : "hour",
+                sortBy: sort,
+                quickFilter: null,
+              }}
+              resultsCount={filteredItems.length}
+              isFiltersOpen={mobileFiltersOpen}
               onToggleFilters={() => setMobileFiltersOpen((current) => !current)}
-              mobileFiltersOpen={mobileFiltersOpen}
+              onCloseFilters={() => setMobileFiltersOpen(false)}
+              onChange={(patch) => {
+                if (patch.category !== undefined) {
+                  const cat = patch.category === "Все категории" ? "Все" : patch.category;
+                  updateCategory(cat as CatalogCategory | "Все");
+                }
+                if (patch.pricingMode !== undefined) updatePriceMode(patch.pricingMode);
+                if (patch.onlyAvailable !== undefined) {
+                  setAvailability(patch.onlyAvailable ? "available" : "all");
+                  setVisibleCount(INITIAL_BATCH);
+                }
+                if (patch.sortBy !== undefined) updateSort(patch.sortBy as CatalogSort);
+                if (patch.search !== undefined) updateQuery(patch.search);
+              }}
+              onResetFilters={resetFilters}
             />
 
             <div className={styles.quickPills}>
@@ -273,18 +316,51 @@ export default function Catalog() {
 
         <div className={styles.catalogLayout}>
           <CatalogFilters
-            categories={categories}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            availability={availability}
-            onAvailabilityChange={setAvailability}
-            priceMode={priceMode}
-            onPriceModeChange={setPriceMode}
-            quickFilters={quickFilters}
-            onToggleQuickFilter={toggleQuickFilter}
+            filters={{
+              search: query,
+              city: "Новосибирск",
+              category: selectedCategory === "Все" ? "Все категории" : selectedCategory,
+              minPrice: "",
+              maxPrice: "",
+              onlyAvailable: availability === "available",
+              pricingMode: priceMode === "day" ? "day" : "hour",
+              sortBy: sort,
+              quickFilter: null,
+            }}
+            resultsCount={filteredItems.length}
+            onChange={(patch) => {
+              if (patch.category !== undefined) {
+                const cat = patch.category === "Все категории" ? "Все" : patch.category;
+                updateCategory(cat as CatalogCategory | "Все");
+              }
+              if (patch.pricingMode !== undefined) updatePriceMode(patch.pricingMode);
+              if (patch.onlyAvailable !== undefined) {
+                setAvailability(patch.onlyAvailable ? "available" : "all");
+                setVisibleCount(INITIAL_BATCH);
+              }
+              if (patch.sortBy !== undefined) updateSort(patch.sortBy as CatalogSort);
+              if (patch.quickFilter !== undefined) {
+                if (patch.quickFilter === null) {
+                  // This is complex because Catalog.tsx uses separate state for quick filters
+                  // For simplicity, let's reset them if null is passed
+                  setQuickFilters(initialQuickFilters);
+                } else {
+                  // Find the key for this option
+                  const keyMap: Record<string, keyof CatalogQuickFiltersState> = {
+                    'С доставкой': 'delivery',
+                    'Рядом сегодня': 'instantBook', // assuming mapping
+                    'Без залога': 'noDeposit',
+                    'Топ-рейтинг': 'instantBook', // assuming mapping
+                    'Новинки': 'newArrival',
+                  };
+                  const key = keyMap[patch.quickFilter];
+                  if (key) toggleQuickFilter(key);
+                }
+              }
+              if (patch.search !== undefined) updateQuery(patch.search);
+            }}
             onReset={resetFilters}
-            totalCount={filteredItems.length}
-            visibleCount={visibleItems.length}
+            onClose={() => setMobileFiltersOpen(false)}
             isMobileOpen={mobileFiltersOpen}
           />
 
@@ -304,13 +380,13 @@ export default function Catalog() {
                   <span>Сортировка</span>
                   <select
                     value={sort}
-                    onChange={(event) => setSort(event.target.value as CatalogSort)}
+                    onChange={(event) => updateSort(event.target.value as CatalogSort)}
                     className={styles.select}
                   >
                     <option value="popular">Сначала популярные</option>
                     <option value="newest">Сначала новые</option>
-                    <option value="price-asc">Цена по возрастанию</option>
-                    <option value="price-desc">Цена по убыванию</option>
+                    <option value="priceAsc">Цена по возрастанию</option>
+                    <option value="priceDesc">Цена по убыванию</option>
                     <option value="rating">Лучший рейтинг</option>
                   </select>
                 </label>
@@ -351,7 +427,7 @@ export default function Catalog() {
                 )}
 
                 {hasMore ? (
-                  <div ref={sentinelRef} aria-hidden="true" />
+                  <div ref={sentinelRef} style={{ height: '20px' }} aria-hidden="true" />
                 ) : (
                   <div className={styles.endCap}>
                     Ты дошёл до конца UI-ленты - реал постраничную загрузку и апи потом

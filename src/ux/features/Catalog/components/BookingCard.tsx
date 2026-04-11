@@ -19,11 +19,6 @@ const shortDateFormatter = new Intl.DateTimeFormat('ru-RU', {
   month: 'short',
 });
 
-function getDaysLabel(days: number) {
-  if (days === 1) return 'сутки';
-  return 'суток';
-}
-
 function toMidnight(date: Date) {
   const value = new Date(date);
   value.setHours(0, 0, 0, 0);

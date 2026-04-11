@@ -117,7 +117,7 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
               ))}
             </div>
 
-            <p className={styles.detailLead}>{item.item_description.trim()}</p>
+            <p className={styles.detailLead}>{item.item_description?.trim() ?? ''}</p>
 
             <dl className={styles.detailFacts}>
               <div>
