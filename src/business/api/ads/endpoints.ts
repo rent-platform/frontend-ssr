@@ -6,6 +6,7 @@ import {
   AdsCreateAd,
   UpdatePlaylistArgs,
 } from "@/business/types/dto/ads.dto";
+import { PhotosList } from "@/business/types/entity/catalog.types";
 
 export const adsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -72,6 +73,23 @@ export const adsApi = baseApi.injectEndpoints({
         "Ads",
       ],
     }),
+    uploadAdPhotos: build.mutation<PhotosList, { adId: string; files: File[] }>(
+      {
+        query: ({ adId, files }) => {
+          const formData = new FormData();
+          files.forEach((file) => formData.append("photos", file));
+
+          return {
+            url: `ads/${adId}/photos`,
+            method: "POST",
+            body: formData,
+          };
+        },
+        invalidatesTags: (_result, _error, { adId }) => [
+          { type: "AdsItem", id: adId },
+        ],
+      },
+    ),
   }),
 });
 
@@ -81,4 +99,5 @@ export const {
   useCreateAdMutation,
   useDeleteAdMutation,
   useUpdateAdMutation,
+  useUploadAdPhotosMutation,
 } = adsApi;

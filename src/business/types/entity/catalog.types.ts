@@ -53,6 +53,9 @@ export type Photo = {
   sort_order: number; // INT NOT NULL DEFAULT 0
   created_at: string; // TIMESTAMPTZ NOT NULL DEFAULT NOW()
 };
+export type PhotosList = {
+  photos: Photo[];
+};
 
 // ─── Table: availability ─────────────────────────────────────────────────────
 

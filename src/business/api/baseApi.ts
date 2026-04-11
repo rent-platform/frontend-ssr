@@ -17,7 +17,7 @@ export const baseApi = createApi({
     "Ads",
     "AdsItem",
     "Session", // пусть будет
-    "User",
+    "Users",
     "Deals",
     "Notifications",
   ],

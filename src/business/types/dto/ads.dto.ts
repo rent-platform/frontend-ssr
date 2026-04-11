@@ -32,7 +32,7 @@ export type AdsQueryParams = {
   search?: string;
 };
 
-export type UpdatePlaylistArgs = DeepPartial<AdsCreateAd>;
+export type UpdatePlaylistArgs = DeepPartial<AdsCreateAd>; //TODO: по сути patch?
 
 export type AdsCreateAd = {
   title: string;
@@ -41,6 +41,6 @@ export type AdsCreateAd = {
   price_per_hour?: string | null;
   deposit_amount: string;
   pickup_location: string | null;
-  photos?: Array<{ photo_url: string; sort_order: number }>;
+  photos?: Array<{ photo_url: string; sort_order: number }>; //TODO: брух это не будет работать
   nearest_available_date: string | null;
 };

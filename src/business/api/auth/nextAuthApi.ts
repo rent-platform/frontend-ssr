@@ -7,7 +7,7 @@ interface FetchApiParams {
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
-export async function fetchApi<T = UserUpdate>({
+export async function fetchApi<T = unknown>({
   endpoint,
   options,
 }: FetchApiParams): Promise<T> {

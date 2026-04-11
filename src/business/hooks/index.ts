@@ -6,3 +6,6 @@ export { useAds } from "./ads/useAds";
 export { useCreateAd } from "./ads/useCreateAd";
 export { useUpdateAd } from "./ads/useUpdateAd";
 export { useDeleteAd } from "./ads/useDeleteAd";
+export { useUploadAdPhotos } from "./ads/useUploadPhotos";
+export { useDeals } from "./deals/useDeals";
+export { useProfile } from "./profile/useProfile";
