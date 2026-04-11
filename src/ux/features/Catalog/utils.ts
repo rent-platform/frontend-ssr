@@ -97,6 +97,34 @@ export const getSecondaryPrice = (item: CatalogUiItem) => {
     : formatPrice(item.price_per_day, '/сутки');
 };
 
+/** Карточка каталога: основная строка — сутки (или только час, если суток нет). */
+export const formatCatalogCardPrimaryPrice = (item: CatalogUiItem) =>
+  item.price_per_day
+    ? formatPrice(item.price_per_day, '/сутки')
+    : formatPrice(item.price_per_hour, '/час');
+
+/** Вторая строка под ценой: только ₽/час, если заданы и сутки, и час. */
+export const formatCatalogCardHourSecondary = (item: CatalogUiItem): string | null =>
+  item.price_per_day && item.price_per_hour
+    ? formatPrice(item.price_per_hour, '/час')
+    : null;
+
+/** Город и адрес/район без дублирования города в строке выдачи. */
+export const formatCatalogCardLocation = (item: CatalogUiItem): string => {
+  const city = item.city?.trim() ?? '';
+  const detail = (item.pickup_location ?? item.location ?? '').trim();
+  if (!detail) {
+    return city || 'Адрес не указан';
+  }
+  if (!city) {
+    return detail;
+  }
+  if (detail === city || detail.startsWith(`${city},`) || detail.startsWith(`${city} `)) {
+    return detail;
+  }
+  return `${city}, ${detail}`;
+};
+
 export const formatViews = (count: number) =>
   `${new Intl.NumberFormat('ru-RU').format(count)} просмотров`;
 

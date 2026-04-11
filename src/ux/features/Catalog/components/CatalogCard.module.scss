@@ -50,34 +50,6 @@
   composes: cardTitleButton from '../Catalog.module.scss';
 }
 
-.cardDescription {
-  composes: cardDescription from '../Catalog.module.scss';
-}
-
-.cardTags {
-  composes: cardTags from '../Catalog.module.scss';
-}
-
-.cardMeta {
-  composes: cardMeta from '../Catalog.module.scss';
-}
-
-.cardFooter {
-  composes: cardFooter from '../Catalog.module.scss';
-}
-
-.cardOwner {
-  composes: cardOwner from '../Catalog.module.scss';
-}
-
-.ownerAvatar {
-  composes: ownerAvatar from '../Catalog.module.scss';
-}
-
-.cardOwnerMeta {
-  composes: cardOwnerMeta from '../Catalog.module.scss';
-}
-
-.cardCtaButton {
-  composes: cardCtaButton from '../Catalog.module.scss';
+.cardLocationLine {
+  composes: cardLocationLine from '../Catalog.module.scss';
 }

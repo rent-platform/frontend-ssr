@@ -1,19 +1,21 @@
 import type { CatalogUiItem } from '../types';
 import {
+  formatCatalogCardHourSecondary,
+  formatCatalogCardLocation,
+  formatCatalogCardPrimaryPrice,
   formatDepositAmount,
-  formatRelativeDate,
-  getPrimaryPrice,
-  getSecondaryPrice,
 } from '../utils';
 import styles from './CatalogCard.module.scss';
 
 type CatalogCardProps = {
   item: CatalogUiItem;
-  pricingMode: 'day' | 'hour';
-  onOpen: (item: CatalogUiItem) => void;
+  pricingMode?: 'day' | 'hour';
+  onOpen?: (item: CatalogUiItem) => void;
 };
 
-export function CatalogCard({ item, pricingMode, onOpen }: CatalogCardProps) {
+export function CatalogCard({ item, onOpen = () => {} }: CatalogCardProps) {
+  const hourSecondary = formatCatalogCardHourSecondary(item);
+
   return (
     <article className={styles.card}>
       <button type="button" className={styles.cardFavorite} aria-label="Добавить в избранное">
@@ -31,46 +33,19 @@ export function CatalogCard({ item, pricingMode, onOpen }: CatalogCardProps) {
       </button>
 
       <div className={styles.cardBody}>
-        <div className={styles.cardPriceRow}>
-          <div className={styles.cardPriceBlock}>
-            <strong>{getPrimaryPrice(item, pricingMode)}</strong>
-            <span>{getSecondaryPrice(item)}</span>
-          </div>
-          <span className={styles.cardDepositBadge}>Залог {formatDepositAmount(item.deposit_amount)}</span>
-        </div>
-
         <button type="button" onClick={() => onOpen(item)} className={styles.cardTitleButton}>
           {item.title}
         </button>
 
-        <p className={styles.cardDescription}>{item.item_description}</p>
-
-        <div className={styles.cardTags}>
-          {item.tags.slice(0, 3).map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
-        </div>
-
-        <div className={styles.cardMeta}>
-          <span>{item.location}</span>
-          <span>{formatRelativeDate(item.created_at)}</span>
-        </div>
-
-        <div className={styles.cardFooter}>
-          <div className={styles.cardOwner}>
-            <div className={styles.ownerAvatar} aria-hidden="true">{item.ownerAvatar}</div>
-            <div className={styles.cardOwnerMeta}>
-              <strong>{item.ownerName}</strong>
-              <p>
-                ★ {item.ownerRating} · {item.responseTime}
-              </p>
-            </div>
+        <div className={styles.cardPriceRow}>
+          <div className={styles.cardPriceBlock}>
+            <strong>{formatCatalogCardPrimaryPrice(item)}</strong>
+            {hourSecondary ? <span>{hourSecondary}</span> : null}
           </div>
-
-          <button type="button" className={styles.cardCtaButton} onClick={() => onOpen(item)}>
-            Смотреть
-          </button>
+          <span className={styles.cardDepositBadge}>Залог {formatDepositAmount(item.deposit_amount)}</span>
         </div>
+
+        <p className={styles.cardLocationLine}>{formatCatalogCardLocation(item)}</p>
       </div>
     </article>
   );
