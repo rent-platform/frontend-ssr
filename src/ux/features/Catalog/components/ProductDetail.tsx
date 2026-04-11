@@ -251,7 +251,6 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
               <CatalogCard
                 key={similarItem.id}
                 item={similarItem}
-                pricingMode="day"
                 onOpen={onOpenSimilar}
                 index={index}
               />

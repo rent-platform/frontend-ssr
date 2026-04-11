@@ -56,7 +56,6 @@ export function CatalogSearchBar({
     const items = [
       filters.city === 'Все города' ? 'Все города' : filters.city,
       filters.category === 'Все категории' ? 'Все категории' : filters.category,
-      filters.pricingMode === 'day' ? 'Цена за сутки' : 'Цена за час',
       filters.onlyAvailable ? 'Только доступные' : 'Все предложения',
     ];
 

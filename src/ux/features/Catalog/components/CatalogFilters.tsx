@@ -58,8 +58,7 @@ export function CatalogFilters({
     Boolean(filters.quickFilter) ||
     Boolean(filters.minPrice.trim()) ||
     Boolean(filters.maxPrice.trim()) ||
-    !filters.onlyAvailable ||
-    filters.pricingMode !== 'day';
+    !filters.onlyAvailable;
 
   const activeFilterLabels = [
     filters.category !== 'Все категории' ? filters.category : null,
@@ -68,7 +67,6 @@ export function CatalogFilters({
     filters.minPrice ? `От ${filters.minPrice} ₽` : null,
     filters.maxPrice ? `До ${filters.maxPrice} ₽` : null,
     filters.onlyAvailable ? 'Только доступные сейчас' : 'Все предложения',
-    filters.pricingMode === 'hour' ? 'Почасовой тариф' : 'Посуточный тариф',
   ].filter(Boolean) as string[];
 
   return (
@@ -154,26 +152,6 @@ export function CatalogFilters({
             initialVisibleCount={12}
             maxVisibleCount={90}
           />
-        </div>
-
-        <div className={styles.filterGroup}>
-          <span className={styles.filterLabel}>Тариф</span>
-          <div className={styles.pricingSwitch}>
-            <button
-              type="button"
-              className={filters.pricingMode === 'day' ? styles.switchActive : styles.switchButton}
-              onClick={() => onChange({ pricingMode: 'day' })}
-            >
-              За сутки
-            </button>
-            <button
-              type="button"
-              className={filters.pricingMode === 'hour' ? styles.switchActive : styles.switchButton}
-              onClick={() => onChange({ pricingMode: 'hour' })}
-            >
-              За час
-            </button>
-          </div>
         </div>
 
         <div className={styles.filterGroup}>

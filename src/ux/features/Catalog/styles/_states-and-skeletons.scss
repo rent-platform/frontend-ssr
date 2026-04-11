@@ -2,7 +2,10 @@
 @use '../../../styles/helpers/mixins' as *;
 
 .skeletonCard {
-  padding: 0 0 16px;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(17, 24, 39, 0.05);
 }
 
 .skeletonImage,
@@ -12,54 +15,88 @@
 .skeletonLineLg,
 .skeletonLineMd,
 .skeletonLineSm,
+.skeletonRating,
+.skeletonPrice,
+.skeletonDeposit,
+.skeletonLocation,
+.skeletonDate,
 .skeletonTagRow span {
-  background: linear-gradient(90deg, #edf1f5 25%, #f7f8fa 50%, #edf1f5 75%);
+  background: linear-gradient(90deg, #f1f5f9 25%, #f8fafc 50%, #f1f5f9 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.3s infinite linear;
+  animation: shimmer 1.5s infinite linear;
 }
 
 .skeletonImage {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
+  width: 100%;
 }
 
-.skeletonLineLg,
-.skeletonLineMd,
-.skeletonLineSm,
-.skeletonTagRow {
-  margin: 0 16px;
+.skeletonBody {
+  padding: 6px 10px 8px;
 }
 
-.skeletonLineLg {
-  height: 22px;
-  border-radius: 10px;
-  margin-top: 16px;
-}
-
-.skeletonLineMd {
-  height: 16px;
-  border-radius: 10px;
-  margin-top: 12px;
-  width: 76%;
+.skeletonMeta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
 }
 
 .skeletonLineSm {
-  height: 14px;
-  border-radius: 10px;
-  margin-top: 10px;
-  width: 58%;
+  height: 8px;
+  width: 40%;
+  border-radius: 3px;
 }
 
-.skeletonTagRow {
-  display: flex;
-  gap: 10px;
-  margin-top: 16px;
+.skeletonRating {
+  height: 8px;
+  width: 20px;
+  border-radius: 3px;
+}
 
-  span {
-    display: block;
-    height: 30px;
-    width: 96px;
-    border-radius: 999px;
-  }
+.skeletonLineLg {
+  height: 35px; // Соответствует 2.5em при 14px шрифте
+  width: 90%;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.skeletonPriceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.04);
+  margin-bottom: 4px;
+}
+
+.skeletonPrice {
+  height: 18px;
+  width: 45%;
+  border-radius: 4px;
+}
+
+.skeletonDeposit {
+  height: 14px;
+  width: 30%;
+  border-radius: 3px;
+}
+
+.skeletonFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.skeletonLocation {
+  height: 10px;
+  width: 60%;
+  border-radius: 3px;
+}
+
+.skeletonDate {
+  height: 10px;
+  width: 35%;
+  border-radius: 3px;
 }
 
 .emptyState {

@@ -13,7 +13,6 @@ import type {
   CatalogCategory,
   CatalogQuickFiltersState,
   CatalogSort,
-  PriceModeFilter,
   QuickFilterKey,
 } from "./types";
 import { getNumericPrice } from "./utils";
@@ -38,7 +37,6 @@ export default function Catalog() {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<CatalogCategory | "Все">("Все");
   const [availability, setAvailability] = useState<AvailabilityFilter>("all");
-  const [priceMode, setPriceMode] = useState<PriceModeFilter>("all");
   const [sort, setSort] = useState<CatalogSort>("popular");
   const [quickFilters, setQuickFilters] = useState<CatalogQuickFiltersState>(initialQuickFilters);
   const [visibleCount, setVisibleCount] = useState(INITIAL_BATCH);
@@ -69,11 +67,6 @@ export default function Catalog() {
         (availability === "available" && item.isAvailable) ||
         (availability === "soon" && !item.isAvailable);
 
-      const matchesPriceMode =
-        priceMode === "all" ||
-        (priceMode === "day" && Boolean(item.price_per_day)) ||
-        (priceMode === "hour" && Boolean(item.price_per_hour));
-
       const matchesQuickFilters =
         (!quickFilters.instantBook || item.quickFilters.includes('Рядом сегодня')) &&
         (!quickFilters.noDeposit || item.quickFilters.includes('Без залога')) &&
@@ -84,7 +77,6 @@ export default function Catalog() {
         matchesQuery &&
         matchesCategory &&
         matchesAvailability &&
-        matchesPriceMode &&
         matchesQuickFilters
       );
     });
@@ -104,13 +96,12 @@ export default function Catalog() {
           return right.views_count - left.views_count;
       }
     });
-  }, [availability, priceMode, query, quickFilters, selectedCategory, sort]);
+  }, [availability, query, quickFilters, selectedCategory, sort]);
 
   const resetFilters = () => {
     setQuery("");
     setSelectedCategory("Все");
     setAvailability("all");
-    setPriceMode("all");
     setSort("popular");
     setQuickFilters(initialQuickFilters);
     setVisibleCount(INITIAL_BATCH);
@@ -123,11 +114,6 @@ export default function Catalog() {
 
   const updateCategory = (newCategory: CatalogCategory | "Все") => {
     setSelectedCategory(newCategory);
-    setVisibleCount(INITIAL_BATCH);
-  };
-
-  const updatePriceMode = (newMode: PriceModeFilter) => {
-    setPriceMode(newMode);
     setVisibleCount(INITIAL_BATCH);
   };
 
@@ -273,7 +259,6 @@ export default function Catalog() {
                 minPrice: "",
                 maxPrice: "",
                 onlyAvailable: availability === "available",
-                pricingMode: priceMode === "day" ? "day" : "hour",
                 sortBy: sort,
                 quickFilter: null,
               }}
@@ -286,7 +271,6 @@ export default function Catalog() {
                   const cat = patch.category === "Все категории" ? "Все" : patch.category;
                   updateCategory(cat as CatalogCategory | "Все");
                 }
-                if (patch.pricingMode !== undefined) updatePriceMode(patch.pricingMode);
                 if (patch.onlyAvailable !== undefined) {
                   setAvailability(patch.onlyAvailable ? "available" : "all");
                   setVisibleCount(INITIAL_BATCH);
@@ -323,7 +307,6 @@ export default function Catalog() {
               minPrice: "",
               maxPrice: "",
               onlyAvailable: availability === "available",
-              pricingMode: priceMode === "day" ? "day" : "hour",
               sortBy: sort,
               quickFilter: null,
             }}
@@ -333,7 +316,6 @@ export default function Catalog() {
                 const cat = patch.category === "Все категории" ? "Все" : patch.category;
                 updateCategory(cat as CatalogCategory | "Все");
               }
-              if (patch.pricingMode !== undefined) updatePriceMode(patch.pricingMode);
               if (patch.onlyAvailable !== undefined) {
                 setAvailability(patch.onlyAvailable ? "available" : "all");
                 setVisibleCount(INITIAL_BATCH);

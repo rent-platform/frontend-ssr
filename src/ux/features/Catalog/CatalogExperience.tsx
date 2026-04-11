@@ -200,7 +200,6 @@ export function CatalogExperience() {
                           <CatalogCard
                             key={item.id}
                             item={item}
-                            pricingMode={filters.pricingMode}
                             onOpen={handleOpenItem}
                             index={index}
                           />

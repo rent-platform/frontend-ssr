@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import type { CatalogUiItem } from '../types';
 import {
-  formatCatalogCardHourSecondary,
   formatCatalogCardLocation,
   formatCatalogCardPrimaryPrice,
   formatDepositAmount,
@@ -10,14 +9,11 @@ import styles from './CatalogCard.module.scss';
 
 type CatalogCardProps = {
   item: CatalogUiItem;
-  pricingMode?: 'day' | 'hour';
   onOpen?: (item: CatalogUiItem) => void;
   index?: number;
 };
 
 export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardProps) {
-  const hourSecondary = formatCatalogCardHourSecondary(item);
-
   return (
     <motion.article
       className={styles.card}
@@ -33,18 +29,27 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardP
       <button type="button" className={styles.cardImageButton} onClick={() => onOpen(item)}>
         <motion.div
           className={styles.cardImageWrap}
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.3 }}
+          whileHover={{ scale: 1.04 }}
+          transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
         >
           <img src={item.imageUrl ?? item.images[0]} alt={item.title} className={styles.cardImage} />
-          <div className={styles.cardImageMeta}>
-            {item.featured ? <span className={styles.cardFeatured}>Топ</span> : null}
-            <span className={styles.cardAvailability}>{item.dateAvailable}</span>
-          </div>
+          {item.featured && (
+            <div className={styles.cardBadge}>
+              <span className={styles.cardFeatured}>Топ</span>
+            </div>
+          )}
         </motion.div>
       </button>
 
       <div className={styles.cardBody}>
+        <div className={styles.cardMeta}>
+          <span className={styles.cardCategory}>{item.category}</span>
+          <div className={styles.cardRating}>
+            <span className={styles.starIcon}>★</span>
+            <strong>{item.ownerRating}</strong>
+          </div>
+        </div>
+
         <button type="button" onClick={() => onOpen(item)} className={styles.cardTitleButton}>
           {item.title}
         </button>
@@ -52,12 +57,14 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardP
         <div className={styles.cardPriceRow}>
           <div className={styles.cardPriceBlock}>
             <strong>{formatCatalogCardPrimaryPrice(item)}</strong>
-            {hourSecondary ? <span>{hourSecondary}</span> : null}
           </div>
           <span className={styles.cardDepositBadge}>Залог {formatDepositAmount(item.deposit_amount)}</span>
         </div>
 
-        <p className={styles.cardLocationLine}>{formatCatalogCardLocation(item)}</p>
+        <div className={styles.cardFooter}>
+          <p className={styles.cardLocationLine}>{formatCatalogCardLocation(item)}</p>
+          <span className={styles.cardDate}>{item.dateAvailable}</span>
+        </div>
       </div>
     </motion.article>
   );

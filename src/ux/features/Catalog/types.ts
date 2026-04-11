@@ -54,7 +54,6 @@ export type CatalogFilterState = {
   minPrice: string;
   maxPrice: string;
   onlyAvailable: boolean;
-  pricingMode: 'day' | 'hour';
   sortBy: CatalogSortKey;
   quickFilter: string | null;
 };

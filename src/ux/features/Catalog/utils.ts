@@ -34,7 +34,6 @@ export const INITIAL_FILTERS: CatalogFilterState = {
   minPrice: '',
   maxPrice: '',
   onlyAvailable: true,
-  pricingMode: 'day',
   sortBy: 'popular',
   quickFilter: null,
 };
@@ -102,11 +101,9 @@ export const getSecondaryPrice = (item: CatalogUiItem) => {
     : formatPrice(item.price_per_day, '/сутки');
 };
 
-/** Карточка каталога: основная строка — сутки (или только час, если суток нет). */
+/** Карточка каталога: основная строка — только сутки. */
 export const formatCatalogCardPrimaryPrice = (item: CatalogUiItem) =>
-  item.price_per_day
-    ? formatPrice(item.price_per_day, '/сутки')
-    : formatPrice(item.price_per_hour, '/час');
+  formatPrice(item.price_per_day, '/сутки');
 
 /** Вторая строка под ценой: только ₽/час, если заданы и сутки, и час. */
 export const formatCatalogCardHourSecondary = (item: CatalogUiItem): string | null =>
@@ -178,11 +175,7 @@ export const applyCatalogFilters = (
 
   return sortCatalogItems(
     items.filter((item) => {
-      const primaryPrice = Number(
-        filters.pricingMode === 'hour'
-          ? item.price_per_hour ?? item.price_per_day ?? 0
-          : item.price_per_day ?? item.price_per_hour ?? 0,
-      );
+      const primaryPrice = Number(item.price_per_day ?? 0);
 
       const matchesQuery =
         !query ||

@@ -142,7 +142,6 @@ export function BookingCard({ item }: BookingCardProps) {
 
       <div className={styles.detailPriceBlock}>
         <strong>{formatPrice(item.price_per_day, '/сутки')}</strong>
-        <span>{item.price_per_hour ? formatPrice(item.price_per_hour, '/час') : 'Почасовой тариф по запросу'}</span>
       </div>
 
       <div className={styles.bookingFieldGrid}>
