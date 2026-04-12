@@ -46,8 +46,10 @@ export function GlassSelect({
   maxVisibleCount = 80,
 }: GlassSelectProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
   const selectedOption = useMemo(
     () => options.find((option) => option.value === value),
@@ -77,6 +79,41 @@ export function GlassSelect({
       document.removeEventListener('keydown', handleEscape);
     };
   }, []);
+
+  useEffect(() => {
+    if (open && rootRef.current) {
+      const rect = rootRef.current.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+      const viewportHeight = window.innerHeight;
+      const dropdownHeight = 180; // max-height from CSS
+      
+      // Check if dropdown would go below viewport
+      let topPosition = rect.bottom + scrollTop + 8;
+      if (rect.bottom + dropdownHeight > viewportHeight) {
+        // Position above the trigger if there's not enough space below
+        topPosition = rect.top + scrollTop - dropdownHeight - 8;
+      }
+      
+      // Ensure dropdown doesn't go beyond viewport edges
+      let leftPosition = rect.left + scrollLeft;
+      const dropdownWidth = rect.width;
+      
+      if (leftPosition + dropdownWidth > window.innerWidth + scrollLeft) {
+        leftPosition = window.innerWidth + scrollLeft - dropdownWidth - 16;
+      }
+      
+      if (leftPosition < scrollLeft) {
+        leftPosition = scrollLeft + 16;
+      }
+      
+      setDropdownStyle({
+        top: Math.max(8, topPosition),
+        left: leftPosition,
+        width: Math.max(260, Math.min(dropdownWidth, window.innerWidth - 32)),
+      });
+    }
+  }, [open]);
 
   const filteredOptions = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -112,7 +149,7 @@ export function GlassSelect({
   };
 
   return (
-    <div ref={rootRef} className={styles.glassSelect}>
+    <div ref={rootRef} className={`${styles.glassSelect}${open ? ` ${styles.glassSelectOpened}` : ''}`}>
       <span className={styles.visuallyHidden}>{label}</span>
       <button
         type="button"
@@ -130,7 +167,11 @@ export function GlassSelect({
       </button>
 
       {open ? (
-        <div className={`${styles.glassSelectDropdown}${dropdownClassName ? ` ${dropdownClassName}` : ''}`}>
+        <div 
+          ref={dropdownRef}
+          className={`${styles.glassSelectDropdown}${dropdownClassName ? ` ${dropdownClassName}` : ''}`}
+          style={dropdownStyle}
+        >
           {searchable ? (
             <div className={styles.glassSelectSearchWrap}>
               <input

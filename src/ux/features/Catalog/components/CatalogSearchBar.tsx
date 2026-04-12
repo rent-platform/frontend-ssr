@@ -59,6 +59,23 @@ export function CatalogSearchBar({
     };
   }, [isFiltersOpen]);
 
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+
+    if (filters.city !== INITIAL_FILTERS.city) count += 1;
+    if (filters.category !== INITIAL_FILTERS.category) count += 1;
+    if (filters.minPrice) count += 1;
+    if (filters.maxPrice) count += 1;
+    if (filters.condition.length > 0) count += 1;
+    if (filters.ownerType !== INITIAL_FILTERS.ownerType) count += 1;
+    if (filters.deliveryType !== INITIAL_FILTERS.deliveryType) count += 1;
+    if (filters.quickFilter !== INITIAL_FILTERS.quickFilter) count += 1;
+    if (filters.onlyAvailable !== INITIAL_FILTERS.onlyAvailable) count += 1;
+    if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit) count += 1;
+
+    return count;
+  }, [filters]);
+
   const summaryItems = useMemo(() => {
     const items: string[] = [];
 
@@ -167,6 +184,11 @@ export function CatalogSearchBar({
               ? `Скрыть`
               : 'Фильтры'}
           </span>
+          {activeFiltersCount > 0 && (
+            <span className={styles.filtersCount}>
+              {activeFiltersCount}
+            </span>
+          )}
         </motion.button>
 
         <motion.button

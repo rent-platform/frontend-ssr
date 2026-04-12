@@ -94,6 +94,19 @@
   border-color: $color-primary;
 }
 
+.filtersCount {
+  @include flex-center;
+  @include square(20px);
+  background: $color-primary;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: $space-1;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .primarySearchBtn {
   display: flex;
   align-items: center;
@@ -213,32 +226,64 @@
 }
 
 .glassSelectDropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  right: 0;
+  position: fixed;
   background: #fff;
   border-radius: $radius-2xl;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   border: 1px solid $color-border;
   overflow: hidden;
-  z-index: 2100;
+  z-index: 99999;
+  padding: 6px;
+  max-height: 180px;
+  min-width: 260px;
+}
+
+.glassSelect {
+  position: relative;
+  width: 100%;
+  border-radius: $radius-lg;
+  border: 1px solid $color-border;
+  overflow: visible;
+  z-index: 9998;
   padding: $space-2;
+
+  &.glassSelectOpened {
+    overflow: visible;
+    z-index: 9999; 
+  }
 }
 
 .glassSelectOptions {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  max-height: 300px;
+  gap: 0;
+  max-height: 180px;
   overflow-y: auto;
-  @include scrollbar-none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.3) transparent;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(34, 197, 94, 0.3);
+    border-radius: 3px;
+    
+    &:hover {
+      background: rgba(34, 197, 94, 0.5);
+    }
+  }
 }
 
 .glassSelectOption, .glassSelectOptionActive {
   display: flex;
   flex-direction: column;
-  padding: $space-3 $space-4;
+  padding: 4px 8px;
   border-radius: $radius-lg;
   border: 0;
   background: transparent;
