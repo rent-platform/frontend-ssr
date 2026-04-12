@@ -44,7 +44,7 @@ export function CatalogHeader({ cityLabel }: CatalogHeaderProps) {
               <BrandIcon />
               <div className={styles.brandTextWrap}>
                 <strong>Арендай</strong>
-                <span className={styles.brandTagline}>Шеринг вещей №1</span>
+                <span className={styles.brandTagline}>Шеринг вешей</span>
               </div>
             </Link>
 

@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useRef } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import type { CatalogFilterState } from '../types';
-import { getAnnouncementsLabel } from '../utils';
+import { getAnnouncementsLabel, INITIAL_FILTERS } from '../utils';
 import { CatalogFilters } from './CatalogFilters';
 import styles from './CatalogSearchBar.module.scss';
 
@@ -46,20 +46,60 @@ export function CatalogSearchBar({
   }, [isFiltersOpen, onCloseFilters]);
 
   const summaryItems = useMemo(() => {
-    const items = [
-      filters.city === 'Все города' ? 'Все города' : filters.city,
-      filters.category === 'Все категории' ? 'Все категории' : filters.category,
-      filters.onlyAvailable ? 'Только доступные' : 'Все предложения',
-    ];
+    const items: string[] = [];
 
-    if (filters.quickFilter) {
-      items.push(filters.quickFilter);
+    if (filters.city !== INITIAL_FILTERS.city) {
+      items.push(filters.city);
+    }
+
+    if (filters.category !== INITIAL_FILTERS.category) {
+      items.push(filters.category);
+    }
+
+    if (filters.onlyAvailable !== INITIAL_FILTERS.onlyAvailable) {
+      items.push(filters.onlyAvailable ? 'Доступно сегодня' : 'Все предложения');
     }
 
     if (filters.minPrice || filters.maxPrice) {
       const minLabel = filters.minPrice ? `от ${filters.minPrice} ₽` : 'от любой цены';
-      const maxLabel = filters.maxPrice ? `до ${filters.maxPrice} ₽` : 'без верхней границы';
+      const maxLabel = filters.maxPrice ? `до ${filters.maxPrice} ₽` : 'без лимита';
       items.push(`${minLabel} · ${maxLabel}`);
+    }
+
+    if (filters.condition.length > 0) {
+      const conditionLabels: Record<string, string> = {
+        new: 'Новое',
+        like_new: 'Как новое',
+        used: 'Б/У',
+      };
+      const selected = filters.condition.map((c) => conditionLabels[c] || c).join(', ');
+      items.push(`Состояние: ${selected}`);
+    }
+
+    if (filters.ownerType !== INITIAL_FILTERS.ownerType) {
+      const ownerLabels: Record<string, string> = {
+        all: 'Все владельцы',
+        private: 'Частные',
+        pro: 'Профи',
+      };
+      items.push(ownerLabels[filters.ownerType as string] || filters.ownerType);
+    }
+
+    if (filters.deliveryType !== INITIAL_FILTERS.deliveryType) {
+      const deliveryLabels: Record<string, string> = {
+        all: 'Любой способ',
+        pickup: 'Самовывоз',
+        delivery: 'Доставка',
+      };
+      items.push(deliveryLabels[filters.deliveryType as string] || filters.deliveryType);
+    }
+
+    if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit) {
+      items.push(filters.hasDeposit === 'no' ? 'Без залога' : 'С залогом');
+    }
+
+    if (filters.quickFilter) {
+      items.push(filters.quickFilter);
     }
 
     return items;
@@ -127,25 +167,23 @@ export function CatalogSearchBar({
         </motion.button>
       </div>
 
-      <div className={styles.searchMetaRow}>
-        <div className={styles.searchSummary}>
-          {filters.search.trim() ? (
-            <span className={styles.searchSummaryChip}>
-              Поиск: «{filters.search.trim()}»
-            </span>
-          ) : null}
+      {(filters.search.trim() || summaryItems.length > 0) && (
+        <div className={styles.searchMetaRow}>
+          <div className={styles.searchSummary}>
+            {filters.search.trim() ? (
+              <span className={styles.searchSummaryChip}>
+                Поиск: «{filters.search.trim()}»
+              </span>
+            ) : null}
 
-          {summaryItems.map((item) => (
-            <span key={item} className={styles.searchSummaryChip}>
-              {item}
-            </span>
-          ))}
+            {summaryItems.map((item) => (
+              <span key={item} className={styles.searchSummaryChip}>
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
-
-        <p className={styles.searchResultsNote}>
-          Найдено {resultsCount} {getAnnouncementsLabel(resultsCount)}
-        </p>
-      </div>
+      )}
 
       <AnimatePresence>
         {isFiltersOpen && (

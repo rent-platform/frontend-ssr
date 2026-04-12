@@ -127,7 +127,7 @@ export function CatalogExperience() {
               >
                 <div className={styles.heroContent}>
                   <span className={styles.eyebrow}>
-                    Sharing Economy
+                    ВАШ — АРЕНДАЙ
                   </span>
                   <h1 className={styles.title}>Берите в аренду то, что нужно сейчас</h1>
                   <p className={styles.subtitle}>
@@ -207,32 +207,31 @@ export function CatalogExperience() {
                   isFiltersOpen={isFiltersOpen}
                 />
 
-                <div className={styles.resultsGrid}>
-                  {visibleItems.length > 0 ? (
-                    visibleItems.map((item) => (
+                {visibleItems.length > 0 ? (
+                  <div className={styles.resultsGrid}>
+                    {visibleItems.map((item) => (
                       <CatalogCard
                         key={item.id}
                         item={item}
                         onOpen={handleOpenItem}
                       />
-                    ))
-                  ) : (
-                    <div className={styles.emptyState}>
-                      <h3>Ничего не нашли</h3>
-                      <p>Попробуйте изменить параметры поиска или фильтры</p>
-                      <button 
-                        className={styles.resetBtn}
-                        onClick={() => updateFilters({ search: '', city: '', category: '' })}
-                      >
-                        Сбросить всё
-                      </button>
-                    </div>
-                  )}
-
-                  {hasMore && (
-                    <div ref={sentinelRef} className={styles.infiniteSentinel} />
-                  )}
-                </div>
+                    ))}
+                    {hasMore && (
+                      <div ref={sentinelRef} className={styles.infiniteSentinel} />
+                    )}
+                  </div>
+                ) : (
+                  <div className={styles.emptyState}>
+                    <h3>Ничего не нашли</h3>
+                    <p>Попробуйте изменить параметры поиска или фильтры</p>
+                    <button 
+                      className={styles.resetBtn}
+                      onClick={() => updateFilters({ search: '', city: '', category: '' })}
+                    >
+                      Сбросить всё
+                    </button>
+                  </div>
+                )}
               </div>
             </section>
           </motion.div>

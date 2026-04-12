@@ -52,6 +52,9 @@
   display: grid;
   justify-items: center;
   gap: $space-4;
+  width: 100%; // Гарантируем полную ширину для центровки
+  max-width: 600px;
+  margin: 0 auto; // Центрируем сам блок в родителе
 
   h3 {
     margin: 0;
