@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CatalogHeader } from './components/CatalogHeader';
 import { CatalogSearchBar } from './components/CatalogSearchBar';
-import { CatalogFilters } from './components/CatalogFilters';
 import { CategoryRail } from './components/CategoryRail';
 import { CatalogToolbar } from './components/CatalogToolbar';
 import { CatalogCard } from './components/CatalogCard';
@@ -103,7 +102,7 @@ export function CatalogExperience() {
 
   return (
     <div className={styles.page}>
-      <CatalogHeader cityLabel={filters.city} />
+      <CatalogHeader cityLabel={filters.city} isHidden={isFiltersOpen} />
 
       <main className={styles.main}>
         <CatalogSearchBar
@@ -184,19 +183,7 @@ export function CatalogExperience() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <section id="catalog-results" className={isFiltersOpen ? styles.catalogLayout : styles.catalogLayoutClosed}>
-              <AnimatePresence>
-                {isFiltersOpen && (
-                  <CatalogFilters
-                    filters={filters}
-                    resultsCount={filteredItems.length}
-                    onChange={updateFilters}
-                    onReset={() => setFilters(INITIAL_FILTERS)}
-                    onClose={onCloseFilters}
-                  />
-                )}
-              </AnimatePresence>
-
+            <section id="catalog-results" className={styles.catalogLayoutClosed}>
               <div className={styles.content}>
                 <CatalogToolbar
                   resultsCount={filteredItems.length}

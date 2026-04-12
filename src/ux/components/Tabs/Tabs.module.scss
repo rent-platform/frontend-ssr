@@ -1,0 +1,82 @@
+@use 'sass:color';
+@use '../../styles/vars' as *;
+@use '../../styles/helpers/mixins' as *;
+
+.root {
+  width: 100%;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: $space-1;
+  @include scrollbar-none;
+}
+
+.underline {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+}
+
+.tab,
+.tabActive {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:focus-visible {
+    outline: none;
+    color: $color-text;
+  }
+}
+
+.underline .tab,
+.underline .tabActive {
+  position: relative;
+  min-height: 52px;
+  padding: 0 2px 14px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.underline .tabActive {
+  color: $color-text;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 3px;
+    border-radius: $radius-full;
+    background: linear-gradient(90deg, $color-primary 0%, color.adjust($color-primary, $lightness: 8%) 100%);
+    box-shadow: 0 8px 22px -12px rgba(34, 197, 94, 0.7);
+  }
+}
+
+.icon {
+  @include square(18px);
+  flex-shrink: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 8px;
+  border-radius: $radius-full;
+  background: rgba(248, 250, 252, 0.96);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  color: $color-text-secondary;
+  font-size: 11px;
+  font-weight: 700;
+}

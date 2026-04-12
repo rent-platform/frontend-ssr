@@ -1,127 +1,631 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
 .sidebar {
-  composes: sidebar from '../Catalog.module.scss';
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 32px 24px;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.28) 0%, rgba(15, 23, 42, 0.5) 100%),
+    radial-gradient(circle at top, rgba(34, 197, 94, 0.14), transparent 32%);
+  backdrop-filter: blur(18px);
 }
 
 .sidebarCard {
-  composes: sidebarCard from '../Catalog.module.scss';
+  width: min(1080px, calc(100vw - 48px));
+  max-height: min(880px, calc(100vh - 48px));
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  gap: $space-5;
+  padding: 32px;
+  border-radius: 32px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(248, 250, 252, 0.92) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow:
+    0 36px 80px -42px rgba(15, 23, 42, 0.68),
+    0 0 0 1px rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .sidebarTitleRow {
-  composes: sidebarTitleRow from '../Catalog.module.scss';
-}
-
-.sidebarActions {
-  composes: sidebarActions from '../Catalog.module.scss';
-}
-
-.resetButton {
-  composes: resetButton from '../Catalog.module.scss';
-}
-
-.closeButton {
-  composes: closeButton from '../Catalog.module.scss';
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-5;
 }
 
 .titleWithIcon {
-  composes: titleWithIcon from '../Catalog.module.scss';
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  min-width: 0;
 }
 
 .titleIcon {
-  composes: titleIcon from '../Catalog.module.scss';
+  @include square(52px);
+  @include flex-center;
+  flex-shrink: 0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, $color-primary 0%, color.adjust($color-primary, $lightness: 8%) 100%);
+  color: #fff;
+  box-shadow: 0 20px 34px -24px rgba(34, 197, 94, 0.72);
+}
+
+.modalTitleCopy {
+  min-width: 0;
+
+  h3 {
+    margin: 0;
+    font-size: clamp(30px, 4vw, 38px);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: $color-text;
+  }
+
+  p {
+    margin: 10px 0 0;
+    max-width: 58ch;
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(15, 23, 42, 0.72);
+  }
+}
+
+.modalEyebrow {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.sidebarActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.resetButton,
+.closeButton {
+  @include square(48px);
+  @include flex-center;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.8);
+  color: $color-text;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: #fff;
+    border-color: rgba(15, 23, 42, 0.16);
+    transform: translateY(-1px);
+  }
+}
+
+.modalMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.modalBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: $radius-full;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  color: $color-text-secondary;
+  font-size: 13px;
+  font-weight: 700;
+
+  svg {
+    flex-shrink: 0;
+    color: $color-primary;
+  }
+
+  strong {
+    color: $color-text;
+  }
+}
+
+.modalIntro {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  padding: 20px 22px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.09), transparent 28%),
+    rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.modalIntroIcon {
+  @include square(40px);
+  @include flex-center;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: rgba(34, 197, 94, 0.12);
+  color: $color-primary;
+}
+
+.modalIntroContent {
+  strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+    color: $color-text;
+  }
+
+  p {
+    margin: 6px 0 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(15, 23, 42, 0.72);
+  }
+}
+
+.filterTabs {
+  position: relative;
+  z-index: 3;
+  margin-top: 2px;
+  padding: 0 4px 14px;
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.62) 0%, rgba(248, 250, 252, 0) 100%);
 }
 
 .scrollableContent {
-  composes: scrollableContent from '../Catalog.module.scss';
+  min-height: 0;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
+  padding-top: 8px;
+  padding-right: $space-2;
+  @include scrollbar-none;
+}
+
+.tabPanel {
+  display: grid;
+  gap: $space-5;
+  padding-top: 4px;
 }
 
 .gridSection {
-  composes: gridSection from '../Catalog.module.scss';
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-5;
 }
 
 .filterGroup {
-  composes: filterGroup from '../Catalog.module.scss';
+  display: grid;
+  min-width: 0;
+  gap: 14px;
+  padding: 22px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow: 0 16px 30px -28px rgba(15, 23, 42, 0.26);
+
+  [aria-haspopup='listbox'] {
+    min-height: 58px;
+    padding: 0 18px;
+    border-radius: 18px;
+    font-size: 15px;
+  }
+}
+
+.filterGroupWide {
+  grid-column: 1 / -1;
 }
 
 .filterLabelRow {
-  composes: filterLabelRow from '../Catalog.module.scss';
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: $color-primary;
 }
 
 .filterLabel {
-  composes: filterLabel from '../Catalog.module.scss';
+  font-size: 12px;
+  font-weight: 800;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 
 .cityDropdown {
-  composes: cityDropdown from '../Catalog.module.scss';
-}
-
-.conditionChips {
-  composes: conditionChips from '../Catalog.module.scss';
-}
-
-.conditionChip {
-  composes: conditionChip from '../Catalog.module.scss';
-}
-
-.conditionChipActive {
-  composes: conditionChipActive from '../Catalog.module.scss';
-}
-
-.segmentedControl {
-  composes: segmentedControl from '../Catalog.module.scss';
-}
-
-.segment {
-  composes: segment from '../Catalog.module.scss';
-}
-
-.segmentActive {
-  composes: segmentActive from '../Catalog.module.scss';
-}
-
-.switchesGrid {
-  composes: switchesGrid from '../Catalog.module.scss';
-}
-
-.fancyCheckbox {
-  composes: fancyCheckbox from '../Catalog.module.scss';
-}
-
-.checkboxContent {
-  composes: checkboxContent from '../Catalog.module.scss';
-}
-
-.checkMark {
-  composes: checkMark from '../Catalog.module.scss';
-}
-
-.footerStats {
-  composes: footerStats from '../Catalog.module.scss';
+  max-height: 420px;
 }
 
 .priceFields {
-  composes: priceFields from '../Catalog.module.scss';
-}
-
-.priceLabel {
-  composes: priceLabel from '../Catalog.module.scss';
-}
-
-.priceInputLabel {
-  composes: priceInputLabel from '../Catalog.module.scss';
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-4;
 }
 
 .priceInputWrap {
-  composes: priceInputWrap from '../Catalog.module.scss';
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  background: rgba(248, 250, 252, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 18px;
+  padding: 0 18px;
+  transition: $transition-smooth;
+
+  &:focus-within {
+    border-color: $color-primary;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+  }
+
+  input {
+    flex: 1;
+    border: 0;
+    outline: 0;
+    padding: 14px 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: $color-text;
+    background: transparent;
+    width: 100%;
+  }
+}
+
+.priceInputLabel {
+  font-size: 11px;
+  font-weight: 800;
+  color: $color-text-secondary;
+  margin-right: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .currency {
-  composes: currency from '../Catalog.module.scss';
+  font-size: 14px;
+  font-weight: 700;
+  color: $color-text-secondary;
+  margin-left: 8px;
+}
+
+.conditionChips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.conditionChip,
+.conditionChipActive {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: $radius-full;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  span:first-child {
+    font-size: 18px;
+  }
+
+  span:last-child {
+    font-size: 14px;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &:hover {
+    border-color: rgba(34, 197, 94, 0.3);
+    transform: translateY(-1px);
+  }
+}
+
+.conditionChipActive {
+  background: linear-gradient(135deg, $color-primary 0%, color.adjust($color-primary, $lightness: 8%) 100%);
+  border-color: transparent;
+  box-shadow: 0 18px 30px -24px rgba(34, 197, 94, 0.7);
+
+  span:last-child {
+    color: #fff;
+  }
+}
+
+.segmentedControl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px;
+  border-radius: 22px;
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.segment,
+.segmentActive {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: $color-text-secondary;
+  background: transparent;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover:not(.segmentActive) {
+    color: $color-text;
+  }
+}
+
+.segmentActive {
+  background: #fff;
+  color: $color-primary;
+  box-shadow: $shadow-sm;
+}
+
+.quickFilterGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.quickFilterCard,
+.quickFilterCardActive {
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  gap: 12px;
+  min-height: 120px;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.82);
+  color: $color-text;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  svg {
+    color: $color-primary;
+  }
+
+  span {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: left;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(34, 197, 94, 0.28);
+    box-shadow: 0 18px 30px -28px rgba(15, 23, 42, 0.32);
+  }
+}
+
+.quickFilterCardActive {
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.12), transparent 36%),
+    linear-gradient(180deg, rgba(240, 253, 244, 0.92) 0%, rgba(255, 255, 255, 0.94) 100%);
+  border-color: rgba(34, 197, 94, 0.28);
+}
+
+.switchesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-4;
+}
+
+.fancyCheckbox {
+  cursor: pointer;
+
+  input {
+    display: none;
+
+    &:checked + .checkboxContent {
+      border-color: rgba(34, 197, 94, 0.28);
+      background: rgba(240, 253, 244, 0.78);
+
+      .checkMark {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      svg:first-child {
+        color: $color-primary;
+      }
+    }
+  }
+}
+
+.checkboxContent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 74px;
+  padding: 0 20px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.84);
+  transition: $transition-smooth;
+
+  svg:first-child {
+    color: $color-text-secondary;
+    transition: color 0.3s ease;
+  }
+
+  span {
+    font-size: 15px;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &:hover {
+    border-color: rgba(15, 23, 42, 0.14);
+  }
+}
+
+.checkMark {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  @include square(26px);
+  @include flex-center;
+  background: $color-primary;
+  color: #fff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: $transition-spring;
 }
 
 .filtersFooter {
-  composes: filtersFooter from '../Catalog.module.scss';
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-4;
+  padding-top: $space-4;
+  border-top: 1px solid rgba(226, 232, 240, 0.86);
+}
+
+.footerStats {
+  font-size: 14px;
+  color: $color-text-secondary;
+
+  strong {
+    color: $color-text;
+    font-weight: 800;
+  }
 }
 
 .primaryAction {
-  composes: primaryAction from '../Catalog.module.scss';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 236px;
+  min-height: 56px;
+  padding: 0 22px;
+  background: linear-gradient(135deg, $color-primary 0%, color.adjust($color-primary, $lightness: -6%) 100%);
+  color: #fff;
+  border: 0;
+  border-radius: 18px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 22px 34px -24px rgba(34, 197, 94, 0.72);
+  transition: $transition-smooth;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 24px 36px -22px rgba(34, 197, 94, 0.62);
+  }
+}
+
+@include respond-below('lg') {
+  .sidebar {
+    padding: 20px;
+  }
+
+  .sidebarCard {
+    width: min(100vw - 24px, 960px);
+    padding: 24px;
+  }
+
+  .quickFilterGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include respond-below('md') {
+  .sidebar {
+    padding: 12px;
+  }
+
+  .sidebarCard {
+    width: min(100vw - 8px, 100%);
+    max-height: calc(100vh - 8px);
+    padding: 20px;
+    border-radius: 28px 28px 20px 20px;
+  }
+
+  .sidebarTitleRow,
+  .filtersFooter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sidebarActions {
+    align-self: flex-end;
+  }
+
+  .gridSection,
+  .priceFields,
+  .switchesGrid,
+  .quickFilterGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .segmentedControl {
+    grid-template-columns: 1fr;
+  }
+
+  .primaryAction {
+    width: 100%;
+  }
+}
+
+@include respond-below('sm') {
+  .sidebarCard {
+    gap: $space-4;
+    padding: 18px;
+  }
+
+  .titleWithIcon {
+    gap: 12px;
+  }
+
+  .titleIcon {
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+  }
+
+  .modalTitleCopy h3 {
+    font-size: 28px;
+  }
+
+  .filterGroup {
+    padding: 18px;
+  }
+
+  .modalIntro {
+    padding: 18px;
+  }
 }

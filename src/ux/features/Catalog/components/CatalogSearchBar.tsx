@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useRef } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import type { CatalogFilterState } from '../types';
-import { getAnnouncementsLabel, INITIAL_FILTERS } from '../utils';
+import { INITIAL_FILTERS } from '../utils';
 import { CatalogFilters } from './CatalogFilters';
 import styles from './CatalogSearchBar.module.scss';
 
@@ -44,6 +44,20 @@ export function CatalogSearchBar({
       document.removeEventListener('keydown', handleEscape);
     };
   }, [isFiltersOpen, onCloseFilters]);
+
+  useEffect(() => {
+    if (!isFiltersOpen) {
+      document.body.style.removeProperty('overflow');
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isFiltersOpen]);
 
   const summaryItems = useMemo(() => {
     const items: string[] = [];
@@ -187,22 +201,13 @@ export function CatalogSearchBar({
 
       <AnimatePresence>
         {isFiltersOpen && (
-          <motion.div
-            id="catalog-filters-panel"
-            className={styles.searchFiltersPanel}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.2 }}
-          >
-            <CatalogFilters
-              filters={filters}
-              resultsCount={resultsCount}
-              onChange={onChange}
-              onReset={onResetFilters}
-              onClose={onCloseFilters}
-            />
-          </motion.div>
+          <CatalogFilters
+            filters={filters}
+            resultsCount={resultsCount}
+            onChange={onChange}
+            onReset={onResetFilters}
+            onClose={onCloseFilters}
+          />
         )}
       </AnimatePresence>
     </motion.section>

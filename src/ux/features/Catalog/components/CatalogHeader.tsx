@@ -14,6 +14,7 @@ import styles from '../Catalog.module.scss';
 
 type CatalogHeaderProps = {
   cityLabel: string;
+  isHidden?: boolean;
 };
 
 export function BrandIcon() {
@@ -34,9 +35,9 @@ const actionIcons = [
   { label: 'Сообщения', count: 9, Icon: MessageSquare },
 ] as const;
 
-export function CatalogHeader({ cityLabel }: CatalogHeaderProps) {
+export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProps) {
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} ${isHidden ? styles.headerHidden : ''}`}>
       <div className={styles.topbar}>
         <div className={styles.topbarInner}>
           <div className={styles.headerLeft}>

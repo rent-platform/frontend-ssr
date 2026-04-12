@@ -11,6 +11,13 @@
   transition: all 0.3s ease;
 }
 
+.headerHidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-100%);
+}
+
 .topbarInner {
   max-width: 1440px;
   margin: 0 auto;
