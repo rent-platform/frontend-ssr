@@ -19,10 +19,6 @@ const sortOptions: GlassSelectOption[] = [
 export function CatalogToolbar({ total, visible, filters, onChange }: CatalogToolbarProps) {
   return (
     <div className={styles.toolbar}>
-      <p>
-        Найдено {total} вариантов
-      </p>
-
       <div className={styles.toolbarActions}>
         <GlassSelect
           label="Сортировка"

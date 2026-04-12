@@ -127,7 +127,7 @@
 
 .sidebarCard {
   background: #fff;
-  padding: $space-6;
+  padding: $space-4; // Было $space-6, стало меньше
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -153,27 +153,27 @@
 .titleWithIcon {
   display: flex;
   align-items: center;
-  gap: $space-3;
+  gap: $space-2;
   
   h3 {
     margin: 0;
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    font-size: 16px; // Было 20px
+    font-weight: 700; // Было 800
+    letter-spacing: -0.01em;
     color: $color-text;
   }
 }
 
 .titleIcon {
-  @include square(36px);
+  @include square(28px); // Было 36px
   @include flex-center;
   background: $color-primary;
   color: #fff;
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
   
   svg {
-    @include square(20px);
+    @include square(16px); // Было 20px
   }
 }
 
@@ -259,8 +259,8 @@
   }
 }
 
-.glassSelectOptionLabel {
-  font-size: 14px;
+.filterLabel {
+  font-size: 13px;
   font-weight: 700;
   color: $color-text;
 }

@@ -199,10 +199,12 @@ export function CatalogExperience() {
 
               <div className={styles.content}>
                 <CatalogToolbar
-                  total={filteredItems.length}
-                  visible={visibleItems.length}
+                  resultsCount={filteredItems.length}
+                  visibleCount={visibleItems.length}
                   filters={filters}
                   onChange={updateFilters}
+                  onToggleFilters={onToggleFilters}
+                  isFiltersOpen={isFiltersOpen}
                 />
 
                 <div className={styles.resultsGrid}>

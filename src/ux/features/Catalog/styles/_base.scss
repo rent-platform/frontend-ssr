@@ -15,8 +15,8 @@
 
 .catalogLayout {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: $space-10;
+  grid-template-columns: 260px 1fr; // Было 320px, стало уже для миниатюрности
+  gap: $space-8;
   margin-top: $space-8;
   transition: all 0.3s ease;
 
