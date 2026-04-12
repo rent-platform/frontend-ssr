@@ -5,6 +5,16 @@
   min-height: 100vh;
   background: #fff;
   color: $color-text;
+  font-family: inherit;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
 }
 
 .main {

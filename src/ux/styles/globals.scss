@@ -2,25 +2,28 @@
 @use 'vars' as *;
 @use 'helpers/mixins' as *;
 
-body {
+body[class] {
   font-family: $font-family-base;
   font-size: $font-size-base;
   color: $color-text;
   background-color: $color-bg;
   line-height: $line-height-normal;
+  font-optical-sizing: auto;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
 }
 
 :root {
   @include scrollbar;
 }
 
-h1, h2, h3 {
-  font-family: $font-family-base;
+h1, h2, h3, h4, h5, h6 {
+  font-family: inherit;
   color: $color-text;
 }
 
 button {
-  font-family: $font-family-base;
+  font-family: inherit;
   color: inherit;
 }
 

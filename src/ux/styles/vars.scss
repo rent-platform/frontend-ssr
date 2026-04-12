@@ -19,7 +19,20 @@ $color-warning:        #f59e0b;
 $color-error:          #ef4444;
 
 // ─── Typography ───────────────────────────────────────────────────────────────
-$font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+$font-family-base:
+  'Segoe UI Variable Text',
+  'SF Pro Text',
+  'Inter',
+  'Segoe UI',
+  'Helvetica Neue',
+  'Roboto',
+  'Noto Sans',
+  system-ui,
+  -apple-system,
+  BlinkMacSystemFont,
+  sans-serif;
+$font-family-marketplace-body: $font-family-base;
+$font-family-marketplace-display: $font-family-base;
 $font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
 $font-size-xs:   0.75rem;   // 12px
@@ -132,6 +145,8 @@ $breakpoint-sm:   $bp-sm;
   --color-warning:        #{$color-warning};
   --color-error:          #{$color-error};
   --font-family-base:     #{$font-family-base};
+  --font-family-marketplace-body: #{$font-family-marketplace-body};
+  --font-family-marketplace-display: #{$font-family-marketplace-display};
   --font-family-mono:     #{$font-family-mono};
   --radius-sm:  #{$radius-sm};
   --radius-md:  #{$radius-md};

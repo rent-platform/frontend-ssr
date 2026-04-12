@@ -1,16 +1,41 @@
+@use 'sass:color';
 @use '../../../styles/vars' as *;
 @use '../../../styles/helpers/mixins' as *;
 
 .detailPage {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: minmax(0, 1fr) 380px;
   gap: $space-12;
-  padding: $space-8 0;
+  padding: $space-8 0 $space-12;
+  align-items: start;
 }
 
 .detailContentMain {
+  min-width: 0;
   display: grid;
-  gap: $space-10;
+  gap: $space-8;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  width: fit-content;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: $radius-full;
+  background: rgba(255, 255, 255, 0.86);
+  color: $color-text-secondary;
+  font-size: 14px;
+  font-weight: 700;
+  transition: $transition-smooth;
+
+  &:hover {
+    color: $color-text;
+    background: #fff;
+    border-color: rgba(15, 23, 42, 0.08);
+    box-shadow: $shadow-sm;
+  }
 }
 
 .detailGallery {
@@ -19,13 +44,14 @@
 }
 
 .mainImageWrap {
+  position: relative;
   width: 100%;
   aspect-ratio: 16 / 10;
-  border-radius: $radius-2xl;
+  border-radius: 30px;
   overflow: hidden;
   background: $color-surface-muted;
-  box-shadow: $shadow-premium;
-  border: 1px solid $color-border;
+  box-shadow: 0 30px 60px -36px rgba(15, 23, 42, 0.34);
+  border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .detailMainImage {
@@ -33,48 +59,82 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.8s cubic-bezier(0.2, 0, 0, 1);
-  
+
   &:hover {
     transform: scale(1.03);
   }
 }
 
-.detailThumbs {
+.detailGalleryOverlay {
+  position: absolute;
+  inset: auto $space-5 $space-5 $space-5;
   display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $space-4;
+  pointer-events: none;
+}
+
+.detailGalleryBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.detailImageCounter {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: $radius-full;
+  background: rgba(15, 23, 42, 0.72);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+}
+
+.detailThumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 92px));
   gap: $space-3;
   overflow-x: auto;
-  padding-bottom: $space-2;
+  padding-bottom: $space-1;
   @include scrollbar-none;
 }
 
 .detailThumb {
-  flex: 0 0 100px;
+  flex: 0 0 92px;
   aspect-ratio: 1 / 1;
-  border-radius: $radius-lg;
+  border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 1px solid rgba(15, 23, 42, 0.08);
   transition: $transition-smooth;
   background: $color-surface-muted;
-  box-shadow: $shadow-sm;
+  box-shadow: 0 12px 20px -18px rgba(15, 23, 42, 0.4);
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
+    opacity: 0.72;
+    transition: $transition-smooth;
   }
 
   &:hover {
     transform: translateY(-2px);
+    border-color: rgba(34, 197, 94, 0.32);
     box-shadow: $shadow-md;
-    img { opacity: 1; }
+
+    img {
+      opacity: 1;
+    }
   }
 
   &Active {
-    border-color: $color-text;
-    box-shadow: $shadow-md;
+    border-color: $color-primary;
+    box-shadow: 0 18px 28px -22px rgba(34, 197, 94, 0.55);
+
     img {
       opacity: 1;
     }
@@ -83,318 +143,299 @@
 
 .detailHeader {
   display: grid;
-  gap: $space-4;
+  gap: $space-5;
+  padding: $space-8;
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.96) 100%);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 28px;
+  box-shadow: 0 24px 48px -36px rgba(15, 23, 42, 0.28);
 
   h1 {
     margin: 0;
-    font-size: 32px;
+    font-size: clamp(1.9rem, 3.6vw, 2.75rem);
     font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 1.1;
+    letter-spacing: -0.05em;
+    line-height: 1.04;
     color: $color-text;
+    max-width: 14ch;
   }
 }
 
 .detailMetaTop {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: $space-4;
 }
 
-.detailCategory {
-  font-size: 13px;
+.detailLabelRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.detailCategory,
+.detailFeaturedBadge,
+.available,
+.unavailable {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: $radius-full;
+  font-size: 12px;
   font-weight: 700;
-  color: $color-primary;
+  letter-spacing: 0.03em;
+}
+
+.detailCategory {
+  background: rgba(34, 197, 94, 0.1);
+  color: color.adjust($color-primary, $lightness: -10%);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+}
+
+.detailFeaturedBadge {
+  background: rgba(15, 23, 42, 0.92);
+  color: #fff;
+}
+
+.available {
+  background: rgba(16, 185, 129, 0.12);
+  color: #0f766e;
+}
+
+.unavailable {
+  background: rgba(245, 158, 11, 0.14);
+  color: #b45309;
 }
 
 .detailRating {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: $space-2;
-  font-size: $font-size-sm;
-  font-weight: 500;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: $radius-full;
+  background: rgba(255, 184, 0, 0.08);
   color: $color-text;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
 
-  strong {
-    font-weight: 700;
+  svg {
+    color: #f59e0b;
   }
 
   span {
     color: $color-text-secondary;
+    font-weight: 600;
   }
+}
+
+.detailLead {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 17px;
+  line-height: 1.72;
+  color: rgba(15, 23, 42, 0.86);
 }
 
 .detailLocation {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: $space-2;
+  gap: 10px;
+  width: fit-content;
+  padding: 10px 14px;
+  border-radius: 18px;
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(226, 232, 240, 0.9);
   color: $color-text-secondary;
-  font-size: $font-size-sm;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
+
+  svg {
+    color: $color-primary;
+  }
 }
 
-.detailDescription {
+.detailTrustRow {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: $space-4;
-  padding-top: $space-8;
-  border-top: 1px solid $color-border;
+}
 
-  h2 {
-    margin: 0;
-    font-size: $font-size-2xl;
-    font-weight: 700;
-    color: $color-text;
+.detailTrustItem {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+  padding: $space-4;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.92);
+
+  svg {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: $color-primary;
   }
 
-  p {
-    margin: 0;
-    font-size: $font-size-base;
-    line-height: 1.7;
+  div {
+    min-width: 0;
+    display: grid;
+    gap: 4px;
+  }
+
+  span {
+    font-size: 11px;
+    font-weight: 700;
+    color: $color-text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  strong {
+    font-size: 14px;
+    font-weight: 700;
     color: $color-text;
-    opacity: 0.9;
+    line-height: 1.45;
+  }
+}
+
+.detailQuickFilter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: $radius-full;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  color: $color-text;
+  font-size: 12px;
+  font-weight: 700;
+
+  svg {
+    color: $color-primary;
   }
 }
 
 .detailSpecs {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: $space-6;
-  padding: $space-10;
-  background: $color-surface-muted;
-  border-radius: $radius-2xl;
-  border: 1px solid rgba(0,0,0,0.02);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: $space-4;
 }
 
 .specItem {
-  display: grid;
-  gap: $space-1;
+  display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+  min-width: 0;
+  padding: $space-5;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.96) 100%);
+  border-radius: 24px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  box-shadow: 0 24px 44px -38px rgba(15, 23, 42, 0.32);
+}
 
-  span:first-child {
-    font-size: 10px;
+.specItemIcon {
+  @include square(40px);
+  @include flex-center;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: rgba(34, 197, 94, 0.1);
+  color: $color-primary;
+}
+
+.specItemContent {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+
+  span {
+    font-size: 11px;
     color: $color-text-secondary;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.09em;
     font-weight: 700;
   }
 
-  span:last-child {
+  strong {
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
     color: $color-text;
+    line-height: 1.45;
   }
 }
 
-.detailSidebar {
-  position: sticky;
-  top: 120px;
+.detailContentGrid {
   display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: $space-6;
 }
 
-.bookingCard {
-  padding: $space-10;
-  background: #fff;
-  border-radius: $radius-2xl;
-  border: 1px solid $color-border;
-  box-shadow: $shadow-premium;
+.detailDescription,
+.detailTermsCard,
+.detailAttributes {
   display: grid;
-  gap: $space-10;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: $color-primary;
-  }
+  gap: $space-5;
+  padding: $space-8;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 28px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  box-shadow: 0 24px 48px -38px rgba(15, 23, 42, 0.26);
 }
 
-.bookingPriceRow {
-  display: flex;
-  align-items: baseline;
-  gap: $space-1;
+.detailSectionHeader {
+  display: grid;
+  gap: 10px;
 
-  strong {
-    font-size: $font-size-3xl;
+  h2 {
+    margin: 0;
+    font-size: 28px;
     font-weight: 800;
+    letter-spacing: -0.04em;
     color: $color-text;
   }
 
-  span {
+  p {
+    margin: 0;
+    max-width: 48ch;
+    font-size: 14px;
+    line-height: 1.7;
     color: $color-text-secondary;
-    font-size: $font-size-base;
-    font-weight: 500;
   }
 }
 
-.bookingForm {
+.detailParagraphs {
   display: grid;
   gap: $space-4;
-}
 
-.bookingField {
-  display: grid;
-  gap: $space-2;
-
-  label {
-    font-size: 11px;
-    font-weight: 700;
-    color: $color-text;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-}
-
-.datePickerPlaceholder {
-  display: flex;
-  align-items: center;
-  gap: $space-3;
-  min-height: 56px;
-  padding: 0 $space-5;
-  background: transparent;
-  border-radius: $radius-md;
-  border: 1px solid $color-border;
-  color: $color-text;
-  font-weight: 500;
-  cursor: pointer;
-  transition: $transition-base;
-
-  &:hover {
-    border-color: $color-text;
-  }
-}
-
-.bookingAction {
-  width: 100%;
-  min-height: 56px;
-  border-radius: $radius-md;
-  background: $color-secondary;
-  color: #fff;
-  font-weight: 700;
-  font-size: $font-size-base;
-  border: 0;
-  cursor: pointer;
-  transition: $transition-spring;
-  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
-
-  &:hover {
-    background: darken($color-secondary, 5%);
-    transform: scale(1.02);
-    box-shadow: 0 6px 16px rgba(244, 63, 94, 0.4);
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-}
-
-.messageAction {
-  width: 100%;
-  min-height: 56px;
-  border-radius: $radius-md;
-  background: #fff;
-  color: $color-text;
-  font-weight: 600;
-  border: 1px solid $color-text;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $space-2;
-  transition: $transition-base;
-
-  &:hover {
-    background: $color-surface-muted;
-  }
-}
-
-.bookingTotal {
-  display: grid;
-  gap: $space-3;
-  padding: $space-6 0;
-  border-top: 1px solid $color-border;
-  border-bottom: 1px solid $color-border;
-}
-
-.totalRow {
-  display: flex;
-  justify-content: space-between;
-  font-size: $font-size-sm;
-  color: $color-text-secondary;
-  font-weight: 500;
-}
-
-.grandTotal {
-  margin-top: $space-2;
-  color: $color-text;
-  font-weight: 800;
-  font-size: $font-size-lg;
-}
-
-.ownerCardCompact {
-  display: flex;
-  align-items: center;
-  gap: $space-4;
-  padding: $space-5;
-  background: transparent;
-  border-radius: $radius-2xl;
-  border: 1px solid $color-border;
-  transition: $transition-base;
-
-  &:hover {
-    border-color: $color-text;
-    background: $color-surface-muted;
-  }
-
-  img {
-    @include square(52px);
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: $shadow-sm;
-  }
-}
-
-.backButton {
-  display: flex;
-  align-items: center;
-  gap: $space-2;
-  border: 0;
-  background: transparent;
-  color: $color-text;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0;
-  margin-bottom: $space-6;
-  text-decoration: none;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-
-  &:hover {
-    opacity: 1;
-    text-decoration: underline;
+  p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.8;
+    color: rgba(15, 23, 42, 0.88);
   }
 }
 
 .tagCloud {
   display: flex;
   flex-wrap: wrap;
-  gap: $space-2;
-  margin-top: $space-6;
+  gap: 10px;
 }
 
 .tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: $radius-full;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   color: $color-text-secondary;
   background: $color-surface-muted;
-  padding: 6px 14px;
-  border-radius: $radius-full;
   border: 1px solid transparent;
   transition: $transition-base;
 
@@ -405,48 +446,633 @@
   }
 }
 
-.bookingGuarantees {
+.detailTermsList {
   display: grid;
   gap: $space-3;
 }
 
-.guaranteeItem {
+.detailTermsItem {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: $space-3;
-  font-size: 12px;
-  font-weight: 500;
-  color: $color-text-secondary;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(15, 23, 42, 0.88);
 
   svg {
+    margin-top: 3px;
+    flex-shrink: 0;
     color: $color-success;
   }
 }
 
-.sidebarActions {
+.detailInlineNotice {
   display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+  padding: $space-4;
+  border-radius: 20px;
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  color: $color-text-secondary;
+  font-size: 14px;
+  line-height: 1.7;
+
+  svg {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: $color-primary;
+  }
+
+  strong {
+    color: $color-text;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $space-4;
+
+  h2 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: $color-text;
+  }
+
+  p {
+    margin: $space-2 0 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: $color-text-secondary;
+  }
+}
+
+.viewAllLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: $radius-full;
+  background: rgba(248, 250, 252, 0.96);
+  border: 1px solid rgba(226, 232, 240, 0.94);
+  color: $color-text;
+  font-size: 13px;
+  font-weight: 700;
+  transition: $transition-smooth;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: rgba(34, 197, 94, 0.25);
+    color: $color-primary;
+    background: #fff;
+  }
+}
+
+.detailSpecsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-4;
+}
+
+.detailSpecCard {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: $space-5;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.92) 0%, rgba(255, 255, 255, 0.98) 100%);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+
+  span {
+    font-size: 11px;
+    font-weight: 700;
+    color: $color-text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  strong {
+    font-size: 16px;
+    font-weight: 700;
+    color: $color-text;
+    line-height: 1.45;
+  }
+}
+
+.similarSection {
+  display: grid;
+  gap: $space-5;
+}
+
+.detailSidebar {
+  position: sticky;
+  top: 120px;
+  display: grid;
+  gap: $space-5;
+}
+
+.bookingCard {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: $space-5;
+  padding: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(248, 250, 252, 0.98) 100%);
+  border-radius: 32px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 30px 60px -40px rgba(15, 23, 42, 0.36);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, $color-primary 0%, color.adjust($color-primary, $lightness: 12%) 100%);
+  }
+}
+
+.bookingCardHeader {
+  display: grid;
+  gap: $space-4;
+}
+
+.sidebarEyebrow {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin: 0 0 $space-2;
+  font-size: 11px;
+  font-weight: 800;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.bookingPriceRow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
   gap: $space-2;
-  margin-top: $space-4;
+
+  strong {
+    font-size: clamp(30px, 5vw, 38px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    color: $color-text;
+  }
+}
+
+.bookingSecondaryPrice {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-text-secondary;
+}
+
+.bookingStatusRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bookingStatusActive,
+.bookingStatusNeutral {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: $radius-full;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bookingStatusActive {
+  background: rgba(16, 185, 129, 0.12);
+  color: #0f766e;
+}
+
+.bookingStatusNeutral {
+  background: rgba(248, 250, 252, 0.96);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  color: $color-text-secondary;
+}
+
+.bookingFieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.bookingFieldCard {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+
+  span {
+    font-size: 11px;
+    font-weight: 700;
+    color: $color-text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  strong {
+    font-size: 15px;
+    font-weight: 700;
+    color: $color-text;
+  }
+}
+
+.bookingForm {
+  display: grid;
+  gap: $space-5;
+}
+
+.bookingField {
+  display: grid;
+  gap: 10px;
+
+  label {
+    font-size: 11px;
+    font-weight: 800;
+    color: $color-text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+}
+
+.datePickerPlaceholder {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 0 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  color: $color-text;
+  font-size: 14px;
+  font-weight: 600;
+  transition: $transition-smooth;
+
+  svg {
+    flex-shrink: 0;
+    color: $color-primary;
+  }
+
+  &:hover {
+    background: #fff;
+    border-color: rgba(34, 197, 94, 0.28);
+    box-shadow: $shadow-sm;
+  }
+}
+
+.bookingTotal {
+  display: grid;
+  gap: 14px;
+  padding: $space-5;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(248, 250, 252, 0.96) 0%, rgba(255, 255, 255, 0.98) 100%);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.totalRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-4;
+  font-size: 14px;
+  line-height: 1.5;
+  color: $color-text-secondary;
+
+  &:not(:last-child) {
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.82);
+  }
+
+  strong {
+    flex-shrink: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: $color-text;
+    white-space: nowrap;
+  }
+}
+
+.grandTotal {
+  align-items: flex-end;
+
+  span {
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  strong {
+    font-size: 24px;
+    letter-spacing: -0.03em;
+  }
+}
+
+.detailActionRow {
+  display: grid;
+  gap: 12px;
+}
+
+.detailSidebar .primaryAction,
+.detailSidebar .secondaryAction,
+.detailSidebar .sidebarActionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 18px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  transition: $transition-smooth;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.16);
+  }
+}
+
+.detailSidebar .primaryAction {
+  border: 0;
+  color: #fff;
+  background: linear-gradient(135deg, $color-secondary 0%, color.adjust($color-secondary, $lightness: -7%) 100%);
+  box-shadow: 0 18px 34px -22px rgba(244, 63, 94, 0.72);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 22px 36px -20px rgba(244, 63, 94, 0.62);
+  }
+}
+
+.detailSidebar .secondaryAction,
+.detailSidebar .sidebarActionButton {
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.97);
+  color: $color-text;
+
+  &:hover {
+    background: #fff;
+    border-color: rgba(15, 23, 42, 0.14);
+    transform: translateY(-1px);
+    box-shadow: $shadow-sm;
+  }
+}
+
+.bookingMetaList {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: $color-text-secondary;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  svg {
+    margin-top: 3px;
+    flex-shrink: 0;
+    color: $color-primary;
+  }
+}
+
+.bookingGuarantees {
+  display: grid;
+  gap: 12px;
+  padding-top: $space-1;
+}
+
+.guaranteeItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(240, 253, 244, 0.76);
+  border: 1px solid rgba(34, 197, 94, 0.16);
+  color: $color-text;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.55;
+
+  svg {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: $color-primary;
+  }
+}
+
+.ownerCardCompact {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: $space-4;
+  align-items: start;
+  padding: $space-5;
+  background: rgba(255, 255, 255, 0.99);
+  border-radius: 28px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 24px 44px -36px rgba(15, 23, 42, 0.3);
+
+  img {
+    width: 64px;
+    height: 64px;
+    border-radius: 22px;
+    object-fit: cover;
+    box-shadow: 0 16px 28px -20px rgba(15, 23, 42, 0.35);
+  }
+}
+
+.ownerAvatarFallback {
+  @include flex-center;
+  width: 64px;
+  height: 64px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, $color-primary 0%, color.adjust($color-primary, $lightness: -10%) 100%);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  box-shadow: 0 16px 28px -20px rgba(34, 197, 94, 0.6);
+}
+
+.ownerInfo {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+
+  strong {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: $color-text;
+  }
+}
+
+.ownerMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: $color-text-secondary;
+  font-size: 13px;
+  font-weight: 700;
+
+  svg {
+    color: #f59e0b;
+  }
+}
+
+.ownerDescription {
+  margin: 0;
+  color: rgba(15, 23, 42, 0.78);
+  font-size: 14px;
+  line-height: 1.72;
+}
+
+.sidebarActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .sidebarActionButton {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $space-2;
-  padding: $space-3;
-  border-radius: $radius-md;
-  border: 1px solid $color-border;
-  background: transparent;
-  color: $color-text;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: $transition-base;
+  min-height: 52px;
+  font-size: 14px;
+}
 
-  &:hover {
-    background: $color-surface-muted;
-    border-color: $color-text;
+@include respond-below('xl') {
+  .detailPage {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: $space-8;
+  }
+
+  .detailContentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .detailTrustRow,
+  .detailSpecs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include respond-below('lg') {
+  .detailPage {
+    padding: $space-6 0 $space-10;
+  }
+
+  .detailSidebar {
+    position: static;
+    top: auto;
+  }
+}
+
+@include respond-below('md') {
+  .detailContentMain {
+    gap: $space-6;
+  }
+
+  .mainImageWrap {
+    aspect-ratio: 4 / 3;
+    border-radius: 24px;
+  }
+
+  .detailGalleryOverlay {
+    inset: auto $space-4 $space-4 $space-4;
+  }
+
+  .detailHeader,
+  .detailDescription,
+  .detailTermsCard,
+  .detailAttributes,
+  .bookingCard {
+    padding: $space-6;
+    border-radius: 24px;
+  }
+
+  .detailMetaTop,
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .detailTrustRow,
+  .detailSpecs,
+  .detailSpecsGrid,
+  .bookingFieldGrid,
+  .sidebarActions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@include respond-below('sm') {
+  .detailPage {
+    gap: $space-6;
+    padding: $space-5 0 $space-8;
+  }
+
+  .backButton {
+    padding: 9px 12px;
+  }
+
+  .detailThumbs {
+    grid-template-columns: repeat(auto-fit, minmax(76px, 76px));
+  }
+
+  .detailHeader h1 {
+    max-width: none;
+    font-size: clamp(1.8rem, 9vw, 2.4rem);
+  }
+
+  .detailLead {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .detailLocation {
+    width: 100%;
+  }
+
+  .bookingPriceRow strong {
+    font-size: 32px;
+  }
+
+  .grandTotal strong {
+    font-size: 22px;
+  }
+
+  .ownerCardCompact {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .ownerCardCompact img,
+  .ownerAvatarFallback {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
   }
 }

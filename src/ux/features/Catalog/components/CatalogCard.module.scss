@@ -30,8 +30,24 @@
   composes: cardFeatured from '../Catalog.module.scss';
 }
 
+.cardStatusChip {
+  composes: cardStatusChip from '../Catalog.module.scss';
+}
+
+.cardStatusAvailable {
+  composes: cardStatusAvailable from '../Catalog.module.scss';
+}
+
+.cardStatusSoon {
+  composes: cardStatusSoon from '../Catalog.module.scss';
+}
+
 .cardBody {
   composes: cardBody from '../Catalog.module.scss';
+}
+
+.cardBodyTop {
+  composes: cardBodyTop from '../Catalog.module.scss';
 }
 
 .cardMeta {
@@ -54,20 +70,8 @@
   composes: cardTitleButton from '../Catalog.module.scss';
 }
 
-.cardPriceRow {
-  composes: cardPriceRow from '../Catalog.module.scss';
-}
-
-.cardPriceBlock {
-  composes: cardPriceBlock from '../Catalog.module.scss';
-}
-
-.cardDepositBadge {
-  composes: cardDepositBadge from '../Catalog.module.scss';
-}
-
-.cardFooter {
-  composes: cardFooter from '../Catalog.module.scss';
+.cardMetaStack {
+  composes: cardMetaStack from '../Catalog.module.scss';
 }
 
 .cardLocationLine {
@@ -76,4 +80,64 @@
 
 .cardDate {
   composes: cardDate from '../Catalog.module.scss';
+}
+
+.cardMetaItem {
+  composes: cardMetaItem from '../Catalog.module.scss';
+}
+
+.cardMetaDivider {
+  composes: cardMetaDivider from '../Catalog.module.scss';
+}
+
+.cardHighlights {
+  composes: cardHighlights from '../Catalog.module.scss';
+}
+
+.cardHighlightChip {
+  composes: cardHighlightChip from '../Catalog.module.scss';
+}
+
+.cardHighlightChipMuted {
+  composes: cardHighlightChipMuted from '../Catalog.module.scss';
+}
+
+.cardFooter {
+  composes: cardFooter from '../Catalog.module.scss';
+}
+
+.cardOwnerRow {
+  composes: cardOwnerRow from '../Catalog.module.scss';
+}
+
+.cardOwnerAvatar {
+  composes: cardOwnerAvatar from '../Catalog.module.scss';
+}
+
+.cardOwnerAvatarImage {
+  composes: cardOwnerAvatarImage from '../Catalog.module.scss';
+}
+
+.cardOwnerInfo {
+  composes: cardOwnerInfo from '../Catalog.module.scss';
+}
+
+.cardPriceRow {
+  composes: cardPriceRow from '../Catalog.module.scss';
+}
+
+.cardPriceBlock {
+  composes: cardPriceBlock from '../Catalog.module.scss';
+}
+
+.cardPriceSecondary {
+  composes: cardPriceSecondary from '../Catalog.module.scss';
+}
+
+.cardDepositBadge {
+  composes: cardDepositBadge from '../Catalog.module.scss';
+}
+
+.cardActionButton {
+  composes: cardActionButton from '../Catalog.module.scss';
 }
