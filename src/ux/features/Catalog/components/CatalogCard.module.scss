@@ -6,6 +6,10 @@
   composes: cardFavorite from '../Catalog.module.scss';
 }
 
+.cardFavoriteActive {
+  composes: cardFavoriteActive from '../Catalog.module.scss';
+}
+
 .cardImageButton {
   composes: cardImageButton from '../Catalog.module.scss';
 }

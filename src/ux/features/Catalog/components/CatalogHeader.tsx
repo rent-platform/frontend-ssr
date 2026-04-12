@@ -1,89 +1,37 @@
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { 
+  Heart, 
+  Bell, 
+  MessageSquare, 
+  Plus, 
+  MapPin, 
+  User,
+  ChevronDown,
+  LayoutGrid,
+} from 'lucide-react';
 import styles from '../Catalog.module.scss';
 
 type CatalogHeaderProps = {
   cityLabel: string;
 };
 
-type IconProps = {
-  className?: string;
-};
-
-type BrandIconProps = {
-  className?: string;
-};
-
-function HeartIcon({ className }: IconProps) {
+export function BrandIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
-      <path
-        d="M12 20.2 4.95 13.3A4.95 4.95 0 0 1 12 6.5a4.95 4.95 0 0 1 7.05 6.8L12 20.2Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function BellIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
-      <path
-        d="M7.2 9.6a4.8 4.8 0 1 1 9.6 0v2.5c0 1 .36 1.97 1.01 2.74l.79.94H5.4l.8-.94A4.23 4.23 0 0 0 7.2 12.1V9.6Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M10 18a2 2 0 0 0 4 0"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function ChatIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
-      <path
-        d="M6 7.5A3.5 3.5 0 0 1 9.5 4h5A3.5 3.5 0 0 1 18 7.5v4A3.5 3.5 0 0 1 14.5 15H11l-4 3v-3.4A3.47 3.47 0 0 1 6 11.5v-4Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-export function BrandIcon({ className }: BrandIconProps) {
-  return (
-    <svg viewBox="0 0 44 44" aria-hidden="true" className={className ?? styles.brandSymbol}>
-      <defs>
-        <linearGradient id="brandGradient" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#16d57c" />
-          <stop offset="100%" stopColor="#0ea764" />
-        </linearGradient>
-      </defs>
-      <rect x="4" y="4" width="36" height="36" rx="14" fill="url(#brandGradient)" />
-      <path
-        d="M14 28.5 22.4 12h1.3L32 28.5h-5l-1.4-3.3h-6.9l-1.4 3.3H14Zm6.5-7.2h3.7l-1.8-4.4-1.9 4.4Z"
-        fill="#fff"
-      />
-    </svg>
+    <motion.div 
+      className={styles.brandSymbol}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <span style={{ fontSize: '20px', fontWeight: '800', lineHeight: 1 }}>А</span>
+    </motion.div>
   );
 }
 
 const actionIcons = [
-  { label: 'Избранное', count: 2, Icon: HeartIcon },
-  { label: 'Уведомления', count: 5, Icon: BellIcon },
-  { label: 'Сообщения', count: 9, Icon: ChatIcon },
+  { label: 'Избранное', count: 2, Icon: Heart },
+  { label: 'Уведомления', count: 5, Icon: Bell },
+  { label: 'Сообщения', count: 9, Icon: MessageSquare },
 ] as const;
 
 export function CatalogHeader({ cityLabel }: CatalogHeaderProps) {
@@ -91,46 +39,90 @@ export function CatalogHeader({ cityLabel }: CatalogHeaderProps) {
     <header className={styles.header}>
       <div className={styles.topbar}>
         <div className={styles.topbarInner}>
-          <Link href="/" className={styles.brandBlock} aria-label="Перейти на главную Арендай">
-            <BrandIcon />
-            <div className={styles.brandTextWrap}>
-              <strong>Арендай</strong>
-              <span>Каталог аренды вещей по городам России</span>
-            </div>
-          </Link>
+          <div className={styles.headerLeft}>
+            <Link href="/" className={styles.brandBlock} aria-label="Перейти на главную Арендай">
+              <BrandIcon />
+              <div className={styles.brandTextWrap}>
+                <strong>Арендай</strong>
+                <span className={styles.brandTagline}>Шеринг вещей №1</span>
+              </div>
+            </Link>
+
+            <nav className={styles.mainNav}>
+              <Link href="/catalog" className={styles.navLinkActive}>
+                <LayoutGrid size={18} />
+                <span>Каталог</span>
+              </Link>
+              <Link href="/how-it-works" className={styles.navLink}>
+                Как это работает
+              </Link>
+              <Link href="/safety" className={styles.navLink}>
+                Безопасность
+              </Link>
+            </nav>
+          </div>
 
           <div className={styles.topbarActions}>
-            <div className={styles.topbarLead}>
-              <button type="button" className={styles.linkButtonSecondary}>
-                Мои объявления
-              </button>
-              <button type="button" className={styles.linkButton}>
-                + Разместить объявление
-              </button>
+            <div className={styles.actionButtons}>
+              <motion.button 
+                type="button" 
+                className={styles.btnSecondary}
+                whileHover={{ y: -1 }}
+                whileTap={{ y: 0 }}
+              >
+                <Plus size={18} />
+                <span>Сдать в аренду</span>
+              </motion.button>
             </div>
+
+            <div className={styles.divider} />
 
             <div className={styles.iconActionRow}>
               {actionIcons.map(({ label, count, Icon }) => (
-                <button key={label} type="button" className={styles.iconAction} aria-label={label}>
-                  <Icon className={styles.iconSvg} />
-                  {count > 0 ? <span className={styles.iconBadge}>{count}</span> : null}
-                </button>
+                <motion.button 
+                  key={label} 
+                  type="button" 
+                  className={styles.iconAction} 
+                  aria-label={label}
+                  whileHover={{ y: -2, color: 'var(--color-primary)' }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Icon size={20} className={styles.iconSvg} />
+                  {count > 0 && (
+                    <motion.span 
+                      className={styles.iconBadge}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                    >
+                      {count}
+                    </motion.span>
+                  )}
+                </motion.button>
               ))}
             </div>
 
             <div className={styles.accountMeta}>
-              <div className={styles.cityBadge}>📍 {cityLabel}</div>
-              <button type="button" className={styles.profileBadge} aria-label="Профиль Владислава">
-                V
-              </button>
+              <motion.div 
+                className={styles.locationChip}
+                whileHover={{ backgroundColor: '#fff', borderColor: 'var(--color-border)' }}
+              >
+                <MapPin size={14} />
+                <span>{cityLabel}</span>
+              </motion.div>
+              
+              <motion.button 
+                type="button" 
+                className={styles.profileTrigger}
+                whileHover={{ y: -1, boxShadow: 'var(--shadow-md)' }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className={styles.avatarWrap}>
+                  <User size={18} />
+                </div>
+                <ChevronDown size={14} className={styles.chevron} />
+              </motion.button>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className={styles.headerMain}>
-        <div className={styles.headerCaption}>
-          <span>Выбирайте вещь, бронируйте срок, пользуйтесь! </span>
         </div>
       </div>
     </header>

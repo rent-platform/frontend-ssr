@@ -5,19 +5,9 @@ export function CatalogSkeletonCard() {
     <div className={styles.skeletonCard}>
       <div className={styles.skeletonImage} />
       <div className={styles.skeletonBody}>
-        <div className={styles.skeletonMeta}>
-          <div className={styles.skeletonLineSm} />
-          <div className={styles.skeletonRating} />
-        </div>
-        <div className={styles.skeletonLineLg} />
-        <div className={styles.skeletonPriceRow}>
-          <div className={styles.skeletonPrice} />
-          <div className={styles.skeletonDeposit} />
-        </div>
-        <div className={styles.skeletonFooter}>
-          <div className={styles.skeletonLocation} />
-          <div className={styles.skeletonDate} />
-        </div>
+        <div className={`${styles.skeletonLine} ${styles.skeletonLineTitle}`} />
+        <div className={`${styles.skeletonLine} ${styles.skeletonLineMedium}`} />
+        <div className={`${styles.skeletonLine} ${styles.skeletonLineShort}`} />
       </div>
     </div>
   );

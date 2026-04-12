@@ -20,37 +20,26 @@ const categoryVisualMap: Record<string, { emoji: string; hint: string }> = {
 
 export function CategoryRail({ categories, activeCategory, onCategoryChange }: CategoryRailProps) {
   return (
-    <section className={styles.categoryRail} aria-label="Популярные категории">
-      {categories.map((category, index) => {
+    <nav className={styles.categoryRail} aria-label="Категории товаров">
+      {categories.map((category) => {
         const visual = categoryVisualMap[category] ?? { emoji: '📦', hint: 'Аренда вещей' };
         const isActive = category === activeCategory;
 
         return (
-          <motion.button
+          <button
             key={category}
             type="button"
-            onClick={() => onCategoryChange(category)}
             className={isActive ? styles.categoryCardActive : styles.categoryCard}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            onClick={() => onCategoryChange(isActive ? 'Все категории' : category)}
+            aria-pressed={isActive}
           >
-            <div>
-              <span className={styles.categoryLabel}>{category}</span>
-              <span className={styles.categoryHint}>{visual.hint}</span>
-            </div>
-            <motion.span
-              className={styles.categoryEmoji}
-              animate={{ rotate: isActive ? [0, -10, 10, 0] : 0 }}
-              transition={{ duration: 0.5 }}
-            >
+            <span className={styles.categoryEmoji} role="img" aria-hidden="true">
               {visual.emoji}
-            </motion.span>
-          </motion.button>
+            </span>
+            <span className={styles.categoryLabel}>{category}</span>
+          </button>
         );
       })}
-    </section>
+    </nav>
   );
 }

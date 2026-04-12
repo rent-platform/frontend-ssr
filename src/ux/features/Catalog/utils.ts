@@ -36,6 +36,10 @@ export const INITIAL_FILTERS: CatalogFilterState = {
   onlyAvailable: true,
   sortBy: 'popular',
   quickFilter: null,
+  condition: [],
+  ownerType: 'all',
+  deliveryType: 'all',
+  hasDeposit: 'all',
 };
 
 export const getNumericPrice = (value: string | null) => {

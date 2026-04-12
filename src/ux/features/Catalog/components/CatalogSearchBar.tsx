@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useRef } from 'react';
+import { Search, SlidersHorizontal } from 'lucide-react';
 import type { CatalogFilterState } from '../types';
 import { getAnnouncementsLabel } from '../utils';
 import { CatalogFilters } from './CatalogFilters';
@@ -94,36 +95,45 @@ export function CatalogSearchBar({
       transition={{ duration: 0.3 }}
     >
       <div className={styles.searchBar}>
-        <motion.label
-          className={styles.searchInputWrap}
-          whileTap={{ scale: 1.01 }}
-          transition={{ type: 'spring', stiffness: 300 }}
-        >
-          <motion.span
-            className={styles.searchIcon}
-            animate={{ rotate: filters.search ? 90 : 0 }}
-          >
-            ⌕
-          </motion.span>
+        <div className={styles.searchInputWrap}>
+          <Search size={20} className={styles.searchIcon} />
           <input
             value={filters.search}
             onChange={(event) => onChange({ search: event.target.value })}
             className={styles.searchInput}
-            placeholder="Поиск по объявлениям"
+            placeholder="Что вы хотите арендовать?"
           />
-        </motion.label>
+        </div>
 
-        <button
+        <div className={styles.searchDivider} />
+
+        <motion.button
           type="button"
-          className={styles.searchButton}
+          className={isFiltersOpen ? styles.searchButtonActive : styles.searchButton}
           onClick={handlePrimaryAction}
           aria-expanded={isFiltersOpen}
           aria-controls="catalog-filters-panel"
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98, y: 0 }}
         >
-          {isFiltersOpen
-            ? `Показать ${resultsCount} ${getAnnouncementsLabel(resultsCount)}`
-            : 'Фильтры'}
-        </button>
+          <SlidersHorizontal size={18} />
+          <span>
+            {isFiltersOpen
+              ? `Показать ${resultsCount}`
+              : 'Фильтры'}
+          </span>
+        </motion.button>
+
+        <motion.button
+          type="button"
+          className={styles.primarySearchBtn}
+          onClick={handlePrimaryAction}
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98, y: 0 }}
+        >
+          <Search size={18} />
+          <span>Найти</span>
+        </motion.button>
       </div>
 
       <div className={styles.searchMetaRow}>
@@ -142,7 +152,7 @@ export function CatalogSearchBar({
         </div>
 
         <p className={styles.searchResultsNote}>
-          Найдено {resultsCount} {getAnnouncementsLabel(resultsCount)} по текущим параметрам.
+          Найдено {resultsCount} {getAnnouncementsLabel(resultsCount)}
         </p>
       </div>
 
@@ -151,10 +161,10 @@ export function CatalogSearchBar({
           <motion.div
             id="catalog-filters-panel"
             className={styles.searchFiltersPanel}
-            initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
           >
             <CatalogFilters
               filters={filters}

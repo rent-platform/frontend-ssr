@@ -1,11 +1,11 @@
-@use '../../styles/vars' as v;
+@use '../../styles/vars' as *;
 @use '../../styles/helpers/mixins' as *;
 
-@import './styles/base';
-@import './styles/header';
-@import './styles/search-and-filters';
-@import './styles/hero-and-category';
-@import './styles/catalog-grid-and-cards';
-@import './styles/detail-and-booking';
-@import './styles/states-and-skeletons';
-@import './styles/responsive';
+@use './styles/base';
+@use './styles/header';
+@use './styles/hero-and-category';
+@use './styles/search-and-filters';
+@use './styles/catalog-grid-and-cards';
+@use './styles/detail-and-booking';
+@use './styles/states-and-skeletons';
+@use './styles/responsive';

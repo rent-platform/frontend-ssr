@@ -56,4 +56,9 @@ export type CatalogFilterState = {
   onlyAvailable: boolean;
   sortBy: CatalogSortKey;
   quickFilter: string | null;
+  // Новые параметры для профессионального шеринга
+  condition: string[]; // ['new', 'like_new', 'used']
+  ownerType: 'all' | 'private' | 'pro';
+  deliveryType: 'all' | 'pickup' | 'delivery';
+  hasDeposit: 'all' | 'yes' | 'no';
 };

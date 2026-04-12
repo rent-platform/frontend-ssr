@@ -1,175 +1,109 @@
-@use '../../../styles/vars' as v;
+@use '../../../styles/vars' as *;
 @use '../../../styles/helpers/mixins' as *;
 
 .skeletonCard {
-  background: #fff;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid rgba(17, 24, 39, 0.05);
-}
-
-.skeletonImage,
-.detailSkeletonHero,
-.detailSkeletonMain,
-.detailSkeletonAside,
-.skeletonLineLg,
-.skeletonLineMd,
-.skeletonLineSm,
-.skeletonRating,
-.skeletonPrice,
-.skeletonDeposit,
-.skeletonLocation,
-.skeletonDate,
-.skeletonTagRow span {
-  background: linear-gradient(90deg, #f1f5f9 25%, #f8fafc 50%, #f1f5f9 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite linear;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  padding: 0 4px;
 }
 
 .skeletonImage {
-  aspect-ratio: 4 / 3;
   width: 100%;
+  aspect-ratio: 1 / 1;
+  background: $color-surface-muted;
+  border-radius: $radius-xl;
+  margin-bottom: $space-4;
+  @include skeleton-shimmer;
+  border: 1px solid rgba(0,0,0,0.02);
 }
 
 .skeletonBody {
-  padding: 6px 10px 8px;
-}
-
-.skeletonMeta {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 4px;
-}
-
-.skeletonLineSm {
-  height: 8px;
-  width: 40%;
-  border-radius: 3px;
-}
-
-.skeletonRating {
-  height: 8px;
-  width: 20px;
-  border-radius: 3px;
-}
-
-.skeletonLineLg {
-  height: 35px; // Соответствует 2.5em при 14px шрифте
-  width: 90%;
-  border-radius: 4px;
-  margin-bottom: 8px;
-}
-
-.skeletonPriceRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(17, 24, 39, 0.04);
-  margin-bottom: 4px;
-}
-
-.skeletonPrice {
-  height: 18px;
-  width: 45%;
-  border-radius: 4px;
-}
-
-.skeletonDeposit {
-  height: 14px;
-  width: 30%;
-  border-radius: 3px;
-}
-
-.skeletonFooter {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: $space-2;
 }
 
-.skeletonLocation {
-  height: 10px;
-  width: 60%;
-  border-radius: 3px;
-}
-
-.skeletonDate {
-  height: 10px;
-  width: 35%;
-  border-radius: 3px;
+.skeletonLine {
+  height: 12px;
+  background: $color-surface-muted;
+  border-radius: $radius-sm;
+  @include skeleton-shimmer;
+  
+  &Short {
+    width: 30%;
+  }
+  
+  &Medium {
+    width: 60%;
+  }
+  
+  &Title {
+    height: 18px;
+    width: 80%;
+    border-radius: $radius-md;
+    margin-bottom: $space-1;
+  }
 }
 
 .emptyState {
-  @include flex-center;
-  flex-direction: column;
-  gap: 14px;
-  min-height: 360px;
-  padding: 32px;
-  border-radius: 24px;
-  background: #fff;
-  border: 1px solid rgba(17, 24, 39, 0.06);
+  padding: $space-16 $space-8;
   text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: $space-4;
 
-  h3,
-  p {
+  h3 {
     margin: 0;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
   }
 
   p {
-    max-width: 520px;
-    color: #6b7280;
-    line-height: 1.55;
+    margin: 0;
+    max-width: 400px;
+    color: $color-text-secondary;
+    line-height: 1.6;
+  }
+  
+  button {
+    margin-top: $space-4;
+    padding: $space-3 $space-8;
+    background: $color-text;
+    color: #fff;
+    border: 0;
+    border-radius: $radius-full;
+    font-weight: $font-weight-600;
+    cursor: pointer;
+    transition: $transition-base;
+    
+    &:hover {
+      background: #000;
+    }
   }
 }
 
 .emptyIcon {
-  font-size: 42px;
+  font-size: 64px;
+  margin-bottom: $space-2;
 }
 
-.infiniteSentinel {
-  height: 1px;
+.loadingShell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: $space-8 $space-6;
 }
 
-.loadMoreWrap {
-  @include flex-center;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px 0 0;
-
-  p {
-    margin: 0;
-    color: #6b7280;
-  }
+.loadingHero {
+  height: 200px;
+  border-radius: $radius-xl;
+  background: $color-surface-muted;
+  margin-bottom: $space-12;
+  @include skeleton-shimmer;
 }
 
-.catalogEndMessage {
-  font-weight: 600;
-  color: #374151;
-}
-
-.detailLoadingState {
+.loadingGrid {
   display: grid;
-  gap: 18px;
-}
-
-.detailSkeletonHero {
-  height: 420px;
-  border-radius: 28px;
-}
-
-.detailSkeletonGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 18px;
-}
-
-.detailSkeletonMain,
-.detailSkeletonAside {
-  min-height: 260px;
-  border-radius: 24px;
-}
-
-.emptyState {
-  min-height: clamp(220px, 23vw, 280px);
-  padding: clamp(12px, 1vw, 16px);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: $space-10 $space-6;
 }

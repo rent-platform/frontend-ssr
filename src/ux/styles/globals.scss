@@ -1,16 +1,26 @@
 @use 'reset';
-@use 'vars' as v;
+@use 'vars' as *;
 @use 'helpers/mixins' as *;
 
 body {
-  font-family: v.$font-family-base;
-  font-size: v.$font-size-base;
-  color: v.$color-text;
-  background-color: v.$color-bg;
-  line-height: v.$line-height-normal;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  color: $color-text;
+  background-color: $color-bg;
+  line-height: $line-height-normal;
 }
 
 :root {
   @include scrollbar;
+}
+
+h1, h2, h3 {
+  font-family: $font-family-base;
+  color: $color-text;
+}
+
+button {
+  font-family: $font-family-base;
+  color: inherit;
 }
 

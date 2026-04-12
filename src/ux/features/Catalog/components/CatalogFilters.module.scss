@@ -10,24 +10,40 @@
   composes: sidebarTitleRow from '../Catalog.module.scss';
 }
 
-.sidebarEyebrow {
-  composes: sidebarEyebrow from '../Catalog.module.scss';
+.sidebarActions {
+  composes: sidebarActions from '../Catalog.module.scss';
 }
 
-.clearButton {
-  composes: clearButton from '../Catalog.module.scss';
+.resetButton {
+  composes: resetButton from '../Catalog.module.scss';
 }
 
-.activeFilters {
-  composes: activeFilters from '../Catalog.module.scss';
+.closeButton {
+  composes: closeButton from '../Catalog.module.scss';
 }
 
-.filterHint {
-  composes: filterHint from '../Catalog.module.scss';
+.titleWithIcon {
+  composes: titleWithIcon from '../Catalog.module.scss';
+}
+
+.titleIcon {
+  composes: titleIcon from '../Catalog.module.scss';
+}
+
+.scrollableContent {
+  composes: scrollableContent from '../Catalog.module.scss';
+}
+
+.gridSection {
+  composes: gridSection from '../Catalog.module.scss';
 }
 
 .filterGroup {
   composes: filterGroup from '../Catalog.module.scss';
+}
+
+.filterLabelRow {
+  composes: filterLabelRow from '../Catalog.module.scss';
 }
 
 .filterLabel {
@@ -38,48 +54,68 @@
   composes: cityDropdown from '../Catalog.module.scss';
 }
 
-.pricingSwitch {
-  composes: pricingSwitch from '../Catalog.module.scss';
+.conditionChips {
+  composes: conditionChips from '../Catalog.module.scss';
 }
 
-.switchButton {
-  composes: switchButton from '../Catalog.module.scss';
+.conditionChip {
+  composes: conditionChip from '../Catalog.module.scss';
 }
 
-.switchActive {
-  composes: switchActive from '../Catalog.module.scss';
+.conditionChipActive {
+  composes: conditionChipActive from '../Catalog.module.scss';
 }
 
-.quickFilters {
-  composes: quickFilters from '../Catalog.module.scss';
+.segmentedControl {
+  composes: segmentedControl from '../Catalog.module.scss';
 }
 
-.quickFilter {
-  composes: quickFilter from '../Catalog.module.scss';
+.segment {
+  composes: segment from '../Catalog.module.scss';
 }
 
-.quickFilterActive {
-  composes: quickFilterActive from '../Catalog.module.scss';
+.segmentActive {
+  composes: segmentActive from '../Catalog.module.scss';
 }
 
-.pricePresets {
-  composes: pricePresets from '../Catalog.module.scss';
+.switchesGrid {
+  composes: switchesGrid from '../Catalog.module.scss';
 }
 
-.pricePreset {
-  composes: pricePreset from '../Catalog.module.scss';
+.fancyCheckbox {
+  composes: fancyCheckbox from '../Catalog.module.scss';
 }
 
-.pricePresetActive {
-  composes: pricePresetActive from '../Catalog.module.scss';
+.checkboxContent {
+  composes: checkboxContent from '../Catalog.module.scss';
+}
+
+.checkMark {
+  composes: checkMark from '../Catalog.module.scss';
+}
+
+.footerStats {
+  composes: footerStats from '../Catalog.module.scss';
 }
 
 .priceFields {
   composes: priceFields from '../Catalog.module.scss';
 }
 
-.checkboxRow {
-  composes: checkboxRow from '../Catalog.module.scss';
+.priceLabel {
+  composes: priceLabel from '../Catalog.module.scss';
+}
+
+.priceInputLabel {
+  composes: priceInputLabel from '../Catalog.module.scss';
+}
+
+.priceInputWrap {
+  composes: priceInputWrap from '../Catalog.module.scss';
+}
+
+.currency {
+  composes: currency from '../Catalog.module.scss';
 }
 
 .filtersFooter {

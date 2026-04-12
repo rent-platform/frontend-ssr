@@ -5,13 +5,13 @@
   width: 100%;
   max-width: v.$auth-form-width;
   background: v.$color-bg-primary;
-  border-radius: v.$border-radius-l;
-  box-shadow: v.$shadow-modal;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-lg;
   padding: 40px 40px 32px;
 
-  @media (max-width: v.$breakpoint-sm) {
+  @media (max-width: v.$bp-sm) {
     padding: 28px 20px 24px;
-    border-radius: v.$border-radius-m;
+    border-radius: v.$radius-md;
   }
 }
 
@@ -19,15 +19,15 @@
 .header { text-align: start; margin-bottom: 1.5rem; }
 
 .title {
-  font-size: v.$font-size-h2;
+  font-size: v.$font-size-2xl;
   font-weight: v.$font-weight-bold;
-  color: v.$color-text-dark;
+  color: v.$color-text;
   margin: 0 0 8px;
 }
 
 .subtitle {
   font-size: v.$font-size-sm;
-  color: v.$color-text-muted;
+  color: v.$color-text-secondary;
   margin: 0;
 }
 
@@ -44,8 +44,8 @@
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  border-radius: v.$border-radius-s;
-  background: v.$color-error-bg;
+  border-radius: v.$radius-sm;
+  background: rgba(255, 90, 95, 0.1);
   color: v.$color-error;
   font-size: v.$font-size-sm;
   line-height: v.$line-height-normal;
@@ -76,19 +76,19 @@
   justify-content: center;
   gap: 8px;
   height: v.$auth-input-height;
-  background: v.$color-btn-primary;
-  color: v.$color-white;
+  background: v.$color-primary;
+  color: #fff;
   font-size: v.$font-size-base;
   font-weight: v.$font-weight-medium;
   border: none;
-  border-radius: v.$border-radius-l;
+  border-radius: v.$radius-lg;
   cursor: pointer;
   margin-top: 4px;
   transition: opacity v.$transition-fast, transform 0.1s ease, box-shadow v.$transition-fast;
 
   &:hover:not(:disabled) {
     opacity: 0.88;
-    box-shadow: 0 6px 18px rgba(22, 213, 124, 0.4);
+    box-shadow: 0 6px 18px rgba(0, 166, 153, 0.4);
   }
 
   &:active:not(:disabled) { transform: scale(0.98); opacity: 1; }
@@ -101,7 +101,7 @@
   width: 18px;
   height: 18px;
   border: 2px solid rgba(255, 255, 255, 0.4);
-  border-top-color: v.$color-white;
+  border-top-color: #fff;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   flex-shrink: 0;
@@ -114,12 +114,12 @@
   margin-top: 24px;
   text-align: center;
   font-size: v.$font-size-sm;
-  color: v.$color-text-muted;
+  color: v.$color-text-secondary;
 }
 
 .link {
   color: v.$color-primary;
-  font-weight: v.$font-weight-500;
+  font-weight: v.$font-weight-medium;
   text-decoration: none;
   transition: color v.$transition-fast;
 

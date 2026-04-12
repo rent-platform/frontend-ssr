@@ -19,25 +19,19 @@ const sortOptions: GlassSelectOption[] = [
 export function CatalogToolbar({ total, visible, filters, onChange }: CatalogToolbarProps) {
   return (
     <div className={styles.toolbar}>
-      <div>
-        <h2>Объявления для аренды</h2>
-        <p>
-          Показано {Math.min(visible, total)} из {total} объявлений
-        </p>
-      </div>
+      <p>
+        Найдено {total} вариантов
+      </p>
 
       <div className={styles.toolbarActions}>
-        <label className={styles.sortSelectWrap}>
-          <span>Сортировка</span>
-          <GlassSelect
-            label="Сортировка"
-            value={filters.sortBy}
-            options={sortOptions}
-            onChange={(value) => onChange({ sortBy: value as CatalogFilterState['sortBy'] })}
-            triggerClassName={styles.sortGlassTrigger}
-            dropdownClassName={styles.sortDropdown}
-          />
-        </label>
+        <GlassSelect
+          label="Сортировка"
+          value={filters.sortBy}
+          options={sortOptions}
+          onChange={(value) => onChange({ sortBy: value as CatalogFilterState['sortBy'] })}
+          triggerClassName={styles.sortGlassTrigger}
+          dropdownClassName={styles.sortDropdown}
+        />
       </div>
     </div>
   );

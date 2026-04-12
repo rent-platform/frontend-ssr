@@ -14,12 +14,24 @@
   composes: searchIcon from '../Catalog.module.scss';
 }
 
+.searchDivider {
+  composes: searchDivider from '../Catalog.module.scss';
+}
+
 .searchInput {
   composes: searchInput from '../Catalog.module.scss';
 }
 
 .searchButton {
   composes: searchButton from '../Catalog.module.scss';
+}
+
+.searchButtonActive {
+  composes: searchButtonActive from '../Catalog.module.scss';
+}
+
+.primarySearchBtn {
+  composes: primarySearchBtn from '../Catalog.module.scss';
 }
 
 .searchMetaRow {
