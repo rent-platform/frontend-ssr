@@ -102,7 +102,13 @@ export function CatalogFilters({
   };
 
   return (
-    <aside className={`${styles.sidebar} ${isMobileOpen ? styles.mobileOpen : ''}`}>
+    <motion.aside 
+      className={`${styles.sidebar} ${isMobileOpen ? styles.mobileOpen : ''}`}
+      initial={{ x: -320, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: -320, opacity: 0 }}
+      transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+    >
       <motion.div
         className={styles.sidebarCard}
         variants={containerVariants}
@@ -325,7 +331,7 @@ export function CatalogFilters({
           </motion.button>
         </motion.div>
       </motion.div>
-    </aside>
+    </motion.aside>
   );
 }
 

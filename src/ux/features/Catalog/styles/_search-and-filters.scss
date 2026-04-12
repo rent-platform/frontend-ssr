@@ -3,7 +3,8 @@
 
 .searchShell {
   position: relative;
-  z-index: 100;
+  z-index: 50;
+  margin-top: $space-6;
   margin-bottom: $space-12;
 }
 
@@ -116,47 +117,25 @@
 }
 
 .sidebar {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  @include flex-center;
-  padding: $space-4;
-  pointer-events: none;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.4);
-    backdrop-filter: blur(8px);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: auto;
-  }
-
-  &.mobileOpen, &:global(.active) {
-    pointer-events: auto;
-    &::before {
-      opacity: 1;
-    }
-  }
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  position: sticky;
+  top: $space-8;
+  z-index: 10;
 }
 
 .sidebarCard {
-  position: relative;
   background: #fff;
-  padding: $space-8;
+  padding: $space-6;
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 680px;
-  max-height: 85vh;
-  border-radius: $radius-3xl;
-  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  z-index: 2001;
-  pointer-events: auto;
+  border-radius: $radius-2xl;
+  border: 1px solid $color-border;
+  box-shadow: $shadow-sm;
 }
+
 
 .searchFiltersPanel {
   display: contents; // Выносим управление в .sidebar

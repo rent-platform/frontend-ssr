@@ -2,8 +2,9 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { BrandIcon, CatalogHeader } from './components/CatalogHeader';
+import { CatalogHeader } from './components/CatalogHeader';
 import { CatalogSearchBar } from './components/CatalogSearchBar';
+import { CatalogFilters } from './components/CatalogFilters';
 import { CategoryRail } from './components/CategoryRail';
 import { CatalogToolbar } from './components/CatalogToolbar';
 import { CatalogCard } from './components/CatalogCard';
@@ -43,6 +44,9 @@ export function CatalogExperience() {
     : [];
 
   const hasMore = visibleCount < filteredItems.length;
+
+  const onCloseFilters = () => setIsFiltersOpen(false);
+  const onToggleFilters = () => setIsFiltersOpen(!isFiltersOpen);
 
   const updateFilters = (patch: Partial<typeof filters>) => {
     setFilters((prev) => ({ ...prev, ...patch }));
@@ -106,25 +110,47 @@ export function CatalogExperience() {
           filters={filters}
           resultsCount={filteredItems.length}
           isFiltersOpen={isFiltersOpen}
-          onToggleFilters={() => setIsFiltersOpen((prev) => !prev)}
-          onCloseFilters={() => setIsFiltersOpen(false)}
+          onToggleFilters={onToggleFilters}
+          onCloseFilters={onCloseFilters}
           onChange={updateFilters}
           onResetFilters={() => setFilters(INITIAL_FILTERS)}
         />
 
         {selectedItem ? null : (
           <>
-            <section className={styles.hero}>
-              <div className={styles.heroPromoBanner}>
-                <div className={styles.heroPromoContent}>
-                  <div className={styles.heroEyebrow}>Sharing Economy</div>
-                  <h1>Берите в аренду то, что нужно сейчас</h1>
-                  <p>
+            <header className={styles.hero}>
+              <motion.div 
+                className={styles.heroGlassCard}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className={styles.heroContent}>
+                  <span className={styles.eyebrow}>
+                    Sharing Economy
+                  </span>
+                  <h1 className={styles.title}>Берите в аренду то, что нужно сейчас</h1>
+                  <p className={styles.subtitle}>
                     Инструменты, техника и товары для досуга в вашем городе.
                   </p>
+                  
+                  <div className={styles.stats}>
+                    <div className={styles.statCard}>
+                      <strong>{mockCatalogItems.length}</strong>
+                      <span>Объявлений</span>
+                    </div>
+                    <div className={styles.statCard}>
+                      <strong>{CATEGORY_OPTIONS.length}</strong>
+                      <span>Категорий</span>
+                    </div>
+                    <div className={styles.statCard}>
+                      <strong>24/7</strong>
+                      <span>Поддержка</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </section>
+              </motion.div>
+            </header>
 
             <CategoryRail
               categories={CATEGORY_OPTIONS}
@@ -158,8 +184,20 @@ export function CatalogExperience() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <section id="catalog" className={styles.catalogContentOnly}>
-              <div className={styles.catalogContent}>
+            <section id="catalog-results" className={isFiltersOpen ? styles.catalogLayout : styles.catalogLayoutClosed}>
+              <AnimatePresence>
+                {isFiltersOpen && (
+                  <CatalogFilters
+                    filters={filters}
+                    resultsCount={filteredItems.length}
+                    onChange={updateFilters}
+                    onReset={() => setFilters(INITIAL_FILTERS)}
+                    onClose={onCloseFilters}
+                  />
+                )}
+              </AnimatePresence>
+
+              <div className={styles.content}>
                 <CatalogToolbar
                   total={filteredItems.length}
                   visible={visibleItems.length}
@@ -167,37 +205,32 @@ export function CatalogExperience() {
                   onChange={updateFilters}
                 />
 
-                {filteredItems.length === 0 ? (
-                  <div className={styles.emptyState}>
-                    <div className={styles.emptyIcon}>🔎</div>
-                    <h3>Ничего не найдено</h3>
-                    <p>
-                      Попробуйте изменить категорию, город или поисковый запрос.
-                    </p>
-                    <button type="button" onClick={() => setFilters(INITIAL_FILTERS)}>
-                      Сбросить фильтры
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <div className={styles.grid}>
-                      <AnimatePresence mode="popLayout">
-                        {visibleItems.map((item, index) => (
-                          <CatalogCard
-                            key={item.id}
-                            item={item}
-                            index={index}
-                            onOpen={handleOpenItem}
-                          />
-                        ))}
-                      </AnimatePresence>
+                <div className={styles.resultsGrid}>
+                  {visibleItems.length > 0 ? (
+                    visibleItems.map((item) => (
+                      <CatalogCard
+                        key={item.id}
+                        item={item}
+                        onOpen={handleOpenItem}
+                      />
+                    ))
+                  ) : (
+                    <div className={styles.emptyState}>
+                      <h3>Ничего не нашли</h3>
+                      <p>Попробуйте изменить параметры поиска или фильтры</p>
+                      <button 
+                        className={styles.resetBtn}
+                        onClick={() => updateFilters({ search: '', city: '', category: '' })}
+                      >
+                        Сбросить всё
+                      </button>
                     </div>
+                  )}
 
-                    {hasMore && (
-                      <div ref={sentinelRef} className={styles.infiniteSentinel} />
-                    )}
-                  </>
-                )}
+                  {hasMore && (
+                    <div ref={sentinelRef} className={styles.infiniteSentinel} />
+                  )}
+                </div>
               </div>
             </section>
           </motion.div>

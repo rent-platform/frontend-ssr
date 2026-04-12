@@ -12,3 +12,89 @@
   margin: 0 auto;
   padding: 0 0 $space-12;
 }
+
+.catalogLayout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: $space-10;
+  margin-top: $space-8;
+  transition: all 0.3s ease;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+    gap: $space-6;
+  }
+}
+
+.catalogLayoutClosed {
+  display: block; // Просто блок, контент займет всё место
+  margin-top: $space-8;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; // Смещаем всё вправо
+  gap: $space-4;
+  padding-bottom: $space-4;
+  border-bottom: 1px solid $color-border;
+}
+
+.toolbarInfo {
+  display: none; // Скрываем громоздкий заголовок, оставляем только счетчик в минимализме
+}
+
+.toolbarControls {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+}
+
+.resultsCountMinimal {
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  margin: 0;
+  
+  strong {
+    color: $color-text;
+  }
+}
+
+.selectWrap {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  cursor: pointer;
+  
+  span {
+    white-space: nowrap;
+  }
+}
+
+.select {
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  color: $color-text;
+  cursor: pointer;
+  outline: 0;
+  padding: 4px 0;
+  border-bottom: 1.5px solid transparent;
+  transition: $transition-smooth;
+  
+  &:hover {
+    color: $color-primary;
+    border-bottom-color: $color-primary;
+  }
+}

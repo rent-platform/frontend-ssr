@@ -3,9 +3,9 @@
 
 .detailPage {
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 1fr 380px;
   gap: $space-12;
-  padding-bottom: $space-16;
+  padding: $space-8 0;
 }
 
 .detailContentMain {

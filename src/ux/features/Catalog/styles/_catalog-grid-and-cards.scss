@@ -2,9 +2,10 @@
 @use '../../../styles/helpers/mixins' as *;
 
 .grid,
-.similarGrid {
+.similarGrid,
+.resultsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: $space-10 $space-6;
   padding: $space-4 0;
 }
@@ -31,6 +32,16 @@
       color: $color-primary;
     }
   }
+}
+
+.cardImageButton {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  outline: 0;
 }
 
 .cardFavorite {

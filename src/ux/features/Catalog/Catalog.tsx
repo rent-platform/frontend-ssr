@@ -167,7 +167,7 @@ export default function Catalog() {
             <div className={styles.loadingHero} />
             <div className={styles.loadingColumns}>
               <div className={styles.loadingSidebar} />
-              <div className={styles.content}>
+              <div id="catalog-results" className={styles.content}>
                 <div className={styles.loadingToolbar} />
                 <div className={styles.loadingGrid}>
                   {Array.from({ length: 6 }).map((_, index) => (
@@ -346,18 +346,15 @@ export default function Catalog() {
             isMobileOpen={mobileFiltersOpen}
           />
 
-          <div className={styles.content}>
+          <div id="catalog-results" className={styles.content}>
             <div className={styles.toolbar}>
-              <div className={styles.toolbarInfo}>
-                <h2>Объявления в каталоге</h2>
-                <p>
-                  {filteredItems.length > 0
-                    ? `Показано ${visibleItems.length} из ${filteredItems.length}`
-                    : "Попробуй снять часть фильтров или изменить запрос"}
-                </p>
-              </div>
-
               <div className={styles.toolbarControls}>
+                <p className={styles.resultsCountMinimal}>
+                  Найдено <strong>{filteredItems.length}</strong> {getAnnouncementsLabel(filteredItems.length)}
+                </p>
+
+                <div className={styles.searchDivider} style={{ height: '16px' }} />
+
                 <label className={styles.selectWrap}>
                   <span>Сортировка</span>
                   <select
@@ -365,11 +362,11 @@ export default function Catalog() {
                     onChange={(event) => updateSort(event.target.value as CatalogSort)}
                     className={styles.select}
                   >
-                    <option value="popular">Сначала популярные</option>
-                    <option value="newest">Сначала новые</option>
-                    <option value="priceAsc">Цена по возрастанию</option>
-                    <option value="priceDesc">Цена по убыванию</option>
-                    <option value="rating">Лучший рейтинг</option>
+                    <option value="popular">популярные</option>
+                    <option value="newest">новые</option>
+                    <option value="priceAsc">дешевле</option>
+                    <option value="priceDesc">дороже</option>
+                    <option value="rating">с рейтингом</option>
                   </select>
                 </label>
               </div>

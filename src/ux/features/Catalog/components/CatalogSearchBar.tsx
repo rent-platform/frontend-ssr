@@ -32,23 +32,15 @@ export function CatalogSearchBar({
       return undefined;
     }
 
-    const handleClickOutside = (event: MouseEvent) => {
-      if (!shellRef.current?.contains(event.target as Node)) {
-        onCloseFilters();
-      }
-    };
-
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onCloseFilters();
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('keydown', handleEscape);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
     };
   }, [isFiltersOpen, onCloseFilters]);
@@ -73,17 +65,15 @@ export function CatalogSearchBar({
     return items;
   }, [filters]);
 
-  const handlePrimaryAction = () => {
+  const handleSearchAction = () => {
     if (isFiltersOpen) {
       onCloseFilters();
-      document.getElementById('catalog')?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-      return;
     }
-
-    onToggleFilters();
+    
+    document.getElementById('catalog-results')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
   };
 
   return (
@@ -100,6 +90,7 @@ export function CatalogSearchBar({
           <input
             value={filters.search}
             onChange={(event) => onChange({ search: event.target.value })}
+            onKeyDown={(e) => e.key === 'Enter' && handleSearchAction()}
             className={styles.searchInput}
             placeholder="Что вы хотите арендовать?"
           />
@@ -110,7 +101,7 @@ export function CatalogSearchBar({
         <motion.button
           type="button"
           className={isFiltersOpen ? styles.searchButtonActive : styles.searchButton}
-          onClick={handlePrimaryAction}
+          onClick={onToggleFilters}
           aria-expanded={isFiltersOpen}
           aria-controls="catalog-filters-panel"
           whileHover={{ scale: 1.02, y: -1 }}
@@ -119,7 +110,7 @@ export function CatalogSearchBar({
           <SlidersHorizontal size={18} />
           <span>
             {isFiltersOpen
-              ? `Показать ${resultsCount}`
+              ? `Скрыть`
               : 'Фильтры'}
           </span>
         </motion.button>
@@ -127,7 +118,7 @@ export function CatalogSearchBar({
         <motion.button
           type="button"
           className={styles.primarySearchBtn}
-          onClick={handlePrimaryAction}
+          onClick={handleSearchAction}
           whileHover={{ scale: 1.02, y: -1 }}
           whileTap={{ scale: 0.98, y: 0 }}
         >

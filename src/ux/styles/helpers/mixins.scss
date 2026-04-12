@@ -33,6 +33,21 @@
   }
 }
 
+// Shortcut для мобильных устройств
+@mixin mobile {
+  @include respond-below('md') {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @include respond-to('md') {
+    @include respond-below('lg') {
+      @content;
+    }
+  }
+}
+
 // ─── Typography ───────────────────────────────────────────────────────────────
 
 @mixin text-truncate {
