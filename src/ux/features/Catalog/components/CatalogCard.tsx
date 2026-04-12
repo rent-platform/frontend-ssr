@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Star } from 'lucide-react';
 import type { CatalogUiItem } from '../types';
 import {
   formatCatalogCardLocation,
@@ -45,7 +46,7 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardP
         <div className={styles.cardMeta}>
           <span className={styles.cardCategory}>{item.category}</span>
           <div className={styles.cardRating}>
-            <span className={styles.starIcon}>★</span>
+            <Star className={styles.starIcon} size={12} fill="#ffb800" color="#ffb800" />
             <strong>{item.ownerRating}</strong>
           </div>
         </div>

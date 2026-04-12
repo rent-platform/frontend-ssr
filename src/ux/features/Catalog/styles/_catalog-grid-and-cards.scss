@@ -173,14 +173,26 @@
 
 .cardRating {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 2px;
   font-size: 11px;
   color: #1e293b;
+  line-height: 1;
 
   .starIcon {
-    color: #fbbf24;
-    font-size: 9px;
+    color: #ffb800;
+    fill: #ffb800;
+    width: 11px;
+    height: 11px;
+    display: block;
+    flex-shrink: 0;
+    margin-right: 1px;
+  }
+
+  strong {
+    line-height: 1;
+    display: block;
   }
 }
 

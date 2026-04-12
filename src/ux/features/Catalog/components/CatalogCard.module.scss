@@ -18,20 +18,36 @@
   composes: cardImage from '../Catalog.module.scss';
 }
 
-.cardImageMeta {
-  composes: cardImageMeta from '../Catalog.module.scss';
+.cardBadge {
+  composes: cardBadge from '../Catalog.module.scss';
 }
 
 .cardFeatured {
   composes: cardFeatured from '../Catalog.module.scss';
 }
 
-.cardAvailability {
-  composes: cardAvailability from '../Catalog.module.scss';
-}
-
 .cardBody {
   composes: cardBody from '../Catalog.module.scss';
+}
+
+.cardMeta {
+  composes: cardMeta from '../Catalog.module.scss';
+}
+
+.cardCategory {
+  composes: cardCategory from '../Catalog.module.scss';
+}
+
+.cardRating {
+  composes: cardRating from '../Catalog.module.scss';
+}
+
+.starIcon {
+  composes: starIcon from '../Catalog.module.scss';
+}
+
+.cardTitleButton {
+  composes: cardTitleButton from '../Catalog.module.scss';
 }
 
 .cardPriceRow {
@@ -46,10 +62,14 @@
   composes: cardDepositBadge from '../Catalog.module.scss';
 }
 
-.cardTitleButton {
-  composes: cardTitleButton from '../Catalog.module.scss';
+.cardFooter {
+  composes: cardFooter from '../Catalog.module.scss';
 }
 
 .cardLocationLine {
   composes: cardLocationLine from '../Catalog.module.scss';
+}
+
+.cardDate {
+  composes: cardDate from '../Catalog.module.scss';
 }

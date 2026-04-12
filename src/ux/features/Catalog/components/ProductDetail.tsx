@@ -1,6 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
+import { Star } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { CatalogUiItem } from '../types';
 import { CatalogCard } from './CatalogCard';
@@ -126,7 +127,10 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
               </div>
               <div>
                 <dt>Рейтинг</dt>
-                <dd>★ {item.ownerRating}</dd>
+                <dd style={{ display: 'flex', alignItems: 'center' }}>
+                  <Star size={12} fill="#ffb800" color="#ffb800" style={{ marginRight: '4px' }} />
+                  {item.ownerRating}
+                </dd>
               </div>
               <div>
                 <dt>Выдача</dt>
@@ -200,8 +204,9 @@ export function ProductDetail({ item, similarItems, onBack, onOpenSimilar }: Pro
               <div className={styles.sellerAvatarLarge} aria-hidden="true">{item.ownerAvatar}</div>
               <div>
                 <strong>{item.ownerName}</strong>
-                <p>
-                  ★ {item.ownerRating} · {item.responseTime}
+                <p style={{ display: 'flex', alignItems: 'center' }}>
+                  <Star size={12} fill="#ffb800" color="#ffb800" style={{ marginRight: '4px' }} />
+                  {item.ownerRating} · {item.responseTime}
                 </p>
               </div>
             </div>
