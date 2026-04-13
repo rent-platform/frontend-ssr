@@ -178,12 +178,16 @@
 }
 
 .scrollableContent {
+  overflow-x: hidden;
   overflow-y: auto;
   padding-right: $space-2;
   display: flex;
   flex-direction: column;
   gap: $space-6;
-  @include scrollbar-none;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.55) rgba(15, 23, 42, 0.06);
+  @include scrollbar(10px, rgba(34, 197, 94, 0.55), rgba(15, 23, 42, 0.06));
 }
 
 .gridSection {
@@ -232,7 +236,10 @@
   gap: 2px;
   max-height: 300px;
   overflow-y: auto;
-  @include scrollbar-none;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.55) transparent;
+  @include scrollbar(10px, rgba(34, 197, 94, 0.55), rgba(15, 23, 42, 0.06));
 }
 
 .glassSelectOption, .glassSelectOptionActive {

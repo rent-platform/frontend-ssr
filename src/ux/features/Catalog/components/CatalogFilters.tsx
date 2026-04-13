@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
+  Star,
   Truck,
   User,
   Wallet,
@@ -64,8 +65,39 @@ const quickFilterIcons: Record<(typeof QUICK_FILTER_OPTIONS)[number], LucideIcon
   'С доставкой': Truck,
   'Рядом сегодня': Zap,
   'Без залога': ShieldCheck,
-  'Топ-рейтинг': Sparkles,
+  'Топ-рейтинг': Star,
   Новинки: Sparkles,
+};
+
+const quickFilterMeta: Record<
+  (typeof QUICK_FILTER_OPTIONS)[number],
+  { title: string; description: string; tone: 'delivery' | 'near' | 'deposit' | 'top' | 'new' }
+> = {
+  'С доставкой': {
+    title: 'С доставкой',
+    description: 'Привезут к двери или в удобную точку',
+    tone: 'delivery',
+  },
+  'Рядом сегодня': {
+    title: 'Рядом сегодня',
+    description: 'Быстро забрать — без ожиданий',
+    tone: 'near',
+  },
+  'Без залога': {
+    title: 'Без залога',
+    description: 'Без блокировок и лишних платежей',
+    tone: 'deposit',
+  },
+  'Топ-рейтинг': {
+    title: 'Топ-рейтинг',
+    description: 'Проверенные арендодатели и отзывы',
+    tone: 'top',
+  },
+  Новинки: {
+    title: 'Новинки',
+    description: 'Свежие объявления и новые вещи',
+    tone: 'new',
+  },
 };
 
 const categoryOptions: GlassSelectOption[] = CATEGORY_OPTIONS.map((option) => ({
@@ -94,6 +126,10 @@ const FILTER_SECTIONS = [
   { value: 'extras', label: 'Быстро', icon: Sparkles },
 ] as const;
 
+function normalizePriceValue(value: string) {
+  return value.replace(/[^\d]/g, '').slice(0, 10);
+}
+
 export function CatalogFilters({
   filters,
   resultsCount,
@@ -120,6 +156,122 @@ export function CatalogFilters({
     return count;
   }, [filters]);
 
+  const activeFilterChips = useMemo(() => {
+    const chips: Array<{
+      key: string;
+      label: string;
+      icon: LucideIcon;
+      onRemove: () => void;
+    }> = [];
+
+    if (filters.city !== INITIAL_FILTERS.city) {
+      chips.push({
+        key: `city-${filters.city}`,
+        label: filters.city,
+        icon: MapPin,
+        onRemove: () => onChange({ city: INITIAL_FILTERS.city }),
+      });
+    }
+
+    if (filters.category !== INITIAL_FILTERS.category) {
+      chips.push({
+        key: `category-${filters.category}`,
+        label: filters.category,
+        icon: LayoutGrid,
+        onRemove: () => onChange({ category: INITIAL_FILTERS.category }),
+      });
+    }
+
+    if (filters.minPrice || filters.maxPrice) {
+      const minLabel = filters.minPrice ? `от ${filters.minPrice} ₽` : 'от любой цены';
+      const maxLabel = filters.maxPrice ? `до ${filters.maxPrice} ₽` : 'без лимита';
+      chips.push({
+        key: `price-${filters.minPrice}-${filters.maxPrice}`,
+        label: `${minLabel} · ${maxLabel}`,
+        icon: Wallet,
+        onRemove: () => onChange({ minPrice: '', maxPrice: '' }),
+      });
+    }
+
+    if (filters.condition.length > 0) {
+      const conditionLabels: Record<string, string> = {
+        new: 'Новое',
+        like_new: 'Как новое',
+        used: 'Б/У',
+      };
+
+      filters.condition.forEach((value) => {
+        chips.push({
+          key: `condition-${value}`,
+          label: conditionLabels[value] ?? value,
+          icon: Sparkles,
+          onRemove: () =>
+            onChange({
+              condition: filters.condition.filter((item) => item !== value),
+            }),
+        });
+      });
+    }
+
+    if (filters.ownerType !== INITIAL_FILTERS.ownerType) {
+      const ownerLabels: Record<string, string> = {
+        all: 'Все владельцы',
+        private: 'Частные',
+        pro: 'Профи',
+      };
+      chips.push({
+        key: `owner-${filters.ownerType}`,
+        label: ownerLabels[filters.ownerType as string] ?? String(filters.ownerType),
+        icon: User,
+        onRemove: () => onChange({ ownerType: INITIAL_FILTERS.ownerType }),
+      });
+    }
+
+    if (filters.deliveryType !== INITIAL_FILTERS.deliveryType) {
+      const deliveryLabels: Record<string, string> = {
+        all: 'Любой способ',
+        pickup: 'Самовывоз',
+        delivery: 'Доставка',
+      };
+      chips.push({
+        key: `delivery-${filters.deliveryType}`,
+        label: deliveryLabels[filters.deliveryType as string] ?? String(filters.deliveryType),
+        icon: Truck,
+        onRemove: () => onChange({ deliveryType: INITIAL_FILTERS.deliveryType }),
+      });
+    }
+
+    if (filters.onlyAvailable !== INITIAL_FILTERS.onlyAvailable) {
+      chips.push({
+        key: `availability-${String(filters.onlyAvailable)}`,
+        label: 'Доступно сегодня',
+        icon: CalendarCheck,
+        onRemove: () => onChange({ onlyAvailable: INITIAL_FILTERS.onlyAvailable }),
+      });
+    }
+
+    if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit) {
+      chips.push({
+        key: `deposit-${String(filters.hasDeposit)}`,
+        label: filters.hasDeposit === 'no' ? 'Без залога' : 'С залогом',
+        icon: ShieldCheck,
+        onRemove: () => onChange({ hasDeposit: INITIAL_FILTERS.hasDeposit }),
+      });
+    }
+
+    if (filters.quickFilter) {
+      const Icon = quickFilterIcons[filters.quickFilter] ?? Sparkles;
+      chips.push({
+        key: `quick-${filters.quickFilter}`,
+        label: filters.quickFilter,
+        icon: Icon,
+        onRemove: () => onChange({ quickFilter: INITIAL_FILTERS.quickFilter }),
+      });
+    }
+
+    return chips;
+  }, [filters, onChange]);
+
   const handleConditionToggle = (value: string) => {
     const next = filters.condition.includes(value)
       ? filters.condition.filter((item) => item !== value)
@@ -142,6 +294,7 @@ export function CatalogFilters({
       onClick={onClose}
     >
       <motion.aside
+        id="catalog-filters-panel"
         className={styles.sidebarCard}
         role="dialog"
         aria-modal="true"
@@ -158,9 +311,9 @@ export function CatalogFilters({
               <SlidersHorizontal size={20} />
             </div>
             <div className={styles.modalTitleCopy}>
-              <span className={styles.modalEyebrow}>Large Filters</span>
-              <h3>Фильтры поиска</h3>
-              <p>Крупная модальная панель для точной настройки выдачи без визуального шума.</p>
+              <span className={styles.modalEyebrow}>Каталог</span>
+              <h3>Фильтры</h3>
+              <p>Настрой выдачу по городу, цене и условиям аренды. Все выбранные параметры можно снять одним кликом.</p>
             </div>
           </div>
 
@@ -173,6 +326,7 @@ export function CatalogFilters({
               }}
               className={styles.resetButton}
               title="Очистить всё"
+              aria-label="Очистить все фильтры"
             >
               <RotateCcw size={18} />
             </button>
@@ -182,6 +336,7 @@ export function CatalogFilters({
               onClick={onClose}
               className={styles.closeButton}
               title="Закрыть"
+              aria-label="Закрыть фильтры"
             >
               <X size={20} />
             </button>
@@ -204,15 +359,35 @@ export function CatalogFilters({
           </div>
         </div>
 
-        <div className={styles.modalIntro}>
-          <div className={styles.modalIntroIcon}>
-            <Compass size={18} />
+        {activeFilterChips.length > 0 ? (
+          <div className={styles.activeFiltersRow} aria-label="Активные фильтры">
+            <div className={styles.activeFiltersList}>
+              {activeFilterChips.map((chip) => (
+                <button
+                  key={chip.key}
+                  type="button"
+                  className={styles.activeFilterChip}
+                  onClick={chip.onRemove}
+                  title="Убрать фильтр"
+                >
+                  <chip.icon size={14} />
+                  <span>{chip.label}</span>
+                  <X size={14} />
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className={styles.resetInline}
+              onClick={() => {
+                onReset();
+                setActiveSection('main');
+              }}
+            >
+              Очистить все
+            </button>
           </div>
-          <div className={styles.modalIntroContent}>
-            <strong>Быстро переключайся между разделами</strong>
-            <p>Основные параметры, условия аренды и быстрые сценарии собраны в отдельных вкладках с underline-навигацией.</p>
-          </div>
-        </div>
+        ) : null}
 
         <Tabs
           items={FILTER_SECTIONS}
@@ -273,10 +448,13 @@ export function CatalogFilters({
                     <div className={styles.priceInputWrap}>
                       <span className={styles.priceInputLabel}>От</span>
                       <input
+                        type="text"
                         value={filters.minPrice}
-                        onChange={(event) => onChange({ minPrice: event.target.value })}
+                        onChange={(event) => onChange({ minPrice: normalizePriceValue(event.target.value) })}
                         placeholder="0"
                         inputMode="numeric"
+                        autoComplete="off"
+                        aria-label="Минимальная цена"
                       />
                       <span className={styles.currency}>₽</span>
                     </div>
@@ -284,10 +462,13 @@ export function CatalogFilters({
                     <div className={styles.priceInputWrap}>
                       <span className={styles.priceInputLabel}>До</span>
                       <input
+                        type="text"
                         value={filters.maxPrice}
-                        onChange={(event) => onChange({ maxPrice: event.target.value })}
+                        onChange={(event) => onChange({ maxPrice: normalizePriceValue(event.target.value) })}
                         placeholder="Без лимита"
                         inputMode="numeric"
+                        autoComplete="off"
+                        aria-label="Максимальная цена"
                       />
                       <span className={styles.currency}>₽</span>
                     </div>
@@ -400,6 +581,7 @@ export function CatalogFilters({
 
                   <div className={styles.quickFilterGrid}>
                     {QUICK_FILTER_OPTIONS.map((option) => {
+                      const meta = quickFilterMeta[option];
                       const Icon = quickFilterIcons[option];
                       const active = filters.quickFilter === option;
 
@@ -407,53 +589,30 @@ export function CatalogFilters({
                         <button
                           key={option}
                           type="button"
-                          className={active ? styles.quickFilterCardActive : styles.quickFilterCard}
+                          aria-pressed={active}
+                          className={`${active ? styles.quickFilterCardActive : styles.quickFilterCard} ${
+                            meta.tone === 'delivery'
+                              ? styles.quickFilterToneDelivery
+                              : meta.tone === 'near'
+                                ? styles.quickFilterToneNear
+                                : meta.tone === 'deposit'
+                                  ? styles.quickFilterToneDeposit
+                                  : meta.tone === 'top'
+                                    ? styles.quickFilterToneTop
+                                    : styles.quickFilterToneNew
+                          }`}
                           onClick={() => handleQuickFilterToggle(option)}
                         >
-                          <Icon size={18} />
-                          <span>{option}</span>
+                          <span className={styles.quickFilterIconWrap} aria-hidden="true">
+                            <Icon size={16} />
+                          </span>
+                          <span className={styles.quickFilterText}>
+                            <span className={styles.quickFilterTitle}>{meta.title}</span>
+                            <span className={styles.quickFilterHint}>{meta.description}</span>
+                          </span>
                         </button>
                       );
                     })}
-                  </div>
-                </section>
-
-                <section className={styles.filterGroup}>
-                  <div className={styles.filterLabelRow}>
-                    <Zap size={18} />
-                    <span className={styles.filterLabel}>Дополнительно</span>
-                  </div>
-
-                  <div className={styles.switchesGrid}>
-                    <label className={styles.fancyCheckbox}>
-                      <input
-                        type="checkbox"
-                        checked={filters.onlyAvailable}
-                        onChange={(event) => onChange({ onlyAvailable: event.target.checked })}
-                      />
-                      <div className={styles.checkboxContent}>
-                        <CalendarCheck size={18} />
-                        <span>Доступно сегодня</span>
-                        <div className={styles.checkMark}>
-                          <CheckCircle2 size={16} />
-                        </div>
-                      </div>
-                    </label>
-
-                    <label className={styles.fancyCheckbox}>
-                      <input
-                        type="checkbox"
-                        checked={filters.hasDeposit === 'no'}
-                        onChange={(event) => onChange({ hasDeposit: event.target.checked ? 'no' : 'all' })}
-                      />
-                      <div className={styles.checkboxContent}>
-                        <ShieldCheck size={18} />
-                        <span>Без залога</span>
-                        <div className={styles.checkMark}>
-                          <CheckCircle2 size={16} />
-                        </div>
-                      </div>
-                    </label>
                   </div>
                 </section>
               </motion.div>
@@ -476,7 +635,7 @@ export function CatalogFilters({
             whileTap={{ scale: 0.99 }}
           >
             <Search size={18} />
-            <span>Применить фильтры</span>
+            <span>Показать {resultsCount}</span>
           </motion.button>
         </div>
       </motion.aside>

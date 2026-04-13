@@ -46,6 +46,8 @@ export function GlassSelect({
   maxVisibleCount = 80,
 }: GlassSelectProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
 
@@ -77,6 +79,61 @@ export function GlassSelect({
       document.removeEventListener('keydown', handleEscape);
     };
   }, []);
+
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const compute = () => {
+      const trigger = triggerRef.current;
+      const dropdown = dropdownRef.current;
+      if (!trigger || !dropdown) return;
+
+      const rect = trigger.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const margin = 12;
+      const gap = 8;
+
+      const width = Math.min(rect.width, viewportWidth - margin * 2);
+      const left = Math.min(
+        Math.max(margin, rect.left + rect.width / 2 - width / 2),
+        viewportWidth - margin - width,
+      );
+
+      const availableBelow = viewportHeight - rect.bottom - margin - gap;
+      const availableAbove = rect.top - margin - gap;
+      const shouldOpenBelow = availableBelow >= 240 || availableBelow >= availableAbove;
+
+      dropdown.style.position = 'fixed';
+      dropdown.style.left = `${left}px`;
+      dropdown.style.width = `${width}px`;
+      dropdown.style.maxHeight = `${Math.max(180, shouldOpenBelow ? availableBelow : availableAbove)}px`;
+      dropdown.style.zIndex = '2200';
+
+      if (shouldOpenBelow) {
+        dropdown.style.top = `${rect.bottom + gap}px`;
+        dropdown.style.bottom = '';
+        return;
+      }
+
+      dropdown.style.bottom = `${viewportHeight - rect.top + gap}px`;
+      dropdown.style.top = '';
+    };
+
+    compute();
+
+    const onViewportEvent = () => {
+      requestAnimationFrame(compute);
+    };
+
+    window.addEventListener('resize', onViewportEvent);
+    window.addEventListener('scroll', onViewportEvent, true);
+
+    return () => {
+      window.removeEventListener('resize', onViewportEvent);
+      window.removeEventListener('scroll', onViewportEvent, true);
+    };
+  }, [open]);
 
   const filteredOptions = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -115,6 +172,7 @@ export function GlassSelect({
     <div ref={rootRef} className={styles.glassSelect}>
       <span className={styles.visuallyHidden}>{label}</span>
       <button
+        ref={triggerRef}
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -130,7 +188,10 @@ export function GlassSelect({
       </button>
 
       {open ? (
-        <div className={`${styles.glassSelectDropdown}${dropdownClassName ? ` ${dropdownClassName}` : ''}`}>
+        <div
+          ref={dropdownRef}
+          className={`${styles.glassSelectDropdown}${dropdownClassName ? ` ${dropdownClassName}` : ''}`}
+        >
           {searchable ? (
             <div className={styles.glassSelectSearchWrap}>
               <input

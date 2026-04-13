@@ -20,8 +20,8 @@ export const CITY_OPTIONS = [
 ] as const;
 
 export const QUICK_FILTER_OPTIONS = [
-  'С доставкой',
   'Рядом сегодня',
+  'С доставкой',
   'Без залога',
   'Топ-рейтинг',
   'Новинки',
