@@ -579,22 +579,6 @@ export function CatalogFilters({
                   </div>
                 </section>
 
-                <section className={`${styles.filterGroup} ${styles.filterGroupWide}`}>
-                  <label className={styles.fancyCheckbox}>
-                    <input
-                      type="checkbox"
-                      checked={filters.onlyAvailable}
-                      onChange={(e) => onChange({ onlyAvailable: e.target.checked })}
-                    />
-                    <span className={styles.checkboxContent}>
-                      <CalendarCheck size={20} />
-                      <span>Доступно сейчас</span>
-                      <span className={styles.checkMark}>
-                        <CheckCircle2 size={14} />
-                      </span>
-                    </span>
-                  </label>
-                </section>
               </motion.div>
             ) : null}
 
