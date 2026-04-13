@@ -21,7 +21,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Tabs } from '../../../components/Tabs/Tabs';
+import { Tabs, type TabsItem } from '../../../components/Tabs/Tabs';
 import type { CatalogFilterState } from '../types';
 import {
   CATEGORY_OPTIONS,
@@ -126,11 +126,11 @@ const cityOptions: GlassSelectOption[] = [
   })),
 ];
 
-const FILTER_SECTIONS = [
+const FILTER_SECTIONS: TabsItem<FilterSectionKey>[] = [
   { value: 'main', label: 'Основное', icon: Search },
   { value: 'terms', label: 'Условия', icon: Compass },
   { value: 'extras', label: 'Быстро', icon: Sparkles },
-] as const;
+];
 
 function normalizePriceValue(value: string) {
   return value.replace(/[^\d]/g, '').slice(0, 10);
