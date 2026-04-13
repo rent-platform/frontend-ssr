@@ -19,8 +19,8 @@
 .sidebarCard {
   width: min(1080px, calc(100vw - 48px));
   max-height: min(880px, calc(100vh - 48px));
-  display: grid;
-  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  display: flex;
+  flex-direction: column;
   gap: $space-4;
   padding: 24px;
   border-radius: 26px;
@@ -273,12 +273,14 @@
   position: relative;
   z-index: 3;
   margin-top: 2px;
-  padding: 0 4px 10px;
-  background: linear-gradient(180deg, rgba(248, 250, 252, 0.62) 0%, rgba(248, 250, 252, 0) 100%);
+  padding: 0 4px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.86);
 }
 
 .scrollableContent {
-  min-height: 0;
+  flex: 1 1 auto;
+  min-height: 200px;
   overflow-x: hidden;
   overflow-y: auto;
   position: relative;
@@ -531,6 +533,7 @@
 .quickFilterCard,
 .quickFilterCardActive {
   --qf-accent: 34, 197, 94;
+  position: relative;
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr);
   align-items: center;
@@ -678,6 +681,7 @@
   gap: $space-3;
   padding-top: $space-3;
   border-top: 1px solid rgba(226, 232, 240, 0.86);
+  flex-shrink: 0;
 }
 
 .footerStats {
@@ -804,3 +808,154 @@
     padding: 14px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   TOGGLE SWITCH — Production-level animated toggle
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.togglesSection {
+  display: grid;
+  gap: $space-3;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-4;
+  padding: $space-3 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggleInfo {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  min-width: 0;
+}
+
+.toggleIconWrap {
+  @include flex-center;
+  @include square(36px);
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  color: $color-primary;
+}
+
+.toggleText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.toggleLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.toggleDesc {
+  font-size: 12px;
+  font-weight: 500;
+  color: $color-text-secondary;
+  line-height: 1.4;
+}
+
+.toggleTrack,
+.toggleTrackActive {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 48px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  padding: 3px;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+  }
+}
+
+.toggleTrack {
+  background: rgba(15, 23, 42, 0.12);
+  justify-content: flex-start;
+}
+
+.toggleTrackActive {
+  background: $color-primary;
+  box-shadow: $shadow-green-sm;
+  justify-content: flex-end;
+}
+
+.toggleThumb {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* ─── Price Hint Badge ─── */
+.priceHintBadge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  padding: 3px 10px;
+  border-radius: $radius-full;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  font-size: 11px;
+  font-weight: 700;
+  color: $color-primary;
+  white-space: nowrap;
+}
+
+/* ─── Active Filter Badge ─── */
+.modalBadgeActive {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: $radius-full;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  color: $color-primary;
+  font-size: 12px;
+  font-weight: 700;
+
+  strong {
+    font-weight: 800;
+  }
+}
+
+/* ─── Quick Filter Check ─── */
+.quickFilterCheck {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: rgb(var(--qf-accent));
+}
+
