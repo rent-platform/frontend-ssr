@@ -652,14 +652,9 @@
   gap: 2px;
   padding: $space-3 $space-4;
   background: #fff;
-  border: 0;
-  cursor: pointer;
   text-align: left;
-  transition: background 0.15s;
 
   &:first-child { border-right: 1px solid $color-border; }
-
-  &:hover { background: $color-green-50; }
 
   .dateLabel {
     font-size: 10px;

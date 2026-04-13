@@ -355,18 +355,18 @@ export function ProductDetail({
 
           {/* Date Selector */}
           <div className={styles.bookingDates}>
-            <button type="button" className={styles.bookingDateBtn} onClick={() => setCalendarOpen(true)}>
+            <div className={styles.bookingDateBtn}>
               <span className={styles.dateLabel}>Начало</span>
               <span className={startDate ? styles.dateValueActive : styles.dateValue}>
-                <Calendar size={14} /> {startDate ? formatDateShort(startDate) : 'Выбрать дату'}
+                <Calendar size={14} /> {startDate ? formatDateShort(startDate) : 'Не выбрано'}
               </span>
-            </button>
-            <button type="button" className={styles.bookingDateBtn} onClick={() => setCalendarOpen(true)}>
+            </div>
+            <div className={styles.bookingDateBtn}>
               <span className={styles.dateLabel}>Конец</span>
               <span className={endDate ? styles.dateValueActive : styles.dateValue}>
-                <Calendar size={14} /> {endDate ? formatDateShort(endDate) : 'Выбрать дату'}
+                <Calendar size={14} /> {endDate ? formatDateShort(endDate) : 'Не выбрано'}
               </span>
-            </button>
+            </div>
           </div>
 
           {/* Pricing Breakdown */}
