@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './RentalCalendar.module.scss';
@@ -121,7 +122,7 @@ export function RentalCalendar({
     return `${diff} ${dayWord}`;
   }, [startDate, endDate]);
 
-  return (
+  return createPortal(
     <motion.div
       className={styles.overlay}
       initial={{ opacity: 0 }}
@@ -223,6 +224,7 @@ export function RentalCalendar({
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body,
   );
 }

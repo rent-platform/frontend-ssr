@@ -30,7 +30,6 @@ import {
   formatDepositAmount,
   formatPrice,
   formatRelativeDate,
-  formatViews,
 } from '../utils';
 import { CatalogCard } from './CatalogCard';
 import { RentalCalendar } from './RentalCalendar';
@@ -57,7 +56,6 @@ export function ProductDetail({
 
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.created_at);
-  const viewsLabel = formatViews(item.views_count);
   const primaryPrice = formatCatalogCardPrimaryPrice(item);
   const hourPrice = formatCatalogCardHourSecondary(item);
   const depositAmount = Number(String(item.deposit_amount ?? '0').replace(/\s/g, ''));
@@ -205,7 +203,7 @@ export function ProductDetail({
           <div className={styles.detailMetaTop}>
             <div className={styles.detailRating}>
               <Star size={16} />
-              {item.ownerRating} <span>({viewsLabel})</span>
+              {item.ownerRating}
             </div>
             <span className={styles.detailMetaDot} />
             <div className={styles.detailLocation}>
@@ -235,24 +233,10 @@ export function ProductDetail({
             </div>
           </div>
           <div className={styles.detailTrustItem}>
-            <MessageCircle size={20} />
-            <div>
-              <span>Ответ владельца</span>
-              <strong>{item.responseTime}</strong>
-            </div>
-          </div>
-          <div className={styles.detailTrustItem}>
             <Truck size={20} />
             <div>
               <span>Доставка</span>
               <strong>Есть / Самовывоз</strong>
-            </div>
-          </div>
-          <div className={styles.detailTrustItem}>
-            <Eye size={20} />
-            <div>
-              <span>Просмотры</span>
-              <strong>{item.views_count}</strong>
             </div>
           </div>
         </section>
