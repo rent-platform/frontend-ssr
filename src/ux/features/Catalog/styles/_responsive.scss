@@ -9,6 +9,12 @@
 
   .detailSidebar {
     position: static;
+    order: -1;
+  }
+
+  .detailContentGrid {
+    grid-template-columns: 1fr;
+    gap: $space-8;
   }
 }
 
@@ -36,8 +42,22 @@
     font-size: $font-size-3xl;
   }
 
-  .detailSpecs {
-    grid-template-columns: 1fr;
+  .detailTrustRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .detailSpecsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .backBar {
+    flex-wrap: wrap;
+    gap: $space-3;
+  }
+
+  .guaranteeBanner {
+    padding: $space-5;
+    gap: $space-4;
   }
 }
 
