@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import {
@@ -33,6 +33,7 @@ import {
   formatViews,
 } from '../utils';
 import { CatalogCard } from './CatalogCard';
+import { RentalCalendar } from './RentalCalendar';
 import styles from '../Catalog.module.scss';
 
 type ProductDetailProps = {
@@ -50,6 +51,9 @@ export function ProductDetail({
 }: ProductDetailProps) {
   const [activeImage, setActiveImage] = useState(0);
   const [isFav, setIsFav] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.created_at);
@@ -60,10 +64,25 @@ export function ProductDetail({
   const depositLabel = depositAmount > 0 ? formatDepositAmount(item.deposit_amount) : null;
 
   const dailyPrice = Number(String(item.price_per_day ?? '0').replace(/\s/g, ''));
-  const rentalDays = 3;
-  const subtotal = dailyPrice * rentalDays;
+  const rentalDays = useMemo(() => {
+    if (!startDate || !endDate) return 0;
+    return Math.max(1, Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+  }, [startDate, endDate]);
+  const subtotal = dailyPrice * (rentalDays || 1);
   const serviceFee = Math.max(290, Math.round(subtotal * 0.08));
   const total = subtotal + serviceFee;
+
+  const formatDateShort = (d: Date) =>
+    d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+
+  const handleDateSelect = useCallback((start: Date | null, end: Date | null) => {
+    setStartDate(start);
+    setEndDate(end);
+  }, []);
+
+  const handleCalendarConfirm = useCallback(() => {
+    setCalendarOpen(false);
+  }, []);
 
   const canPrev = activeImage > 0;
   const canNext = activeImage < item.images.length - 1;
@@ -352,16 +371,16 @@ export function ProductDetail({
 
           {/* Date Selector */}
           <div className={styles.bookingDates}>
-            <button type="button" className={styles.bookingDateBtn}>
+            <button type="button" className={styles.bookingDateBtn} onClick={() => setCalendarOpen(true)}>
               <span className={styles.dateLabel}>Начало</span>
-              <span className={styles.dateValue}>
-                <Calendar size={14} /> Выбрать дату
+              <span className={startDate ? styles.dateValueActive : styles.dateValue}>
+                <Calendar size={14} /> {startDate ? formatDateShort(startDate) : 'Выбрать дату'}
               </span>
             </button>
-            <button type="button" className={styles.bookingDateBtn}>
+            <button type="button" className={styles.bookingDateBtn} onClick={() => setCalendarOpen(true)}>
               <span className={styles.dateLabel}>Конец</span>
-              <span className={styles.dateValue}>
-                <Calendar size={14} /> Выбрать дату
+              <span className={endDate ? styles.dateValueActive : styles.dateValue}>
+                <Calendar size={14} /> {endDate ? formatDateShort(endDate) : 'Выбрать дату'}
               </span>
             </button>
           </div>
@@ -369,7 +388,7 @@ export function ProductDetail({
           {/* Pricing Breakdown */}
           <div className={styles.bookingTotal}>
             <div className={styles.totalRow}>
-              <span>{formatPrice(String(dailyPrice), '')} × {rentalDays} дня</span>
+              <span>{formatPrice(String(dailyPrice), '')} × {rentalDays || 1} {rentalDays === 1 ? 'день' : rentalDays < 5 ? 'дня' : 'дней'}</span>
               <span>{formatPrice(String(subtotal), '')}</span>
             </div>
             <div className={styles.totalRow}>
@@ -391,10 +410,22 @@ export function ProductDetail({
           )}
 
           {/* Actions */}
-          <button type="button" className={styles.primaryAction}>
+          <button type="button" className={styles.primaryAction} onClick={() => setCalendarOpen(true)}>
             <Calendar size={18} />
             Забронировать
           </button>
+
+          <AnimatePresence>
+            {calendarOpen ? (
+              <RentalCalendar
+                startDate={startDate}
+                endDate={endDate}
+                onSelect={handleDateSelect}
+                onConfirm={handleCalendarConfirm}
+                onClose={() => setCalendarOpen(false)}
+              />
+            ) : null}
+          </AnimatePresence>
 
           <div className={styles.bookingActions}>
             <button type="button" className={styles.secondaryAction}>

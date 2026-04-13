@@ -670,9 +670,28 @@
   }
 
   .dateValue {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 14px;
     font-weight: 600;
-    color: $color-text;
+    color: $color-text-secondary;
+
+    svg { flex-shrink: 0; }
+  }
+
+  .dateValueActive {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: $color-primary;
+
+    svg {
+      flex-shrink: 0;
+      color: $color-primary;
+    }
   }
 }
 
