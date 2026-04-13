@@ -102,15 +102,32 @@
   border: 1px solid rgba(15, 23, 42, 0.05);
 }
 
-.detailMainImage {
+.detailMainImageBlur {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: blur(28px) saturate(1.2) brightness(0.85);
+  transform: scale(1.08);
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.detailMainImage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .detailGalleryOverlay {
   position: absolute;
   inset: auto $space-5 $space-5 $space-5;
+  z-index: 4;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -166,6 +183,7 @@
 .galleryNav {
   position: absolute;
   inset: 0;
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -247,7 +265,7 @@
     letter-spacing: -0.025em;
     color: $color-text;
     margin: 0;
-    font-family: $font-family-display;
+    font-family: $font-family-base;
   }
 }
 

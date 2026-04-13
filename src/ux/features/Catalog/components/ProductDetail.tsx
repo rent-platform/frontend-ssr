@@ -109,6 +109,11 @@ export function ProductDetail({
         {/* ─── Gallery ─── */}
         <section className={styles.detailGallery}>
           <div className={styles.mainImageWrap}>
+            <img
+              src={item.images[activeImage]}
+              aria-hidden="true"
+              className={styles.detailMainImageBlur}
+            />
             <AnimatePresence mode="wait">
               <motion.img
                 key={activeImage}
