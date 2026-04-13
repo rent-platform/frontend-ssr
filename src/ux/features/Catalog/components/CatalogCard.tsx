@@ -1,6 +1,8 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useCallback, useRef, useState } from 'react';
 import {
+  ArrowRight,
+  ChevronLeft,
   ChevronRight,
   Clock3,
   Eye,
@@ -45,148 +47,224 @@ function isExternalImage(value: string | undefined) {
   return Boolean(value && /^https?:\/\//.test(value));
 }
 
+/* ─── Mini Image Carousel ─── */
+function ImageCarousel({
+  images,
+  alt,
+  onImageClick,
+}: {
+  images: string[];
+  alt: string;
+  onImageClick: () => void;
+}) {
+  const [current, setCurrent] = useState(0);
+  const touchStartX = useRef(0);
+  const count = images.length;
+  const hasMultiple = count > 1;
+
+  const goTo = useCallback(
+    (idx: number) => setCurrent((idx + count) % count),
+    [count],
+  );
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      goTo(diff > 0 ? current + 1 : current - 1);
+    }
+  };
+
+  return (
+    <div
+      className={styles.carousel}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.img
+          key={current}
+          src={images[current]}
+          alt={`${alt} — фото ${current + 1}`}
+          className={styles.carouselImage}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          onClick={onImageClick}
+          draggable={false}
+        />
+      </AnimatePresence>
+
+      {hasMultiple ? (
+        <>
+          <button
+            type="button"
+            className={`${styles.carouselArrow} ${styles.carouselArrowLeft}`}
+            onClick={(e) => { e.stopPropagation(); goTo(current - 1); }}
+            aria-label="Предыдущее фото"
+          >
+            <ChevronLeft size={16} />
+          </button>
+          <button
+            type="button"
+            className={`${styles.carouselArrow} ${styles.carouselArrowRight}`}
+            onClick={(e) => { e.stopPropagation(); goTo(current + 1); }}
+            aria-label="Следующее фото"
+          >
+            <ChevronRight size={16} />
+          </button>
+
+          <div className={styles.carouselDots}>
+            {images.slice(0, 5).map((_, i) => (
+              <span
+                key={i}
+                className={i === current ? styles.carouselDotActive : styles.carouselDot}
+                onClick={(e) => { e.stopPropagation(); goTo(i); }}
+              />
+            ))}
+            {count > 5 ? <span className={styles.carouselDotMore}>+{count - 5}</span> : null}
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
+}
+
 export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.created_at);
   const viewsLabel = formatViews(item.views_count);
-  const secondaryPrice =
-    formatCatalogCardHourSecondary(item) ??
-    (item.deposit_amount
-      ? `Залог ${formatDepositAmount(item.deposit_amount)}`
-      : 'Без залога');
+  const hourPrice = formatCatalogCardHourSecondary(item);
+  const depositLabel = item.deposit_amount
+    ? `Залог ${formatDepositAmount(item.deposit_amount)}`
+    : null;
   const ownerAvatarValue = item.ownerAvatar?.trim();
   const ownerInitial = getOwnerInitial(item.ownerName);
   const highlightItems = item.quickFilters.slice(0, 2);
+  const allImages = item.images?.length > 0 ? item.images : (item.imageUrl ? [item.imageUrl] : []);
 
   return (
     <motion.article
       className={styles.card}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      transition={{ duration: 0.35, delay: index * 0.04, ease: [0.23, 1, 0.32, 1] }}
     >
-      <button
-        type="button"
-        className={`${styles.cardFavorite} ${isFavorite ? styles.cardFavoriteActive : ''}`}
-        aria-label={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
-        onClick={(event) => {
-          event.stopPropagation();
-          setIsFavorite(!isFavorite);
-        }}
-      >
-        <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
-      </button>
-
-      <button type="button" className={styles.cardImageButton} onClick={() => onOpen(item)}>
-        <motion.div
-          className={styles.cardImageWrap}
-          whileHover={{ scale: 1.04 }}
-          transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
+      {/* ── Image area ── */}
+      <div className={styles.cardImageArea}>
+        <button
+          type="button"
+          className={`${styles.cardFavorite} ${isFavorite ? styles.cardFavoriteActive : ''}`}
+          aria-label={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
+          onClick={(e) => { e.stopPropagation(); setIsFavorite(!isFavorite); }}
         >
-          <img src={item.imageUrl ?? item.images[0]} alt={item.title} className={styles.cardImage} />
+          <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
+        </button>
 
-          <div className={styles.cardBadge}>
-            {item.featured ? <span className={styles.cardFeatured}>Топ выбор</span> : <span />}
-            <span
-              className={`${styles.cardStatusChip} ${
-                item.isAvailable ? styles.cardStatusAvailable : styles.cardStatusSoon
-              }`}
-            >
-              {item.isAvailable ? 'Доступно' : 'Скоро'}
-            </span>
-          </div>
-        </motion.div>
-      </button>
+        <div className={styles.cardBadgeRow}>
+          {item.featured ? <span className={styles.cardFeatured}>Топ</span> : null}
+          <span
+            className={`${styles.cardStatus} ${
+              item.isAvailable ? styles.cardStatusAvailable : styles.cardStatusSoon
+            }`}
+          >
+            {item.isAvailable ? 'Доступно' : 'Скоро'}
+          </span>
+        </div>
 
+        <div className={styles.cardImageWrap}>
+          {allImages.length > 0 ? (
+            <ImageCarousel
+              images={allImages}
+              alt={item.title}
+              onImageClick={() => onOpen(item)}
+            />
+          ) : (
+            <div className={styles.cardImagePlaceholder} onClick={() => onOpen(item)}>
+              <Eye size={32} />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Body ── */}
       <div className={styles.cardBody}>
-        <div className={styles.cardBodyTop}>
-          <div className={styles.cardMeta}>
+        <div className={styles.cardTop}>
+          <div className={styles.cardMetaRow}>
             <span className={styles.cardCategory}>{item.category}</span>
             <div className={styles.cardRating}>
-              <Star className={styles.starIcon} size={12} fill="currentColor" color="currentColor" />
-              <strong>{item.ownerRating}</strong>
+              <Star size={12} className={styles.starIcon} />
+              <span>{item.ownerRating.toFixed(1)}</span>
             </div>
           </div>
 
-          <button type="button" onClick={() => onOpen(item)} className={styles.cardTitleButton}>
+          <button type="button" onClick={() => onOpen(item)} className={styles.cardTitle}>
             {item.title}
           </button>
 
-          <div className={styles.cardMetaStack}>
-            <p className={styles.cardLocationLine}>
-              <MapPin size={14} />
-              <span>{locationLabel}</span>
-            </p>
-
-            <div className={styles.cardDate}>
-              <span className={styles.cardMetaItem}>
-                <Clock3 size={13} />
-                {publishedLabel}
-              </span>
-              <span className={styles.cardMetaDivider} aria-hidden="true" />
-              <span className={styles.cardMetaItem}>
-                <Eye size={13} />
-                {viewsLabel}
-              </span>
-            </div>
-          </div>
-
-          <div className={styles.cardHighlights}>
-            <span
-              className={`${styles.cardHighlightChip} ${
-                item.isAvailable ? '' : styles.cardHighlightChipMuted
-              }`}
-            >
-              <Clock3 size={12} />
-              <span>{item.isAvailable ? 'Можно забрать сегодня' : item.dateAvailable}</span>
-            </span>
-
-            {highlightItems.map((highlight) => {
-              const Icon = highlightVisuals[highlight as keyof typeof highlightVisuals] ?? ShieldCheck;
-
-              return (
-                <span key={highlight} className={styles.cardHighlightChip}>
-                  <Icon size={12} />
-                  <span>{highlight}</span>
-                </span>
-              );
-            })}
-          </div>
+          <p className={styles.cardLocation}>
+            <MapPin size={14} />
+            <span>{locationLabel}</span>
+          </p>
         </div>
 
+        {/* ── Highlights ── */}
+        <div className={styles.cardChips}>
+          {highlightItems.map((hl) => {
+            const Icon = highlightVisuals[hl as keyof typeof highlightVisuals] ?? ShieldCheck;
+            return (
+              <span key={hl} className={styles.cardChip}>
+                <Icon size={12} />
+                <span>{hl}</span>
+              </span>
+            );
+          })}
+          {!depositLabel ? (
+            <span className={styles.cardChipGreen}>
+              <ShieldCheck size={12} />
+              <span>Без залога</span>
+            </span>
+          ) : null}
+        </div>
+
+        {/* ── Footer ── */}
         <div className={styles.cardFooter}>
-          <div className={styles.cardOwnerRow}>
-            <div className={styles.cardOwnerAvatar} aria-hidden="true">
+          <div className={styles.cardOwner}>
+            <div className={styles.cardAvatar}>
               {isExternalImage(ownerAvatarValue) ? (
-                <img
-                  src={ownerAvatarValue}
-                  alt=""
-                  className={styles.cardOwnerAvatarImage}
-                />
+                <img src={ownerAvatarValue} alt="" className={styles.cardAvatarImg} />
               ) : (
                 <span>{ownerInitial}</span>
               )}
             </div>
-
-            <div className={styles.cardOwnerInfo}>
+            <div className={styles.cardOwnerText}>
               <strong>{item.ownerName}</strong>
               <span>{item.responseTime}</span>
             </div>
           </div>
 
-          <div className={styles.cardPriceRow}>
-            <div className={styles.cardPriceBlock}>
+          <div className={styles.cardPricing}>
+            <div className={styles.cardPrice}>
               <strong>{formatCatalogCardPrimaryPrice(item)}</strong>
-              <span className={styles.cardPriceSecondary}>{secondaryPrice}</span>
+              {hourPrice ? <span className={styles.cardPriceSub}>{hourPrice}</span> : null}
             </div>
 
-            <button type="button" className={styles.cardActionButton} onClick={() => onOpen(item)}>
+            <button type="button" className={styles.cardCta} onClick={() => onOpen(item)}>
               <span>Подробнее</span>
-              <ChevronRight size={16} />
+              <ArrowRight size={15} />
             </button>
           </div>
+        </div>
+
+        {/* ── Subtle meta ── */}
+        <div className={styles.cardMeta}>
+          <span><Clock3 size={12} /> {publishedLabel}</span>
+          <span><Eye size={12} /> {viewsLabel}</span>
         </div>
       </div>
     </motion.article>
