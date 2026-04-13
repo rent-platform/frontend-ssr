@@ -12,7 +12,7 @@
     'xl':  $bp-xl,
     '2xl': $bp-2xl,
   );
-  @if map-has-key($breakpoints, $bp) {
+  @if map.has-key($breakpoints, $bp) {
     @media (width >= map.get($breakpoints, $bp)) { @content; }
   } @else {
     @warn "Unknown breakpoint `#{$bp}`.";
@@ -28,7 +28,7 @@
     'xl':  $bp-xl,
     '2xl': $bp-2xl,
   );
-  @if map-has-key($breakpoints, $bp) {
+  @if map.has-key($breakpoints, $bp) {
     @media (width < map.get($breakpoints, $bp)) { @content; }
   }
 }
@@ -133,3 +133,35 @@
   &:hover { @content; }
 }
 
+// ─── Green Design System ─────────────────────────────────────────────────────
+
+@mixin green-glow($intensity: 0.1) {
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, $intensity);
+}
+
+@mixin green-surface {
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+}
+
+@mixin glass-card($blur: 20px) {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur($blur) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+@mixin green-gradient-text {
+  background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@mixin card-hover-lift($lift: -4px) {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  &:hover {
+    transform: translateY($lift);
+    box-shadow: $shadow-card-hover;
+  }
+}

@@ -144,13 +144,13 @@
   gap: 6px;
   padding: 6px 14px;
   border-radius: $radius-full;
-  background: linear-gradient(135deg, $color-primary, color.adjust($color-primary, $lightness: -8%));
+  background: $gradient-green;
   color: #fff;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  box-shadow: $shadow-green-sm;
 }
 
 .detailImageCounter {
@@ -247,6 +247,7 @@
     letter-spacing: -0.025em;
     color: $color-text;
     margin: 0;
+    font-family: $font-family-display;
   }
 }
 
@@ -305,17 +306,16 @@
   align-items: center;
   padding: 6px 14px;
   border-radius: $radius-full;
-  background: $color-surface-muted;
-  border: 1px solid $color-border;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
   font-size: 12px;
   font-weight: 600;
-  color: $color-text-secondary;
+  color: color.adjust($color-primary, $lightness: -8%);
   transition: $transition-smooth;
 
   &:hover {
-    border-color: rgba(34, 197, 94, 0.3);
-    background: rgba(34, 197, 94, 0.05);
-    color: $color-primary;
+    background: $color-green-100;
+    box-shadow: $shadow-green-sm;
   }
 }
 
@@ -325,9 +325,9 @@
   grid-template-columns: repeat(4, 1fr);
   gap: $space-4;
   padding: $space-6;
-  background: $color-surface-muted;
+  background: $color-green-50;
   border-radius: $radius-xl;
-  border: 1px solid $color-border;
+  border: 1px solid $color-border-green;
 }
 
 .detailTrustItem {
@@ -380,7 +380,8 @@
     @include flex-center;
     @include square(36px);
     border-radius: $radius-md;
-    background: rgba(34, 197, 94, 0.08);
+    background: $color-green-50;
+    border: 1px solid $color-border-green;
     color: $color-primary;
     flex-shrink: 0;
   }
@@ -453,9 +454,10 @@
 
 .detailTermsCard {
   padding: $space-6;
-  background: $color-surface-muted;
+  background: #fff;
   border-radius: $radius-xl;
   border: 1px solid $color-border;
+  box-shadow: $shadow-card;
   align-self: start;
 }
 
@@ -485,17 +487,17 @@
   gap: $space-5;
   padding: $space-6 $space-8;
   border-radius: $radius-xl;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(16, 185, 129, 0.04) 100%);
-  border: 1px solid rgba(34, 197, 94, 0.18);
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
 
   .guaranteeIcon {
     @include flex-center;
     @include square(52px);
     border-radius: $radius-lg;
-    background: linear-gradient(135deg, $color-primary, color.adjust($color-primary, $lightness: -8%));
+    background: $gradient-green;
     color: #fff;
     flex-shrink: 0;
-    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.25);
+    box-shadow: $shadow-green-md;
   }
 
   .guaranteeText {
@@ -563,7 +565,7 @@
 }
 
 .bookingCard {
-  padding: 28px 28px $space-6;
+  padding: $space-7 $space-7 $space-6;
   background: #fff;
   border-radius: $radius-2xl;
   border: 1px solid $color-border;
@@ -582,6 +584,7 @@
     font-weight: 800;
     color: $color-text;
     letter-spacing: -0.02em;
+    font-family: $font-family-display;
   }
 }
 
@@ -603,9 +606,9 @@
   svg { flex-shrink: 0; }
 
   &Available {
-    background: rgba(16, 185, 129, 0.08);
-    color: $color-success;
-    border: 1px solid rgba(16, 185, 129, 0.15);
+    background: $color-green-50;
+    color: $color-primary;
+    border: 1px solid $color-border-green;
   }
 
   &Soon {
@@ -623,7 +626,7 @@
   overflow: hidden;
   transition: border-color 0.2s;
 
-  &:hover { border-color: rgba(15, 23, 42, 0.2); }
+  &:hover { border-color: $color-border-green; }
 }
 
 .bookingDateBtn {
@@ -638,7 +641,7 @@
 
   &:first-child { border-right: 1px solid $color-border; }
 
-  &:hover { background: $color-surface-muted; }
+  &:hover { background: $color-green-50; }
 
   .dateLabel {
     font-size: 10px;
@@ -657,7 +660,8 @@
 
 .bookingTotal {
   padding: $space-4;
-  background: $color-surface-muted;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
   border-radius: $radius-lg;
   display: grid;
   gap: 10px;
@@ -707,15 +711,15 @@
 .primaryAction {
   width: 100%;
   height: 54px;
-  background: linear-gradient(135deg, $color-secondary, color.adjust($color-secondary, $lightness: -4%));
+  background: $gradient-green;
   color: #fff;
   border: 0;
   border-radius: $radius-lg;
   font-weight: 700;
   font-size: 16px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: $shadow-green-sm;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -723,12 +727,12 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(244, 63, 94, 0.32);
+    box-shadow: $shadow-green-lg;
   }
 
   &:active {
     transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(244, 63, 94, 0.2);
+    box-shadow: $shadow-green-sm;
   }
 }
 
@@ -757,8 +761,8 @@
   svg { flex-shrink: 0; }
 
   &:hover {
-    border-color: rgba(15, 23, 42, 0.2);
-    background: $color-surface-muted;
+    border-color: $color-border-green;
+    background: $color-green-50;
     box-shadow: $shadow-sm;
   }
 
@@ -788,7 +792,7 @@
   transition: $transition-smooth;
 
   &:hover {
-    border-color: rgba(15, 23, 42, 0.15);
+    border-color: $color-border-green;
     box-shadow: $shadow-card-hover;
   }
 }
@@ -802,11 +806,11 @@
   @include flex-center;
   @include square(50px);
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(51, 65, 85, 0.85));
+  background: $gradient-green;
   color: #fff;
   font-size: 18px;
   font-weight: 800;
-  box-shadow: 0 6px 14px -8px rgba(15, 23, 42, 0.6);
+  box-shadow: $shadow-green-sm;
 }
 
 .ownerVerifiedBadge {
@@ -874,8 +878,8 @@
   gap: $space-3;
   padding: $space-5;
   border-radius: $radius-xl;
-  background: $color-surface-muted;
-  border: 1px solid $color-border;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
 
   svg {
     flex-shrink: 0;

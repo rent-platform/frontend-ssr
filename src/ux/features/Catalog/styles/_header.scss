@@ -2,12 +2,12 @@
 @use '../../../styles/helpers/mixins' as *;
 
 .header {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 1px solid $color-border;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
   transition: all 0.3s ease;
 }
 
@@ -19,9 +19,9 @@
 }
 
 .topbarInner {
-  max-width: 1440px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: $space-3 $space-10;
+  padding: $space-3 $space-8;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -50,16 +50,22 @@
     color: $color-text;
     letter-spacing: -0.05em;
     line-height: 1;
+    font-family: $font-family-display;
   }
 }
 
 .brandSymbol {
-  @include square(36px);
+  @include square(34px);
   @include flex-center;
-  background: $color-primary;
+  background: $gradient-green;
   color: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+  box-shadow: $shadow-green-sm;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: $shadow-green-md;
+  }
 }
 
 .brandTextWrap {
@@ -91,12 +97,12 @@
   font-weight: 600;
   color: $color-text-secondary;
   text-decoration: none;
-  transition: $transition-base;
+  transition: color 0.2s ease;
   padding: $space-2 0;
   position: relative;
 
   &:hover {
-    color: $color-text;
+    color: $color-primary;
   }
 }
 
@@ -130,8 +136,8 @@
   display: flex;
   align-items: center;
   gap: $space-2;
-  padding: 8px 16px;
-  background: $color-surface-muted;
+  padding: 8px 18px;
+  background: #fff;
   border: 1px solid $color-border;
   border-radius: $radius-full;
   color: $color-text;
@@ -141,9 +147,9 @@
   transition: $transition-smooth;
 
   &:hover {
-    background: #fff;
-    border-color: $color-text;
-    box-shadow: $shadow-sm;
+    border-color: $color-primary;
+    color: $color-primary;
+    box-shadow: $shadow-green-sm;
     transform: translateY(-1px);
   }
 }
@@ -162,7 +168,7 @@
 
 .iconAction {
   position: relative;
-  @include square(40px);
+  @include square(38px);
   @include flex-center;
   background: transparent;
   border: 0;
@@ -172,18 +178,17 @@
   transition: $transition-smooth;
 
   &:hover {
-    background: $color-surface-muted;
+    background: $color-green-50;
     color: $color-primary;
-    transform: translateY(-1px);
   }
 
   &Badge {
     position: absolute;
-    top: 6px;
-    right: 6px;
+    top: 4px;
+    right: 4px;
     @include square(16px);
     @include flex-center;
-    background: $color-secondary;
+    background: $color-primary;
     color: #fff;
     font-size: 10px;
     font-weight: 700;
@@ -222,7 +227,7 @@
   display: flex;
   align-items: center;
   gap: $space-2;
-  padding: 4px 4px 4px 4px;
+  padding: 4px;
   background: #fff;
   border: 1px solid $color-border;
   border-radius: $radius-full;
@@ -231,16 +236,15 @@
   box-shadow: $shadow-sm;
 
   &:hover {
-    border-color: $color-text;
-    box-shadow: $shadow-md;
-    transform: translateY(-1px);
+    border-color: $color-primary;
+    box-shadow: $shadow-green-sm;
   }
 }
 
 .avatarWrap {
   @include square(32px);
   @include flex-center;
-  background: $color-accent;
+  background: $gradient-green;
   color: #fff;
   border-radius: 50%;
 }
