@@ -36,18 +36,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: transparent;
   border: 0;
   cursor: pointer;
-  padding: $space-2 $space-4 $space-3;
+  padding: $space-3 $space-5 $space-4;
   transition: $transition-smooth;
   position: relative;
   outline: none;
   border-radius: $radius-lg $radius-lg 0 0;
 
   .categoryLabel {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     color: $color-text-secondary;
     transition: color 0.25s ease;
@@ -74,7 +74,7 @@
 
 .categoryEmojiWrap {
   position: relative;
-  @include square(34px);
+  @include square(42px);
   @include flex-center;
   z-index: 1;
 }

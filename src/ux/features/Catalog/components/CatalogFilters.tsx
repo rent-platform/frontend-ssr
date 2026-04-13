@@ -85,7 +85,7 @@ const quickFilterMeta: Record<
     tone: 'delivery',
   },
   'Рядом сегодня': {
-    title: 'Рядом сегодня',
+    title: 'Доступно сегодня',
     description: 'Быстро забрать — без ожиданий',
     tone: 'near',
   },

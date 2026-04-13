@@ -51,7 +51,7 @@ export function CategoryRail({ categories, activeCategory, onCategoryChange }: C
             >
               <div className={styles.categoryEmojiWrap}>
                 <Icon 
-                  size={20} 
+                  size={24} 
                   className={styles.categoryIcon} 
                   strokeWidth={isActive ? 2.5 : 2}
                 />
