@@ -1,6 +1,6 @@
 export {
   useFetchAdQuery,
-  useFetchAdsQuery,
+  useFetchAdsInfiniteQuery,
   useCreateAdMutation,
   useDeleteAdMutation,
   useUpdateAdMutation,

@@ -21,5 +21,6 @@ export const baseApi = createApi({
     "Deals",
     "Notifications",
   ],
+  refetchOnReconnect: true,
   endpoints: () => ({}),
 });

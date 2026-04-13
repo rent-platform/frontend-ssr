@@ -2,3 +2,4 @@ infinite query
 merge branches
 add to favorites
 
+search MSW

@@ -14,7 +14,7 @@ export default function HomePage() {
     const loadData = async () => {
       try {
         const result = await store
-          .dispatch(adsApi.endpoints.fetchAds.initiate({ page: 1, limit: 10 }))
+          .dispatch(adsApi.endpoints.fetchAds.initiate({ search: "5" }))
           .unwrap();
 
         console.log("Данные каталога:", result);

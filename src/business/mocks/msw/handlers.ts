@@ -26,24 +26,37 @@ const authHandlers = [
 // CATALOG
 // ─────────────────────────────────────────────────────────────────────────────
 const catalogHandlers = [
-  http.get(`${API}/catalog`, async ({ request }) => {
+  http.get(`${API}/ads`, async ({ request }) => {
     await delay(300);
 
     const url = new URL(request.url);
-    const page = Number(url.searchParams.get("page") ?? 1);
-    const limit = Number(url.searchParams.get("limit") ?? 10);
+    const cursor = url.searchParams.get("cursor"); // ← cursor, не page
+    const pageSize = Number(url.searchParams.get("pageSize") ?? 10);
+    const search = url.searchParams.get("search") ?? "";
 
-    const start = (page - 1) * limit;
-    const items = MOCK_CATALOG_ITEMS.slice(start, start + limit);
+    const filtered = MOCK_CATALOG_ITEMS.filter((item) =>
+      search ? item.title.toLowerCase().includes(search.toLowerCase()) : true,
+    );
+
+    const startIndex = cursor ? parseInt(cursor, 10) : 0;
+    const items = filtered.slice(startIndex, startIndex + pageSize);
+    const nextIndex = startIndex + pageSize;
+    const nextCursor =
+      nextIndex < filtered.length ? String(nextIndex) : undefined;
 
     return HttpResponse.json({
       items,
-      total: MOCK_CATALOG_ITEMS.length,
-      page,
-      limit,
+      meta: {
+        page: Math.floor(startIndex / pageSize) + 1,
+        pageSize,
+        totalCount: filtered.length,
+        pagesCount: Math.ceil(filtered.length / pageSize),
+        nextCursor,
+      },
     });
   }),
 
+  ,
   http.get(`${API}/catalog/:id`, async ({ params }) => {
     await delay(200);
     const { id } = params;

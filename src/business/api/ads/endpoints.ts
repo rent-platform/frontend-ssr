@@ -1,30 +1,44 @@
 import { baseApi } from "@/business/api/baseApi";
 import {
   AdsListResponseDto,
-  AdsQueryParams,
   AdsItemResponseDto,
   AdsCreateAd,
   UpdatePlaylistArgs,
+  FetchAdsArgs,
 } from "@/business/types/dto/ads.dto";
 import { PhotosList } from "@/business/types/entity/catalog.types";
 
 export const adsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    fetchAds: build.query<AdsListResponseDto, AdsQueryParams>({
-      query: ({ page = 1, limit = 10, category_id, search } = {}) => ({
-        url: "/ads",
+    fetchAds: build.infiniteQuery<
+      AdsListResponseDto,
+      FetchAdsArgs,
+      string | undefined
+    >({
+      infiniteQueryOptions: {
+        initialPageParam: undefined,
+        getNextPageParam: (lastPage) => {
+          return lastPage.meta.nextCursor || undefined;
+        },
+      },
+      query: ({ pageParam, queryArg }) => ({
+        url: `ads`,
         params: {
-          page,
-          limit,
-          ...(category_id !== undefined && { category_id }),
-          ...(search !== undefined && { search }),
-        }, // TODO: пагинацию на infinite query
+          cursor: pageParam,
+          pageSize: queryArg.pageSize ?? 40,
+          ...(queryArg.search && { search: queryArg.search }),
+          ...(queryArg.sortBy && { sortBy: queryArg.sortBy }),
+          ...(queryArg.sortDirection && {
+            sortDirection: queryArg.sortDirection,
+          }),
+        },
       }),
       providesTags: ["Ads"],
+      keepUnusedDataFor: 300,
     }),
 
     fetchAd: build.query<AdsItemResponseDto, string>({
-      query: (id) => ({ url: `/ads/${id}` }), // TODO: ads на "/" ?
+      query: (id) => ({ url: `ads/${id}` }), // TODO: ads на "/" ?
       providesTags: (_result, _err, id) => [{ type: "AdsItem", id }],
     }),
     createAd: build.mutation<AdsItemResponseDto, AdsCreateAd>({
@@ -95,7 +109,7 @@ export const adsApi = baseApi.injectEndpoints({
 
 export const {
   useFetchAdQuery,
-  useFetchAdsQuery,
+  useFetchAdsInfiniteQuery,
   useCreateAdMutation,
   useDeleteAdMutation,
   useUpdateAdMutation,

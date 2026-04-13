@@ -6,15 +6,7 @@ export const useFilters = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const setFilter = (name: string, value: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (value) {
-      params.set(name, value);
-    } else {
-      params.delete(name);
-    }
-    router.push(`${pathname}?${params.toString()}`);
-  };
+
   const setFilters = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams);
     if (value) {
@@ -38,7 +30,6 @@ export const useFilters = () => {
       condition: searchParams.get("condition") || "",
       city: searchParams.get("city") || "",
     },
-    setFilter,
     setFilters,
   };
 };

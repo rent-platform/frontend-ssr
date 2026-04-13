@@ -18,18 +18,24 @@ export type AdsItemResponseDto = {
   nearest_available_date: string | null;
 };
 
+export type Meta = {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  pagesCount: number;
+  nextCursor?: string;
+};
 export type AdsListResponseDto = {
   items: AdsItemResponseDto[];
-  total: number;
-  page: number;
-  limit: number;
+  meta: Meta;
 };
 
-export type AdsQueryParams = {
-  page?: number;
-  limit?: number;
-  category_id?: number;
+export type FetchAdsArgs = {
+  pageSize?: number;
+  pageNumber?: number;
   search?: string;
+  sortBy?: string;
+  sortDirection?: "asc" | "desc";
 };
 
 export type UpdatePlaylistArgs = DeepPartial<AdsCreateAd>; //TODO: по сути patch?
