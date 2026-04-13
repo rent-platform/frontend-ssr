@@ -21,7 +21,6 @@ import {
   formatCatalogCardPrimaryPrice,
   formatDepositAmount,
   formatRelativeDate,
-  formatViews,
 } from '../utils';
 import styles from './CatalogCard.module.scss';
 
@@ -138,7 +137,6 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardP
   const [isFavorite, setIsFavorite] = useState(false);
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.created_at);
-  const viewsLabel = formatViews(item.views_count);
   const hourPrice = formatCatalogCardHourSecondary(item);
   const depositLabel = item.deposit_amount
     ? `Залог ${formatDepositAmount(item.deposit_amount)}`
@@ -264,7 +262,6 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardP
         {/* ── Subtle meta ── */}
         <div className={styles.cardMeta}>
           <span><Clock3 size={12} /> {publishedLabel}</span>
-          <span><Eye size={12} /> {viewsLabel}</span>
         </div>
       </div>
     </motion.article>
