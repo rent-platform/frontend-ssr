@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
-import { 
-  LayoutGrid, 
-  Smartphone, 
-  Camera, 
-  Wrench, 
-  Home, 
-  Bike, 
-  Baby, 
+import {
+  Baby,
+  Bike,
+  Camera,
+  Home,
+  LayoutGrid,
+  PackageSearch,
   PartyPopper,
-  PackageSearch
+  Smartphone,
+  Wrench,
+  type LucideIcon,
 } from 'lucide-react';
 import styles from '../Catalog.module.scss';
 
@@ -18,7 +19,7 @@ type CategoryRailProps = {
   onCategoryChange: (category: string) => void;
 };
 
-const categoryVisualMap: Record<string, { icon: any; hint: string }> = {
+const categoryVisualMap: Record<string, { icon: LucideIcon; hint: string }> = {
   'Все категории': { icon: LayoutGrid, hint: 'Техника, дом и отдых' },
   'Электроника': { icon: Smartphone, hint: 'Ноутбуки и гаджеты' },
   'Фото и видео': { icon: Camera, hint: 'Камеры и свет' },

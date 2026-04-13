@@ -119,11 +119,11 @@ const AppInput = forwardRef<HTMLInputElement, AppInputProps>(
   ) => {
     const [showPassword, setShowPassword] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
-    const [passwordHasValue, setPasswordHasValue] = useState(
-      Boolean(value ?? defaultValue ?? ''),
+    const [uncontrolledPasswordValue, setUncontrolledPasswordValue] = useState(() =>
+      type === 'password' && value === undefined ? String(defaultValue ?? '') : '',
     );
-    const [phoneDigits, setPhoneDigits] = useState(() =>
-      type === 'tel' ? stripToPhoneDigits(String(value ?? defaultValue ?? '')) : '',
+    const [uncontrolledPhoneDigits, setUncontrolledPhoneDigits] = useState(() =>
+      type === 'tel' && value === undefined ? stripToPhoneDigits(String(defaultValue ?? '')) : '',
     );
 
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -131,22 +131,19 @@ const AppInput = forwardRef<HTMLInputElement, AppInputProps>(
 
     const isPassword = type === 'password';
     const isPhone = type === 'tel';
+    const isControlled = value !== undefined;
     const resolvedType = isPassword ? (showPassword ? 'text' : 'password') : type === 'name' ? 'text' : type;
     const hasLeft = LEFT_ICON_TYPES.has(type);
-    const isFloatingLabelActive = isPassword && (isFocused || passwordHasValue);
+    const phoneDigits = isPhone
+      ? isControlled
+        ? stripToPhoneDigits(String(value ?? ''))
+        : uncontrolledPhoneDigits
+      : '';
+    const isFloatingLabelActive =
+      isPassword &&
+      (isFocused ||
+        (isControlled ? Boolean(String(value ?? '')) : Boolean(uncontrolledPasswordValue)));
     const phoneDisplayValue = isPhone ? formatPhoneDigits(phoneDigits) : undefined;
-
-    useEffect(() => {
-      if (!isPhone) return;
-
-      const nextDigits = stripToPhoneDigits(String(value ?? defaultValue ?? ''));
-      setPhoneDigits((currentDigits) => (currentDigits === nextDigits ? currentDigits : nextDigits));
-    }, [defaultValue, isPhone, value]);
-
-    useEffect(() => {
-      if (!isPassword) return;
-      setPasswordHasValue(Boolean(value ?? defaultValue ?? ''));
-    }, [defaultValue, isPassword, value]);
 
     useEffect(() => {
       if (pendingCaretPositionRef.current === null || !inputRef.current) return;
@@ -179,7 +176,9 @@ const AppInput = forwardRef<HTMLInputElement, AppInputProps>(
       );
       const nextFormatted = formatPhoneDigits(nextDigits);
 
-      setPhoneDigits(nextDigits);
+      if (!isControlled) {
+        setUncontrolledPhoneDigits(nextDigits);
+      }
       pendingCaretPositionRef.current = getCaretPositionForDigitCount(nextFormatted, digitCountBeforeCaret);
       syncExternalPhoneValue(nextDigits);
     };
@@ -213,7 +212,9 @@ const AppInput = forwardRef<HTMLInputElement, AppInputProps>(
         phoneDigits.slice(digitsBeforeFormattingCharacter);
       const nextFormatted = formatPhoneDigits(nextDigits);
 
-      setPhoneDigits(nextDigits);
+      if (!isControlled) {
+        setUncontrolledPhoneDigits(nextDigits);
+      }
       pendingCaretPositionRef.current = getCaretPositionForDigitCount(
         nextFormatted,
         digitsBeforeFormattingCharacter - 1,
@@ -227,8 +228,8 @@ const AppInput = forwardRef<HTMLInputElement, AppInputProps>(
         return;
       }
 
-      if (isPassword) {
-        setPasswordHasValue(Boolean(event.target.value));
+      if (isPassword && !isControlled) {
+        setUncontrolledPasswordValue(event.target.value);
       }
 
       onChange?.(event);

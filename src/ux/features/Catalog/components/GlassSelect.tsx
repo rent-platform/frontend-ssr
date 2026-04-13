@@ -46,10 +46,10 @@ export function GlassSelect({
   maxVisibleCount = 80,
 }: GlassSelectProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
   const selectedOption = useMemo(
     () => options.find((option) => option.value === value),
@@ -81,38 +81,58 @@ export function GlassSelect({
   }, []);
 
   useEffect(() => {
-    if (open && rootRef.current) {
-      const rect = rootRef.current.getBoundingClientRect();
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+    if (!open) return undefined;
+
+    const compute = () => {
+      const trigger = triggerRef.current;
+      const dropdown = dropdownRef.current;
+      if (!trigger || !dropdown) return;
+
+      const rect = trigger.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      const dropdownHeight = 180; // max-height from CSS
-      
-      // Check if dropdown would go below viewport
-      let topPosition = rect.bottom + scrollTop + 8;
-      if (rect.bottom + dropdownHeight > viewportHeight) {
-        // Position above the trigger if there's not enough space below
-        topPosition = rect.top + scrollTop - dropdownHeight - 8;
+      const margin = 12;
+      const gap = 8;
+
+      const width = Math.min(rect.width, viewportWidth - margin * 2);
+      const left = Math.min(
+        Math.max(margin, rect.left + rect.width / 2 - width / 2),
+        viewportWidth - margin - width,
+      );
+
+      const availableBelow = viewportHeight - rect.bottom - margin - gap;
+      const availableAbove = rect.top - margin - gap;
+      const shouldOpenBelow = availableBelow >= 240 || availableBelow >= availableAbove;
+
+      dropdown.style.position = 'fixed';
+      dropdown.style.left = `${left}px`;
+      dropdown.style.width = `${width}px`;
+      dropdown.style.maxHeight = `${Math.max(180, shouldOpenBelow ? availableBelow : availableAbove)}px`;
+      dropdown.style.zIndex = '2200';
+
+      if (shouldOpenBelow) {
+        dropdown.style.top = `${rect.bottom + gap}px`;
+        dropdown.style.bottom = '';
+        return;
       }
-      
-      // Ensure dropdown doesn't go beyond viewport edges
-      let leftPosition = rect.left + scrollLeft;
-      const dropdownWidth = rect.width;
-      
-      if (leftPosition + dropdownWidth > window.innerWidth + scrollLeft) {
-        leftPosition = window.innerWidth + scrollLeft - dropdownWidth - 16;
-      }
-      
-      if (leftPosition < scrollLeft) {
-        leftPosition = scrollLeft + 16;
-      }
-      
-      setDropdownStyle({
-        top: Math.max(8, topPosition),
-        left: leftPosition,
-        width: Math.max(260, Math.min(dropdownWidth, window.innerWidth - 32)),
-      });
-    }
+
+      dropdown.style.bottom = `${viewportHeight - rect.top + gap}px`;
+      dropdown.style.top = '';
+    };
+
+    compute();
+
+    const onViewportEvent = () => {
+      requestAnimationFrame(compute);
+    };
+
+    window.addEventListener('resize', onViewportEvent);
+    window.addEventListener('scroll', onViewportEvent, true);
+
+    return () => {
+      window.removeEventListener('resize', onViewportEvent);
+      window.removeEventListener('scroll', onViewportEvent, true);
+    };
   }, [open]);
 
   const filteredOptions = useMemo(() => {
@@ -149,9 +169,10 @@ export function GlassSelect({
   };
 
   return (
-    <div ref={rootRef} className={`${styles.glassSelect}${open ? ` ${styles.glassSelectOpened}` : ''}`}>
+    <div ref={rootRef} className={styles.glassSelect}>
       <span className={styles.visuallyHidden}>{label}</span>
       <button
+        ref={triggerRef}
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -167,10 +188,9 @@ export function GlassSelect({
       </button>
 
       {open ? (
-        <div 
+        <div
           ref={dropdownRef}
           className={`${styles.glassSelectDropdown}${dropdownClassName ? ` ${dropdownClassName}` : ''}`}
-          style={dropdownStyle}
         >
           {searchable ? (
             <div className={styles.glassSelectSearchWrap}>

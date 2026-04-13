@@ -94,19 +94,6 @@
   border-color: $color-primary;
 }
 
-.filtersCount {
-  @include flex-center;
-  @include square(20px);
-  background: $color-primary;
-  color: #fff;
-  border-radius: 50%;
-  font-size: 11px;
-  font-weight: 700;
-  margin-left: $space-1;
-  border: 2px solid #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 .primarySearchBtn {
   display: flex;
   align-items: center;
@@ -191,12 +178,16 @@
 }
 
 .scrollableContent {
+  overflow-x: hidden;
   overflow-y: auto;
   padding-right: $space-2;
   display: flex;
   flex-direction: column;
   gap: $space-6;
-  @include scrollbar-none;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.55) rgba(15, 23, 42, 0.06);
+  @include scrollbar(10px, rgba(34, 197, 94, 0.55), rgba(15, 23, 42, 0.06));
 }
 
 .gridSection {
@@ -226,64 +217,35 @@
 }
 
 .glassSelectDropdown {
-  position: fixed;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
   background: #fff;
   border-radius: $radius-2xl;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   border: 1px solid $color-border;
   overflow: hidden;
-  z-index: 99999;
-  padding: 6px;
-  max-height: 180px;
-  min-width: 260px;
-}
-
-.glassSelect {
-  position: relative;
-  width: 100%;
-  border-radius: $radius-lg;
-  border: 1px solid $color-border;
-  overflow: visible;
-  z-index: 9998;
+  z-index: 2100;
   padding: $space-2;
-
-  &.glassSelectOpened {
-    overflow: visible;
-    z-index: 9999; 
-  }
 }
 
 .glassSelectOptions {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  max-height: 180px;
+  gap: 2px;
+  max-height: 300px;
   overflow-y: auto;
+  padding-right: 4px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(34, 197, 94, 0.3) transparent;
-  
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: rgba(34, 197, 94, 0.3);
-    border-radius: 3px;
-    
-    &:hover {
-      background: rgba(34, 197, 94, 0.5);
-    }
-  }
+  scrollbar-color: rgba(34, 197, 94, 0.55) transparent;
+  @include scrollbar(10px, rgba(34, 197, 94, 0.55), rgba(15, 23, 42, 0.06));
 }
 
 .glassSelectOption, .glassSelectOptionActive {
   display: flex;
   flex-direction: column;
-  padding: 4px 8px;
+  padding: $space-3 $space-4;
   border-radius: $radius-lg;
   border: 0;
   background: transparent;
