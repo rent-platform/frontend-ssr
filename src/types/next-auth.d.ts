@@ -11,6 +11,7 @@ declare module "next-auth" {
     avatar_url?: string | null;
     rememberMe: boolean;
     accessToken: string;
+    refreshToken: string;
   }
 
   interface Session {
@@ -36,5 +37,6 @@ declare module "@auth/core/jwt" {
     avatar_url?: string | null;
     rememberMe?: boolean;
     accessToken: string;
+    refreshToken: string;
   }
 }

@@ -5,6 +5,7 @@ import {
   signOut,
   useSession as useNextAuthSession,
 } from "next-auth/react";
+import { fetchApi } from "@/business/api/auth/nextAuthApi";
 
 export type AuthResult = { ok: boolean; error: string | null };
 
@@ -35,7 +36,7 @@ export function useSession() {
       const error = res?.error ?? null;
       return { ok: !error, error };
     } catch (e) {
-      const message = e instanceof Error ? e.message : "CredentialsSignin";
+      const message = e instanceof Error ? e.message : "MyCredentialsSignin";
       return { ok: false, error: message };
     }
   };
@@ -46,24 +47,18 @@ export function useSession() {
     password: string,
   ): Promise<AuthResult> => {
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, tel, password }),
+      const data = await fetchApi<RegisterApiResponse>({
+        endpoint: "/api/register",
+        options: {
+          // auth if real
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, tel, password }),
+        },
       });
-
-      const data: RegisterApiResponse = await res.json();
       console.log(data);
-      if (!res.ok || !data.success) {
-        return {
-          ok: false,
-          error: data.error ?? "Ошибка при регистрации. Попробуйте позже.",
-        };
-      }
 
-      // Когда появится RTK Query, accessToken из data.accessToken
-      // положить в redux store из jwt callback(get session)
-      const autoLoginResult = await login(tel, password); // два запроса получается в итоге
+      const autoLoginResult = await login(tel, password);
 
       if (!autoLoginResult.ok) {
         return {

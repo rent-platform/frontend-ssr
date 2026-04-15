@@ -56,7 +56,6 @@ const catalogHandlers = [
     });
   }),
 
-  ,
   http.get(`${API}/catalog/:id`, async ({ params }) => {
     await delay(200);
     const { id } = params;
