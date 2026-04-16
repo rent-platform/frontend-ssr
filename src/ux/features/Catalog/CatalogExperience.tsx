@@ -186,12 +186,8 @@ export function CatalogExperience() {
             <section id="catalog-results" className={styles.catalogLayoutClosed}>
               <div className={styles.content}>
                 <CatalogToolbar
-                  resultsCount={filteredItems.length}
-                  visibleCount={visibleItems.length}
                   filters={filters}
                   onChange={updateFilters}
-                  onToggleFilters={onToggleFilters}
-                  isFiltersOpen={isFiltersOpen}
                 />
 
                 {visibleItems.length > 0 ? (

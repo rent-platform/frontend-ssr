@@ -25,7 +25,6 @@ export type CatalogSortKey =
   | 'rating';
 
 export type AvailabilityFilter = 'all' | 'available' | 'soon';
-export type PriceModeFilter = 'all' | 'day' | 'hour';
 export type CatalogSort = CatalogSortKey;
 export type CatalogCategory =
   | 'Электроника'

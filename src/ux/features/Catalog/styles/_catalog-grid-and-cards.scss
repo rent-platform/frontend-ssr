@@ -6,8 +6,8 @@
 .similarGrid,
 .resultsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: $space-8 $space-5;
+  grid-template-columns: repeat(auto-fill, minmax(224px, 1fr));
+  gap: $space-6 $space-4;
   padding: $space-2 0;
 }
 

@@ -52,8 +52,8 @@
   .grid,
   .similarGrid,
   .resultsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: $space-6 $space-4;
+    grid-template-columns: repeat(auto-fill, minmax(192px, 1fr));
+    gap: $space-5 $space-3;
   }
 
   .detailHeader h1 {

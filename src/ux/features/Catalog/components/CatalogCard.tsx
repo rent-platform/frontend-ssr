@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useRef, useState } from 'react';
 import {
-  ArrowRight,
   ChevronLeft,
   ChevronRight,
   Clock3,
@@ -37,14 +36,6 @@ const highlightVisuals = {
   'Топ-рейтинг': Star,
   Новинки: Sparkles,
 } as const;
-
-function getOwnerInitial(name: string) {
-  return name.trim().charAt(0).toUpperCase();
-}
-
-function isExternalImage(value: string | undefined) {
-  return Boolean(value && /^https?:\/\//.test(value));
-}
 
 /* ─── Mini Image Carousel ─── */
 function ImageCarousel({
@@ -141,8 +132,6 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardP
   const depositLabel = item.deposit_amount
     ? `Залог ${formatDepositAmount(item.deposit_amount)}`
     : null;
-  const ownerAvatarValue = item.ownerAvatar?.trim();
-  const ownerInitial = getOwnerInitial(item.ownerName);
   const highlightItems = item.quickFilters.slice(0, 2);
   const allImages = item.images?.length > 0 ? item.images : (item.imageUrl ? [item.imageUrl] : []);
 
@@ -232,30 +221,12 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardP
 
         {/* ── Footer ── */}
         <div className={styles.cardFooter}>
-          <div className={styles.cardOwner}>
-            <div className={styles.cardAvatar}>
-              {isExternalImage(ownerAvatarValue) ? (
-                <img src={ownerAvatarValue} alt="" className={styles.cardAvatarImg} />
-              ) : (
-                <span>{ownerInitial}</span>
-              )}
-            </div>
-            <div className={styles.cardOwnerText}>
-              <strong>{item.ownerName}</strong>
-              <span>{item.responseTime}</span>
-            </div>
-          </div>
-
           <div className={styles.cardPricing}>
             <div className={styles.cardPrice}>
               <strong>{formatCatalogCardPrimaryPrice(item)}</strong>
               {hourPrice ? <span className={styles.cardPriceSub}>{hourPrice}</span> : null}
             </div>
 
-            <button type="button" className={styles.cardCta} onClick={() => onOpen(item)}>
-              <span>Подробнее</span>
-              <ArrowRight size={15} />
-            </button>
           </div>
         </div>
 

@@ -11,14 +11,6 @@ export const CATEGORY_OPTIONS = [
   'Мероприятия',
 ] as const;
 
-export const CITY_OPTIONS = [
-  'Все города',
-  'Новосибирск',
-  'Бердск',
-  'Академгородок',
-  'Кольцово',
-] as const;
-
 export const QUICK_FILTER_OPTIONS = [
   'Рядом сегодня',
   'С доставкой',
@@ -81,30 +73,6 @@ export const getAnnouncementsLabel = (count: number) => {
   return 'объявлений';
 };
 
-export const getPrimaryPrice = (
-  item: CatalogUiItem,
-  pricingMode: CatalogFilterState['pricingMode'],
-) => {
-  if (pricingMode === 'hour' && item.price_per_hour) {
-    return formatPrice(item.price_per_hour, '/час');
-  }
-
-  return formatPrice(item.price_per_day, '/сутки');
-};
-
-export const getSecondaryPrice = (item: CatalogUiItem) => {
-  if (item.price_per_hour && item.price_per_day) {
-    return `${formatPrice(item.price_per_hour, '/час')} · ${formatPrice(
-      item.price_per_day,
-      '/сутки',
-    )}`;
-  }
-
-  return item.price_per_hour
-    ? formatPrice(item.price_per_hour, '/час')
-    : formatPrice(item.price_per_day, '/сутки');
-};
-
 /** Карточка каталога: основная строка — только сутки. */
 export const formatCatalogCardPrimaryPrice = (item: CatalogUiItem) =>
   formatPrice(item.price_per_day, '/сутки');
@@ -130,9 +98,6 @@ export const formatCatalogCardLocation = (item: CatalogUiItem): string => {
   }
   return `${city}, ${detail}`;
 };
-
-export const formatViews = (count: number) =>
-  `${new Intl.NumberFormat('ru-RU').format(count)} просмотров`;
 
 export const formatRelativeDate = (isoDate: string) => {
   const diffHours = Math.max(

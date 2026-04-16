@@ -40,7 +40,7 @@
 .cardImageArea {
   position: relative;
   flex-shrink: 0;
-  padding: 10px 10px 0;
+  padding: 8px 8px 0;
 }
 
 .cardFavorite {
@@ -242,8 +242,8 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: $space-3;
-  padding: $space-4 $space-4 $space-4;
+  gap: $space-2;
+  padding: $space-3 $space-3 $space-3;
 }
 
 .cardTop {
@@ -295,9 +295,9 @@
   padding: 0;
   cursor: pointer;
   font-family: $font-family-display;
-  font-size: 16px;
-  font-weight: 750;
-  letter-spacing: -0.014em;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: $color-text;
   text-align: left;
   line-height: 1.35;
@@ -432,11 +432,11 @@
   gap: 2px;
 
   strong {
-    font-family: $font-family-display;
-    font-size: 19px;
-    font-weight: 800;
+    font-size: 15px;
+    font-weight: 700;
     color: $color-text;
-    line-height: 1.1;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
   }
 }
 
@@ -451,13 +451,13 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  min-height: 36px;
-  padding: 0 14px;
+  min-height: 30px;
+  padding: 0 11px;
   border-radius: $radius-full;
   border: 1px solid $color-border;
   background: #fff;
   color: $color-text;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
   transition: $transition-smooth;

@@ -15,7 +15,7 @@ import type {
   CatalogSort,
   QuickFilterKey,
 } from "./types";
-import { getNumericPrice } from "./utils";
+import { getNumericPrice, getAnnouncementsLabel } from "./utils";
 import styles from "./Catalog.module.scss";
 
 const INITIAL_BATCH = 6;
@@ -261,6 +261,10 @@ export default function Catalog() {
                 onlyAvailable: availability === "available",
                 sortBy: sort,
                 quickFilter: null,
+                condition: [],
+                ownerType: 'all',
+                deliveryType: 'all',
+                hasDeposit: 'all',
               }}
               resultsCount={filteredItems.length}
               isFiltersOpen={mobileFiltersOpen}
@@ -309,6 +313,10 @@ export default function Catalog() {
               onlyAvailable: availability === "available",
               sortBy: sort,
               quickFilter: null,
+              condition: [],
+              ownerType: 'all',
+              deliveryType: 'all',
+              hasDeposit: 'all',
             }}
             resultsCount={filteredItems.length}
             onChange={(patch) => {
@@ -323,16 +331,13 @@ export default function Catalog() {
               if (patch.sortBy !== undefined) updateSort(patch.sortBy as CatalogSort);
               if (patch.quickFilter !== undefined) {
                 if (patch.quickFilter === null) {
-                  // This is complex because Catalog.tsx uses separate state for quick filters
-                  // For simplicity, let's reset them if null is passed
                   setQuickFilters(initialQuickFilters);
                 } else {
-                  // Find the key for this option
                   const keyMap: Record<string, keyof CatalogQuickFiltersState> = {
                     'С доставкой': 'delivery',
-                    'Рядом сегодня': 'instantBook', // assuming mapping
+                    'Рядом сегодня': 'instantBook',
                     'Без залога': 'noDeposit',
-                    'Топ-рейтинг': 'instantBook', // assuming mapping
+                    'Топ-рейтинг': 'instantBook',
                     'Новинки': 'newArrival',
                   };
                   const key = keyMap[patch.quickFilter];
@@ -343,7 +348,6 @@ export default function Catalog() {
             }}
             onReset={resetFilters}
             onClose={() => setMobileFiltersOpen(false)}
-            isMobileOpen={mobileFiltersOpen}
           />
 
           <div id="catalog-results" className={styles.content}>
