@@ -40,7 +40,7 @@
 .cardImageArea {
   position: relative;
   flex-shrink: 0;
-  padding: 8px 8px 0;
+  padding: 6px 6px 0;
 }
 
 .cardFavorite {
@@ -48,7 +48,7 @@
   top: 18px;
   right: 18px;
   z-index: 10;
-  @include square(36px);
+  @include square(28px);
   @include flex-center;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(8px);
@@ -123,7 +123,7 @@
 
 .cardImageWrap {
   position: relative;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   border-radius: 16px;
   overflow: hidden;
   background: $color-surface-muted;
@@ -242,13 +242,13 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: $space-2;
-  padding: $space-3 $space-3 $space-3;
+  gap: 4px;
+  padding: $space-2 $space-2 $space-2;
 }
 
 .cardTop {
   display: grid;
-  gap: 8px;
+  gap: 5px;
 }
 
 .cardMetaRow {
