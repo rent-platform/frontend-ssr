@@ -65,15 +65,17 @@ export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProp
 
           <div className={styles.topbarActions}>
             <div className={styles.actionButtons}>
-              <motion.button 
-                type="button" 
-                className={styles.btnSecondary}
-                whileHover={{ y: -1 }}
-                whileTap={{ y: 0 }}
-              >
-                <Plus size={18} />
-                <span>Сдать в аренду</span>
-              </motion.button>
+              <Link href="/dev-ui/create-listing" style={{ textDecoration: 'none' }}>
+                <motion.button 
+                  type="button" 
+                  className={styles.btnSecondary}
+                  whileHover={{ y: -1 }}
+                  whileTap={{ y: 0 }}
+                >
+                  <Plus size={18} />
+                  <span>Сдать в аренду</span>
+                </motion.button>
+              </Link>
             </div>
 
             <div className={styles.divider} />
