@@ -1,26 +1,33 @@
 import { ItemStatus } from "@/business/types/entity";
 
-export type CatalogItemCardVM = {
+export type CatalogItemBaseVM = {
   id: string;
   title: string;
-  imageUrl: string | null;
-  item_description: string | null;
-  price_per_day: string | null;
-  price_per_hour: string | null;
-  deposit_amount: string;
-  pickup_location: string | null;
+  pricePerDay: string | null;
+  pricePerHour: string | null;
+  depositAmount: string;
+  pickupLocation: string | null;
   status: ItemStatus;
-  views_count: number;
-  created_at: string;
-  location: string | null;
+  viewsCount: number;
+  createdAt: string;
   isAvailable: boolean;
-  dateAvailable: string;
+  nearestAvailableDate: string | null;
+};
+
+export type CatalogItemCardVM = CatalogItemBaseVM & {
+  coverImageUrl: string | null;
+};
+
+export type CatalogItemDetailsVM = CatalogItemBaseVM & {
+  description: string | null;
+  photos: string[];
 };
 
 export type CatalogListVM = {
   items: CatalogItemCardVM[];
   total: number;
 };
+
 export type Availability = {
   item_id: string;
   date: string;

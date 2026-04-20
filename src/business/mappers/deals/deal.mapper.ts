@@ -6,6 +6,7 @@ const DEAL_STATUS_LABELS: Record<Deal["status"], string> = {
   confirmed: "Подтверждена",
   active: "Активна",
   completed: "Завершена",
+  cancelled: "Отменена",
   rejected: "Отклонена",
 };
 

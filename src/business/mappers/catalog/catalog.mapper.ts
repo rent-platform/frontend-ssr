@@ -1,26 +1,49 @@
 import type { AdsItemResponseDto } from "@/business/types/dto/ads.dto";
-import type { CatalogItemCardVM } from "@/business/types/view/catalog.view";
+import type {
+  CatalogItemBaseVM,
+  CatalogItemCardVM,
+  CatalogItemDetailsVM,
+} from "@/business/types/view";
 
-export function mapCatalogItemToVM(dto: AdsItemResponseDto): CatalogItemCardVM {
-  const sortedPhotos = [...(dto.photos ?? [])].sort(
-    (a, b) => a.sort_order - b.sort_order,
-  );
+function getSortedPhotoUrls(dto: AdsItemResponseDto): string[] {
+  return [...(dto.photos ?? [])]
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .map((photo) => photo.photo_url);
+}
 
+function mapCatalogItemToBaseVM(dto: AdsItemResponseDto): CatalogItemBaseVM {
   return {
     id: dto.id,
     title: dto.title,
-    imageUrl: sortedPhotos[0]?.photo_url ?? null,
-    item_description: dto.item_description,
-    price_per_day: dto.price_per_day,
-    price_per_hour: dto.price_per_hour,
-    deposit_amount: dto.deposit_amount,
-    pickup_location: dto.pickup_location, // откуда брать | надо??
-    location: dto.pickup_location, // город
+    pricePerDay: dto.price_per_day,
+    pricePerHour: dto.price_per_hour,
+    depositAmount: dto.deposit_amount,
+    pickupLocation: dto.pickup_location,
     status: dto.status,
-    views_count: dto.views_count,
-    created_at: dto.created_at,
+    viewsCount: dto.views_count,
+    createdAt: dto.created_at,
     isAvailable: dto.is_available,
-    dateAvailable:
-      dto.nearest_available_date ?? new Date().toISOString().split("T")[0],
+    nearestAvailableDate: dto.nearest_available_date,
+  };
+}
+
+export function mapCatalogItemToCardVM(
+  dto: AdsItemResponseDto,
+): CatalogItemCardVM {
+  const photoUrls = getSortedPhotoUrls(dto);
+
+  return {
+    ...mapCatalogItemToBaseVM(dto),
+    coverImageUrl: photoUrls[0] ?? null,
+  };
+}
+
+export function mapCatalogItemToDetailsVM(
+  dto: AdsItemResponseDto,
+): CatalogItemDetailsVM {
+  return {
+    ...mapCatalogItemToBaseVM(dto),
+    description: dto.item_description,
+    photos: getSortedPhotoUrls(dto),
   };
 }

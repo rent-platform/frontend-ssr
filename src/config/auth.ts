@@ -142,6 +142,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             body: JSON.stringify({ refreshToken: token.refreshToken }),
           },
         });
+        // async function apiFetch(input, options) {
+        //   const res = await fetch(input, options);
+        //
+        //   if (res.status === 401) {
+        //
+        //     const refreshed = await refreshToken();
+        //
+        //     if (!refreshed) {
+        //       throw new Error("SESSION_EXPIRED");
+        //     }
+        //
+        //     // 2. повторяем запрос
+        //     return fetch(input, options);
+        //   }
+        //2. reactive refresh
+        //
+        // ловит 401
+        //  делает refresh
+        //  повторяет запрос
+        //   return res;
+        // }
 
         const newDecoded = decodeJwt(data.accessToken);
 

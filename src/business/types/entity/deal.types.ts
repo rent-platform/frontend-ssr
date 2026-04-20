@@ -7,6 +7,7 @@ export type DealStatus =
   | "confirmed"
   | "active"
   | "completed"
+  | "cancelled"
   | "rejected";
 
 export type TransactionType =

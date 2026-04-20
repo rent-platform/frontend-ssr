@@ -1,7 +1,7 @@
 "use client";
 
 import { useFetchAdsInfiniteQuery } from "@/business/api";
-import { mapCatalogItemToVM } from "@/business/mappers";
+import { mapCatalogItemToCardVM } from "@/business/mappers";
 import type { FetchAdsArgs } from "@/business/types/dto/ads.dto";
 import type { CatalogItemCardVM } from "@/business/types/view/catalog.view";
 
@@ -31,7 +31,7 @@ export function useGetAds(params: FetchAdsArgs = {}): UseAdsResult {
 
   return {
     products: (data?.pages.flatMap((page) => page.items) ?? []).map(
-      mapCatalogItemToVM,
+      mapCatalogItemToCardVM,
     ),
     total: data?.pages[0]?.meta.totalCount ?? 0,
     isLoading,

@@ -37,10 +37,11 @@ export const adsApi = baseApi.injectEndpoints({
       keepUnusedDataFor: 300,
     }),
 
-    fetchAd: build.query<AdsItemResponseDto, string>({
-      query: (id) => ({ url: `ads/${id}` }), // TODO: ads на "/" ?
+    fetchAdById: build.query<AdsItemResponseDto, string>({
+      query: (id) => ({ url: `ads/${id}` }),
       providesTags: (_result, _err, id) => [{ type: "AdsItem", id }],
     }),
+
     createAd: build.mutation<AdsItemResponseDto, AdsCreateAd>({
       query: ({ ...body }) => ({
         url: "ads",
@@ -108,7 +109,7 @@ export const adsApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useFetchAdQuery,
+  useFetchAdByIdQuery,
   useFetchAdsInfiniteQuery,
   useCreateAdMutation,
   useDeleteAdMutation,

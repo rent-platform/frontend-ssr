@@ -3,7 +3,7 @@
 import { useGetAds } from "./useGetAds";
 import { useInfiniteScroll } from "@/business/hooks/utils/useInfiniteScroll";
 import { useFilters } from "@/business/hooks/filters/useFilters";
-import { useDebouncedValue } from "@/business/hooks/utils/useDebouncedValue"; // см. ниже
+import { useDebouncedValue } from "@/business/hooks/utils/useDebouncedValue";
 
 export function useCatalogPage() {
   const { filters } = useFilters();

@@ -3,6 +3,7 @@ export { useLoginForm } from "./auth/useLoginForm";
 export { useRegisterForm } from "./auth/useRegisterForm";
 export { useFilters } from "./filters/useFilters";
 export { useGetAds } from "./ads/useGetAds";
+export { useGetAdById } from "./ads/useGetAdById";
 export { useCreateAd } from "./ads/useCreateAd";
 export { useUpdateAd } from "./ads/useUpdateAd";
 export { useDeleteAd } from "./ads/useDeleteAd";

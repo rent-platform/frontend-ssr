@@ -38,6 +38,12 @@ export type FetchAdsArgs = {
   sortDirection?: "asc" | "desc";
 };
 
+export type FetchAdByIdArgs = {
+  search?: string;
+
+  sortDirection?: "asc" | "desc";
+};
+
 export type UpdatePlaylistArgs = DeepPartial<AdsCreateAd>; //TODO: по сути patch?
 
 export type AdsCreateAd = {

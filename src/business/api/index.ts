@@ -1,5 +1,5 @@
 export {
-  useFetchAdQuery,
+  useFetchAdByIdQuery,
   useFetchAdsInfiniteQuery,
   useCreateAdMutation,
   useDeleteAdMutation,
@@ -7,7 +7,19 @@ export {
   useUploadAdPhotosMutation,
 } from "./ads/endpoints";
 
-export { useFetchDealsQuery } from "./deals/endpoints";
+export {
+  useFetchDealsQuery,
+  useCreateDealRequestMutation,
+  useFetchDealByIdQuery,
+  useConfirmDealMutation,
+  useRejectDealMutation,
+  useCancelDealMutation,
+  useStartDealMutation,
+  useCompleteDealMutation,
+  useFetchMyIncomingDealsQuery,
+  useFetchMyOutgoingDealsQuery,
+  useFetchDealStatusHistoryQuery,
+} from "./deals/endpoints";
 
 export {
   useGetProfileQuery,

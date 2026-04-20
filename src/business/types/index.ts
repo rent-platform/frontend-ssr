@@ -1,1 +1,7 @@
-export type { CatalogItemCardVM, CatalogListVM, Availability } from "./view";
+export type {
+  CatalogItemBaseVM,
+  CatalogItemCardVM,
+  CatalogItemDetailsVM,
+  CatalogListVM,
+  Availability,
+} from "./view";
