@@ -22,6 +22,7 @@ export const baseApi = createApi({
     "Notifications",
     "Review",
     "UserRating",
+    "Payment",
   ],
   refetchOnReconnect: true,
   endpoints: () => ({}),

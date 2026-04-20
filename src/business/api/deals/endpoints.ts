@@ -1,10 +1,12 @@
 import { baseApi } from "@/business/api/baseApi";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import type {
   CreateDealRequestDto,
   DealsListResponseDto,
   FetchDealsArgs,
   RejectDealRequestDto,
 } from "@/business/types/dto/deals.dto";
+import type { Payment } from "@/business/types/dto/payments.dto";
 import type { Deal, DealStatusHistory } from "@/business/types/entity/deal.types";
 
 const DEALS_LIST_TAG_ID = "LIST";
@@ -39,6 +41,11 @@ const getDealMutationInvalidationTags = (dealId: string) => [
   { type: "Deals" as const, id: OUTGOING_DEALS_TAG_ID },
   getDealHistoryTag(dealId),
 ];
+
+const createCustomError = (message: string): FetchBaseQueryError => ({
+  status: "CUSTOM_ERROR" as const,
+  error: message,
+});
 
 export const dealsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -98,10 +105,41 @@ export const dealsApi = baseApi.injectEndpoints({
     }),
 
     startDeal: build.mutation<Deal, string>({
-      query: (id) => ({
-        url: `deals/${id}/start`,
-        method: "PATCH",
-      }),
+      async queryFn(dealId, _api, _extraOptions, baseQuery) {
+        const paymentResult = await baseQuery({
+          url: "payments",
+          params: { dealId },
+        });
+
+        if ("error" in paymentResult) {
+          return {
+            error: createCustomError(
+              "Нельзя начать сделку без подтвержденной оплаты",
+            ),
+          };
+        }
+
+        const payment = paymentResult.data as Payment;
+
+        if (payment.status !== "SUCCEEDED") {
+          return {
+            error: createCustomError(
+              "Нельзя начать сделку без подтвержденной оплаты",
+            ),
+          };
+        }
+
+        const startDealResult = await baseQuery({
+          url: `deals/${dealId}/start`,
+          method: "PATCH",
+        });
+
+        if ("error" in startDealResult && startDealResult.error) {
+          return { error: startDealResult.error };
+        }
+
+        return { data: startDealResult.data as Deal };
+      },
       invalidatesTags: (_result, _error, id) => getDealMutationInvalidationTags(id),
     }),
 

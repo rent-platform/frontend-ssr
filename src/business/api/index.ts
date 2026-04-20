@@ -29,6 +29,12 @@ export {
 } from "./reviews/endpoints";
 
 export {
+  useCreatePaymentMutation,
+  useFetchPaymentByDealQuery,
+  useFetchPaymentByIdQuery,
+} from "./payments/endpoints";
+
+export {
   useGetProfileQuery,
   useUploadAvatarMutation,
   useUpdateUserInfoMutation,
