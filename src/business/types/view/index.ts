@@ -5,3 +5,9 @@ export type {
   CatalogListVM,
   Availability,
 } from "@/business/types/view/catalog.view";
+export type {
+  DealCardVM,
+  DealDetailsVM,
+  DealStatusHistoryItemVM,
+  DealsListVM,
+} from "@/business/types/view/deal.view";

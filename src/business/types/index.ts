@@ -4,4 +4,8 @@ export type {
   CatalogItemDetailsVM,
   CatalogListVM,
   Availability,
+  DealCardVM,
+  DealDetailsVM,
+  DealStatusHistoryItemVM,
+  DealsListVM,
 } from "./view";

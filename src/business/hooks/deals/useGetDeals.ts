@@ -13,7 +13,7 @@ export interface UseDealsResult {
   refetch: () => void;
 }
 
-export function useDeals(params: dealsQueryParams = {}): UseDealsResult {
+export function useGetDeals(params: dealsQueryParams = {}): UseDealsResult {
   const { data, isLoading, isFetching, isError, refetch } =
     useFetchDealsQuery(params);
 

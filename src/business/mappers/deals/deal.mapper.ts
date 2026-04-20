@@ -1,7 +1,14 @@
-import type { Deal } from "@/business/types/entity/deal.types";
-import type { DealCardVM } from "@/business/types/view/deal.view";
+import type {
+  Deal,
+  DealStatus,
+  DealStatusHistory,
+} from "@/business/types/entity/deal.types";
+import type {
+  DealCardVM,
+  DealStatusHistoryItemVM,
+} from "@/business/types/view/deal.view";
 
-const DEAL_STATUS_LABELS: Record<Deal["status"], string> = {
+const DEAL_STATUS_LABELS: Record<DealStatus, string> = {
   new: "Новая",
   confirmed: "Подтверждена",
   active: "Активна",
@@ -9,6 +16,10 @@ const DEAL_STATUS_LABELS: Record<Deal["status"], string> = {
   cancelled: "Отменена",
   rejected: "Отклонена",
 };
+
+export function mapDealStatusToLabel(status: DealStatus): string {
+  return DEAL_STATUS_LABELS[status];
+}
 
 export function mapDealToVM(deal: Deal): DealCardVM {
   const pricePerPeriod =
@@ -22,7 +33,7 @@ export function mapDealToVM(deal: Deal): DealCardVM {
     renterId: deal.renter_id,
     ownerId: deal.owner_id,
     status: deal.status,
-    statusLabel: DEAL_STATUS_LABELS[deal.status],
+    statusLabel: mapDealStatusToLabel(deal.status),
     startDate: deal.start_date,
     endDate: deal.end_date,
     totalPrice: deal.total_price,
@@ -30,5 +41,24 @@ export function mapDealToVM(deal: Deal): DealCardVM {
     pricingMode: deal.pricing_mode,
     pricePerPeriod,
     createdAt: deal.created_at,
+  };
+}
+
+export function mapDealStatusHistoryToVM(
+  historyItem: DealStatusHistory,
+): DealStatusHistoryItemVM {
+  return {
+    id: historyItem.id,
+    dealId: historyItem.deal_id,
+    oldStatus: historyItem.old_status,
+    oldStatusLabel: historyItem.old_status
+      ? mapDealStatusToLabel(historyItem.old_status)
+      : null,
+    newStatus: historyItem.new_status,
+    newStatusLabel: mapDealStatusToLabel(historyItem.new_status),
+    changedBy: historyItem.changed_by,
+    changeSource: historyItem.change_source,
+    comment: historyItem.comment,
+    changedAt: historyItem.changed_at,
   };
 }
