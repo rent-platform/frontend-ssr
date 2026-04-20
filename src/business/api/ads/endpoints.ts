@@ -8,6 +8,49 @@ import {
 } from "@/business/types/dto/ads.dto";
 import { PhotosList } from "@/business/types/entity/catalog.types";
 
+type QueryParamValue = string | number | boolean | Date | undefined;
+
+function buildQueryParams(
+  args: FetchAdsArgs,
+  cursor?: string,
+): Record<string, string> {
+  const rawParams: Record<string, QueryParamValue> = {
+    cursor,
+    pageSize: args.pageSize ?? 40,
+    pageNumber: args.pageNumber,
+    search: args.search,
+    category: args.category,
+    subCategory: args.subCategory,
+    priceFrom: args.priceFrom,
+    priceTo: args.priceTo,
+    deposit: args.deposit,
+    city: args.city,
+    radius: args.radius,
+    availableFrom: args.availableFrom
+      ? new Date(args.availableFrom)
+      : undefined,
+    availableTo: args.availableTo ? new Date(args.availableTo) : undefined,
+    minRating: args.minRating,
+    favoritesOnly: args.favoritesOnly,
+    sortBy: args.sortBy,
+    sortDirection: args.sortDirection,
+  };
+
+  return Object.fromEntries(
+    Object.entries(rawParams).flatMap(([key, value]) => {
+      if (value === undefined) {
+        return [];
+      }
+
+      if (value instanceof Date) {
+        return Number.isNaN(value.getTime()) ? [] : [[key, value.toISOString()]];
+      }
+
+      return [[key, String(value)]];
+    }),
+  );
+}
+
 export const adsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     fetchAds: build.infiniteQuery<
@@ -23,15 +66,7 @@ export const adsApi = baseApi.injectEndpoints({
       },
       query: ({ pageParam, queryArg }) => ({
         url: `ads`,
-        params: {
-          cursor: pageParam,
-          pageSize: queryArg.pageSize ?? 40,
-          ...(queryArg.search && { search: queryArg.search }),
-          ...(queryArg.sortBy && { sortBy: queryArg.sortBy }),
-          ...(queryArg.sortDirection && {
-            sortDirection: queryArg.sortDirection,
-          }),
-        },
+        params: buildQueryParams(queryArg, pageParam),
       }),
       providesTags: ["Ads"],
       keepUnusedDataFor: 300,

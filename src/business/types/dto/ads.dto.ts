@@ -30,13 +30,27 @@ export type AdsListResponseDto = {
   meta: Meta;
 };
 
-export type FetchAdsArgs = {
+export interface AdsFilterParams {
+  search?: string;
+  category?: string;
+  subCategory?: string;
+  priceFrom?: number;
+  priceTo?: number;
+  deposit?: boolean;
+  city?: string;
+  radius?: number;
+  availableFrom?: string;
+  availableTo?: string;
+  minRating?: number;
+  favoritesOnly?: boolean;
+}
+
+export interface FetchAdsArgs extends AdsFilterParams {
   pageSize?: number;
   pageNumber?: number;
-  search?: string;
   sortBy?: string;
   sortDirection?: "asc" | "desc";
-};
+}
 
 export type FetchAdByIdArgs = {
   search?: string;
