@@ -8,7 +8,12 @@ import {
 } from "@/business/types/dto/ads.dto";
 import { PhotosList } from "@/business/types/entity/catalog.types";
 
+const ADS_LIST_TAG_ID = "LIST";
+
 type QueryParamValue = string | number | boolean | Date | undefined;
+
+const getAdsItemTags = (items?: AdsItemResponseDto[]) =>
+  items?.map((item) => ({ type: "AdsItem" as const, id: item.id })) ?? [];
 
 function buildQueryParams(
   args: FetchAdsArgs,
@@ -68,7 +73,10 @@ export const adsApi = baseApi.injectEndpoints({
         url: `ads`,
         params: buildQueryParams(queryArg, pageParam),
       }),
-      providesTags: ["Ads"],
+      providesTags: (result) => [
+        { type: "Ads", id: ADS_LIST_TAG_ID },
+        ...getAdsItemTags(result?.pages.flatMap((page) => page.items)),
+      ],
       keepUnusedDataFor: 300,
     }),
 
@@ -90,7 +98,7 @@ export const adsApi = baseApi.injectEndpoints({
           },
         },
       }),
-      invalidatesTags: ["Ads"],
+      invalidatesTags: [{ type: "Ads", id: ADS_LIST_TAG_ID }],
     }),
     deleteAd: build.mutation<void, string>({
       query: (adId) => ({
@@ -98,8 +106,8 @@ export const adsApi = baseApi.injectEndpoints({
         method: "DELETE",
       }),
       invalidatesTags: (_result, _error, adId) => [
-        { type: "Ads", id: adId },
-        "Ads",
+        { type: "Ads", id: ADS_LIST_TAG_ID },
+        { type: "AdsItem", id: adId },
       ],
     }),
     updateAd: build.mutation<
@@ -119,8 +127,8 @@ export const adsApi = baseApi.injectEndpoints({
         },
       }),
       invalidatesTags: (_result, _error, { adId }) => [
-        { type: "Ads", id: adId },
-        "Ads",
+        { type: "Ads", id: ADS_LIST_TAG_ID },
+        { type: "AdsItem", id: adId },
       ],
     }),
     uploadAdPhotos: build.mutation<PhotosList, { adId: string; files: File[] }>(
@@ -137,6 +145,7 @@ export const adsApi = baseApi.injectEndpoints({
         },
         invalidatesTags: (_result, _error, { adId }) => [
           { type: "AdsItem", id: adId },
+          { type: "Ads", id: ADS_LIST_TAG_ID },
         ],
       },
     ),

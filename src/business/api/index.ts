@@ -22,6 +22,13 @@ export {
 } from "./deals/endpoints";
 
 export {
+  useCreateReviewMutation,
+  useFetchReviewsByUserQuery,
+  useFetchReviewsByAdQuery,
+  useFetchUserRatingQuery,
+} from "./reviews/endpoints";
+
+export {
   useGetProfileQuery,
   useUploadAvatarMutation,
   useUpdateUserInfoMutation,

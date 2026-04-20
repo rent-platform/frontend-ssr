@@ -16,10 +16,12 @@ export const baseApi = createApi({
   tagTypes: [
     "Ads",
     "AdsItem",
-    "Session", // пусть будет
+    "Session",
     "Users",
     "Deals",
     "Notifications",
+    "Review",
+    "UserRating",
   ],
   refetchOnReconnect: true,
   endpoints: () => ({}),
