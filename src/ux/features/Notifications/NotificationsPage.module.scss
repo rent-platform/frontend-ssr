@@ -1,0 +1,488 @@
+@use '../../styles/vars' as *;
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Notifications Page — Modern Glass UI
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.page {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(34, 197, 94, 0.03) 0%, transparent 70%),
+    $color-surface-muted;
+  font-family: $font-family-base;
+  padding: $space-8 $space-6 $space-16;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ─── Page Header ─── */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-4;
+  margin-bottom: $space-6;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-lg;
+  border: 1px solid transparent;
+  background: none;
+  color: $color-text-secondary;
+  text-decoration: none;
+  transition: $transition-smooth;
+
+  svg { width: 18px; height: 18px; }
+
+  &:hover {
+    color: $color-primary;
+    background: rgba(34, 197, 94, 0.06);
+    border-color: rgba(34, 197, 94, 0.15);
+  }
+}
+
+.title {
+  font-family: $font-family-display;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.unreadBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: $radius-full;
+  background: $color-primary;
+  color: #fff;
+  font-size: 11px;
+  font-weight: $font-weight-bold;
+  margin-left: $space-2;
+}
+
+.headerActions {
+  display: flex;
+  gap: $space-2;
+}
+
+.markReadBtn {
+  padding: 6px $space-4;
+  border-radius: $radius-full;
+  border: 1px solid $color-border;
+  background: #fff;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  font-family: $font-family-base;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    background: rgba(34, 197, 94, 0.03);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.settingsBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: $radius-full;
+  border: 1px solid $color-border;
+  background: #fff;
+  color: $color-text-secondary;
+  cursor: pointer;
+  text-decoration: none;
+  transition: $transition-smooth;
+
+  svg { width: 16px; height: 16px; }
+
+  &:hover {
+    color: $color-primary;
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+}
+
+/* ─── Tabs ─── */
+
+.tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: $space-5;
+  background: #fff;
+  border-radius: $radius-xl;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  padding: 4px;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.tab {
+  flex: 1;
+  padding: $space-2 $space-3;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  font-family: $font-family-base;
+  color: $color-text-secondary;
+  background: none;
+  border: none;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: $transition-smooth;
+  text-align: center;
+  white-space: nowrap;
+  position: relative;
+
+  &:hover { color: $color-text; }
+}
+
+.tabActive {
+  background: rgba(34, 197, 94, 0.08);
+  color: $color-primary;
+  font-weight: $font-weight-600;
+}
+
+.tabBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  margin-left: 4px;
+  border-radius: $radius-full;
+  font-size: 10px;
+  font-weight: $font-weight-600;
+  background: rgba(100, 116, 139, 0.08);
+}
+
+.tabBadgeActive {
+  background: rgba(34, 197, 94, 0.12);
+  color: $color-primary;
+}
+
+/* ─── Date Group ─── */
+
+.dateGroup {
+  margin-bottom: $space-5;
+}
+
+.dateLabel {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: $color-text-secondary;
+  margin: 0 0 $space-3;
+  padding-left: $space-1;
+}
+
+/* ─── Notification Card ─── */
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  padding: $space-4 $space-5;
+  background: #fff;
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  border-radius: $radius-xl;
+  margin-bottom: $space-2;
+  cursor: pointer;
+  transition: $transition-smooth;
+  position: relative;
+
+  &:hover {
+    border-color: rgba(34, 197, 94, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transform: translateY(-1px);
+  }
+}
+
+.cardUnread {
+  background: rgba(34, 197, 94, 0.015);
+  border-color: rgba(34, 197, 94, 0.12);
+}
+
+.cardUrgent {
+  border-left: 3px solid $color-error;
+}
+
+.cardHigh {
+  border-left: 3px solid $color-warning;
+}
+
+/* ─── Icon circle ─── */
+
+.iconCircle {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: $radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg { width: 18px; height: 18px; }
+}
+
+.iconDeal {
+  background: rgba(34, 197, 94, 0.07);
+  color: $color-primary;
+}
+
+.iconPayment {
+  background: rgba(59, 130, 246, 0.07);
+  color: #3b82f6;
+}
+
+.iconMessage {
+  background: rgba(139, 92, 246, 0.07);
+  color: #8b5cf6;
+}
+
+.iconReview {
+  background: rgba(245, 158, 11, 0.07);
+  color: #f59e0b;
+}
+
+.iconSystem {
+  background: rgba(100, 116, 139, 0.07);
+  color: $color-text-secondary;
+}
+
+.iconSecurity {
+  background: rgba(239, 68, 68, 0.07);
+  color: $color-error;
+}
+
+.iconPromo {
+  background: rgba(236, 72, 153, 0.07);
+  color: #ec4899;
+}
+
+/* ─── Card content ─── */
+
+.cardBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardTitleRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: 2px;
+}
+
+.cardTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+  margin: 0;
+  line-height: $line-height-tight;
+}
+
+.cardTitleUnread {
+  font-weight: $font-weight-bold;
+}
+
+.unreadDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: $color-primary;
+  flex-shrink: 0;
+}
+
+.cardText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  margin: 0 0 $space-2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  flex-wrap: wrap;
+}
+
+.cardTime {
+  font-size: 10px;
+  color: $color-text-secondary;
+  opacity: 0.7;
+}
+
+.cardItemTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: $color-text-secondary;
+  background: rgba(100, 116, 139, 0.05);
+  padding: 1px 6px;
+  border-radius: $radius-full;
+
+  svg { width: 10px; height: 10px; }
+}
+
+.cardAmount {
+  font-size: 10px;
+  font-weight: $font-weight-600;
+  color: $color-text;
+}
+
+.cardAmountPositive {
+  color: $color-primary;
+}
+
+.cardAmountNegative {
+  color: $color-error;
+}
+
+.cardRating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  font-weight: $font-weight-600;
+  color: #f59e0b;
+
+  svg { width: 11px; height: 11px; fill: #f59e0b; }
+}
+
+/* ─── Action button inside card ─── */
+
+.cardAction {
+  padding: 4px $space-3;
+  border-radius: $radius-full;
+  font-size: 11px;
+  font-weight: $font-weight-600;
+  font-family: $font-family-base;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  background: rgba(34, 197, 94, 0.04);
+  color: $color-primary;
+  cursor: pointer;
+  transition: $transition-smooth;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: $color-primary;
+  }
+}
+
+/* ─── Right side of card ─── */
+
+.cardRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: $space-2;
+  flex-shrink: 0;
+}
+
+/* ─── Deal status badge ─── */
+
+.statusBadge {
+  font-size: 9px;
+  font-weight: $font-weight-600;
+  padding: 2px 7px;
+  border-radius: $radius-full;
+  white-space: nowrap;
+}
+
+.statusNew { background: rgba(245, 158, 11, 0.08); color: #f59e0b; }
+.statusConfirmed { background: rgba(59, 130, 246, 0.08); color: #3b82f6; }
+.statusActive { background: rgba(34, 197, 94, 0.08); color: $color-primary; }
+.statusCompleted { background: rgba(100, 116, 139, 0.08); color: $color-text-secondary; }
+.statusRejected { background: rgba(239, 68, 68, 0.08); color: $color-error; }
+
+/* ─── Empty state ─── */
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16 $space-5;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: $radius-full;
+  background: rgba(34, 197, 94, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-primary;
+  margin-bottom: $space-4;
+
+  svg { width: 32px; height: 32px; }
+}
+
+.emptyTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  margin: 0 0 $space-2;
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  max-width: 320px;
+  margin: 0;
+}
+
+/* ═══ Responsive ═══ */
+
+@media (max-width: $bp-md) {
+  .page { padding: $space-5 $space-4 $space-12; }
+  .header { flex-direction: column; align-items: flex-start; gap: $space-3; }
+  .tabs { border-radius: $radius-lg; }
+  .tab { padding: $space-2 $space-2; font-size: 11px; }
+  .card { padding: $space-3 $space-4; gap: $space-3; }
+  .iconCircle { width: 36px; height: 36px; svg { width: 16px; height: 16px; } }
+}
+
+@media (max-width: $bp-sm) {
+  .title { font-size: $font-size-xl; }
+  .headerActions { width: 100%; justify-content: flex-end; }
+}

@@ -33,7 +33,7 @@ export function BrandIcon() {
 
 const actionIcons = [
   { label: 'Избранное', count: 2, Icon: Heart, href: '' },
-  { label: 'Уведомления', count: 5, Icon: Bell, href: '' },
+  { label: 'Уведомления', count: 5, Icon: Bell, href: '/dev-ui/notifications' },
   { label: 'Сообщения', count: 9, Icon: MessageSquare, href: '/dev-ui/chat' },
 ] as const;
 
@@ -143,6 +143,10 @@ export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProp
                   <Link href="/dev-ui/profile" className={styles.profileMenuItem}>
                     <User size={16} />
                     <span>Мой профиль</span>
+                  </Link>
+                  <Link href="/dev-ui/notifications" className={styles.profileMenuItem}>
+                    <Bell size={16} />
+                    <span>Уведомления</span>
                   </Link>
                   <Link href="/dev-ui/chat" className={styles.profileMenuItem}>
                     <MessageSquare size={16} />
