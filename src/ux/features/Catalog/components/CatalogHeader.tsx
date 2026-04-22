@@ -32,9 +32,9 @@ export function BrandIcon() {
 }
 
 const actionIcons = [
-  { label: 'Избранное', count: 2, Icon: Heart },
-  { label: 'Уведомления', count: 5, Icon: Bell },
-  { label: 'Сообщения', count: 9, Icon: MessageSquare },
+  { label: 'Избранное', count: 2, Icon: Heart, href: '' },
+  { label: 'Уведомления', count: 5, Icon: Bell, href: '' },
+  { label: 'Сообщения', count: 9, Icon: MessageSquare, href: '/dev-ui/chat' },
 ] as const;
 
 export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProps) {
@@ -83,27 +83,36 @@ export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProp
             <div className={styles.divider} />
 
             <div className={styles.iconActionRow}>
-              {actionIcons.map(({ label, count, Icon }) => (
-                <motion.button 
-                  key={label} 
-                  type="button" 
-                  className={styles.iconAction} 
-                  aria-label={label}
-                  whileHover={{ y: -2, color: 'var(--color-primary)' }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Icon size={20} className={styles.iconSvg} />
-                  {count > 0 && (
-                    <motion.span 
-                      className={styles.iconBadge}
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                    >
-                      {count}
-                    </motion.span>
-                  )}
-                </motion.button>
-              ))}
+              {actionIcons.map(({ label, count, Icon, href }) => {
+                const btn = (
+                  <motion.button 
+                    key={label} 
+                    type="button" 
+                    className={styles.iconAction} 
+                    aria-label={label}
+                    whileHover={{ y: -2, color: 'var(--color-primary)' }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <Icon size={20} className={styles.iconSvg} />
+                    {count > 0 && (
+                      <motion.span 
+                        className={styles.iconBadge}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                      >
+                        {count}
+                      </motion.span>
+                    )}
+                  </motion.button>
+                );
+                return href ? (
+                  <Link key={label} href={href} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {btn}
+                  </Link>
+                ) : (
+                  <span key={label}>{btn}</span>
+                );
+              })}
             </div>
 
             <div className={styles.accountMeta}>
@@ -134,6 +143,10 @@ export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProp
                   <Link href="/dev-ui/profile" className={styles.profileMenuItem}>
                     <User size={16} />
                     <span>Мой профиль</span>
+                  </Link>
+                  <Link href="/dev-ui/chat" className={styles.profileMenuItem}>
+                    <MessageSquare size={16} />
+                    <span>Сообщения</span>
                   </Link>
                   <Link href="/dev-ui/settings" className={styles.profileMenuItem}>
                     <Settings size={16} />
