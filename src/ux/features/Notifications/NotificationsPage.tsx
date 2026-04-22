@@ -10,6 +10,7 @@ import {
   Calendar,
   Check,
   CheckCheck,
+  ChevronDown,
   CreditCard,
   Gift,
   Lock,
@@ -210,21 +211,50 @@ export function NotificationsPage() {
 
         {/* ─── Tabs ─── */}
         <div className={styles.tabs}>
-          {(Object.keys(NOTIFICATION_TAB_LABELS) as NotificationTab[]).map((t) => (
+          <button
+            type="button"
+            className={`${styles.tab} ${tab === 'all' ? styles.tabActive : ''}`}
+            onClick={() => setTab('all')}
+          >
+            Все
+            {tabCounts.all > 0 && (
+              <span className={`${styles.tabBadge} ${tab === 'all' ? styles.tabBadgeActive : ''}`}>
+                {tabCounts.all}
+              </span>
+            )}
+          </button>
+
+          <div className={styles.dropdownWrap}>
             <button
-              key={t}
               type="button"
-              className={`${styles.tab} ${tab === t ? styles.tabActive : ''}`}
-              onClick={() => setTab(t)}
+              className={`${styles.tab} ${tab !== 'all' ? styles.tabActive : ''}`}
             >
-              {NOTIFICATION_TAB_LABELS[t]}
-              {tabCounts[t] > 0 && (
-                <span className={`${styles.tabBadge} ${tab === t ? styles.tabBadgeActive : ''}`}>
-                  {tabCounts[t]}
+              {tab !== 'all' ? NOTIFICATION_TAB_LABELS[tab] : 'Категория'}
+              {tab !== 'all' && tabCounts[tab] > 0 && (
+                <span className={`${styles.tabBadge} ${styles.tabBadgeActive}`}>
+                  {tabCounts[tab]}
                 </span>
               )}
+              <ChevronDown size={14} className={styles.dropdownChevron} />
             </button>
-          ))}
+            <div className={styles.dropdown}>
+              {(Object.keys(NOTIFICATION_TAB_LABELS) as NotificationTab[])
+                .filter((t) => t !== 'all')
+                .map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    className={`${styles.dropdownItem} ${tab === t ? styles.dropdownItemActive : ''}`}
+                    onClick={() => setTab(t)}
+                  >
+                    <span>{NOTIFICATION_TAB_LABELS[t]}</span>
+                    {tabCounts[t] > 0 && (
+                      <span className={styles.dropdownItemBadge}>{tabCounts[t]}</span>
+                    )}
+                  </button>
+                ))}
+            </div>
+          </div>
         </div>
 
         {/* ─── Notification List ─── */}
