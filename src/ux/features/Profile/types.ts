@@ -20,6 +20,7 @@ export type ProfileStats = {
   totalListings: number;
   activeBookings: number;
   completedBookings: number;
+  rentedCount: number;
   totalEarnings: string;
   totalSpent: string;
   responseRate: number;
@@ -60,4 +61,4 @@ export type ProfileBooking = {
 
 /* ═══ Tabs ═══ */
 
-export type ProfileTab = 'overview' | 'listings' | 'bookings';
+export type ProfileTab = 'overview' | 'listings' | 'renting-out' | 'renting-in';

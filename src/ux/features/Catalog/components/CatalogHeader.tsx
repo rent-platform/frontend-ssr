@@ -135,7 +135,7 @@ export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProp
                     <User size={16} />
                     <span>Мой профиль</span>
                   </Link>
-                  <Link href="/dev-ui/profile" className={styles.profileMenuItem}>
+                  <Link href="/dev-ui/settings" className={styles.profileMenuItem}>
                     <Settings size={16} />
                     <span>Настройки</span>
                   </Link>

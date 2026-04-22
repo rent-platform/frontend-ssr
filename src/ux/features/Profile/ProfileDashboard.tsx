@@ -3,7 +3,6 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
-  ArrowDownUp,
   ArrowLeft,
   Calendar,
   CalendarCheck,
@@ -15,11 +14,13 @@ import {
   Mail,
   Package,
   Phone,
+  ShoppingBag,
   Star,
+  Upload,
   User,
 } from 'lucide-react';
 import type { ItemStatus, DealStatus } from '@/business/types/entity';
-import type { ProfileTab, ProfileListing, ProfileBooking } from './types';
+import type { ProfileTab, ProfileListing, ProfileBooking, BookingSide } from './types';
 import { MOCK_USER, MOCK_STATS, MOCK_LISTINGS, MOCK_BOOKINGS } from './mockProfileData';
 import styles from './ProfileDashboard.module.scss';
 
@@ -74,7 +75,8 @@ function formatShortDate(iso: string) {
 export function ProfileDashboard() {
   const [tab, setTab] = useState<ProfileTab>('overview');
   const [listingFilter, setListingFilter] = useState<ListingFilter>('all');
-  const [bookingFilter, setBookingFilter] = useState<BookingFilter>('all');
+  const [outFilter, setOutFilter] = useState<BookingFilter>('all');
+  const [inFilter, setInFilter] = useState<BookingFilter>('all');
 
   const user = MOCK_USER;
   const stats = MOCK_STATS;
@@ -153,12 +155,12 @@ export function ProfileDashboard() {
             <div className={styles.inlineStatDivider} />
             <div className={styles.inlineStat}>
               <span className={styles.inlineStatValue}>{stats.completedBookings}</span>
-              <span className={styles.inlineStatLabel}>Сделок</span>
+              <span className={styles.inlineStatLabel}>Сдал</span>
             </div>
             <div className={styles.inlineStatDivider} />
             <div className={styles.inlineStat}>
-              <span className={styles.inlineStatValue}>{stats.responseRate}%</span>
-              <span className={styles.inlineStatLabel}>Отклик</span>
+              <span className={styles.inlineStatValue}>{stats.rentedCount}</span>
+              <span className={styles.inlineStatLabel}>Арендовал</span>
             </div>
           </div>
         </div>
@@ -179,11 +181,18 @@ export function ProfileDashboard() {
             onClick={() => setTab('listings')}
           />
           <TabBtn
-            active={tab === 'bookings'}
-            icon={<ArrowDownUp size={16} />}
-            label="Бронирования"
-            badge={stats.activeBookings}
-            onClick={() => setTab('bookings')}
+            active={tab === 'renting-out'}
+            icon={<Upload size={16} />}
+            label="Сдаю в аренду"
+            badge={MOCK_BOOKINGS.filter((b) => b.side === 'owner').length}
+            onClick={() => setTab('renting-out')}
+          />
+          <TabBtn
+            active={tab === 'renting-in'}
+            icon={<ShoppingBag size={16} />}
+            label="Арендую"
+            badge={MOCK_BOOKINGS.filter((b) => b.side === 'renter').length}
+            onClick={() => setTab('renting-in')}
           />
         </div>
 
@@ -192,8 +201,23 @@ export function ProfileDashboard() {
         {tab === 'listings' && (
           <ListingsPanel filter={listingFilter} onFilterChange={setListingFilter} />
         )}
-        {tab === 'bookings' && (
-          <BookingsPanel filter={bookingFilter} onFilterChange={setBookingFilter} />
+        {tab === 'renting-out' && (
+          <BookingsPanel
+            side="owner"
+            title="Сдаю в аренду"
+            subtitle="Вещи, которые вы сдаёте другим"
+            filter={outFilter}
+            onFilterChange={setOutFilter}
+          />
+        )}
+        {tab === 'renting-in' && (
+          <BookingsPanel
+            side="renter"
+            title="Арендую"
+            subtitle="Вещи, которые вы берёте у других"
+            filter={inFilter}
+            onFilterChange={setInFilter}
+          />
         )}
       </div>
     </div>
@@ -256,13 +280,15 @@ function TabBtn({
 function OverviewPanel() {
   const user = MOCK_USER;
   const stats = MOCK_STATS;
+  const ownerDeals = MOCK_BOOKINGS.filter((b) => b.side === 'owner');
+  const renterDeals = MOCK_BOOKINGS.filter((b) => b.side === 'renter');
 
   return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <div>
           <h2 className={styles.panelTitle}>Обзор профиля</h2>
-          <p className={styles.panelSubtitle}>Основная информация и статистика</p>
+          <p className={styles.panelSubtitle}>Статистика как арендодателя и арендатора</p>
         </div>
       </div>
 
@@ -271,13 +297,19 @@ function OverviewPanel() {
           icon={<Package size={20} />}
           iconCls={styles.statIconGreen}
           value={`${stats.activeListings} / ${stats.totalListings}`}
-          label="Активных / Всего"
+          label="Объявлений (акт. / всего)"
         />
         <StatCard
-          icon={<Handshake size={20} />}
+          icon={<Upload size={20} />}
           iconCls={styles.statIconBlue}
-          value={`${stats.activeBookings}`}
-          label="Активных бронирований"
+          value={`${ownerDeals.length}`}
+          label="Сдал в аренду"
+        />
+        <StatCard
+          icon={<ShoppingBag size={20} />}
+          iconCls={styles.statIconPurple}
+          value={`${renterDeals.length}`}
+          label="Арендовал у других"
         />
         <StatCard
           icon={<Star size={20} />}
@@ -390,27 +422,32 @@ function ListingRow({ item }: { item: ProfileListing }) {
 
 /* ═══ Bookings Panel ═══ */
 function BookingsPanel({
+  side,
+  title,
+  subtitle,
   filter,
   onFilterChange,
 }: {
+  side: BookingSide;
+  title: string;
+  subtitle: string;
   filter: BookingFilter;
   onFilterChange: (f: BookingFilter) => void;
 }) {
-  const filtered = useMemo(
-    () =>
-      filter === 'all'
-        ? MOCK_BOOKINGS
-        : MOCK_BOOKINGS.filter((b) => b.status === filter),
-    [filter],
-  );
+  const filtered = useMemo(() => {
+    const bySide = MOCK_BOOKINGS.filter((b) => b.side === side);
+    return filter === 'all' ? bySide : bySide.filter((b) => b.status === filter);
+  }, [side, filter]);
+
+  const counterLabel = side === 'owner' ? 'Арендатор' : 'Владелец';
 
   return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <div>
-          <h2 className={styles.panelTitle}>История бронирований</h2>
+          <h2 className={styles.panelTitle}>{title}</h2>
           <p className={styles.panelSubtitle}>
-            {filtered.length} {pluralize(filtered.length, 'бронирование', 'бронирования', 'бронирований')}
+            {subtitle} · {filtered.length} {pluralize(filtered.length, 'сделка', 'сделки', 'сделок')}
           </p>
         </div>
         <div className={styles.filterPills}>
@@ -428,11 +465,15 @@ function BookingsPanel({
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState icon={<Handshake />} title="Нет бронирований" text="В этой категории пока ничего нет" />
+        <EmptyState
+          icon={side === 'owner' ? <Upload /> : <ShoppingBag />}
+          title={side === 'owner' ? 'Нет сделок по аренде' : 'Вы ещё ничего не арендовали'}
+          text="В этой категории пока ничего нет"
+        />
       ) : (
         <div className={styles.bookingsGrid}>
           {filtered.map((b) => (
-            <BookingRow key={b.id} booking={b} />
+            <BookingRow key={b.id} booking={b} counterLabel={counterLabel} />
           ))}
         </div>
       )}
@@ -440,10 +481,8 @@ function BookingsPanel({
   );
 }
 
-function BookingRow({ booking }: { booking: ProfileBooking }) {
+function BookingRow({ booking, counterLabel }: { booking: ProfileBooking; counterLabel: string }) {
   const st = DEAL_STATUS_MAP[booking.status];
-  const sideLabel = booking.side === 'owner' ? 'Сдаю' : 'Арендую';
-  const sideCls = booking.side === 'owner' ? styles.sideOwner : styles.sideRenter;
 
   return (
     <div className={styles.bookingRow}>
@@ -456,14 +495,11 @@ function BookingRow({ booking }: { booking: ProfileBooking }) {
       )}
 
       <div className={styles.bookingInfo}>
-        <div className={styles.bookingTitleRow}>
-          <span className={styles.bookingTitle}>{booking.itemTitle}</span>
-          <span className={`${styles.bookingSideBadge} ${sideCls}`}>{sideLabel}</span>
-        </div>
+        <span className={styles.bookingTitle}>{booking.itemTitle}</span>
         <div className={styles.bookingMeta}>
           <span className={styles.bookingMetaItem}>
             <User size={12} />
-            {booking.counterpartyName}
+            {counterLabel}: {booking.counterpartyName}
           </span>
           <span className={styles.bookingMetaItem}>
             <Calendar size={12} />

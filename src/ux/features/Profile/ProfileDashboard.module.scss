@@ -254,7 +254,7 @@
 /* ─── Stats Grid (used in Overview) ─── */
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: $space-4;
   margin-bottom: $space-6;
 }
@@ -403,8 +403,7 @@
 
 .panelHeader {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  flex-direction: column;
   margin-bottom: $space-6;
   gap: $space-4;
 }
