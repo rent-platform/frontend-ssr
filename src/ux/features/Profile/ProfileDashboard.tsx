@@ -124,10 +124,10 @@ export function ProfileDashboard() {
             {user.bio && <p className={styles.profileBio}>{user.bio}</p>}
 
             <div className={styles.profileMeta}>
-              <span className={styles.ratingBadge}>
+              <Link href="/dev-ui/reviews" className={styles.ratingBadge}>
                 <Star size={12} />
                 {user.rating.toFixed(1)} · {user.reviewCount} отзывов
-              </span>
+              </Link>
               <span className={styles.profileMetaItem}>
                 <Calendar size={13} />
                 С {formatDate(user.memberSince)}
@@ -311,12 +311,14 @@ function OverviewPanel() {
           value={`${renterDeals.length}`}
           label="Арендовал у других"
         />
-        <StatCard
-          icon={<Star size={20} />}
-          iconCls={styles.statIconAmber}
-          value={user.rating.toFixed(1)}
-          label={`${user.reviewCount} отзывов`}
-        />
+        <Link href="/dev-ui/reviews" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <StatCard
+            icon={<Star size={20} />}
+            iconCls={styles.statIconAmber}
+            value={user.rating.toFixed(1)}
+            label={`${user.reviewCount} отзывов →`}
+          />
+        </Link>
       </div>
     </div>
   );

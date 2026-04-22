@@ -199,8 +199,15 @@
   padding: $space-1 $space-3;
   border-radius: $radius-full;
   font-size: $font-size-xs;
+  text-decoration: none;
+  transition: $transition-smooth;
+  cursor: pointer;
 
   svg { width: 12px; height: 12px; opacity: 1; color: $color-primary; }
+
+  &:hover {
+    background: rgba(34, 197, 94, 0.14);
+  }
 }
 
 /* ─── Inline Stats Row ─── */
