@@ -116,17 +116,19 @@ export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProp
               </motion.div>
               
               <div className={styles.profileDropdown}>
-                <motion.button 
-                  type="button" 
-                  className={styles.profileTrigger}
-                  whileHover={{ y: -1, boxShadow: 'var(--shadow-md)' }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className={styles.avatarWrap}>
-                    <User size={18} />
-                  </div>
-                  <ChevronDown size={14} className={styles.chevron} />
-                </motion.button>
+                <Link href="/dev-ui/profile" style={{ textDecoration: 'none' }}>
+                  <motion.button 
+                    type="button" 
+                    className={styles.profileTrigger}
+                    whileHover={{ y: -1, boxShadow: 'var(--shadow-md)' }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className={styles.avatarWrap}>
+                      <User size={18} />
+                    </div>
+                    <ChevronDown size={14} className={styles.chevron} />
+                  </motion.button>
+                </Link>
 
                 <div className={styles.profileMenu}>
                   <Link href="/dev-ui/profile" className={styles.profileMenuItem}>

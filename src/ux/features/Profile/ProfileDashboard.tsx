@@ -1,8 +1,10 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import {
   ArrowDownUp,
+  ArrowLeft,
   Calendar,
   CalendarCheck,
   Camera,
@@ -11,13 +13,10 @@ import {
   ImageIcon,
   LayoutGrid,
   Mail,
-  MapPin,
   Package,
   Phone,
   Star,
-  TrendingUp,
   User,
-  Wallet,
 } from 'lucide-react';
 import type { ItemStatus, DealStatus } from '@/business/types/entity';
 import type { ProfileTab, ProfileListing, ProfileBooking } from './types';
@@ -89,18 +88,27 @@ export function ProfileDashboard() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        {/* ── Profile Header ── */}
+        {/* ── Back Button ── */}
+        <Link href="/dev-ui" className={styles.backLink}>
+          <ArrowLeft size={18} />
+          <span>На главную</span>
+        </Link>
+
+        {/* ── Profile Header (Hero Card) ── */}
         <div className={styles.profileHeader}>
           <div className={styles.avatarSection}>
-            {user.avatar_url ? (
-              <img
-                src={user.avatar_url}
-                alt={user.full_name}
-                className={styles.avatar}
-              />
-            ) : (
-              <div className={styles.avatarPlaceholder}>{initials}</div>
-            )}
+            <div className={styles.avatarRing}>
+              {user.avatar_url ? (
+                <img
+                  src={user.avatar_url}
+                  alt={user.full_name}
+                  className={styles.avatar}
+                />
+              ) : (
+                <div className={styles.avatarPlaceholder}>{initials}</div>
+              )}
+            </div>
+            <div className={styles.onlineIndicator} />
           </div>
 
           <div className={styles.profileInfo}>
@@ -119,45 +127,40 @@ export function ProfileDashboard() {
                 {user.rating.toFixed(1)} · {user.reviewCount} отзывов
               </span>
               <span className={styles.profileMetaItem}>
-                <Calendar size={14} />
-                На платформе с {formatDate(user.memberSince)}
+                <Calendar size={13} />
+                С {formatDate(user.memberSince)}
               </span>
               {user.phone && (
                 <span className={styles.profileMetaItem}>
-                  <Phone size={14} />
+                  <Phone size={13} />
                   {user.phone}
                 </span>
               )}
               {user.email && (
                 <span className={styles.profileMetaItem}>
-                  <Mail size={14} />
+                  <Mail size={13} />
                   {user.email}
                 </span>
               )}
             </div>
           </div>
-        </div>
 
-        {/* ── Stats Grid ── */}
-        <div className={styles.statsGrid}>
-          <StatCard
-            icon={<Package size={20} />}
-            iconCls={styles.statIconGreen}
-            value={stats.activeListings.toString()}
-            label="Активных объявлений"
-          />
-          <StatCard
-            icon={<Handshake size={20} />}
-            iconCls={styles.statIconBlue}
-            value={stats.completedBookings.toString()}
-            label="Сделок завершено"
-          />
-          <StatCard
-            icon={<TrendingUp size={20} />}
-            iconCls={styles.statIconPurple}
-            value={`${stats.responseRate}%`}
-            label="Отклик"
-          />
+          <div className={styles.inlineStats}>
+            <div className={styles.inlineStat}>
+              <span className={styles.inlineStatValue}>{stats.activeListings}</span>
+              <span className={styles.inlineStatLabel}>Объявлений</span>
+            </div>
+            <div className={styles.inlineStatDivider} />
+            <div className={styles.inlineStat}>
+              <span className={styles.inlineStatValue}>{stats.completedBookings}</span>
+              <span className={styles.inlineStatLabel}>Сделок</span>
+            </div>
+            <div className={styles.inlineStatDivider} />
+            <div className={styles.inlineStat}>
+              <span className={styles.inlineStatValue}>{stats.responseRate}%</span>
+              <span className={styles.inlineStatLabel}>Отклик</span>
+            </div>
+          </div>
         </div>
 
         {/* ── Tabs ── */}
