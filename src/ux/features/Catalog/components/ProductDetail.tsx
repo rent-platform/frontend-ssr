@@ -203,7 +203,7 @@ export function ProductDetail({
           <div className={styles.detailMetaTop}>
             <div className={styles.detailRating}>
               <Star size={16} />
-              {item.ownerRating}
+              {(item.ownerRating ?? 0).toFixed(1)}
             </div>
             <span className={styles.detailMetaDot} />
             <div className={styles.detailLocation}>
@@ -214,9 +214,9 @@ export function ProductDetail({
 
           <h1>{item.title}</h1>
 
-          {item.tags.length > 0 && (
+          {(item.tags ?? []).length > 0 && (
             <div className={styles.detailTags}>
-              {item.tags.map((tag) => (
+              {(item.tags ?? []).map((tag) => (
                 <span key={tag} className={styles.detailTag}>{tag}</span>
               ))}
             </div>
@@ -242,7 +242,7 @@ export function ProductDetail({
         </section>
 
         {/* ─── Specs Grid ─── */}
-        {item.specs.length > 0 && (
+        {(item.specs ?? []).length > 0 && (
           <motion.section
             className={styles.detailSpecsSection}
             initial={{ opacity: 0, y: 16 }}
@@ -253,7 +253,7 @@ export function ProductDetail({
               <h2>Характеристики</h2>
             </div>
             <div className={styles.detailSpecsGrid}>
-              {item.specs.map((spec, i) => (
+              {(item.specs ?? []).map((spec, i) => (
                 <div key={i} className={styles.detailSpecItem}>
                   <div className={styles.specIcon}>
                     <Package size={18} />
@@ -275,7 +275,7 @@ export function ProductDetail({
               <h2>Описание</h2>
             </div>
             <div className={styles.detailParagraphs}>
-              {item.description.map((p, i) => (
+              {(item.description ?? (item.item_description ? item.item_description.split('\n') : [])).map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
@@ -286,7 +286,7 @@ export function ProductDetail({
               <h2>Условия аренды</h2>
             </div>
             <ul className={styles.detailTermsList}>
-              {item.rentalTerms.map((term, i) => (
+              {(item.rentalTerms ?? []).map((term, i) => (
                 <li key={i} className={styles.detailTermsItem}>
                   <CheckCircle2 size={17} />
                   <span>{term}</span>
@@ -440,7 +440,7 @@ export function ProductDetail({
             <span className={styles.ownerName}>{item.ownerName}</span>
             <div className={styles.ownerMeta}>
               <Star size={14} fill="#f59e0b" color="#f59e0b" />
-              {item.ownerRating} · 54 отзыва
+              {(item.ownerRating ?? 0).toFixed(1)} · 54 отзыва
             </div>
           </div>
         </div>

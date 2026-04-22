@@ -1,20 +1,25 @@
 import type { CatalogItemCardVM } from '@/business/types';
 
 export type CatalogUiItem = CatalogItemCardVM & {
+  /* ── Derivable via JOINs (category_id → categories, owner_id → users, item_id → photos) ── */
   category: string;
-  city: string;
   ownerName: string;
-  ownerAvatar: string;
-  ownerRating: number;
-  responseTime: string;
+  ownerAvatar: string | null;
   images: string[];
-  tags: string[];
-  pickupWindow: string;
-  rentalTerms: string[];
-  specs: Array<{ label: string; value: string }>;
-  description: string[];
+
+  /* ── Computed (AVG reviews.rating) ── */
+  ownerRating?: number;
+
+  /* ── No DB backing yet — kept optional for forward-compat ── */
+  city?: string;
+  responseTime?: string;
+  tags?: string[];
+  pickupWindow?: string;
+  rentalTerms?: string[];
+  specs?: Array<{ label: string; value: string }>;
+  description?: string[];
   featured?: boolean;
-  quickFilters: string[];
+  quickFilters?: string[];
 };
 
 export type CatalogSortKey =
@@ -55,9 +60,5 @@ export type CatalogFilterState = {
   onlyAvailable: boolean;
   sortBy: CatalogSortKey;
   quickFilter: string | null;
-  // Новые параметры для профессионального шеринга
-  condition: string[]; // ['new', 'like_new', 'used']
-  ownerType: 'all' | 'private' | 'pro';
-  deliveryType: 'all' | 'pickup' | 'delivery';
   hasDeposit: 'all' | 'yes' | 'no';
 };

@@ -1,21 +1,17 @@
 'use client';
 
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useRef, useState } from 'react';
 import {
   Camera,
   Check,
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Clock,
   Eye,
   FileText,
-  MapPin,
   Plus,
   Shield,
   Sparkles,
   Tag,
-  Truck,
   X,
 } from 'lucide-react';
 import styles from './CreateListing.module.scss';
@@ -38,15 +34,17 @@ type FormData = {
   pricePerHour: string;
   depositAmount: string;
   noDeposit: boolean;
-  deliveryAvailable: boolean;
-  deliveryPrice: string;
-  city: string;
-  address: string;
-  pickupWindow: string;
-  minRentalDays: string;
+  pickupLocation: string;
 };
 
 /* ─── Constants ─── */
+const CONDITIONS: { value: Condition; label: string; desc: string }[] = [
+  { value: 'new', label: 'Новый', desc: 'В оригинальной упаковке' },
+  { value: 'like_new', label: 'Как новый', desc: 'Без следов износа' },
+  { value: 'good', label: 'Хорошее', desc: 'Незначительные следы' },
+  { value: 'used', label: 'Б/у', desc: 'Видимые следы использования' },
+];
+
 const CATEGORIES = [
   'Электроника',
   'Фото и видео',
@@ -57,35 +55,6 @@ const CATEGORIES = [
   'Мероприятия',
 ];
 
-const CONDITIONS: { value: Condition; label: string; desc: string }[] = [
-  { value: 'new', label: 'Новый', desc: 'В оригинальной упаковке' },
-  { value: 'like_new', label: 'Как новый', desc: 'Без следов износа' },
-  { value: 'good', label: 'Хорошее', desc: 'Незначительные следы' },
-  { value: 'used', label: 'Б/у', desc: 'Видимые следы использования' },
-];
-
-const CITIES_DB = [
-  'Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань',
-  'Нижний Новгород', 'Челябинск', 'Самара', 'Омск', 'Ростов-на-Дону',
-  'Уфа', 'Красноярск', 'Воронеж', 'Пермь', 'Волгоград', 'Краснодар',
-  'Саратов', 'Тюмень', 'Тольятти', 'Ижевск', 'Барнаул', 'Ульяновск',
-  'Иркутск', 'Хабаровск', 'Ярославль', 'Владивосток', 'Махачкала',
-  'Томск', 'Оренбург', 'Кемерово', 'Новокузнецк', 'Рязань', 'Астрахань',
-  'Набережные Челны', 'Пенза', 'Липецк', 'Тула', 'Киров', 'Чебоксары',
-  'Калининград', 'Брянск', 'Курск', 'Иваново', 'Магнитогорск', 'Тверь',
-  'Ставрополь', 'Белгород', 'Архангельск', 'Владимир', 'Сочи',
-];
-
-const PICKUP_OPTIONS = [
-  'Круглосуточно',
-  'С 8:00 до 20:00',
-  'С 9:00 до 21:00',
-  'С 10:00 до 22:00',
-  'С 11:00 до 23:00',
-  'С 8:00 до 18:00 (будни)',
-  'Только по выходным',
-  'По договорённости',
-];
 
 const STEPS = [
   { id: 'photos', label: 'Фотографии', Icon: Camera },
@@ -104,12 +73,7 @@ const INITIAL: FormData = {
   pricePerHour: '',
   depositAmount: '',
   noDeposit: false,
-  deliveryAvailable: false,
-  deliveryPrice: '',
-  city: 'Новосибирск',
-  address: '',
-  pickupWindow: '',
-  minRentalDays: '1',
+  pickupLocation: '',
 };
 
 const MAX_IMAGES = 10;
@@ -122,19 +86,7 @@ export function CreateListing() {
   const [form, setForm] = useState<FormData>(INITIAL);
   const [published, setPublished] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const [citySearch, setCitySearch] = useState('');
-  const [cityOpen, setCityOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const cityRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!cityOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (!cityRef.current?.contains(e.target as Node)) setCityOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [cityOpen]);
 
   /* ─── Helpers ─── */
   const patch = useCallback(
@@ -163,7 +115,36 @@ export function CreateListing() {
     [form.images, patch],
   );
 
-  const goNext = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  const isStepValid = useCallback(
+    (s: number): boolean => {
+      switch (s) {
+        case 0:
+          return form.images.length > 0;
+        case 1:
+          return (
+            form.title.trim() !== '' &&
+            form.category !== '' &&
+            form.description.trim() !== ''
+          );
+        case 2:
+          return (
+            form.pricePerDay.trim() !== '' &&
+            (form.noDeposit || form.depositAmount.trim() !== '') &&
+            form.pickupLocation.trim() !== ''
+          );
+        default:
+          return true;
+      }
+    },
+    [form],
+  );
+
+  const canAdvance = isStepValid(step);
+
+  const goNext = () => {
+    if (!canAdvance) return;
+    setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  };
   const goBack = () => setStep((s) => Math.max(s - 1, 0));
 
   const handleDrop = useCallback(
@@ -240,7 +221,9 @@ export function CreateListing() {
                       ? styles.stepItemCompleted
                       : ''
                 }`}
-                onClick={() => i < step && setStep(i)}
+                onClick={() => {
+                  if (i < step) setStep(i);
+                }}
               >
                 {i < step ? <Check size={15} /> : <s.Icon size={15} />}
                 <span>{s.label}</span>
@@ -269,7 +252,12 @@ export function CreateListing() {
           )}
 
           {step < STEPS.length - 1 ? (
-            <button type="button" className={styles.navNext} onClick={goNext}>
+            <button
+              type="button"
+              className={`${styles.navNext} ${!canAdvance ? styles.navDisabled : ''}`}
+              onClick={goNext}
+              disabled={!canAdvance}
+            >
               Далее
               <ChevronRight size={16} />
             </button>
@@ -503,126 +491,16 @@ export function CreateListing() {
             </div>
           )}
 
-          {/* Min rental */}
+          {/* Pickup location — maps to Item.pickup_location */}
           <div className={styles.field}>
-            <label className={styles.fieldLabel}>Минимальный срок аренды</label>
-            <select
-              className={styles.select}
-              value={form.minRentalDays}
-              onChange={(e) => patch({ minRentalDays: e.target.value })}
-            >
-              <option value="1">1 день</option>
-              <option value="2">2 дня</option>
-              <option value="3">3 дня</option>
-              <option value="7">1 неделя</option>
-              <option value="30">1 месяц</option>
-            </select>
-          </div>
-
-          {/* Delivery toggle */}
-          <div
-            className={`${styles.toggleRow} ${form.deliveryAvailable ? styles.toggleRowActive : ''}`}
-            onClick={() => patch({ deliveryAvailable: !form.deliveryAvailable, deliveryPrice: '' })}
-          >
-            <div className={styles.toggleInfo}>
-              <span className={styles.toggleLabel}>
-                <Truck size={14} />
-                Доставка
-              </span>
-              <span className={styles.toggleHint}>Предложите доставку арендаторам</span>
-            </div>
-            <button
-              type="button"
-              className={`${styles.toggle} ${form.deliveryAvailable ? styles.toggleOn : ''}`}
-              onClick={(e) => { e.stopPropagation(); patch({ deliveryAvailable: !form.deliveryAvailable, deliveryPrice: '' }); }}
+            <label className={styles.fieldLabel}>Место выдачи</label>
+            <input
+              className={styles.input}
+              placeholder="Новосибирск, Центральный район"
+              value={form.pickupLocation}
+              onChange={(e) => patch({ pickupLocation: e.target.value })}
             />
-          </div>
-
-          {form.deliveryAvailable && (
-            <div className={styles.field}>
-              <label className={styles.fieldLabel}>Стоимость доставки</label>
-              <div className={styles.inputWithPrefix}>
-                <span className={styles.inputPrefix}>₽</span>
-                <input
-                  className={`${styles.input} ${styles.inputPrefixed}`}
-                  type="number"
-                  placeholder="300"
-                  value={form.deliveryPrice}
-                  onChange={(e) => patch({ deliveryPrice: e.target.value })}
-                />
-              </div>
-              <span className={styles.fieldHint}>Укажите 0 для бесплатной доставки</span>
-            </div>
-          )}
-
-          {/* Location */}
-          <div className={styles.fieldRow}>
-            <div className={styles.field}>
-              <label className={styles.fieldLabel}>Город</label>
-              <div className={styles.cityPicker} ref={cityRef}>
-                <button
-                  type="button"
-                  className={styles.cityTrigger}
-                  onClick={() => { setCityOpen((o) => !o); setCitySearch(''); }}
-                >
-                  <MapPin size={14} />
-                  <span>{form.city}</span>
-                  <ChevronDown size={14} className={cityOpen ? styles.cityChevronOpen : styles.cityChevron} />
-                </button>
-                {cityOpen && (
-                  <div className={styles.cityDropdown}>
-                    <input
-                      className={styles.citySearchInput}
-                      placeholder="Поиск города..."
-                      value={citySearch}
-                      onChange={(e) => setCitySearch(e.target.value)}
-                      autoFocus
-                    />
-                    <div className={styles.cityList}>
-                      {CITIES_DB
-                        .filter((c) => c.toLowerCase().includes(citySearch.toLowerCase()))
-                        .map((c) => (
-                          <button
-                            key={c}
-                            type="button"
-                            className={`${styles.cityOption} ${form.city === c ? styles.cityOptionActive : ''}`}
-                            onClick={() => { patch({ city: c }); setCityOpen(false); }}
-                          >
-                            {c}
-                          </button>
-                        ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className={styles.field}>
-              <label className={styles.fieldLabel}>Район / адрес</label>
-              <input
-                className={styles.input}
-                placeholder="Центральный район"
-                value={form.address}
-                onChange={(e) => patch({ address: e.target.value })}
-              />
-            </div>
-          </div>
-
-          {/* Pickup window */}
-          <div className={styles.field}>
-            <label className={styles.fieldLabel}>
-              <Clock size={14} style={{ display: 'inline', verticalAlign: -2, marginRight: 4 }} />
-              Время выдачи
-            </label>
-            <select
-              className={styles.select}
-              value={form.pickupWindow}
-              onChange={(e) => patch({ pickupWindow: e.target.value })}
-            >
-              <option value="">Выберите время</option>
-              {PICKUP_OPTIONS.map((o) => (
-                <option key={o} value={o}>{o}</option>
-              ))}
-            </select>
+            <span className={styles.fieldHint}>Город, район или адрес для самовывоза</span>
           </div>
         </div>
       </>
@@ -631,18 +509,6 @@ export function CreateListing() {
 
   /* ═══ Step 3 — Обзор и публикация ═══ */
   function StepReview() {
-    const conditionLabel =
-      CONDITIONS.find((c) => c.value === form.condition)?.label ?? form.condition;
-
-    const minDaysMap: Record<string, string> = {
-      '1': '1 день',
-      '2': '2 дня',
-      '3': '3 дня',
-      '7': '1 неделя',
-      '30': '1 месяц',
-    };
-    const minDayLabel = minDaysMap[form.minRentalDays] ?? `${form.minRentalDays} дн.`;
-
     return (
       <>
         <h2 className={styles.sectionTitle}>Проверьте перед публикацией</h2>
@@ -669,12 +535,12 @@ export function CreateListing() {
           <h3 className={styles.reviewBlockTitle}>Описание</h3>
           <ReviewRow label="Название" value={form.title} />
           <ReviewRow label="Категория" value={form.category} />
-          <ReviewRow label="Состояние" value={conditionLabel} />
+          <ReviewRow label="Состояние" value={CONDITIONS.find((c) => c.value === form.condition)?.label ?? form.condition} />
         </div>
 
         {/* Pricing */}
         <div className={styles.reviewBlock}>
-          <h3 className={styles.reviewBlockTitle}>Стоимость и условия</h3>
+          <h3 className={styles.reviewBlockTitle}>Стоимость</h3>
           <ReviewRow
             label="Цена за сутки"
             value={form.pricePerDay ? `${form.pricePerDay} ₽` : undefined}
@@ -692,26 +558,15 @@ export function CreateListing() {
                   : undefined
             }
           />
-          <ReviewRow label="Мин. срок" value={minDayLabel} />
-          <ReviewRow
-            label="Доставка"
-            value={
-              form.deliveryAvailable
-                ? form.deliveryPrice
-                  ? `${form.deliveryPrice} ₽`
-                  : 'Бесплатно'
-                : 'Самовывоз'
-            }
-          />
         </div>
 
         {/* Location */}
-        <div className={styles.reviewBlock}>
-          <h3 className={styles.reviewBlockTitle}>Местоположение</h3>
-          <ReviewRow label="Город" value={form.city} />
-          {form.address && <ReviewRow label="Район" value={form.address} />}
-          {form.pickupWindow && <ReviewRow label="Время выдачи" value={form.pickupWindow} />}
-        </div>
+        {form.pickupLocation && (
+          <div className={styles.reviewBlock}>
+            <h3 className={styles.reviewBlockTitle}>Место выдачи</h3>
+            <ReviewRow label="Адрес" value={form.pickupLocation} />
+          </div>
+        )}
       </>
     );
   }

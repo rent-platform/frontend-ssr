@@ -132,7 +132,7 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardP
   const depositLabel = item.deposit_amount
     ? `Залог ${formatDepositAmount(item.deposit_amount)}`
     : null;
-  const highlightItems = item.quickFilters.slice(0, 2);
+  const highlightItems = (item.quickFilters ?? []).slice(0, 2);
   const allImages = item.images?.length > 0 ? item.images : (item.imageUrl ? [item.imageUrl] : []);
 
   return (
@@ -154,7 +154,7 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardP
         </button>
 
         <div className={styles.cardBadgeRow}>
-          {item.featured ? <span className={styles.cardFeatured}>Топ</span> : null}
+          {item.featured && <span className={styles.cardFeatured}>Топ</span>}
           <span
             className={`${styles.cardStatus} ${
               item.isAvailable ? styles.cardStatusAvailable : styles.cardStatusSoon
@@ -186,7 +186,7 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardP
             <span className={styles.cardCategory}>{item.category}</span>
             <div className={styles.cardRating}>
               <Star size={12} className={styles.starIcon} />
-              <span>{item.ownerRating.toFixed(1)}</span>
+              <span>{(item.ownerRating ?? 0).toFixed(1)}</span>
             </div>
           </div>
 

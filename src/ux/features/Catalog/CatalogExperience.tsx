@@ -209,7 +209,7 @@ export function CatalogExperience() {
                     <p>Попробуйте изменить параметры поиска или фильтры</p>
                     <button 
                       className={styles.resetBtn}
-                      onClick={() => updateFilters({ search: '', city: '', category: '' })}
+                      onClick={() => updateFilters({ search: '', category: 'Все категории' })}
                     >
                       Сбросить всё
                     </button>

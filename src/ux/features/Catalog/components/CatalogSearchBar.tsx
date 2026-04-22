@@ -66,9 +66,6 @@ export function CatalogSearchBar({
     if (filters.category !== INITIAL_FILTERS.category) count += 1;
     if (filters.minPrice) count += 1;
     if (filters.maxPrice) count += 1;
-    if (filters.condition.length > 0) count += 1;
-    if (filters.ownerType !== INITIAL_FILTERS.ownerType) count += 1;
-    if (filters.deliveryType !== INITIAL_FILTERS.deliveryType) count += 1;
     if (filters.quickFilter !== INITIAL_FILTERS.quickFilter) count += 1;
     if (filters.onlyAvailable !== INITIAL_FILTERS.onlyAvailable) count += 1;
     if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit) count += 1;
@@ -95,34 +92,6 @@ export function CatalogSearchBar({
       const minLabel = filters.minPrice ? `от ${filters.minPrice} ₽` : 'от любой цены';
       const maxLabel = filters.maxPrice ? `до ${filters.maxPrice} ₽` : 'без лимита';
       items.push(`${minLabel} · ${maxLabel}`);
-    }
-
-    if (filters.condition.length > 0) {
-      const conditionLabels: Record<string, string> = {
-        new: 'Новое',
-        like_new: 'Как новое',
-        used: 'Б/У',
-      };
-      const selected = filters.condition.map((c) => conditionLabels[c] || c).join(', ');
-      items.push(`Состояние: ${selected}`);
-    }
-
-    if (filters.ownerType !== INITIAL_FILTERS.ownerType) {
-      const ownerLabels: Record<string, string> = {
-        all: 'Все владельцы',
-        private: 'Частные',
-        pro: 'Профи',
-      };
-      items.push(ownerLabels[filters.ownerType as string] || filters.ownerType);
-    }
-
-    if (filters.deliveryType !== INITIAL_FILTERS.deliveryType) {
-      const deliveryLabels: Record<string, string> = {
-        all: 'Любой способ',
-        pickup: 'Самовывоз',
-        delivery: 'Доставка',
-      };
-      items.push(deliveryLabels[filters.deliveryType as string] || filters.deliveryType);
     }
 
     if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit) {

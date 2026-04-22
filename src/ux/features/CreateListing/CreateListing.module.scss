@@ -696,6 +696,13 @@
   svg { width: 16px; height: 16px; }
 }
 
+.navDisabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+}
+
 .publishBtn {
   padding: $space-4 $space-8;
   font-size: $font-size-base;

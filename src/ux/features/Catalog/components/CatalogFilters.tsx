@@ -14,7 +14,6 @@ import {
   Sparkles,
   Star,
   Truck,
-  User,
   Wallet,
   X,
   Zap,
@@ -42,24 +41,6 @@ type CatalogFiltersProps = {
 };
 
 type FilterSectionKey = 'main' | 'terms' | 'extras';
-
-const CONDITION_OPTIONS = [
-  { value: 'new', label: 'Новое', emoji: '✨' },
-  { value: 'like_new', label: 'Как новое', emoji: '👌' },
-  { value: 'used', label: 'Б/У', emoji: '♻️' },
-] as const;
-
-const OWNER_TYPES = [
-  { value: 'all', label: 'Все', icon: LayoutGrid },
-  { value: 'private', label: 'Частные', icon: User },
-  { value: 'pro', label: 'Профи', icon: ShieldCheck },
-] as const;
-
-const DELIVERY_TYPES = [
-  { value: 'all', label: 'Любой', icon: LayoutGrid },
-  { value: 'pickup', label: 'Самовывоз', icon: MapPin },
-  { value: 'delivery', label: 'Доставка', icon: Truck },
-] as const;
 
 const DEPOSIT_OPTIONS = [
   { value: 'all', label: 'Любой' },
@@ -214,9 +195,6 @@ export function CatalogFilters({
     if (filters.city !== INITIAL_FILTERS.city) count += 1;
     if (filters.minPrice) count += 1;
     if (filters.maxPrice) count += 1;
-    if (filters.condition.length > 0) count += 1;
-    if (filters.ownerType !== INITIAL_FILTERS.ownerType) count += 1;
-    if (filters.deliveryType !== INITIAL_FILTERS.deliveryType) count += 1;
     if (filters.quickFilter !== INITIAL_FILTERS.quickFilter) count += 1;
     if (filters.onlyAvailable !== INITIAL_FILTERS.onlyAvailable) count += 1;
     if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit) count += 1;
@@ -261,54 +239,6 @@ export function CatalogFilters({
       });
     }
 
-    if (filters.condition.length > 0) {
-      const conditionLabels: Record<string, string> = {
-        new: 'Новое',
-        like_new: 'Как новое',
-        used: 'Б/У',
-      };
-
-      filters.condition.forEach((value) => {
-        chips.push({
-          key: `condition-${value}`,
-          label: conditionLabels[value] ?? value,
-          icon: Sparkles,
-          onRemove: () =>
-            onChange({
-              condition: filters.condition.filter((item) => item !== value),
-            }),
-        });
-      });
-    }
-
-    if (filters.ownerType !== INITIAL_FILTERS.ownerType) {
-      const ownerLabels: Record<string, string> = {
-        all: 'Все владельцы',
-        private: 'Частные',
-        pro: 'Профи',
-      };
-      chips.push({
-        key: `owner-${filters.ownerType}`,
-        label: ownerLabels[filters.ownerType as string] ?? String(filters.ownerType),
-        icon: User,
-        onRemove: () => onChange({ ownerType: INITIAL_FILTERS.ownerType }),
-      });
-    }
-
-    if (filters.deliveryType !== INITIAL_FILTERS.deliveryType) {
-      const deliveryLabels: Record<string, string> = {
-        all: 'Любой способ',
-        pickup: 'Самовывоз',
-        delivery: 'Доставка',
-      };
-      chips.push({
-        key: `delivery-${filters.deliveryType}`,
-        label: deliveryLabels[filters.deliveryType as string] ?? String(filters.deliveryType),
-        icon: Truck,
-        onRemove: () => onChange({ deliveryType: INITIAL_FILTERS.deliveryType }),
-      });
-    }
-
     if (filters.onlyAvailable !== INITIAL_FILTERS.onlyAvailable) {
       chips.push({
         key: `availability-${String(filters.onlyAvailable)}`,
@@ -340,14 +270,6 @@ export function CatalogFilters({
 
     return chips;
   }, [filters, onChange]);
-
-  const handleConditionToggle = (value: string) => {
-    const next = filters.condition.includes(value)
-      ? filters.condition.filter((item) => item !== value)
-      : [...filters.condition, value];
-
-    onChange({ condition: next });
-  };
 
   const handleQuickFilterToggle = (value: string) => {
     onChange({ quickFilter: filters.quickFilter === value ? null : value });
@@ -591,81 +513,13 @@ export function CatalogFilters({
                 exit={{ opacity: 0, y: 12 }}
                 transition={{ duration: 0.22 }}
               >
-                <section className={styles.filterGroup}>
-                  <div className={styles.filterLabelRow}>
-                    <Sparkles size={18} />
-                    <span className={styles.filterLabel}>Состояние вещи</span>
-                  </div>
-                  <div className={styles.conditionChips}>
-                    {CONDITION_OPTIONS.map((option) => {
-                      const active = filters.condition.includes(option.value);
-
-                      return (
-                        <motion.button
-                          key={option.value}
-                          type="button"
-                          className={active ? styles.conditionChipActive : styles.conditionChip}
-                          onClick={() => handleConditionToggle(option.value)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <span>{option.emoji}</span>
-                          <span>{option.label}</span>
-                        </motion.button>
-                      );
-                    })}
-                  </div>
-                </section>
-
-                <div className={styles.gridSection}>
-                  <section className={styles.filterGroup}>
-                    <div className={styles.filterLabelRow}>
-                      <User size={18} />
-                      <span className={styles.filterLabel}>Тип владельца</span>
-                    </div>
-                    <div className={styles.segmentedControl}>
-                      {OWNER_TYPES.map((option) => {
-                        const active = filters.ownerType === option.value;
-
-                        return (
-                          <button
-                            key={option.value}
-                            type="button"
-                            className={active ? styles.segmentActive : styles.segment}
-                            onClick={() => onChange({ ownerType: option.value })}
-                          >
-                            <option.icon size={16} />
-                            <span>{option.label}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </section>
-
-                  <section className={styles.filterGroup}>
-                    <div className={styles.filterLabelRow}>
-                      <Truck size={18} />
-                      <span className={styles.filterLabel}>Способ получения</span>
-                    </div>
-                    <div className={styles.segmentedControl}>
-                      {DELIVERY_TYPES.map((option) => {
-                        const active = filters.deliveryType === option.value;
-
-                        return (
-                          <button
-                            key={option.value}
-                            type="button"
-                            className={active ? styles.segmentActive : styles.segment}
-                            onClick={() => onChange({ deliveryType: option.value })}
-                          >
-                            <option.icon size={16} />
-                            <span>{option.label}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </section>
-                </div>
+                <ToggleSwitch
+                  checked={filters.onlyAvailable}
+                  onChange={(next) => onChange({ onlyAvailable: next })}
+                  label="Только доступные"
+                  description="Показывать только товары, которые можно арендовать сейчас"
+                  icon={CalendarCheck}
+                />
 
                 <section className={`${styles.filterGroup} ${styles.filterGroupWide}`}>
                   <div className={styles.filterLabelRow}>

@@ -28,9 +28,6 @@ export const INITIAL_FILTERS: CatalogFilterState = {
   onlyAvailable: true,
   sortBy: 'popular',
   quickFilter: null,
-  condition: [],
-  ownerType: 'all',
-  deliveryType: 'all',
   hasDeposit: 'all',
 };
 
@@ -85,7 +82,7 @@ export const formatCatalogCardHourSecondary = (item: CatalogUiItem): string | nu
 
 /** Город и адрес/район без дублирования города в строке выдачи. */
 export const formatCatalogCardLocation = (item: CatalogUiItem): string => {
-  const city = item.city?.trim() ?? '';
+  const city = (item.city ?? '').trim();
   const detail = (item.pickup_location ?? item.location ?? '').trim();
   if (!detail) {
     return city || 'Адрес не указан';
@@ -150,7 +147,7 @@ export const applyCatalogFilters = (
         !query ||
         item.title.toLowerCase().includes(query) ||
         item.item_description?.toLowerCase().includes(query) ||
-        item.tags.some((tag) => tag.toLowerCase().includes(query));
+        (item.tags ?? []).some((tag) => tag.toLowerCase().includes(query));
 
       const matchesCategory =
         filters.category === 'Все категории' || item.category === filters.category;
@@ -163,7 +160,7 @@ export const applyCatalogFilters = (
       const matchesPrice = primaryPrice >= minPrice && primaryPrice <= maxPrice;
 
       const matchesQuickFilter =
-        !filters.quickFilter || item.quickFilters.includes(filters.quickFilter);
+        !filters.quickFilter || (item.quickFilters ?? []).includes(filters.quickFilter);
 
       return (
         matchesQuery &&

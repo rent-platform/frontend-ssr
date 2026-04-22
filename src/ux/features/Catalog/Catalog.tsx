@@ -55,7 +55,7 @@ export default function Catalog() {
     const items = mockCatalogItems.filter((item) => {
       const matchesQuery =
         !normalizedQuery ||
-        [item.title, item.item_description ?? "", item.category, item.location ?? "", ...item.tags]
+        [item.title, item.item_description ?? "", item.category, item.location ?? "", ...(item.tags ?? [])]
           .join(" ")
           .toLowerCase()
           .includes(normalizedQuery);
@@ -68,10 +68,10 @@ export default function Catalog() {
         (availability === "soon" && !item.isAvailable);
 
       const matchesQuickFilters =
-        (!quickFilters.instantBook || item.quickFilters.includes('Рядом сегодня')) &&
-        (!quickFilters.noDeposit || item.quickFilters.includes('Без залога')) &&
-        (!quickFilters.newArrival || item.quickFilters.includes('Новинки')) &&
-        (!quickFilters.delivery || item.quickFilters.includes('С доставкой'));
+        (!quickFilters.instantBook || (item.quickFilters ?? []).includes('Рядом сегодня')) &&
+        (!quickFilters.noDeposit || (item.quickFilters ?? []).includes('Без залога')) &&
+        (!quickFilters.newArrival || (item.quickFilters ?? []).includes('Новинки')) &&
+        (!quickFilters.delivery || (item.quickFilters ?? []).includes('С доставкой'));
 
       return (
         matchesQuery &&
@@ -90,7 +90,7 @@ export default function Catalog() {
         case "priceDesc":
           return getNumericPrice(right.price_per_day) - getNumericPrice(left.price_per_day);
         case "rating":
-          return right.ownerRating - left.ownerRating;
+          return (right.ownerRating ?? 0) - (left.ownerRating ?? 0);
         case "popular":
         default:
           return right.views_count - left.views_count;
@@ -261,9 +261,6 @@ export default function Catalog() {
                 onlyAvailable: availability === "available",
                 sortBy: sort,
                 quickFilter: null,
-                condition: [],
-                ownerType: 'all',
-                deliveryType: 'all',
                 hasDeposit: 'all',
               }}
               resultsCount={filteredItems.length}
@@ -313,9 +310,6 @@ export default function Catalog() {
               onlyAvailable: availability === "available",
               sortBy: sort,
               quickFilter: null,
-              condition: [],
-              ownerType: 'all',
-              deliveryType: 'all',
               hasDeposit: 'all',
             }}
             resultsCount={filteredItems.length}
