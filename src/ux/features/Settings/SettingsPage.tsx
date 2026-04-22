@@ -245,6 +245,7 @@ function ProfileSection() {
 
 /* ═══ Security Section ═══ */
 function SecuritySection() {
+  const [email, setEmail] = useState(MOCK_PROFILE.email);
   const [pw, setPw] = useState<PasswordFormData>({ current: '', next: '', confirm: '' });
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNext, setShowNext] = useState(false);
@@ -253,9 +254,12 @@ function SecuritySection() {
   return (
     <div className={styles.section}>
       <h2 className={styles.sectionTitle}>Безопасность</h2>
-      <p className={styles.sectionSubtitle}>Управление паролем и активными сессиями</p>
+      <p className={styles.sectionSubtitle}>Управление паролем, почтой и активными сессиями</p>
 
       {/* Password */}
+      <h3 className={styles.sectionTitle}>Пароль</h3>
+      <p className={styles.sectionSubtitle}>Смена пароля для входа в аккаунт</p>
+
       <div className={styles.formGrid}>
         <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
           <label className={styles.formLabel}>Текущий пароль</label>
@@ -313,6 +317,33 @@ function SecuritySection() {
           {showNext ? <EyeOff size={14} /> : <Eye size={14} />}
           <span>{showNext ? 'Скрыть' : 'Показать'}</span>
         </button>
+      </div>
+
+      <div className={styles.sectionDivider} />
+
+      {/* Email */}
+      <h3 className={styles.sectionTitle}>Email</h3>
+      <p className={styles.sectionSubtitle}>Ваш текущий email: <strong>{MOCK_PROFILE.email}</strong></p>
+
+      <div className={styles.formGrid}>
+        <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+          <label className={styles.formLabel}>Новый адрес электронной почты</label>
+          <div className={styles.formInputWithIcon}>
+            <Mail size={16} />
+            <input
+              className={styles.formInput}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="new-email@example.com"
+            />
+          </div>
+          <span className={styles.formHint}>После изменения потребуется подтверждение по ссылке в письме</span>
+        </div>
+      </div>
+
+      <div className={styles.btnRow}>
+        <button type="button" className={styles.btnPrimary}>Сохранить email</button>
       </div>
 
       <div className={styles.sectionDivider} />
