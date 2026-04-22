@@ -9,6 +9,8 @@ import {
   User,
   ChevronDown,
   LayoutGrid,
+  LogOut,
+  Settings,
 } from 'lucide-react';
 import styles from '../Catalog.module.scss';
 
@@ -113,17 +115,35 @@ export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProp
                 <span>{cityLabel}</span>
               </motion.div>
               
-              <motion.button 
-                type="button" 
-                className={styles.profileTrigger}
-                whileHover={{ y: -1, boxShadow: 'var(--shadow-md)' }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div className={styles.avatarWrap}>
-                  <User size={18} />
+              <div className={styles.profileDropdown}>
+                <motion.button 
+                  type="button" 
+                  className={styles.profileTrigger}
+                  whileHover={{ y: -1, boxShadow: 'var(--shadow-md)' }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className={styles.avatarWrap}>
+                    <User size={18} />
+                  </div>
+                  <ChevronDown size={14} className={styles.chevron} />
+                </motion.button>
+
+                <div className={styles.profileMenu}>
+                  <Link href="/dev-ui/profile" className={styles.profileMenuItem}>
+                    <User size={16} />
+                    <span>Мой профиль</span>
+                  </Link>
+                  <Link href="/dev-ui/profile" className={styles.profileMenuItem}>
+                    <Settings size={16} />
+                    <span>Настройки</span>
+                  </Link>
+                  <div className={styles.profileMenuDivider} />
+                  <button type="button" className={`${styles.profileMenuItem} ${styles.profileMenuLogout}`}>
+                    <LogOut size={16} />
+                    <span>Выйти</span>
+                  </button>
                 </div>
-                <ChevronDown size={14} className={styles.chevron} />
-              </motion.button>
+              </div>
             </div>
           </div>
         </div>

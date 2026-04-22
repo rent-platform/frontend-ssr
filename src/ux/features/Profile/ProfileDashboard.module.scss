@@ -1,0 +1,650 @@
+@use 'sass:color';
+@use '../../styles/vars' as *;
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Profile Dashboard
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.page {
+  min-height: 100vh;
+  background: $color-surface-muted;
+  padding: $space-8 $space-4;
+  font-family: $font-family-base;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ─── Profile Header ─── */
+.profileHeader {
+  display: flex;
+  gap: $space-6;
+  padding: $space-8;
+  background: $color-surface;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-card;
+  margin-bottom: $space-6;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: $gradient-green-soft;
+    z-index: 0;
+  }
+}
+
+.avatarSection {
+  position: relative;
+  z-index: $z-base;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: $radius-full;
+  object-fit: cover;
+  border: 4px solid $color-surface;
+  box-shadow: $shadow-md;
+}
+
+.avatarPlaceholder {
+  width: 96px;
+  height: 96px;
+  border-radius: $radius-full;
+  background: $gradient-green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  font-family: $font-family-display;
+  border: 4px solid $color-surface;
+  box-shadow: $shadow-md;
+}
+
+.profileInfo {
+  flex: 1;
+  position: relative;
+  z-index: $z-base;
+  padding-top: $space-2;
+}
+
+.profileNameRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  margin-bottom: $space-1;
+}
+
+.profileName {
+  font-family: $font-family-display;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  margin: 0;
+}
+
+.profileNickname {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  background: $color-surface-muted;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+}
+
+.profileBio {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  margin: $space-2 0 $space-3;
+  max-width: 500px;
+}
+
+.profileMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-4;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.profileMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+
+  svg { width: 14px; height: 14px; opacity: 0.6; }
+}
+
+.ratingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: $color-green-50;
+  color: $color-primary;
+  font-weight: $font-weight-600;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+
+  svg { width: 12px; height: 12px; opacity: 1; color: $color-primary; }
+}
+
+/* ─── Stats Grid ─── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-4;
+  margin-bottom: $space-6;
+}
+
+.statCard {
+  background: $color-surface;
+  border-radius: $radius-lg;
+  padding: $space-5;
+  box-shadow: $shadow-card;
+  text-align: center;
+  transition: $transition-smooth;
+
+  &:hover {
+    box-shadow: $shadow-card-hover;
+    transform: translateY(-2px);
+  }
+}
+
+.statIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto $space-3;
+
+  svg { width: 20px; height: 20px; }
+}
+
+.statIconGreen {
+  background: $color-green-50;
+  color: $color-primary;
+}
+
+.statIconBlue {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.statIconAmber {
+  background: #fffbeb;
+  color: #f59e0b;
+}
+
+.statIconPurple {
+  background: #faf5ff;
+  color: #a855f7;
+}
+
+.statValue {
+  font-family: $font-family-display;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  line-height: 1;
+  margin-bottom: $space-1;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+/* ─── Tabs ─── */
+.tabs {
+  display: flex;
+  gap: $space-1;
+  background: $color-surface;
+  border-radius: $radius-lg;
+  padding: $space-1;
+  box-shadow: $shadow-card;
+  margin-bottom: $space-6;
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  padding: $space-3 $space-4;
+  border-radius: $radius-md;
+  border: 0;
+  background: transparent;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  font-family: $font-family-base;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  svg { width: 16px; height: 16px; }
+
+  &:hover {
+    color: $color-text;
+    background: $color-surface-muted;
+  }
+}
+
+.tabActive {
+  background: $gradient-green;
+  color: #fff;
+  box-shadow: $shadow-green-sm;
+  font-weight: $font-weight-600;
+
+  &:hover {
+    color: #fff;
+    background: $gradient-green;
+  }
+}
+
+.tabBadge {
+  font-size: $font-size-xs;
+  background: rgba(255, 255, 255, 0.25);
+  padding: 1px $space-2;
+  border-radius: $radius-full;
+  font-weight: $font-weight-600;
+}
+
+.tabBadgeInactive {
+  background: $color-surface-muted;
+  color: $color-text-secondary;
+}
+
+/* ─── Content Panel ─── */
+.panel {
+  background: $color-surface;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-card;
+  padding: $space-6;
+  min-height: 300px;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-5;
+}
+
+.panelTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  margin: 0;
+}
+
+.panelSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: $space-1 0 0;
+}
+
+/* ─── Filter Pills ─── */
+.filterPills {
+  display: flex;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+.filterPill {
+  padding: $space-2 $space-3;
+  border-radius: $radius-full;
+  border: 1px solid $color-border;
+  background: $color-surface;
+  color: $color-text-secondary;
+  font-size: $font-size-xs;
+  font-family: $font-family-base;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+  }
+}
+
+.filterPillActive {
+  background: $color-green-50;
+  border-color: $color-primary;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+/* ─── Listings Grid ─── */
+.listingsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.listingRow {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-4;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-border-green;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.listingImage {
+  width: 72px;
+  height: 72px;
+  border-radius: $radius-md;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: $color-surface-muted;
+}
+
+.listingImagePlaceholder {
+  width: 72px;
+  height: 72px;
+  border-radius: $radius-md;
+  background: $color-surface-muted;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: $color-text-secondary;
+
+  svg { width: 24px; height: 24px; opacity: 0.4; }
+}
+
+.listingInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.listingTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+  margin: 0 0 $space-1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listingMeta {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.listingMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+
+  svg { width: 12px; height: 12px; opacity: 0.5; }
+}
+
+.listingPrice {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  white-space: nowrap;
+}
+
+.listingPriceUnit {
+  font-weight: $font-weight-regular;
+  color: $color-text-secondary;
+  font-size: $font-size-xs;
+}
+
+/* ─── Status Badge ─── */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+  font-size: 11px;
+  font-weight: $font-weight-600;
+  white-space: nowrap;
+}
+
+.statusActive {
+  background: $color-green-50;
+  color: color.adjust($color-primary, $lightness: -10%);
+}
+
+.statusModeration {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.statusDraft {
+  background: $color-surface-muted;
+  color: $color-text-secondary;
+}
+
+.statusArchived {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.statusRejected {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* Deal-specific statuses */
+.statusNew {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.statusConfirmed {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.statusCompleted {
+  background: $color-surface-muted;
+  color: $color-text-secondary;
+}
+
+/* ─── Bookings Grid ─── */
+.bookingsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.bookingRow {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-4;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-border-green;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.bookingImage {
+  width: 56px;
+  height: 56px;
+  border-radius: $radius-md;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: $color-surface-muted;
+}
+
+.bookingInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.bookingTitleRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: 2px;
+}
+
+.bookingTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bookingSideBadge {
+  font-size: 10px;
+  font-weight: $font-weight-600;
+  padding: 1px $space-2;
+  border-radius: $radius-full;
+  white-space: nowrap;
+}
+
+.sideOwner {
+  background: $color-green-50;
+  color: $color-primary;
+}
+
+.sideRenter {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.bookingMeta {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.bookingMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+
+  svg { width: 12px; height: 12px; opacity: 0.5; }
+}
+
+.bookingRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: $space-1;
+  flex-shrink: 0;
+}
+
+.bookingPrice {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+}
+
+/* ─── Empty State ─── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16 $space-4;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: $radius-full;
+  background: $color-surface-muted;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $space-4;
+  color: $color-text-secondary;
+
+  svg { width: 24px; height: 24px; }
+}
+
+.emptyTitle {
+  font-size: $font-size-base;
+  font-weight: $font-weight-600;
+  color: $color-text;
+  margin: 0 0 $space-1;
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 0;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: $bp-md) {
+  .page { padding: $space-4 $space-3; }
+
+  .profileHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: $space-6 $space-4;
+  }
+
+  .profileBio { max-width: 100%; }
+  .profileMeta { justify-content: center; }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tabs { overflow-x: auto; }
+
+  .listingRow,
+  .bookingRow { flex-wrap: wrap; }
+
+  .listingInfo,
+  .bookingInfo { min-width: 200px; }
+}
+
+@media (max-width: $bp-sm) {
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: $space-3;
+  }
+
+  .statCard { padding: $space-4; }
+  .statValue { font-size: $font-size-xl; }
+
+  .tab span { display: none; }
+  .tabBadge { display: none; }
+}

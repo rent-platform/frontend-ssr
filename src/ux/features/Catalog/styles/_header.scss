@@ -253,3 +253,80 @@
   color: $color-text-secondary;
   margin-right: $space-2;
 }
+
+/* ─── Profile Dropdown ─── */
+.profileDropdown {
+  position: relative;
+
+  &:hover .profileMenu,
+  &:focus-within .profileMenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+.profileMenu {
+  position: absolute;
+  top: calc(100% + $space-2);
+  right: 0;
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+  padding: $space-2;
+  z-index: $z-dropdown;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+}
+
+.profileMenuItem {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  width: 100%;
+  padding: $space-3 $space-3;
+  border: 0;
+  border-radius: $radius-md;
+  background: transparent;
+  color: $color-text;
+  font-size: $font-size-sm;
+  font-family: $font-family-base;
+  text-decoration: none;
+  cursor: pointer;
+  transition: $transition-fast;
+
+  svg { width: 16px; height: 16px; color: $color-text-secondary; flex-shrink: 0; }
+
+  &:hover {
+    background: $color-surface-muted;
+    color: $color-primary;
+
+    svg { color: $color-primary; }
+  }
+}
+
+.profileMenuDivider {
+  height: 1px;
+  background: $color-border;
+  margin: $space-1 $space-2;
+}
+
+.profileMenuLogout {
+  color: $color-error;
+
+  svg { color: $color-error; }
+
+  &:hover {
+    background: rgba($color-error, 0.06);
+    color: $color-error;
+
+    svg { color: $color-error; }
+  }
+}
