@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock3,
+  CreditCard,
   Eye,
   Heart,
   Info,
@@ -394,10 +395,45 @@ export function ProductDetail({
           )}
 
           {/* Actions */}
-          <button type="button" className={styles.primaryAction} onClick={() => setCalendarOpen(true)}>
-            <Calendar size={18} />
-            Забронировать
-          </button>
+          <AnimatePresence mode="wait">
+            {startDate && endDate ? (
+              <motion.div
+                key="booked-actions"
+                className={styles.bookedActions}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.22 }}
+              >
+                <button type="button" className={styles.primaryAction}>
+                  <CreditCard size={18} />
+                  Перейти к оплате
+                </button>
+                <button
+                  type="button"
+                  className={styles.changeDateBtn}
+                  onClick={() => setCalendarOpen(true)}
+                >
+                  <Calendar size={15} />
+                  Изменить дату
+                </button>
+              </motion.div>
+            ) : (
+              <motion.button
+                key="book-btn"
+                type="button"
+                className={styles.primaryAction}
+                onClick={() => setCalendarOpen(true)}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.22 }}
+              >
+                <Calendar size={18} />
+                Забронировать
+              </motion.button>
+            )}
+          </AnimatePresence>
 
           <AnimatePresence>
             {calendarOpen ? (
