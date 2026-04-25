@@ -311,14 +311,43 @@
   overflow: hidden;
   border: 1px solid $color-border;
   background: $color-surface-muted;
+  cursor: grab;
+
+  &:active { cursor: grabbing; }
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    pointer-events: none;
   }
 
   &:hover .imageRemove { opacity: 1; }
+  &:hover .imageDragHandle { opacity: 1; }
+}
+
+.imageThumbDragOver {
+  border-color: $color-primary;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25);
+  transform: scale(1.03);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.imageDragHandle {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-md;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
 }
 
 .imageMainBadge {

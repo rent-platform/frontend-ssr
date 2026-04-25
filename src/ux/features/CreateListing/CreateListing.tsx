@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Eye,
   FileText,
+  GripVertical,
   Plus,
   Shield,
   Sparkles,
@@ -86,6 +87,8 @@ export function CreateListing() {
   const [form, setForm] = useState<FormData>(INITIAL);
   const [published, setPublished] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+  const dragSourceId = useRef<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   /* ─── Helpers ─── */
@@ -113,6 +116,22 @@ export function CreateListing() {
       patch({ images: form.images.filter((i) => i.id !== id) });
     },
     [form.images, patch],
+  );
+
+  const reorderImages = useCallback(
+    (fromId: string, toId: string) => {
+      if (fromId === toId) return;
+      setForm((prev) => {
+        const from = prev.images.findIndex((img) => img.id === fromId);
+        const to = prev.images.findIndex((img) => img.id === toId);
+        if (from === -1 || to === -1) return prev;
+        const next = [...prev.images];
+        const [moved] = next.splice(from, 1);
+        next.splice(to, 0, moved);
+        return { ...prev, images: next };
+      });
+    },
+    [],
   );
 
   const isStepValid = useCallback(
@@ -317,8 +336,25 @@ export function CreateListing() {
         ) : (
           <div className={styles.imageGrid}>
             {form.images.map((img, i) => (
-              <div key={img.id} className={styles.imageThumb}>
+              <div
+                key={img.id}
+                className={`${styles.imageThumb} ${dragOverId === img.id ? styles.imageThumbDragOver : ''}`}
+                draggable
+                onDragStart={() => { dragSourceId.current = img.id; }}
+                onDragOver={(e) => { e.preventDefault(); setDragOverId(img.id); }}
+                onDragLeave={() => setDragOverId(null)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  if (dragSourceId.current) reorderImages(dragSourceId.current, img.id);
+                  dragSourceId.current = null;
+                  setDragOverId(null);
+                }}
+                onDragEnd={() => { dragSourceId.current = null; setDragOverId(null); }}
+              >
                 <img src={img.url} alt={`Фото ${i + 1}`} />
+                <span className={styles.imageDragHandle}>
+                  <GripVertical size={14} />
+                </span>
                 {i === 0 && <span className={styles.imageMainBadge}>Обложка</span>}
                 <button
                   type="button"
