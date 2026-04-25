@@ -431,17 +431,10 @@
   }
 }
 
-/* ─── Content Grid (Description / Terms) ─── */
-.detailContentGrid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: $space-10;
+/* ─── Description ─── */
+.detailDescription {
   padding-top: $space-6;
   border-top: 1px solid $color-border;
-}
-
-.detailDescription {
-  min-width: 0;
 }
 
 .detailSectionHeader {
@@ -470,33 +463,6 @@
   }
 }
 
-.detailTermsCard {
-  padding: $space-6;
-  background: #fff;
-  border-radius: $radius-xl;
-  border: 1px solid $color-border;
-  box-shadow: $shadow-card;
-  align-self: start;
-}
-
-.detailTermsList {
-  display: grid;
-  gap: $space-3;
-}
-
-.detailTermsItem {
-  display: flex;
-  align-items: flex-start;
-  gap: $space-3;
-  font-size: 14px;
-  line-height: 1.5;
-
-  svg {
-    color: $color-success;
-    margin-top: 2px;
-    flex-shrink: 0;
-  }
-}
 
 /* ─── Guarantee Banner ─── */
 .guaranteeBanner {

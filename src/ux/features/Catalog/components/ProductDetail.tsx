@@ -269,33 +269,22 @@ export function ProductDetail({
           </motion.section>
         )}
 
-        {/* ─── Description & Terms ─── */}
-        <div className={styles.detailContentGrid}>
-          <section className={styles.detailDescription}>
-            <div className={styles.detailSectionHeader}>
-              <h2>Описание</h2>
-            </div>
-            <div className={styles.detailParagraphs}>
-              {(item.description ?? (item.item_description ? item.item_description.split('\n') : [])).map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
-            </div>
-          </section>
-
-          <section className={styles.detailTermsCard}>
-            <div className={styles.detailSectionHeader}>
-              <h2>Условия аренды</h2>
-            </div>
-            <ul className={styles.detailTermsList}>
-              {(item.rentalTerms ?? []).map((term, i) => (
-                <li key={i} className={styles.detailTermsItem}>
-                  <CheckCircle2 size={17} />
-                  <span>{term}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
+        {/* ─── Description ─── */}
+        <motion.section
+          className={styles.detailDescription}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <div className={styles.detailSectionHeader}>
+            <h2>Описание</h2>
+          </div>
+          <div className={styles.detailParagraphs}>
+            {(item.description ?? (item.item_description ? item.item_description.split('\n') : [])).map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </motion.section>
 
         {/* ─── Guarantee Banner ─── */}
         <section className={styles.guaranteeBanner}>
