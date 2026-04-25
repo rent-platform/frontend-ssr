@@ -8,7 +8,7 @@
   height: 100vh;
   display: flex;
   font-family: $font-family-base;
-  background: $color-surface-muted;
+  background: #eef2f7;
   overflow: hidden;
 }
 
@@ -20,15 +20,17 @@
   display: flex;
   flex-direction: column;
   background: #fff;
-  border-right: 1px solid $color-border;
+  border-right: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
 }
 
 .sidebarHeader {
-  padding: $space-4 $space-5;
+  padding: $space-4 $space-5 $space-3;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: $space-3;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.4);
 }
 
 .sidebarTitle {
@@ -265,14 +267,16 @@
   border-left: 3px solid transparent;
   position: relative;
 
-  &:hover { background: rgba(248, 250, 252, 0.8); }
+  &:hover { background: #f8fafc; }
 }
 
 .chatItemActive {
-  background: rgba(34, 197, 94, 0.04);
+  background: rgba(34, 197, 94, 0.06);
   border-left-color: $color-primary;
 
-  &:hover { background: rgba(34, 197, 94, 0.06); }
+  .chatName { color: $color-primary; }
+
+  &:hover { background: rgba(34, 197, 94, 0.09); }
 }
 
 .chatAvatar {
@@ -290,9 +294,10 @@
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: $font-size-xs;
+  font-size: $font-size-sm;
   font-weight: $font-weight-800;
   font-family: $font-family-display;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
 }
 
 .chatAvatarImg {
@@ -361,17 +366,18 @@
 
 .chatUnread {
   flex-shrink: 0;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
   border-radius: $radius-full;
   background: $color-primary;
   color: #fff;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: $font-weight-bold;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.35);
 }
 
 .chatItemLine {
@@ -442,9 +448,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(34, 197, 94, 0.02) 0%, transparent 60%),
-    $color-surface-muted;
+  background: #eef2f7;
 }
 
 /* ─── Conversation Header ─── */
@@ -453,10 +457,11 @@
   display: flex;
   align-items: center;
   gap: $space-4;
-  padding: $space-3 $space-6;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+  padding: $space-4 $space-6;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.04);
 }
 
 .convAvatarWrap {
@@ -465,22 +470,23 @@
 }
 
 .convAvatar {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: $radius-full;
   background: $gradient-green;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: $font-size-xs;
+  font-size: $font-size-sm;
   font-weight: $font-weight-800;
   font-family: $font-family-display;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
 }
 
 .convAvatarImg {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: $radius-full;
   object-fit: cover;
 }
@@ -503,8 +509,9 @@
 
 .convName {
   font-size: $font-size-sm;
-  font-weight: $font-weight-600;
+  font-weight: $font-weight-bold;
   color: $color-text;
+  letter-spacing: -0.1px;
 }
 
 .convStatus {
@@ -531,8 +538,9 @@
   align-items: center;
   gap: $space-3;
   padding: $space-3 $space-6;
-  background: rgba(255, 255, 255, 0.7);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
 }
 
 .dealBarImg {
@@ -644,13 +652,13 @@
 .messagesArea {
   flex: 1;
   overflow-y: auto;
-  padding: $space-4 $space-6;
+  padding: $space-5 $space-6 $space-4;
   display: flex;
   flex-direction: column;
-  gap: $space-1;
+  gap: 2px;
 
   &::-webkit-scrollbar { width: 4px; }
-  &::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.1); border-radius: 2px; }
+  &::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.12); border-radius: 2px; }
 }
 
 /* ─── Date separator ─── */
@@ -663,14 +671,15 @@
 }
 
 .dateLabel {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: $font-weight-medium;
   color: $color-text-secondary;
-  background: rgba(255, 255, 255, 0.85);
-  padding: 3px $space-3;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 14px;
   border-radius: $radius-full;
-  border: 1px solid rgba(226, 232, 240, 0.5);
+  border: 1px solid rgba(226, 232, 240, 0.6);
   backdrop-filter: blur(8px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 /* ─── System event ─── */
@@ -683,12 +692,13 @@
 }
 
 .systemEventText {
-  font-size: 10px;
+  font-size: 11px;
   color: $color-text-secondary;
-  background: rgba(34, 197, 94, 0.03);
-  border: 1px solid rgba(34, 197, 94, 0.08);
-  padding: 3px $space-3;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  padding: 5px 14px;
   border-radius: $radius-full;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 
   svg {
     display: inline;
@@ -710,27 +720,27 @@
 }
 
 .bubble {
-  max-width: 65%;
-  padding: $space-3 $space-4;
-  border-radius: $radius-xl;
+  max-width: 68%;
+  padding: 10px 14px;
+  border-radius: 18px;
   font-size: $font-size-sm;
-  line-height: $line-height-normal;
-  color: $color-text;
+  line-height: 1.5;
   word-break: break-word;
   position: relative;
 }
 
 .bubbleOther {
   background: #fff;
-  border: 1px solid rgba(226, 232, 240, 0.5);
-  border-bottom-left-radius: $radius-sm;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  color: $color-text;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .bubbleOwn {
-  background: rgba(34, 197, 94, 0.07);
-  border: 1px solid rgba(34, 197, 94, 0.1);
-  border-bottom-right-radius: $radius-sm;
+  background: $gradient-green;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.28);
 }
 
 .bubbleText { margin: 0; }
@@ -749,28 +759,30 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 4px;
-  margin-top: 3px;
+  gap: 3px;
+  margin-top: 4px;
 }
 
 .bubbleTime {
   font-size: 10px;
-  color: $color-text-secondary;
-  opacity: 0.7;
+  color: rgba(255, 255, 255, 0.75);
+
+  .bubbleOther & {
+    color: $color-text-secondary;
+    opacity: 0.75;
+  }
 }
 
 .bubbleCheck {
   display: flex;
   align-items: center;
-  color: $color-text-secondary;
-  opacity: 0.6;
+  color: rgba(255, 255, 255, 0.65);
 
   svg { width: 13px; height: 13px; }
 }
 
 .bubbleCheckRead {
-  color: $color-primary;
-  opacity: 1;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 /* ─── Typing indicator (conversation) ─── */
@@ -786,20 +798,20 @@
   display: flex;
   align-items: center;
   gap: 3px;
-  padding: $space-3 $space-4;
+  padding: 12px 16px;
   background: #fff;
-  border: 1px solid rgba(226, 232, 240, 0.5);
-  border-radius: $radius-xl;
-  border-bottom-left-radius: $radius-sm;
+  border-radius: 18px;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .typingDot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: $color-text-secondary;
-  opacity: 0.4;
-  animation: typingBounce 1.4s infinite;
+  opacity: 0.45;
+  animation: typingBounce 1.3s infinite;
 
   &:nth-child(2) { animation-delay: 0.2s; }
   &:nth-child(3) { animation-delay: 0.4s; }
@@ -813,21 +825,22 @@
 /* ─── Input area ─── */
 
 .inputArea {
-  padding: $space-3 $space-6;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(226, 232, 240, 0.5);
+  padding: $space-4 $space-6;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(226, 232, 240, 0.6);
+  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.04);
   display: flex;
   align-items: flex-end;
-  gap: $space-2;
+  gap: $space-3;
 }
 
 .attachBtn {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: $radius-full;
-  border: 1px solid $color-border;
-  background: #fff;
+  border: 1.5px solid rgba(226, 232, 240, 0.8);
+  background: #f8fafc;
   color: $color-text-secondary;
   display: flex;
   align-items: center;
@@ -840,8 +853,8 @@
 
   &:hover {
     color: $color-primary;
-    border-color: rgba(34, 197, 94, 0.3);
-    background: rgba(34, 197, 94, 0.03);
+    border-color: rgba(34, 197, 94, 0.35);
+    background: rgba(34, 197, 94, 0.04);
   }
 }
 
@@ -853,31 +866,31 @@
 .textInput {
   width: 100%;
   resize: none;
-  padding: $space-2 $space-4;
-  border-radius: $radius-xl;
-  border: 1px solid $color-border;
-  background: $color-surface-muted;
+  padding: 10px $space-4;
+  border-radius: 22px;
+  border: 1.5px solid rgba(226, 232, 240, 0.8);
+  background: #f8fafc;
   font-size: $font-size-sm;
   font-family: $font-family-base;
   color: $color-text;
   outline: none;
-  min-height: 40px;
+  min-height: 42px;
   max-height: 140px;
   transition: $transition-smooth;
-  line-height: $line-height-normal;
+  line-height: 1.5;
 
-  &::placeholder { color: $color-text-secondary; }
+  &::placeholder { color: rgba(100, 116, 139, 0.7); }
 
   &:focus {
-    border-color: $color-primary;
+    border-color: rgba(34, 197, 94, 0.5);
     background: #fff;
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.08);
   }
 }
 
 .sendBtn {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: $radius-full;
   border: none;
   background: $gradient-green;
@@ -888,16 +901,17 @@
   cursor: pointer;
   transition: $transition-smooth;
   flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(34, 197, 94, 0.35);
 
   svg { width: 17px; height: 17px; }
 
   &:hover {
-    transform: scale(1.05);
-    box-shadow: $shadow-green-sm;
+    transform: scale(1.06);
+    box-shadow: $shadow-green-lg;
   }
 
   &:disabled {
-    opacity: 0.35;
+    opacity: 0.3;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -912,19 +926,21 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: $space-3;
+  gap: $space-4;
+  background: #eef2f7;
 }
 
 .emptyIcon {
-  width: 72px;
-  height: 72px;
+  width: 80px;
+  height: 80px;
   border-radius: $radius-full;
-  background: rgba(34, 197, 94, 0.05);
+  background: rgba(34, 197, 94, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
   color: $color-primary;
-  svg { width: 32px; height: 32px; }
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.15);
+  svg { width: 36px; height: 36px; }
 }
 
 .emptyTitle {
