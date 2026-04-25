@@ -7,6 +7,7 @@ import {
   Calendar,
   Check,
   CheckCheck,
+  ChevronDown,
   MessageCircle,
   Package,
   Paperclip,
@@ -164,21 +165,48 @@ export function ChatPage() {
         </div>
 
         <div className={styles.sidebarTabs}>
-          {TABS.map((t) => (
+          <button
+            type="button"
+            className={`${styles.sidebarTab} ${tab === 'all' ? styles.sidebarTabActive : ''}`}
+            onClick={() => setTab('all')}
+          >
+            Все
+            {tabCounts.all > 0 && (
+              <span className={`${styles.sidebarTabBadge} ${tab === 'all' ? styles.sidebarTabBadgeActive : ''}`}>
+                {tabCounts.all}
+              </span>
+            )}
+          </button>
+
+          <div className={styles.tabDropdownWrap}>
             <button
-              key={t.id}
               type="button"
-              className={`${styles.sidebarTab} ${tab === t.id ? styles.sidebarTabActive : ''}`}
-              onClick={() => setTab(t.id)}
+              className={`${styles.sidebarTab} ${tab !== 'all' ? styles.sidebarTabActive : ''}`}
             >
-              {t.label}
-              {tabCounts[t.id] > 0 && (
-                <span className={`${styles.sidebarTabBadge} ${tab === t.id ? styles.sidebarTabBadgeActive : ''}`}>
-                  {tabCounts[t.id]}
+              {tab !== 'all' ? TABS.find((t) => t.id === tab)?.label : 'Категория'}
+              {tab !== 'all' && tabCounts[tab] > 0 && (
+                <span className={`${styles.sidebarTabBadge} ${styles.sidebarTabBadgeActive}`}>
+                  {tabCounts[tab]}
                 </span>
               )}
+              <ChevronDown size={13} className={styles.tabDropdownChevron} />
             </button>
-          ))}
+            <div className={styles.tabDropdown}>
+              {TABS.filter((t) => t.id !== 'all').map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  className={`${styles.tabDropdownItem} ${tab === t.id ? styles.tabDropdownItemActive : ''}`}
+                  onClick={() => setTab(t.id)}
+                >
+                  <span>{t.label}</span>
+                  {tabCounts[t.id] > 0 && (
+                    <span className={styles.tabDropdownItemBadge}>{tabCounts[t.id]}</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className={styles.searchBox}>

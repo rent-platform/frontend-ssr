@@ -451,13 +451,6 @@ export function ProductDetail({
             <button type="button" className={styles.secondaryAction}>
               <MessageCircle size={17} /> Написать
             </button>
-            <button
-              type="button"
-              className={clsx(styles.secondaryAction, styles.secondaryActionFav)}
-              onClick={() => setIsFav((v) => !v)}
-            >
-              <Heart size={17} fill={isFav ? 'currentColor' : 'none'} />
-            </button>
           </div>
         </motion.div>
 
