@@ -19,8 +19,10 @@ import {
   Zap,
 } from 'lucide-react';
 import { CatalogCard } from '../Catalog/components/CatalogCard';
+import { ProductDetail } from '../Catalog/components/ProductDetail';
 import { CategoryRail } from '../Catalog/components/CategoryRail';
 import { mockCatalogItems } from '../Catalog/mockCatalogItems';
+import type { CatalogUiItem } from '../Catalog/types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from '../Catalog/utils';
 import styles from './GuestExperience.module.scss';
 
@@ -49,10 +51,20 @@ const POPULAR_QUERIES = ['Фотоаппарат', 'PlayStation', 'Дрель', 
 export function GuestExperience() {
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
 
   const filteredItems = useMemo(
     () => applyCatalogFilters(mockCatalogItems, filters).slice(0, GUEST_ITEM_LIMIT),
     [filters],
+  );
+
+  const similarItems = useMemo(
+    () => selectedItem
+      ? mockCatalogItems
+          .filter((item) => item.id !== selectedItem.id && item.category === selectedItem.category)
+          .slice(0, 4)
+      : [],
+    [selectedItem],
   );
 
   const updateFilters = (patch: Partial<typeof filters>) => {
@@ -61,6 +73,15 @@ export function GuestExperience() {
 
   const openAuthModal = () => {
     setShowAuthModal(true);
+  };
+
+  const openItem = (item: CatalogUiItem) => {
+    setSelectedItem(item);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const backToCatalog = () => {
+    setSelectedItem(null);
   };
 
   return (
@@ -100,6 +121,17 @@ export function GuestExperience() {
       </header>
 
       <main className={styles.main}>
+        {selectedItem ? (
+          <ProductDetail
+            item={selectedItem}
+            similarItems={similarItems}
+            onBack={backToCatalog}
+            onOpenSimilar={openItem}
+            isGuest
+            onAuthRequired={openAuthModal}
+          />
+        ) : (
+          <>
         <motion.section
           className={styles.hero}
           initial={{ opacity: 0, y: 20 }}
@@ -198,7 +230,7 @@ export function GuestExperience() {
             <div className={styles.resultsGrid}>
               {filteredItems.map((item, index) => (
                 <div key={item.id} className={styles.cardWrapper}>
-                  <CatalogCard item={item} onOpen={openAuthModal} index={index} />
+                  <CatalogCard item={item} onOpen={openItem} index={index} />
                   <button
                     type="button"
                     className={styles.cardGate}
@@ -255,6 +287,8 @@ export function GuestExperience() {
             })}
           </div>
         </section>
+          </>
+        )}
       </main>
 
       <AnimatePresence>

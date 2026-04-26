@@ -41,6 +41,8 @@ type ProductDetailProps = {
   similarItems: CatalogUiItem[];
   onBack: () => void;
   onOpenSimilar: (item: CatalogUiItem) => void;
+  isGuest?: boolean;
+  onAuthRequired?: () => void;
 };
 
 export function ProductDetail({
@@ -48,6 +50,8 @@ export function ProductDetail({
   similarItems,
   onBack,
   onOpenSimilar,
+  isGuest = false,
+  onAuthRequired,
 }: ProductDetailProps) {
   const [activeImage, setActiveImage] = useState(0);
   const [isFav, setIsFav] = useState(false);
@@ -83,6 +87,24 @@ export function ProductDetail({
     setCalendarOpen(false);
   }, []);
 
+  const handleProtectedAction = useCallback(() => {
+    if (isGuest) {
+      onAuthRequired?.();
+      return;
+    }
+
+    setCalendarOpen(true);
+  }, [isGuest, onAuthRequired]);
+
+  const handleFavoriteToggle = useCallback(() => {
+    if (isGuest) {
+      onAuthRequired?.();
+      return;
+    }
+
+    setIsFav((v) => !v);
+  }, [isGuest, onAuthRequired]);
+
   const canPrev = activeImage > 0;
   const canNext = activeImage < item.images.length - 1;
 
@@ -116,7 +138,7 @@ export function ProductDetail({
             <button
               type="button"
               className={clsx(styles.detailActionBtn, styles.detailActionBtnDanger)}
-              onClick={() => setIsFav((v) => !v)}
+              onClick={handleFavoriteToggle}
             >
               <Heart size={16} fill={isFav ? 'currentColor' : 'none'} />
               {isFav ? 'В избранном' : 'Сохранить'}
@@ -394,14 +416,14 @@ export function ProductDetail({
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.22 }}
               >
-                <button type="button" className={styles.primaryAction}>
+                <button type="button" className={styles.primaryAction} onClick={isGuest ? onAuthRequired : undefined}>
                   <CreditCard size={18} />
                   Перейти к оплате
                 </button>
                 <button
                   type="button"
                   className={styles.changeDateBtn}
-                  onClick={() => setCalendarOpen(true)}
+                  onClick={handleProtectedAction}
                 >
                   <Calendar size={15} />
                   Изменить дату
@@ -412,7 +434,7 @@ export function ProductDetail({
                 key="book-btn"
                 type="button"
                 className={styles.primaryAction}
-                onClick={() => setCalendarOpen(true)}
+                onClick={handleProtectedAction}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
@@ -437,7 +459,7 @@ export function ProductDetail({
           </AnimatePresence>
 
           <div className={styles.bookingActions}>
-            <button type="button" className={styles.secondaryAction}>
+            <button type="button" className={styles.secondaryAction} onClick={isGuest ? onAuthRequired : undefined}>
               <MessageCircle size={17} /> Написать
             </button>
           </div>
