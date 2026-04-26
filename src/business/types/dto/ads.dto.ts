@@ -1,0 +1,67 @@
+import type { ItemStatus } from "@/business/types/entity/catalog.types";
+import type { DeepPartial } from "@/business/utils";
+
+export type AdsItemResponseDto = {
+  id: string;
+  owner_id: string;
+  title: string;
+  item_description: string | null;
+  price_per_day: string | null;
+  price_per_hour: string | null;
+  deposit_amount: string;
+  pickup_location: string | null;
+  status: ItemStatus;
+  views_count: number;
+  created_at: string;
+  photos?: Array<{ photo_url: string; sort_order: number }>;
+  is_available: boolean;
+  nearest_available_date: string | null;
+};
+
+export type Meta = {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  pagesCount: number;
+  nextCursor?: string;
+};
+
+export type AdsListResponseDto = {
+  items: AdsItemResponseDto[];
+  meta: Meta;
+};
+
+export interface AdsFilterParams {
+  search?: string;
+  category?: string;
+  subCategory?: string;
+  priceFrom?: number;
+  priceTo?: number;
+  deposit?: boolean;
+  city?: string;
+  radius?: number;
+  availableFrom?: string;
+  availableTo?: string;
+  minRating?: number;
+  favoritesOnly?: boolean;
+}
+
+export interface FetchAdsArgs extends AdsFilterParams {
+  pageSize?: number;
+  pageNumber?: number;
+  sortBy?: string;
+  sortDirection?: "asc" | "desc";
+}
+
+export type UpdatePlaylistArgs = DeepPartial<AdsCreateAd>;
+
+export type AdsCreateAd = {
+  title: string;
+  item_description: string | null;
+  price_per_day?: string | null;
+  price_per_hour?: string | null;
+  deposit_amount: string;
+  pickup_location: string | null;
+  photos?: Array<{ photo_url: string; sort_order: number }>;
+  nearest_available_date: string | null;
+};

@@ -1,15 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { authApi } from "@/business/api";
 import { useDispatch, useSelector } from "react-redux";
-import sessionReducer, { sessionSlice } from "./sessionSlice";
+import uiReducer from "./features/Ui/uiSlice";
+import { baseApi } from "@/business/api/baseApi";
 
 export const store = configureStore({
   reducer: {
-    session: sessionReducer,
-    [authApi.reducerPath]: authApi.reducer,
+    ui: uiReducer,
+    [baseApi.reducerPath]: baseApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+    getDefaultMiddleware().concat(baseApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
@@ -17,9 +17,3 @@ export type RootDispatch = typeof store.dispatch;
 
 export const useAppSelector = useSelector.withTypes<RootState>();
 export const useAppDispatch = useDispatch.withTypes<RootDispatch>();
-
-
-export const { getToken, getUser } = sessionSlice.getSelectors<RootState>(
-  (state) => state.session,
-);
-

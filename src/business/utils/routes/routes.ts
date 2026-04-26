@@ -1,4 +1,4 @@
-export const ROUTE_PATHS = {
+const ROUTE_PATHS = {
   HOME: "/",
   PROFILE: "/profile",
   ORDERS: "/orders",
@@ -6,6 +6,6 @@ export const ROUTE_PATHS = {
   LOGIN: "/login",
   REGISTER: "/register",
   devUi: "/dev-ui",
-} as const;
-
-export type RoutePath = (typeof ROUTE_PATHS)[keyof typeof ROUTE_PATHS];
+  authorization: "/api/auth",
+};
+export default ROUTE_PATHS;
