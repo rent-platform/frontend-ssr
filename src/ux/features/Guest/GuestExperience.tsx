@@ -199,9 +199,13 @@ export function GuestExperience() {
               {filteredItems.map((item, index) => (
                 <div key={item.id} className={styles.cardWrapper}>
                   <CatalogCard item={item} onOpen={openAuthModal} index={index} />
-                  <button type="button" className={styles.cardGate} onClick={openAuthModal}>
+                  <button
+                    type="button"
+                    className={styles.cardGate}
+                    onClick={openAuthModal}
+                    aria-label="Войти для сделки"
+                  >
                     <Lock size={16} />
-                    Войти для сделки
                   </button>
                 </div>
               ))}
