@@ -1,51 +1,54 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
-import { 
-  Lock, 
-  UserPlus, 
-  LogIn, 
-  Eye, 
-  Shield, 
-  Zap,
-  Users,
-  TrendingUp,
+import { AnimatePresence, motion } from 'framer-motion';
+import { useMemo, useState } from 'react';
+import {
+  ArrowRight,
   CheckCircle2,
-  Star
+  Lock,
+  LogIn,
+  PackageCheck,
+  Search,
+  Shield,
+  Sparkles,
+  Star,
+  TrendingUp,
+  UserPlus,
+  Users,
+  X,
+  Zap,
 } from 'lucide-react';
 import { CatalogCard } from '../Catalog/components/CatalogCard';
-import { CatalogSkeletonCard } from '../Catalog/components/CatalogSkeletonCard';
 import { CategoryRail } from '../Catalog/components/CategoryRail';
 import { mockCatalogItems } from '../Catalog/mockCatalogItems';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from '../Catalog/utils';
-import type { CatalogUiItem } from '../Catalog/types';
 import styles from './GuestExperience.module.scss';
 
 const GUEST_ITEM_LIMIT = 12;
 
-// Trust indicators для гостевого режима
 const TRUST_STATS = [
-  { icon: Users, value: '10K+', label: 'Активных пользователей' },
-  { icon: CheckCircle2, value: '50K+', label: 'Успешных сделок' },
-  { icon: Star, value: '4.8', label: 'Средний рейтинг' },
+  { icon: Users, value: '10K+', label: 'пользователей' },
+  { icon: CheckCircle2, value: '50K+', label: 'успешных аренд' },
+  { icon: Star, value: '4.8', label: 'средний рейтинг' },
 ];
 
-const FEATURES = [
-  { icon: Shield, title: 'Безопасные сделки', description: 'Проверенные пользователи и защита платежей' },
-  { icon: Zap, title: 'Быстрая аренда', description: 'Найдите и арендуйте за несколько минут' },
-  { icon: TrendingUp, title: 'Выгодные цены', description: 'Экономьте до 70% от стоимости покупки' },
+const VALUE_PROPS = [
+  { icon: Shield, title: 'Безопасная сделка', description: 'Проверка профилей, понятные условия и история отзывов.' },
+  { icon: Zap, title: 'Быстрый старт', description: 'Выбирайте вещь, смотрите условия и бронируйте без лишних звонков.' },
+  { icon: TrendingUp, title: 'Выгоднее покупки', description: 'Берите технику, инструменты и товары для отдыха только на нужный срок.' },
 ];
+
+const GUEST_LIMITS = [
+  'Контакты владельца открываются после входа',
+  'Бронирование доступно только зарегистрированным пользователям',
+  'Отзывы, избранное и чат сохраняются в личном кабинете',
+];
+
+const POPULAR_QUERIES = ['Фотоаппарат', 'PlayStation', 'Дрель', 'Проектор'];
 
 export function GuestExperience() {
   const [filters, setFilters] = useState(INITIAL_FILTERS);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsInitialLoading(false), 800);
-    return () => clearTimeout(timer);
-  }, []);
 
   const filteredItems = useMemo(
     () => applyCatalogFilters(mockCatalogItems, filters).slice(0, GUEST_ITEM_LIMIT),
@@ -56,57 +59,33 @@ export function GuestExperience() {
     setFilters((prev) => ({ ...prev, ...patch }));
   };
 
-  const handleItemClick = (item: CatalogUiItem) => {
+  const openAuthModal = () => {
     setShowAuthModal(true);
   };
-
-  if (isInitialLoading) {
-    return (
-      <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.headerContent}>
-          <div className={styles.brandBlock}>
-            <div className={styles.brandSymbol}>
-              <span style={{ fontSize: '20px', fontWeight: '800', lineHeight: 1 }}>А</span>
-            </div>
-            <div className={styles.brandTextWrap}>
-              <strong>Арендай</strong>
-              <span className={styles.brandTagline}>Шеринг вещей</span>
-            </div>
-          </div>
-          <div className={styles.authButtons}>
-              <div className={styles.skeletonBtn} />
-              <div className={styles.skeletonBtn} />
-            </div>
-          </div>
-        </header>
-        <main className={styles.main}>
-          <div className={styles.loadingShell}>
-            <div className={styles.loadingHero} />
-            <div className={styles.loadingGrid}>
-              {Array.from({ length: 6 }).map((_, i) => (
-                <CatalogSkeletonCard key={i} />
-              ))}
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.page}>
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <div className={styles.brandBlock}>
-            <div className={styles.brandSymbol}>
+          <a href="/dev-ui/guest" className={styles.brandBlock}>
+            <motion.div 
+              className={styles.brandSymbol}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
               <span style={{ fontSize: '20px', fontWeight: '800', lineHeight: 1 }}>А</span>
-            </div>
+            </motion.div>
             <div className={styles.brandTextWrap}>
               <strong>Арендай</strong>
               <span className={styles.brandTagline}>Шеринг вещей</span>
             </div>
-          </div>
+          </a>
+
+          <nav className={styles.headerNav} aria-label="Гостевая навигация">
+            <a href="#guest-catalog">Каталог</a>
+            <a href="#guest-access">Преимущества</a>
+          </nav>
+
           <div className={styles.authButtons}>
             <a href="/login" className={styles.loginBtn}>
               <LogIn size={18} />
@@ -121,153 +100,220 @@ export function GuestExperience() {
       </header>
 
       <main className={styles.main}>
-        <motion.header 
+        <motion.section
           className={styles.hero}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.55, ease: [0.23, 1, 0.32, 1] }}
         >
-          <div className={styles.heroGlassCard}>
-            <div className={styles.heroContent}>
-              <span className={styles.eyebrow}>ГОСТЕВОЙ РЕЖИМ</span>
-              <h1 className={styles.title}>Арендуйте всё, что нужно</h1>
+          <div className={styles.heroGrid}>
+            <div className={styles.heroCopy}>
+              <span className={styles.eyebrow}>
+                <Sparkles size={15} />
+                Гостевой просмотр
+              </span>
+
+              <h1 className={styles.title}>Найдите вещь в аренду рядом с собой</h1>
               <p className={styles.subtitle}>
-                Инструменты, техника, товары для досуга и путешествий. 
-                Зарегистрируйтесь, чтобы получить полный доступ к платформе.
+                Посмотрите популярные предложения в Новосибирске: техника, инструменты,
+                товары для дома, спорта и мероприятий. Для бронирования достаточно создать аккаунт.
               </p>
-              
-              <div className={styles.features}>
-                {TRUST_STATS.map((stat, index) => (
-                  <div key={index} className={styles.feature}>
-                    <stat.icon size={20} />
-                    <strong>{stat.value}</strong>
-                    <span>{stat.label}</span>
-                  </div>
+
+              <div className={styles.searchPanel}>
+                <Search size={18} />
+                <input
+                  value={filters.search}
+                  onChange={(event) => updateFilters({ search: event.target.value })}
+                  placeholder="Что хотите арендовать?"
+                  aria-label="Поиск по гостевому каталогу"
+                />
+                <button type="button" onClick={openAuthModal}>
+                  Забронировать
+                </button>
+              </div>
+
+              <div className={styles.popularQueries}>
+                {POPULAR_QUERIES.map((query) => (
+                  <button
+                    key={query}
+                    type="button"
+                    onClick={() => updateFilters({ search: query })}
+                  >
+                    {query}
+                  </button>
                 ))}
               </div>
 
-              <div className={styles.ctaButtons}>
+              <div className={styles.ctaRow}>
                 <a href="/register" className={styles.primaryCta}>
-                  <UserPlus size={20} />
-                  Создать аккаунт бесплатно
+                  Создать аккаунт
+                  <ArrowRight size={18} />
                 </a>
-                <a href="/login" className={styles.secondaryCta}>
-                  Уже есть аккаунт?
+                <a href="#guest-catalog" className={styles.secondaryCta}>
+                  Смотреть каталог
                 </a>
               </div>
             </div>
           </div>
-        </motion.header>
 
-        <CategoryRail
-          categories={CATEGORY_OPTIONS}
-          activeCategory={filters.category}
-          onCategoryChange={(category) => updateFilters({ category })}
-        />
+          <div className={styles.statsStrip}>
+            {TRUST_STATS.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <div key={stat.label} className={styles.statItem}>
+                  <Icon size={18} />
+                  <strong>{stat.value}</strong>
+                  <span>{stat.label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </motion.section>
 
-        <section className={styles.catalogSection}>
+        <section className={styles.categorySection}>
+          <CategoryRail
+            categories={CATEGORY_OPTIONS}
+            activeCategory={filters.category}
+            onCategoryChange={(category) => updateFilters({ category })}
+          />
+        </section>
+
+        <section id="guest-catalog" className={styles.catalogSection}>
           <div className={styles.sectionHeader}>
             <div>
+              <span className={styles.sectionKicker}>Каталог без входа</span>
               <h2>Популярные предложения</h2>
-              <p className={styles.guestNotice}>
-                <Eye size={16} />
-                Показано {GUEST_ITEM_LIMIT} из {mockCatalogItems.length} объявлений
+              <p>
+                Показано {filteredItems.length} из {mockCatalogItems.length} объявлений.
+                Детали сделки и контакты доступны после авторизации.
               </p>
             </div>
-            <div className={styles.trustBadge}>
-              <Shield size={18} />
-              <span>Все объявления проверены</span>
-            </div>
+            <button type="button" className={styles.trustBadge} onClick={openAuthModal}>
+              <Lock size={17} />
+              Гостевой режим
+            </button>
           </div>
 
           {filteredItems.length > 0 ? (
             <div className={styles.resultsGrid}>
-              {filteredItems.map((item) => (
+              {filteredItems.map((item, index) => (
                 <div key={item.id} className={styles.cardWrapper}>
-                  <CatalogCard item={item} onOpen={handleItemClick} />
-                  <div className={styles.cardOverlay}>
-                    <Lock size={24} />
-                    <span>Войдите для просмотра</span>
-                  </div>
+                  <CatalogCard item={item} onOpen={openAuthModal} index={index} />
+                  <button type="button" className={styles.cardGate} onClick={openAuthModal}>
+                    <Lock size={16} />
+                    Войти для сделки
+                  </button>
                 </div>
               ))}
             </div>
           ) : (
             <div className={styles.emptyState}>
+              <PackageCheck size={32} />
               <h3>Ничего не найдено</h3>
-              <p>Попробуйте выбрать другую категорию</p>
+              <p>Попробуйте изменить запрос или выбрать другую категорию.</p>
             </div>
           )}
+        </section>
 
-          <div className={styles.authPrompt}>
-            <div className={styles.promptContent}>
-              <Lock size={48} />
-              <h3>Откройте полный доступ к платформе</h3>
-              <p>
-                Зарегистрируйтесь бесплатно и получите доступ ко всем {mockCatalogItems.length} объявлениям,
-                возможность связаться с владельцами и начать арендовать прямо сейчас.
-              </p>
-              
-              <div className={styles.benefitsList}>
-                {FEATURES.map((feature, index) => (
-                  <div key={index} className={styles.benefitItem}>
-                    <div className={styles.benefitIcon}>
-                      <feature.icon size={20} />
-                    </div>
-                    <div className={styles.benefitText}>
-                      <strong>{feature.title}</strong>
-                      <span>{feature.description}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className={styles.promptButtons}>
-                <a href="/register" className={styles.promptPrimary}>
-                  <UserPlus size={20} />
-                  Зарегистрироваться бесплатно
-                </a>
-                <a href="/login" className={styles.promptSecondary}>
-                  Уже есть аккаунт? Войти
-                </a>
-              </div>
+        <section id="guest-access" className={styles.accessPanel}>
+          <div className={styles.accessCopy}>
+            <span className={styles.sectionKicker}>Полный доступ</span>
+            <h2>Зарегистрируйтесь, чтобы арендовать безопасно</h2>
+            <p>
+              Гостевой режим помогает оценить ассортимент. После входа вы сможете
+              бронировать вещи, общаться с владельцами и сохранять избранное.
+            </p>
+            <div className={styles.promptButtons}>
+              <a href="/register" className={styles.promptPrimary}>
+                <UserPlus size={18} />
+                Зарегистрироваться
+              </a>
+              <a href="/login" className={styles.promptSecondary}>
+                Уже есть аккаунт
+              </a>
             </div>
+          </div>
+
+          <div className={styles.benefitsList}>
+            {VALUE_PROPS.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <div key={feature.title} className={styles.benefitItem}>
+                  <div className={styles.benefitIcon}>
+                    <Icon size={20} />
+                  </div>
+                  <div className={styles.benefitText}>
+                    <strong>{feature.title}</strong>
+                    <span>{feature.description}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
       </main>
 
-      {showAuthModal && (
-        <div className={styles.modal} onClick={() => setShowAuthModal(false)}>
-          <motion.div 
-            className={styles.modalContent}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+        {showAuthModal && (
+          <motion.div
+            className={styles.modal}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowAuthModal(false)}
           >
-            <Lock size={48} className={styles.modalIcon} />
-            <h3>Требуется авторизация</h3>
-            <p>
-              Чтобы просматривать детали объявлений и связываться с владельцами,
-              необходимо войти в систему или создать аккаунт.
-            </p>
-            <div className={styles.modalButtons}>
-              <a href="/register" className={styles.modalPrimary}>
-                <UserPlus size={20} />
-                Создать аккаунт
-              </a>
-              <a href="/login" className={styles.modalSecondary}>
-                Войти
-              </a>
-            </div>
-            <button 
-              className={styles.modalClose}
-              onClick={() => setShowAuthModal(false)}
+            <motion.div
+              className={styles.modalContent}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="guest-auth-title"
+              initial={{ opacity: 0, y: 18, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.98 }}
+              transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+              onClick={(event) => event.stopPropagation()}
             >
-              Закрыть
-            </button>
+              <button
+                type="button"
+                className={styles.modalClose}
+                onClick={() => setShowAuthModal(false)}
+                aria-label="Закрыть окно"
+              >
+                <X size={18} />
+              </button>
+
+              <div className={styles.modalIcon}>
+                <Lock size={26} />
+              </div>
+
+              <h3 id="guest-auth-title">Войдите, чтобы продолжить</h3>
+              <p>
+                В гостевом режиме можно смотреть каталог. Для сделки, контактов владельца
+                и чата нужен аккаунт.
+              </p>
+
+              <div className={styles.modalLimits}>
+                {GUEST_LIMITS.map((item) => (
+                  <span key={item}>
+                    <CheckCircle2 size={15} />
+                    {item}
+                  </span>
+                ))}
+              </div>
+
+              <div className={styles.modalButtons}>
+                <a href="/register" className={styles.modalPrimary}>
+                  <UserPlus size={18} />
+                  Создать аккаунт
+                </a>
+                <a href="/login" className={styles.modalSecondary}>
+                  Войти
+                </a>
+              </div>
+            </motion.div>
           </motion.div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 }
