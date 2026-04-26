@@ -295,23 +295,6 @@ function OverviewPanel() {
         </Link>
       </div>
 
-      {/* Trust Indicators */}
-      <div className={styles.trustGrid}>
-        <div className={styles.trustCard}>
-          <div className={styles.trustHeader}><Zap size={16} /><span>Скорость ответа</span></div>
-          <div className={styles.trustBarWrap}><div className={styles.trustBar} style={{ width: `${stats.responseRate}%` }} /></div>
-          <span className={styles.trustValue}>{stats.responseRate}%</span>
-        </div>
-        <div className={styles.trustCard}>
-          <div className={styles.trustHeader}><TrendingUp size={16} /><span>Заработано</span></div>
-          <span className={styles.trustBigValue}>{stats.totalEarnings} ₽</span>
-        </div>
-        <div className={styles.trustCard}>
-          <div className={styles.trustHeader}><Handshake size={16} /><span>Потрачено на аренду</span></div>
-          <span className={styles.trustBigValue}>{stats.totalSpent} ₽</span>
-        </div>
-      </div>
-
       {/* Quick actions */}
       <div className={styles.quickActions}>
         <Link href="/dev-ui/create-listing" className={styles.quickAction}>
