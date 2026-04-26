@@ -1,16 +1,51 @@
 @use 'reset';
-@use 'vars' as v;
+@use 'vars' as *;
 @use 'helpers/mixins' as *;
 
-body {
-  font-family: v.$font-family-base;
-  font-size: v.$font-size-base;
-  color: v.$color-text;
-  background-color: v.$color-bg;
-  line-height: v.$line-height-normal;
+body[class] {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  color: $color-text;
+  background-color: $color-bg;
+  line-height: $line-height-normal;
+  font-optical-sizing: auto;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
 }
 
 :root {
   @include scrollbar;
+  color-scheme: light;
 }
 
+::selection {
+  background: rgba(34, 197, 94, 0.15);
+  color: $color-text;
+}
+
+:focus-visible {
+  outline: 2px solid $color-primary;
+  outline-offset: 2px;
+  border-radius: $radius-sm;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-display;
+  color: $color-text;
+}
+
+button {
+  font-family: inherit;
+  color: inherit;
+}
+
+a {
+  transition: color 0.2s ease;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: $color-border;
+}

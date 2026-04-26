@@ -1,0 +1,934 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   DETAIL PAGE — SHARING SERVICE PRODUCT CARD
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.detailPage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 400px;
+  gap: $space-12;
+  padding: $space-6 0 $space-16;
+  align-items: start;
+}
+
+.detailContentMain {
+  min-width: 0;
+  display: grid;
+  gap: $space-10;
+}
+
+/* ─── Back Bar (navigation + share/fav) ─── */
+.backBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  padding: 10px 18px;
+  border-radius: $radius-full;
+  background: $color-surface-muted;
+  border: 1px solid $color-border;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-text;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  svg { flex-shrink: 0; }
+
+  &:hover {
+    background: #fff;
+    border-color: $color-primary;
+    color: $color-primary;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.detailActions {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.detailActionBtn {
+  @include flex-center;
+  gap: $space-2;
+  padding: 10px 16px;
+  border-radius: $radius-full;
+  border: 1px solid $color-border;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: $color-text;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  svg { flex-shrink: 0; }
+
+  &:hover {
+    border-color: rgba(15, 23, 42, 0.2);
+    box-shadow: $shadow-sm;
+  }
+
+  &Danger:hover {
+    color: $color-secondary;
+    border-color: rgba(244, 63, 94, 0.3);
+    background: rgba(244, 63, 94, 0.04);
+    svg { fill: $color-secondary; }
+  }
+}
+
+/* ─── Gallery Section ─── */
+.detailGallery {
+  display: grid;
+  gap: $space-4;
+}
+
+.mainImageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: $radius-2xl;
+  overflow: hidden;
+  background: $color-surface-muted;
+  box-shadow: $shadow-lg;
+  border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.detailMainImageBlur {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(28px) saturate(1.2) brightness(0.85);
+  transform: scale(1.08);
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.detailMainImage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.detailGalleryOverlay {
+  position: absolute;
+  inset: auto $space-5 $space-5 $space-5;
+  z-index: 4;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.detailGalleryBadges {
+  display: flex;
+  gap: 8px;
+}
+
+.detailCategory {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: $radius-full;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: $color-text;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: $shadow-sm;
+}
+
+.detailFeaturedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: $radius-full;
+  background: $gradient-green;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: $shadow-green-sm;
+}
+
+.detailImageCounter {
+  padding: 6px 14px;
+  border-radius: $radius-full;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.galleryNav {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $space-4;
+  pointer-events: none;
+}
+
+.galleryNavBtn {
+  @include flex-center;
+  @include square(44px);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: $shadow-md;
+  color: $color-text;
+  cursor: pointer;
+  pointer-events: all;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: #fff;
+    box-shadow: $shadow-lg;
+    transform: scale(1.08);
+  }
+
+  &:disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.detailThumbs {
+  display: flex;
+  gap: $space-3;
+  overflow-x: auto;
+  padding: $space-1 0;
+  @include scrollbar-none;
+}
+
+.detailThumb {
+  flex: 0 0 88px;
+  aspect-ratio: 1 / 1;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2.5px solid transparent;
+  transition: $transition-smooth;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.55;
+    transition: opacity 0.3s, transform 0.4s;
+  }
+
+  &:hover img {
+    opacity: 0.9;
+    transform: scale(1.06);
+  }
+
+  &Active {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+    img { opacity: 1; }
+  }
+}
+
+/* ─── Header & Meta ─── */
+.detailHeader {
+  display: grid;
+  gap: $space-4;
+
+  h1 {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    color: $color-text;
+    margin: 0;
+    font-family: $font-family-base;
+  }
+}
+
+.detailMetaTop {
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+  flex-wrap: wrap;
+}
+
+.detailRating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 700;
+
+  svg { color: #f59e0b; fill: #f59e0b; }
+  span { color: $color-text-secondary; font-weight: 500; }
+}
+
+.detailMetaDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: $color-text-secondary;
+  opacity: 0.5;
+}
+
+.detailLocation {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  svg { color: $color-primary; flex-shrink: 0; }
+
+  &:hover { color: $color-text; }
+}
+
+.detailTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: $space-1;
+}
+
+.detailTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: $radius-full;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  font-size: 12px;
+  font-weight: 600;
+  color: color.adjust($color-primary, $lightness: -8%);
+  transition: $transition-smooth;
+
+  &:hover {
+    background: $color-green-100;
+    box-shadow: $shadow-green-sm;
+  }
+}
+
+/* ─── Trust Row ─── */
+.detailTrustRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-4;
+  padding: $space-6;
+  background: $color-green-50;
+  border-radius: $radius-xl;
+  border: 1px solid $color-border-green;
+}
+
+.detailTrustItem {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+
+  svg { color: $color-primary; flex-shrink: 0; }
+
+  div {
+    display: grid;
+    gap: 2px;
+    span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: $color-text-secondary;
+      font-weight: 700;
+    }
+    strong {
+      font-size: 14px;
+      font-weight: 700;
+    }
+  }
+}
+
+/* ─── Specs Grid ─── */
+.detailSpecsSection {
+  padding-top: $space-6;
+  border-top: 1px solid $color-border;
+}
+
+.detailSpecsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $space-3;
+}
+
+.detailSpecItem {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4;
+  border-radius: $radius-lg;
+  background: $color-surface-muted;
+  border: 1px solid transparent;
+  transition: $transition-smooth;
+
+  .specIcon {
+    @include flex-center;
+    @include square(36px);
+    border-radius: $radius-md;
+    background: $color-green-50;
+    border: 1px solid $color-border-green;
+    color: $color-primary;
+    flex-shrink: 0;
+  }
+
+  .specContent {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+
+    span:first-child {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: $color-text-secondary;
+      font-weight: 600;
+    }
+
+    span:last-child {
+      font-size: 14px;
+      font-weight: 700;
+      color: $color-text;
+      @include text-truncate;
+    }
+  }
+
+  &:hover {
+    border-color: $color-border;
+    box-shadow: $shadow-sm;
+  }
+}
+
+/* ─── Description ─── */
+.detailDescription {
+  padding-top: $space-6;
+  border-top: 1px solid $color-border;
+}
+
+.detailSectionHeader {
+  margin-bottom: $space-5;
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    color: $color-text;
+  }
+  p {
+    font-size: 14px;
+    color: $color-text-secondary;
+    margin: 0;
+  }
+}
+
+.detailParagraphs {
+  font-size: 15px;
+  line-height: 1.72;
+  color: rgba(15, 23, 42, 0.82);
+
+  p {
+    margin: 0 0 $space-4;
+    &:last-child { margin-bottom: 0; }
+  }
+}
+
+
+/* ─── Guarantee Banner ─── */
+.guaranteeBanner {
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+  padding: $space-6 $space-8;
+  border-radius: $radius-xl;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+
+  .guaranteeIcon {
+    @include flex-center;
+    @include square(52px);
+    border-radius: $radius-lg;
+    background: $gradient-green;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: $shadow-green-md;
+  }
+
+  .guaranteeText {
+    display: grid;
+    gap: 4px;
+
+    strong {
+      font-size: 15px;
+      font-weight: 700;
+      color: $color-text;
+    }
+
+    span {
+      font-size: 13px;
+      color: $color-text-secondary;
+      line-height: 1.5;
+    }
+  }
+}
+
+/* ─── Similar Section ─── */
+.similarSection {
+  padding-top: $space-8;
+  border-top: 1px solid $color-border;
+}
+
+.sectionHeader {
+  @include flex-between;
+  margin-bottom: $space-6;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+  }
+}
+
+.viewAllLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-primary;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  transition: gap 0.2s;
+
+  &:hover {
+    gap: $space-2;
+    text-decoration: underline;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   SIDEBAR & BOOKING
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.detailSidebar {
+  position: sticky;
+  top: 100px;
+  display: grid;
+  gap: $space-5;
+}
+
+.bookingCard {
+  padding: $space-7 $space-7 $space-6;
+  background: #fff;
+  border-radius: $radius-2xl;
+  border: 1px solid $color-border;
+  box-shadow: $shadow-premium;
+  display: grid;
+  gap: $space-5;
+}
+
+.bookingPriceRow {
+  display: flex;
+  align-items: baseline;
+  gap: $space-2;
+
+  strong {
+    font-size: 30px;
+    font-weight: 800;
+    color: $color-text;
+    letter-spacing: -0.02em;
+    font-family: $font-family-display;
+  }
+}
+
+.bookingHourPrice {
+  font-size: 13px;
+  font-weight: 500;
+  color: $color-text-secondary;
+}
+
+.bookingAvailability {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: 10px $space-4;
+  border-radius: $radius-lg;
+  font-size: 13px;
+  font-weight: 600;
+
+  svg { flex-shrink: 0; }
+
+  &Available {
+    background: $color-green-50;
+    color: $color-primary;
+    border: 1px solid $color-border-green;
+  }
+
+  &Soon {
+    background: rgba(245, 158, 11, 0.08);
+    color: $color-warning;
+    border: 1px solid rgba(245, 158, 11, 0.15);
+  }
+}
+
+.bookingDates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  transition: border-color 0.2s;
+
+  &:hover { border-color: $color-border-green; }
+}
+
+.bookingDateBtn {
+  display: grid;
+  gap: 2px;
+  padding: $space-3 $space-4;
+  background: #fff;
+  text-align: left;
+
+  &:first-child { border-right: 1px solid $color-border; }
+
+  .dateLabel {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    color: $color-text-secondary;
+  }
+
+  .dateValue {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: $color-text-secondary;
+
+    svg { flex-shrink: 0; }
+  }
+
+  .dateValueActive {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: $color-primary;
+
+    svg {
+      flex-shrink: 0;
+      color: $color-primary;
+    }
+  }
+}
+
+.bookingTotal {
+  padding: $space-4;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  border-radius: $radius-lg;
+  display: grid;
+  gap: 10px;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: $color-text-secondary;
+}
+
+.grandTotal {
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid $color-border;
+  color: $color-text;
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.depositRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px $space-4;
+  border-radius: $radius-lg;
+  background: rgba(245, 158, 11, 0.06);
+  border: 1px solid rgba(245, 158, 11, 0.12);
+  font-size: 13px;
+
+  span:first-child {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: $color-text-secondary;
+    font-weight: 600;
+    svg { color: $color-warning; }
+  }
+
+  span:last-child {
+    font-weight: 700;
+    color: $color-text;
+  }
+}
+
+.primaryAction {
+  width: 100%;
+  height: 54px;
+  background: $gradient-green;
+  color: #fff;
+  border: 0;
+  border-radius: $radius-lg;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: $shadow-green-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-green-lg;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: $shadow-green-sm;
+  }
+}
+
+.bookedActions {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.changeDateBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  width: 100%;
+  height: 44px;
+  border-radius: $radius-lg;
+  border: 1px solid $color-border;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: $font-family-base;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-border-green;
+    color: $color-primary;
+    background: $color-green-50;
+  }
+}
+
+.bookingActions {
+  display: flex;
+  gap: $space-3;
+}
+
+.secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  flex: 1;
+  height: 46px;
+  padding: 0 $space-4;
+  border-radius: $radius-lg;
+  border: 1px solid $color-border;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-text;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  svg { flex-shrink: 0; }
+
+  &:hover {
+    border-color: $color-border-green;
+    background: $color-green-50;
+    box-shadow: $shadow-sm;
+  }
+
+  &Fav {
+    flex: 0 0 46px;
+    padding: 0;
+
+    &:hover {
+      color: $color-secondary;
+      border-color: rgba(244, 63, 94, 0.25);
+      background: rgba(244, 63, 94, 0.04);
+    }
+  }
+}
+
+/* ─── Owner Card ─── */
+.ownerCardCompact {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-5;
+  background: #fff;
+  border-radius: $radius-xl;
+  border: 1px solid $color-border;
+  box-shadow: $shadow-card;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-border-green;
+    box-shadow: $shadow-card-hover;
+  }
+}
+
+.ownerAvatarWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ownerAvatarFallback {
+  @include flex-center;
+  @include square(50px);
+  border-radius: 50%;
+  background: $gradient-green;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  box-shadow: $shadow-green-sm;
+}
+
+.ownerVerifiedBadge {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  @include flex-center;
+  @include square(20px);
+  border-radius: 50%;
+  background: $color-primary;
+  color: #fff;
+  border: 2px solid #fff;
+
+  svg { width: 12px; height: 12px; }
+}
+
+.ownerInfo {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.sidebarEyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: $color-text-secondary;
+}
+
+.ownerName {
+  font-size: 15px;
+  font-weight: 700;
+  color: $color-text;
+  @include text-truncate;
+}
+
+.ownerMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: $color-text-secondary;
+
+  svg { flex-shrink: 0; }
+}
+
+.ownerStats {
+  display: flex;
+  gap: $space-4;
+  margin-top: $space-1;
+
+  span {
+    font-size: 12px;
+    color: $color-text-secondary;
+    font-weight: 500;
+  }
+}
+
+/* ─── Guarantee Sidebar Card ─── */
+.guaranteeCard {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+  padding: $space-5;
+  border-radius: $radius-xl;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+
+  svg {
+    flex-shrink: 0;
+    color: $color-primary;
+    margin-top: 2px;
+  }
+
+  .guaranteeCardText {
+    display: grid;
+    gap: 3px;
+
+    strong {
+      font-size: 13px;
+      font-weight: 700;
+      color: $color-text;
+    }
+
+    span {
+      font-size: 12px;
+      color: $color-text-secondary;
+      line-height: 1.5;
+    }
+  }
+}

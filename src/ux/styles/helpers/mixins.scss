@@ -1,5 +1,5 @@
-@use '../vars' as *;
 @use "sass:map";
+@use "../vars" as *;
 
 // ─── Responsive Breakpoints ───────────────────────────────────────────────────
 
@@ -12,7 +12,7 @@
     'xl':  $bp-xl,
     '2xl': $bp-2xl,
   );
-  @if map-has-key($breakpoints, $bp) {
+  @if map.has-key($breakpoints, $bp) {
     @media (width >= map.get($breakpoints, $bp)) { @content; }
   } @else {
     @warn "Unknown breakpoint `#{$bp}`.";
@@ -28,8 +28,23 @@
     'xl':  $bp-xl,
     '2xl': $bp-2xl,
   );
-  @if map-has-key($breakpoints, $bp) {
+  @if map.has-key($breakpoints, $bp) {
     @media (width < map.get($breakpoints, $bp)) { @content; }
+  }
+}
+
+// Shortcut для мобильных устройств
+@mixin mobile {
+  @include respond-below('md') {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @include respond-to('md') {
+    @include respond-below('lg') {
+      @content;
+    }
   }
 }
 
@@ -82,6 +97,33 @@
   &::-webkit-scrollbar-thumb:hover  { background: $color-primary-hover; }
 }
 
+@mixin scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@mixin skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  background-color: $color-surface-muted;
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
 @mixin focus-ring($color: $color-border-focus) {
   outline: 1px solid $color;
 }
@@ -91,3 +133,35 @@
   &:hover { @content; }
 }
 
+// ─── Green Design System ─────────────────────────────────────────────────────
+
+@mixin green-glow($intensity: 0.1) {
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, $intensity);
+}
+
+@mixin green-surface {
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+}
+
+@mixin glass-card($blur: 20px) {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur($blur) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+@mixin green-gradient-text {
+  background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@mixin card-hover-lift($lift: -4px) {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  &:hover {
+    transform: translateY($lift);
+    box-shadow: $shadow-card-hover;
+  }
+}

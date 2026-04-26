@@ -1,0 +1,653 @@
+@use 'sass:color';
+@use '../../styles/vars' as *;
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Settings Page — Modern Glass UI
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.page {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34, 197, 94, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(59, 130, 246, 0.04) 0%, transparent 50%),
+    $color-surface-muted;
+  padding: $space-10 $space-4 $space-16;
+  font-family: $font-family-base;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ─── Back Link ─── */
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: $space-6;
+  padding: $space-2 $space-4;
+  border-radius: $radius-full;
+  border: 1px solid transparent;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  text-decoration: none;
+  transition: $transition-smooth;
+  backdrop-filter: blur(8px);
+
+  svg { width: 16px; height: 16px; transition: transform 0.2s ease; }
+
+  &:hover {
+    color: $color-primary;
+    background: rgba(34, 197, 94, 0.06);
+    border-color: rgba(34, 197, 94, 0.15);
+    svg { transform: translateX(-3px); }
+  }
+}
+
+/* ─── Page Title ─── */
+.pageTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  margin: 0 0 $space-2;
+  letter-spacing: -0.5px;
+}
+
+.pageSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 0 0 $space-8;
+}
+
+/* ─── Layout ─── */
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: $space-6;
+  align-items: flex-start;
+}
+
+/* ─── Sidebar ─── */
+.sidebar {
+  position: sticky;
+  top: $space-10;
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  border-radius: $radius-xl;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: $space-2;
+}
+
+.sidebarItem {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3 $space-4;
+  border-radius: $radius-lg;
+  border: 0;
+  background: transparent;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  font-family: $font-family-base;
+  cursor: pointer;
+  transition: $transition-smooth;
+  width: 100%;
+  text-align: left;
+
+  svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  &:hover {
+    color: $color-text;
+    background: rgba(100, 116, 139, 0.06);
+  }
+}
+
+.sidebarItemActive {
+  background: #fff;
+  color: $color-text;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  font-weight: $font-weight-600;
+
+  svg { color: $color-primary; }
+
+  &:hover {
+    background: #fff;
+    color: $color-text;
+  }
+}
+
+.sidebarItemDanger {
+  color: $color-error;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.06);
+    color: $color-error;
+  }
+}
+
+/* ─── Section ─── */
+.section {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  border-radius: $radius-2xl;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: $space-7 $space-6;
+}
+
+.sectionTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  margin: 0 0 $space-1;
+  letter-spacing: -0.3px;
+}
+
+.sectionSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 0 0 $space-6;
+}
+
+.sectionDivider {
+  height: 1px;
+  background: $color-border;
+  margin: $space-6 0;
+}
+
+/* ─── Form Elements ─── */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+}
+
+.formGroupFull {
+  grid-column: 1 / -1;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.formLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+}
+
+.formHint {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin-top: -$space-1;
+}
+
+.formInput {
+  padding: $space-3 $space-4;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  font-size: $font-size-sm;
+  font-family: $font-family-base;
+  color: $color-text;
+  background: #fff;
+  transition: $transition-smooth;
+  outline: none;
+
+  &::placeholder { color: $color-text-secondary; opacity: 0.6; }
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+  }
+}
+
+.formTextarea {
+  @extend .formInput;
+  min-height: 100px;
+  resize: vertical;
+  line-height: $line-height-normal;
+}
+
+.formInputWithIcon {
+  position: relative;
+
+  svg {
+    position: absolute;
+    left: $space-3;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: $color-text-secondary;
+    opacity: 0.5;
+  }
+
+  .formInput { padding-left: 38px; }
+}
+
+/* ─── Avatar Upload ─── */
+.avatarUpload {
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+  margin-bottom: $space-6;
+}
+
+.avatarPreview {
+  width: 80px;
+  height: 80px;
+  border-radius: $radius-full;
+  background: $gradient-green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-800;
+  font-family: $font-family-display;
+  flex-shrink: 0;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.2);
+}
+
+.avatarPreviewImg {
+  width: 80px;
+  height: 80px;
+  border-radius: $radius-full;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.avatarActions {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.avatarActionsTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+}
+
+.avatarActionsHint {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+/* ─── Buttons ─── */
+.btnRow {
+  display: flex;
+  gap: $space-3;
+  margin-top: $space-6;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-3 $space-5;
+  border: 0;
+  border-radius: $radius-lg;
+  background: $gradient-green;
+  color: #fff;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  font-family: $font-family-base;
+  cursor: pointer;
+  transition: $transition-smooth;
+  box-shadow: $shadow-green-sm;
+
+  &:hover {
+    box-shadow: $shadow-green-md;
+    transform: translateY(-1px);
+  }
+
+  &:active { transform: translateY(0); }
+}
+
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-3 $space-5;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  background: #fff;
+  color: $color-text;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  font-family: $font-family-base;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    background: rgba(34, 197, 94, 0.04);
+  }
+}
+
+.btnDanger {
+  @extend .btnSecondary;
+  border-color: rgba(239, 68, 68, 0.3);
+  color: $color-error;
+
+  &:hover {
+    border-color: $color-error;
+    color: $color-error;
+    background: rgba(239, 68, 68, 0.04);
+  }
+}
+
+.btnSmall {
+  padding: $space-2 $space-3;
+  font-size: $font-size-xs;
+}
+
+/* ─── Toggle / Switch ─── */
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-4 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+
+  &:last-child { border-bottom: 0; }
+}
+
+.toggleInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toggleLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+}
+
+.toggleHint {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: $radius-full;
+  border: 0;
+  background: rgba(100, 116, 139, 0.2);
+  cursor: pointer;
+  transition: $transition-smooth;
+  flex-shrink: 0;
+  padding: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
+  }
+}
+
+.toggleOn {
+  background: $color-primary;
+
+  &::after {
+    transform: translateX(20px);
+  }
+}
+
+/* ─── Session Cards ─── */
+.sessionsList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.sessionCard {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-4;
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  border-radius: $radius-xl;
+  background: rgba(255, 255, 255, 0.5);
+  transition: $transition-smooth;
+
+  &:hover {
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.sessionCardCurrent {
+  border-color: rgba(34, 197, 94, 0.2);
+  background: rgba(34, 197, 94, 0.02);
+}
+
+.sessionIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(100, 116, 139, 0.06);
+  color: $color-text-secondary;
+
+  svg { width: 20px; height: 20px; }
+}
+
+.sessionIconCurrent {
+  background: rgba(34, 197, 94, 0.08);
+  color: $color-primary;
+}
+
+.sessionInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.sessionNameRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: 2px;
+}
+
+.sessionName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+}
+
+.sessionCurrentBadge {
+  font-size: 10px;
+  font-weight: $font-weight-600;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+  background: rgba(34, 197, 94, 0.08);
+  color: $color-primary;
+}
+
+.sessionDevice {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.sessionRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: $space-2;
+  flex-shrink: 0;
+}
+
+.sessionTime {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+/* ─── Payment Cards ─── */
+.paymentsList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.paymentCard {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-4 $space-5;
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  border-radius: $radius-xl;
+  background: rgba(255, 255, 255, 0.5);
+  transition: $transition-smooth;
+
+  &:hover {
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.paymentCardDefault {
+  border-color: rgba(34, 197, 94, 0.2);
+  background: rgba(34, 197, 94, 0.02);
+}
+
+.paymentIcon {
+  width: 48px;
+  height: 34px;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #fff;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-800;
+  font-family: $font-family-display;
+  letter-spacing: 0.5px;
+}
+
+.paymentInfo {
+  flex: 1;
+}
+
+.paymentNameRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: 2px;
+}
+
+.paymentName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+}
+
+.paymentDefaultBadge {
+  font-size: 10px;
+  font-weight: $font-weight-600;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+  background: rgba(34, 197, 94, 0.08);
+  color: $color-primary;
+}
+
+.paymentExpiry {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.paymentRight {
+  display: flex;
+  gap: $space-2;
+  flex-shrink: 0;
+}
+
+/* ─── Privacy Section ─── */
+.dangerZone {
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-radius: $radius-xl;
+  padding: $space-5;
+  background: rgba(239, 68, 68, 0.02);
+}
+
+.dangerZoneTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-error;
+  margin: 0 0 $space-1;
+}
+
+.dangerZoneText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin: 0 0 $space-4;
+  line-height: $line-height-normal;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: $bp-md) {
+  .page { padding: $space-6 $space-3 $space-12; }
+
+  .layout {
+    grid-template-columns: 1fr;
+    gap: $space-4;
+  }
+
+  .sidebar {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+    border-radius: $radius-lg;
+    padding: $space-1;
+  }
+
+  .sidebarItem {
+    white-space: nowrap;
+    padding: $space-2 $space-3;
+    font-size: $font-size-xs;
+  }
+
+  .formGrid { grid-template-columns: 1fr; }
+
+  .section { padding: $space-5 $space-4; }
+
+  .avatarUpload { flex-direction: column; text-align: center; }
+}
+
+@media (max-width: $bp-sm) {
+  .toggleRow { flex-direction: column; align-items: flex-start; gap: $space-3; }
+  .sessionCard { flex-wrap: wrap; }
+  .paymentCard { flex-wrap: wrap; }
+  .btnRow { flex-direction: column; }
+}

@@ -1,0 +1,961 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+.sidebar {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 18px;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.28) 0%, rgba(15, 23, 42, 0.5) 100%),
+    radial-gradient(circle at top, rgba(34, 197, 94, 0.14), transparent 32%);
+  backdrop-filter: blur(18px);
+}
+
+.sidebarCard {
+  width: min(1080px, calc(100vw - 48px));
+  max-height: min(880px, calc(100vh - 48px));
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  padding: 24px;
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(248, 250, 252, 0.92) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow:
+    0 36px 80px -42px rgba(15, 23, 42, 0.68),
+    0 0 0 1px rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.sidebarTitleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-5;
+}
+
+.titleWithIcon {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  min-width: 0;
+}
+
+.titleIcon {
+  @include square(40px);
+  @include flex-center;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: $gradient-green;
+  color: #fff;
+  box-shadow: $shadow-green-md;
+}
+
+.modalTitleCopy {
+  min-width: 0;
+
+  h3 {
+    margin: 0;
+    font-size: clamp(24px, 3.6vw, 32px);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: $color-text;
+  }
+
+  p {
+    margin: 8px 0 0;
+    max-width: 58ch;
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(15, 23, 42, 0.72);
+  }
+}
+
+.modalEyebrow {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 9px;
+  font-weight: 800;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.sidebarActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.resetButton,
+.closeButton {
+  @include square(40px);
+  @include flex-center;
+  border-radius: 14px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.8);
+  color: $color-text;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: #fff;
+    border-color: rgba(15, 23, 42, 0.16);
+    transform: translateY(-1px);
+  }
+}
+
+.modalMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.modalBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: $radius-full;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  color: $color-text-secondary;
+  font-size: 12px;
+  font-weight: 700;
+
+  svg {
+    flex-shrink: 0;
+    color: $color-primary;
+  }
+
+  strong {
+    color: $color-text;
+  }
+}
+
+.activeFiltersRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-3;
+  padding: 12px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.activeFiltersList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.activeFilterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 10px;
+  border-radius: $radius-full;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.86);
+  color: $color-text;
+  cursor: pointer;
+  transition: $transition-smooth;
+  max-width: 100%;
+
+  svg:first-child {
+    color: $color-primary;
+    flex-shrink: 0;
+  }
+
+  svg:last-child {
+    color: rgba(15, 23, 42, 0.42);
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 12px;
+    font-weight: 700;
+    color: $color-text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 34ch;
+  }
+
+  &:hover {
+    border-color: rgba(34, 197, 94, 0.28);
+    background: #fff;
+    transform: translateY(-1px);
+
+    svg:last-child {
+      color: rgba(15, 23, 42, 0.6);
+    }
+  }
+}
+
+.resetInline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: $radius-full;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(248, 250, 252, 0.9);
+  color: $color-text-secondary;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: $transition-smooth;
+  flex-shrink: 0;
+
+  &:hover {
+    background: #fff;
+    color: $color-text;
+    border-color: rgba(15, 23, 42, 0.16);
+    transform: translateY(-1px);
+  }
+}
+
+.modalIntro {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  padding: 20px 22px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.09), transparent 28%),
+    rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.modalIntroIcon {
+  @include square(40px);
+  @include flex-center;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  color: $color-primary;
+}
+
+.modalIntroContent {
+  strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+    color: $color-text;
+  }
+
+  p {
+    margin: 6px 0 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(15, 23, 42, 0.72);
+  }
+}
+
+.filterTabs {
+  position: relative;
+  z-index: 3;
+  margin-top: 2px;
+  padding: 0 4px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.86);
+}
+
+.scrollableContent {
+  flex: 1 1 auto;
+  min-height: 200px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
+  padding-top: 8px;
+  padding-right: 10px;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.55) rgba(15, 23, 42, 0.06);
+  @include scrollbar(10px, rgba(34, 197, 94, 0.55), rgba(15, 23, 42, 0.06));
+}
+
+.tabPanel {
+  display: grid;
+  gap: $space-4;
+  padding-top: 4px;
+}
+
+.gridSection {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-4;
+}
+
+.filterGroup {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow: 0 16px 30px -28px rgba(15, 23, 42, 0.26);
+
+  [aria-haspopup='listbox'] {
+    min-height: 48px;
+    padding: 0 14px;
+    border-radius: 16px;
+    font-size: 14px;
+  }
+}
+
+.filterGroupWide {
+  grid-column: 1 / -1;
+}
+
+.filterLabelRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: $color-primary;
+}
+
+.filterLabel {
+  font-size: 11px;
+  font-weight: 800;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.subSectionDivider {
+  height: 1px;
+  width: 100%;
+  background: rgba(226, 232, 240, 0.86);
+}
+
+.subSectionLabelRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $color-primary;
+}
+
+.subSectionLabel {
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(15, 23, 42, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.cityDropdown {
+  max-height: 360px;
+}
+
+.priceFields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-3;
+}
+
+.priceInputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  background: rgba(248, 250, 252, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 16px;
+  padding: 0 14px;
+  transition: $transition-smooth;
+
+  &:focus-within {
+    border-color: $color-primary;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+  }
+
+  input {
+    flex: 1;
+    border: 0;
+    outline: 0;
+    padding: 12px 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: $color-text;
+    background: transparent;
+    width: 100%;
+  }
+}
+
+.priceInputLabel {
+  font-size: 10px;
+  font-weight: 800;
+  color: $color-text-secondary;
+  margin-right: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.currency {
+  font-size: 13px;
+  font-weight: 700;
+  color: $color-text-secondary;
+  margin-left: 6px;
+}
+
+.conditionChips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.conditionChip,
+.conditionChipActive {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: $radius-full;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  span:first-child {
+    font-size: 16px;
+  }
+
+  span:last-child {
+    font-size: 13px;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &:hover {
+    border-color: rgba(34, 197, 94, 0.3);
+    transform: translateY(-1px);
+  }
+}
+
+.conditionChipActive {
+  background: $gradient-green;
+  border-color: transparent;
+  box-shadow: $shadow-green-sm;
+
+  span:last-child {
+    color: #fff;
+  }
+}
+
+.segmentedControl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  padding: 6px;
+  border-radius: 18px;
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.segment,
+.segmentActive {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: $color-text-secondary;
+  background: transparent;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover:not(.segmentActive) {
+    color: $color-text;
+  }
+}
+
+.segmentActive {
+  background: #fff;
+  color: $color-primary;
+  box-shadow: $shadow-sm;
+}
+
+.quickFilterGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.quickFilterToneDelivery {
+  --qf-accent: 56, 189, 248;
+}
+
+.quickFilterToneNear {
+  --qf-accent: 34, 197, 94;
+}
+
+.quickFilterToneDeposit {
+  --qf-accent: 99, 102, 241;
+}
+
+.quickFilterToneTop {
+  --qf-accent: 245, 158, 11;
+}
+
+.quickFilterToneNew {
+  --qf-accent: 236, 72, 153;
+}
+
+.quickFilterCard,
+.quickFilterCardActive {
+  --qf-accent: 34, 197, 94;
+  position: relative;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 72px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.82);
+  color: $color-text;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--qf-accent), 0.32);
+    box-shadow: 0 18px 30px -28px rgba(15, 23, 42, 0.32);
+  }
+}
+
+.quickFilterIconWrap {
+  @include square(34px);
+  @include flex-center;
+  border-radius: 12px;
+  background: rgba(var(--qf-accent), 0.12);
+  border: 1px solid rgba(var(--qf-accent), 0.14);
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: rgb(var(--qf-accent));
+  }
+}
+
+.quickFilterText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  text-align: left;
+}
+
+.quickFilterTitle {
+  font-size: 12px;
+  font-weight: 800;
+  color: $color-text;
+  line-height: 1.25;
+}
+
+.quickFilterHint {
+  font-size: 11px;
+  font-weight: 650;
+  color: rgba(15, 23, 42, 0.62);
+  line-height: 1.3;
+  @include line-clamp(2);
+}
+
+.quickFilterCardActive {
+  background:
+    radial-gradient(circle at top right, rgba(var(--qf-accent), 0.16), transparent 40%),
+    linear-gradient(180deg, rgba(248, 250, 252, 0.96) 0%, rgba(255, 255, 255, 0.94) 100%);
+  border-color: rgba(var(--qf-accent), 0.32);
+
+  .quickFilterIconWrap {
+    background: rgba(var(--qf-accent), 0.16);
+    border-color: rgba(var(--qf-accent), 0.2);
+  }
+}
+
+.switchesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-3;
+}
+
+.fancyCheckbox {
+  cursor: pointer;
+
+  input {
+    display: none;
+
+    &:checked + .checkboxContent {
+      border-color: rgba(34, 197, 94, 0.28);
+      background: rgba(240, 253, 244, 0.78);
+
+      .checkMark {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      svg:first-child {
+        color: $color-primary;
+      }
+    }
+  }
+}
+
+.checkboxContent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 60px;
+  padding: 0 16px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.84);
+  transition: $transition-smooth;
+
+  svg:first-child {
+    color: $color-text-secondary;
+    transition: color 0.3s ease;
+  }
+
+  span {
+    font-size: 13px;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &:hover {
+    border-color: $color-border-green;
+  }
+}
+
+.checkMark {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  @include square(22px);
+  @include flex-center;
+  background: $gradient-green;
+  color: #fff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: $transition-spring;
+  box-shadow: $shadow-green-sm;
+}
+
+.filtersFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  padding-top: $space-3;
+  border-top: 1px solid rgba(226, 232, 240, 0.86);
+  flex-shrink: 0;
+}
+
+.footerStats {
+  font-size: 13px;
+  color: $color-text-secondary;
+
+  strong {
+    color: $color-text;
+    font-weight: 800;
+  }
+}
+
+.primaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 200px;
+  min-height: 46px;
+  padding: 0 18px;
+  background: $gradient-green;
+  color: #fff;
+  border: 0;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: $shadow-green-md;
+  transition: $transition-smooth;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-green-lg;
+  }
+}
+
+@include respond-below('lg') {
+  .sidebar {
+    padding: 16px;
+  }
+
+  .sidebarCard {
+    width: min(100vw - 24px, 960px);
+    padding: 20px;
+  }
+
+  .quickFilterGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include respond-below('md') {
+  .sidebar {
+    padding: 10px;
+  }
+
+  .sidebarCard {
+    width: min(100vw - 8px, 100%);
+    max-height: calc(100vh - 8px);
+    padding: 16px;
+    border-radius: 24px 24px 18px 18px;
+  }
+
+  .activeFiltersRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .resetInline {
+    width: 100%;
+  }
+
+  .sidebarTitleRow,
+  .filtersFooter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sidebarActions {
+    align-self: flex-end;
+  }
+
+  .gridSection,
+  .priceFields,
+  .switchesGrid,
+  .quickFilterGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .segmentedControl {
+    grid-template-columns: 1fr;
+  }
+
+  .primaryAction {
+    width: 100%;
+  }
+}
+
+@include respond-below('sm') {
+  .sidebarCard {
+    gap: $space-4;
+    padding: 14px;
+  }
+
+  .titleWithIcon {
+    gap: 12px;
+  }
+
+  .titleIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 16px;
+  }
+
+  .modalTitleCopy h3 {
+    font-size: 24px;
+  }
+
+  .filterGroup {
+    padding: 14px;
+  }
+
+  .modalIntro {
+    padding: 14px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   TOGGLE SWITCH — Production-level animated toggle
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.togglesSection {
+  display: grid;
+  gap: $space-3;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-4;
+  padding: $space-3 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggleInfo {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  min-width: 0;
+}
+
+.toggleIconWrap {
+  @include flex-center;
+  @include square(36px);
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  color: $color-primary;
+}
+
+.toggleText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.toggleLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.toggleDesc {
+  font-size: 12px;
+  font-weight: 500;
+  color: $color-text-secondary;
+  line-height: 1.4;
+}
+
+.toggleTrack,
+.toggleTrackActive {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 48px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  padding: 3px;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+  }
+}
+
+.toggleTrack {
+  background: rgba(15, 23, 42, 0.12);
+  justify-content: flex-start;
+}
+
+.toggleTrackActive {
+  background: $color-primary;
+  box-shadow: $shadow-green-sm;
+  justify-content: flex-end;
+}
+
+.toggleThumb {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* ─── Price Hint Badge ─── */
+.priceHintBadge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  padding: 3px 10px;
+  border-radius: $radius-full;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  font-size: 11px;
+  font-weight: 700;
+  color: $color-primary;
+  white-space: nowrap;
+}
+
+/* ─── Active Filter Badge ─── */
+.modalBadgeActive {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: $radius-full;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  color: $color-primary;
+  font-size: 12px;
+  font-weight: 700;
+
+  strong {
+    font-weight: 800;
+  }
+}
+
+/* ─── Quick Filter Check ─── */
+.quickFilterCheck {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: rgb(var(--qf-accent));
+}
+

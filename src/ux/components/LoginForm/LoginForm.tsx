@@ -28,7 +28,7 @@ export const LoginForm = () => {
           label="Телефон"
           type="tel"
           autoComplete="tel"
-          placeholder="+7 (___) ___-__-__"
+          placeholder="(___) ___-__-__"
           error={errors.tel?.message}
           {...register("tel")}
         />

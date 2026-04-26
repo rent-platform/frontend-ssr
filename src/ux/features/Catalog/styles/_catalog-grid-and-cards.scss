@@ -1,0 +1,440 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+.grid,
+.similarGrid,
+.resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-5 $space-4;
+  padding: $space-2 0;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px 10px 14px;
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-2xl;
+  box-shadow: $shadow-card;
+  transition: $transition-smooth;
+  overflow: hidden;
+
+  &:hover {
+    border-color: $color-border-green;
+    box-shadow: $shadow-card-hover;
+
+    .cardImage {
+      transform: scale(1.04);
+    }
+
+    .cardTitleButton {
+      color: $color-primary;
+    }
+
+    .cardActionButton {
+      background: $gradient-green;
+      border-color: transparent;
+      color: #fff;
+      box-shadow: $shadow-green-sm;
+    }
+  }
+}
+
+.cardImageButton {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  outline: 0;
+}
+
+.cardFavorite {
+  position: absolute;
+  top: $space-3;
+  right: $space-3;
+  z-index: 10;
+  @include square(34px);
+  @include flex-center;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border: 0;
+  border-radius: 50%;
+  color: $color-text-secondary;
+  box-shadow: $shadow-sm;
+  cursor: pointer;
+  transition: $transition-spring;
+
+  &:hover {
+    transform: scale(1.1);
+    background: #fff;
+    color: $color-secondary;
+    box-shadow: $shadow-md;
+  }
+
+  &Active {
+    color: $color-secondary;
+    background: #fff;
+
+    svg {
+      fill: currentColor;
+    }
+  }
+}
+
+.cardImageWrap {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  overflow: hidden;
+  background: $color-surface-muted;
+  transition: $transition-smooth;
+  border: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(15, 23, 42, 0.02) 0%, transparent 30%),
+      linear-gradient(180deg, transparent 60%, rgba(15, 23, 42, 0.06) 100%);
+    pointer-events: none;
+  }
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.cardBadge {
+  position: absolute;
+  inset: $space-3 $space-3 auto $space-3;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-2;
+  z-index: 2;
+}
+
+.cardFeatured {
+  display: inline-flex;
+  align-items: center;
+  background: $gradient-green;
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: $radius-full;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: $shadow-green-sm;
+  border: 0;
+}
+
+.cardStatusChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: $radius-full;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.cardStatusAvailable {
+  background: rgba(34, 197, 94, 0.9);
+  color: #fff;
+}
+
+.cardStatusSoon {
+  background: rgba(255, 255, 255, 0.92);
+  color: $color-text;
+}
+
+.cardBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: $space-4;
+  padding: $space-5 $space-2 0;
+}
+
+.cardBodyTop {
+  display: grid;
+  gap: $space-3;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+}
+
+.cardCategory {
+  display: inline-flex;
+  align-items: center;
+  max-width: calc(100% - 72px);
+  padding: 5px 10px;
+  border-radius: $radius-full;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  color: color.adjust($color-primary, $lightness: -8%);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  @include text-truncate;
+}
+
+.cardTitleButton {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 750;
+  letter-spacing: -0.012em;
+  color: $color-text;
+  text-align: left;
+  line-height: 1.32;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
+}
+
+.cardRating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: $radius-full;
+  background: $color-surface-muted;
+  font-size: 12px;
+  font-weight: 700;
+  color: $color-text;
+  flex-shrink: 0;
+}
+
+.starIcon {
+  color: #f59e0b;
+  fill: #f59e0b;
+  @include square(14px);
+}
+
+.cardMetaStack {
+  display: grid;
+  gap: 8px;
+}
+
+.cardLocationLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: $color-text-secondary;
+  margin: 0;
+  font-weight: 500;
+
+  svg {
+    flex-shrink: 0;
+    color: rgba(100, 116, 139, 0.9);
+  }
+
+  span {
+    @include line-clamp(1);
+  }
+}
+
+.cardDate {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+.cardMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: $color-text-secondary;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.cardMetaDivider {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(148, 163, 184, 0.9);
+}
+
+.cardHighlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cardHighlightChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 6px 10px;
+  border-radius: $radius-full;
+  background: $color-surface-muted;
+  border: 1px solid $color-border;
+  color: $color-text;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+
+  svg {
+    flex-shrink: 0;
+    color: $color-primary;
+  }
+
+  span {
+    @include text-truncate;
+  }
+}
+
+.cardHighlightChipMuted {
+  background: rgba(244, 246, 248, 0.9);
+  color: $color-text-secondary;
+
+  svg {
+    color: $color-text-secondary;
+  }
+}
+
+.cardPriceRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $space-3;
+}
+
+.cardPriceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  strong {
+    font-size: 20px;
+    font-weight: 800;
+    color: $color-text;
+    line-height: 1.1;
+  }
+}
+
+.cardPriceSecondary {
+  font-size: 12px;
+  color: $color-text-secondary;
+  font-weight: 600;
+}
+
+.cardDepositBadge {
+  font-size: 11px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  background: $color-surface-muted;
+  padding: 2px 8px;
+  border-radius: $radius-full;
+}
+
+.cardFooter {
+  display: grid;
+  gap: $space-4;
+  margin-top: auto;
+  padding-top: $space-4;
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.cardOwnerRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.cardOwnerAvatar {
+  @include square(36px);
+  @include flex-center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: $gradient-green;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: $shadow-green-sm;
+}
+
+.cardOwnerAvatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardOwnerInfo {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+
+  strong {
+    font-size: 14px;
+    font-weight: 700;
+    color: $color-text;
+    @include text-truncate;
+  }
+
+  span {
+    font-size: 12px;
+    font-weight: 500;
+    color: $color-text-secondary;
+    @include text-truncate;
+  }
+}
+
+.cardActionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: $radius-full;
+  border: 1px solid $color-border;
+  background: #fff;
+  color: $color-text;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: $transition-smooth;
+  flex-shrink: 0;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    background: $color-green-50;
+  }
+}

@@ -1,0 +1,865 @@
+@use 'sass:color';
+@use '../../styles/vars' as *;
+@use '../../styles/helpers/mixins' as *;
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   CreateListing — 4-step wizard for item rental publishing
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Page Layout ─── */
+.page {
+  min-height: 100vh;
+  background: $color-surface-muted;
+  padding: $space-10 $space-4 $space-16;
+}
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ─── Header ─── */
+.header {
+  text-align: center;
+  margin-bottom: $space-8;
+}
+
+.headerTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  margin: 0 0 $space-2;
+  letter-spacing: -0.02em;
+}
+
+.headerSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 0;
+}
+
+/* ═══ Stepper ═══ */
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $space-8;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2 $space-4;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: $color-text-secondary;
+  background: transparent;
+  transition: $transition-smooth;
+  cursor: default;
+  white-space: nowrap;
+  user-select: none;
+
+  svg { width: 15px; height: 15px; flex-shrink: 0; }
+}
+
+.stepItemActive {
+  color: $color-primary;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+}
+
+.stepItemCompleted {
+  color: $color-primary;
+  cursor: pointer;
+
+  &:hover { background: $color-green-50; }
+}
+
+.stepConnector {
+  width: 28px;
+  height: 2px;
+  background: $color-border;
+  margin: 0 $space-1;
+  border-radius: $radius-full;
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}
+
+.stepConnectorDone {
+  background: $color-primary;
+}
+
+/* ═══ Card ═══ */
+.card {
+  background: $color-surface;
+  border-radius: $radius-2xl;
+  border: 1px solid $color-border;
+  padding: $space-8;
+  box-shadow: $shadow-premium;
+  animation: fadeSlideIn 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sectionTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  margin: 0 0 $space-1;
+}
+
+.sectionSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 0 0 $space-6;
+  line-height: $line-height-normal;
+}
+
+/* ═══ Form Fields ═══ */
+.fieldGroup {
+  display: grid;
+  gap: $space-5;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+}
+
+.fieldLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+}
+
+.fieldHint {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin-top: 2px;
+}
+
+.input {
+  width: 100%;
+  height: 48px;
+  padding: 0 $space-4;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  font-family: inherit;
+  font-size: $font-size-sm;
+  color: $color-text;
+  transition: $transition-smooth;
+
+  &::placeholder { color: $color-text-secondary; }
+  &:hover { border-color: color.adjust($color-border, $lightness: -10%); }
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: $shadow-green-glow;
+  }
+
+  &[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}
+
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: $space-3 $space-4;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  font-family: inherit;
+  font-size: $font-size-sm;
+  color: $color-text;
+  line-height: $line-height-normal;
+  resize: vertical;
+  transition: $transition-smooth;
+
+  &::placeholder { color: $color-text-secondary; }
+  &:hover { border-color: color.adjust($color-border, $lightness: -10%); }
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: $shadow-green-glow;
+  }
+}
+
+.select {
+  width: 100%;
+  height: 48px;
+  padding: 0 40px 0 $space-4;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  font-family: inherit;
+  font-size: $font-size-sm;
+  color: $color-text;
+  appearance: none;
+  cursor: pointer;
+  transition: $transition-smooth;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='m5 7.5 5 5 5-5' fill='none' stroke='%2364748b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px;
+
+  &:hover { border-color: color.adjust($color-border, $lightness: -10%); }
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: $shadow-green-glow;
+  }
+}
+
+.inputWithPrefix {
+  position: relative;
+}
+
+.inputPrefix {
+  position: absolute;
+  left: $space-4;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text-secondary;
+  pointer-events: none;
+}
+
+.inputPrefixed {
+  padding-left: 36px;
+}
+
+/* ═══ Image Upload ═══ */
+.uploadZone {
+  border: 2px dashed $color-border;
+  border-radius: $radius-xl;
+  padding: $space-12 $space-4;
+  text-align: center;
+  cursor: pointer;
+  transition: $transition-smooth;
+  background: $color-surface-muted;
+
+  &:hover {
+    border-color: $color-primary;
+    background: $color-green-50;
+  }
+}
+
+.uploadZoneDragging {
+  border-color: $color-primary;
+  background: $color-green-50;
+  box-shadow: $shadow-green-glow;
+}
+
+.uploadIcon {
+  @include flex-center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto $space-4;
+  border-radius: 50%;
+  background: $color-green-50;
+  color: $color-primary;
+  border: 1px solid $color-border-green;
+}
+
+.uploadText {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+  margin: 0 0 $space-1;
+}
+
+.uploadHint {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin: 0;
+}
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-3;
+  margin-top: $space-5;
+}
+
+.imageThumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  border: 1px solid $color-border;
+  background: $color-surface-muted;
+  cursor: grab;
+
+  &:active { cursor: grabbing; }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  &:hover .imageRemove { opacity: 1; }
+  &:hover .imageDragHandle { opacity: 1; }
+}
+
+.imageThumbDragOver {
+  border-color: $color-primary;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25);
+  transform: scale(1.03);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.imageDragHandle {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-md;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.imageMainBadge {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  font-size: 10px;
+  font-weight: $font-weight-bold;
+  color: #fff;
+  background: $color-primary;
+  padding: 2px 8px;
+  border-radius: $radius-full;
+}
+
+.imageRemove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  @include square(24px);
+  @include flex-center;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transition: $transition-fast;
+}
+
+.addMoreBtn {
+  @include flex-center;
+  flex-direction: column;
+  gap: $space-1;
+  aspect-ratio: 1 / 1;
+  border: 2px dashed $color-border;
+  border-radius: $radius-lg;
+  background: transparent;
+  color: $color-text-secondary;
+  cursor: pointer;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    background: $color-green-50;
+  }
+}
+
+/* ═══ Condition Selector ═══ */
+.conditionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-3;
+}
+
+.conditionCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: $space-3 $space-4;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover { border-color: color.adjust($color-border, $lightness: -10%); }
+}
+
+.conditionCardActive {
+  border-color: $color-primary;
+  background: $color-green-50;
+  box-shadow: $shadow-green-glow;
+}
+
+.conditionLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+}
+
+.conditionDesc {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+/* ═══ Tags Grid ═══ */
+.tagGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+}
+
+.tagChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: $radius-full;
+  border: 1.5px solid $color-border;
+  background: $color-surface;
+  color: $color-text;
+  font-family: inherit;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover:not(:disabled) {
+    border-color: $color-primary;
+    background: $color-green-50;
+  }
+}
+
+.tagChipActive {
+  border-color: $color-primary;
+  background: $color-green-50;
+  color: color.adjust($color-primary, $lightness: -8%);
+
+  svg { flex-shrink: 0; }
+}
+
+.tagChipDisabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.tagBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: $radius-full;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  color: color.adjust($color-primary, $lightness: -8%);
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+}
+
+/* ═══ City Picker ═══ */
+.cityPicker {
+  position: relative;
+}
+
+.cityTrigger {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  width: 100%;
+  height: 48px;
+  padding: 0 $space-4;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  font-family: inherit;
+  font-size: $font-size-sm;
+  color: $color-text;
+  cursor: pointer;
+  transition: $transition-smooth;
+  text-align: left;
+
+  svg { color: $color-text-secondary; flex-shrink: 0; }
+  span { flex: 1; }
+
+  &:hover { border-color: color.adjust($color-border, $lightness: -10%); }
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: $shadow-green-glow;
+  }
+}
+
+.cityChevron {
+  transition: transform 0.2s ease;
+}
+
+.cityChevronOpen {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.cityDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: $color-surface;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-xl;
+  overflow: hidden;
+  animation: fadeSlideIn 0.18s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.citySearchInput {
+  display: block;
+  width: 100%;
+  height: 42px;
+  padding: 0 $space-4;
+  border: 0;
+  border-bottom: 1px solid $color-border;
+  background: $color-surface-muted;
+  font-family: inherit;
+  font-size: $font-size-sm;
+  color: $color-text;
+
+  &::placeholder { color: $color-text-secondary; }
+  &:focus { outline: none; }
+}
+
+.cityList {
+  max-height: 220px;
+  overflow-y: auto;
+  @include scrollbar(4px);
+}
+
+.cityOption {
+  display: block;
+  width: 100%;
+  padding: $space-2 $space-4;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: $font-size-sm;
+  color: $color-text;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover { background: $color-surface-muted; }
+}
+
+.cityOptionActive {
+  background: $color-green-50;
+  color: color.adjust($color-primary, $lightness: -8%);
+  font-weight: $font-weight-600;
+
+  &:hover { background: $color-green-50; }
+}
+
+/* ═══ Toggle ═══ */
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-4;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover { border-color: color.adjust($color-border, $lightness: -10%); }
+}
+
+.toggleRowActive {
+  border-color: $color-border-green;
+  background: $color-green-50;
+}
+
+.toggleInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toggleLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+
+  svg { width: 14px; height: 14px; color: $color-primary; flex-shrink: 0; }
+}
+
+.toggleHint {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border: 0;
+  border-radius: $radius-full;
+  background: $color-border;
+  cursor: pointer;
+  transition: $transition-smooth;
+  flex-shrink: 0;
+  padding: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: $shadow-sm;
+    transition: $transition-smooth;
+  }
+}
+
+.toggleOn {
+  background: $color-primary;
+
+  &::after { left: 22px; }
+}
+
+/* ═══ Navigation ═══ */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: $space-6;
+  gap: $space-4;
+}
+
+.navSpacer {
+  flex: 1;
+}
+
+.navBack {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-3 $space-5;
+  border-radius: $radius-full;
+  border: 1.5px solid $color-border;
+  background: $color-surface;
+  color: $color-text;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: color.adjust($color-border, $lightness: -10%);
+    background: $color-surface-muted;
+  }
+
+  svg { width: 16px; height: 16px; }
+}
+
+.navNext {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-3 $space-6;
+  border-radius: $radius-full;
+  border: 0;
+  background: $gradient-green;
+  color: #fff;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  cursor: pointer;
+  transition: $transition-smooth;
+  box-shadow: $shadow-green-sm;
+  margin-left: auto;
+
+  &:hover {
+    box-shadow: $shadow-green-md;
+    transform: translateY(-1px);
+  }
+
+  svg { width: 16px; height: 16px; }
+}
+
+.navDisabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+.publishBtn {
+  padding: $space-4 $space-8;
+  font-size: $font-size-base;
+}
+
+/* ═══ Review Step ═══ */
+.reviewBlock {
+  padding: $space-5;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface-muted;
+
+  & + & { margin-top: $space-4; }
+}
+
+.reviewBlockTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 $space-3;
+}
+
+.reviewRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: $font-size-sm;
+  padding: $space-2 0;
+
+  & + & { border-top: 1px solid rgba(0, 0, 0, 0.05); }
+}
+
+.reviewLabel {
+  color: $color-text-secondary;
+}
+
+.reviewValue {
+  font-weight: $font-weight-600;
+  color: $color-text;
+  text-align: right;
+  max-width: 60%;
+  @include text-truncate;
+}
+
+.reviewImages {
+  display: flex;
+  gap: $space-2;
+  overflow-x: auto;
+  @include scrollbar-none;
+}
+
+.reviewImageThumb {
+  flex-shrink: 0;
+  @include square(64px);
+  border-radius: $radius-md;
+  overflow: hidden;
+  border: 1px solid $color-border;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.reviewTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-1;
+  margin-top: $space-2;
+}
+
+/* ═══ Success State ═══ */
+.successOverlay {
+  @include flex-center;
+  flex-direction: column;
+  gap: $space-5;
+  padding: $space-12 $space-4;
+  text-align: center;
+}
+
+.successIcon {
+  @include flex-center;
+  @include square(80px);
+  border-radius: 50%;
+  background: $color-green-50;
+  color: $color-primary;
+  border: 2px solid $color-border-green;
+}
+
+.successTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  margin: 0;
+}
+
+.successText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  max-width: 380px;
+  line-height: $line-height-normal;
+  margin: 0;
+}
+
+/* ═══ Responsive ═══ */
+@include respond-below('md') {
+  .page { padding: $space-5 $space-3 $space-12; }
+
+  .card {
+    padding: $space-5;
+    border-radius: $radius-xl;
+  }
+
+  .stepper { flex-wrap: wrap; gap: $space-1; }
+  .stepItem { padding: $space-1 $space-3; font-size: 11px; }
+  .stepConnector { width: 16px; }
+
+  .fieldRow { grid-template-columns: 1fr; }
+  .conditionGrid { grid-template-columns: 1fr; }
+  .imageGrid { grid-template-columns: repeat(3, 1fr); }
+
+  .headerTitle { font-size: $font-size-2xl; }
+
+  .nav { flex-wrap: wrap; }
+  .navNext { width: 100%; justify-content: center; }
+  .navBack { width: 100%; justify-content: center; order: 1; }
+}

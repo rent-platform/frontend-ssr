@@ -1,0 +1,341 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+.header {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  transition: all 0.3s ease;
+}
+
+.headerHidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-100%);
+}
+
+.topbarInner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: $space-3 $space-8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: $space-12;
+}
+
+.brandBlock {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+  
+  strong {
+    font-size: 22px;
+    font-weight: 800;
+    color: $color-text;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    font-family: $font-family-display;
+  }
+}
+
+.brandSymbol {
+  @include square(34px);
+  @include flex-center;
+  background: $gradient-green;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: $shadow-green-sm;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: $shadow-green-md;
+  }
+}
+
+.brandTextWrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandTagline {
+  font-size: 11px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.mainNav {
+  display: flex;
+  align-items: center;
+  gap: $space-8;
+}
+
+.navLink,
+.navLinkActive {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  padding: $space-2 0;
+  position: relative;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.navLinkActive {
+  color: $color-primary;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: $color-primary;
+    border-radius: $radius-full;
+  }
+}
+
+.topbarActions {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+}
+
+.btnSecondary {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: 8px 18px;
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-full;
+  color: $color-text;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    box-shadow: $shadow-green-sm;
+    transform: translateY(-1px);
+  }
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background: $color-border;
+}
+
+.iconActionRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.iconAction {
+  position: relative;
+  @include square(38px);
+  @include flex-center;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: $color-green-50;
+    color: $color-primary;
+  }
+
+  &Badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    @include square(16px);
+    @include flex-center;
+    background: $color-primary;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 50%;
+    border: 2px solid #fff;
+  }
+}
+
+.accountMeta {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+}
+
+.locationChip {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: 6px 12px;
+  background: $color-surface-muted;
+  border-radius: $radius-full;
+  font-size: 13px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  border: 1px solid transparent;
+  transition: $transition-base;
+
+  &:hover {
+    background: #fff;
+    border-color: $color-border;
+    color: $color-text;
+  }
+}
+
+.profileTrigger {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: 4px;
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-full;
+  cursor: pointer;
+  transition: $transition-smooth;
+  box-shadow: $shadow-sm;
+
+  &:hover {
+    border-color: $color-primary;
+    box-shadow: $shadow-green-sm;
+  }
+}
+
+.avatarWrap {
+  @include square(32px);
+  @include flex-center;
+  background: $gradient-green;
+  color: #fff;
+  border-radius: 50%;
+}
+
+.chevron {
+  color: $color-text-secondary;
+  margin-right: $space-2;
+}
+
+/* ─── Profile Dropdown ─── */
+.profileDropdown {
+  position: relative;
+
+  &:hover .profileMenu,
+  &:focus-within .profileMenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+.profileMenu {
+  position: absolute;
+  top: calc(100% + $space-2);
+  right: 0;
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+  padding: $space-2;
+  z-index: $z-dropdown;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -$space-2;
+    left: 0;
+    right: 0;
+    height: $space-2;
+  }
+}
+
+.profileMenuItem {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  width: 100%;
+  padding: $space-3 $space-3;
+  border: 0;
+  border-radius: $radius-md;
+  background: transparent;
+  color: $color-text;
+  font-size: $font-size-sm;
+  font-family: $font-family-base;
+  text-decoration: none;
+  cursor: pointer;
+  transition: $transition-fast;
+
+  svg { width: 16px; height: 16px; color: $color-text-secondary; flex-shrink: 0; }
+
+  &:hover {
+    background: $color-surface-muted;
+    color: $color-primary;
+
+    svg { color: $color-primary; }
+  }
+}
+
+.profileMenuDivider {
+  height: 1px;
+  background: $color-border;
+  margin: $space-1 $space-2;
+}
+
+.profileMenuLogout {
+  color: $color-error;
+
+  svg { color: $color-error; }
+
+  &:hover {
+    background: rgba($color-error, 0.06);
+    color: $color-error;
+
+    svg { color: $color-error; }
+  }
+}

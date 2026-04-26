@@ -1,0 +1,195 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — Green Minimalism Breakpoints
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+// ─── Desktop → Tablet ────────────────────────────────────────────────────────
+@include respond-below('lg') {
+  .detailPage {
+    grid-template-columns: 1fr;
+    gap: $space-6;
+  }
+
+  .detailSidebar {
+    position: static;
+    order: -1;
+  }
+
+  .detailContentGrid {
+    grid-template-columns: 1fr;
+    gap: $space-6;
+  }
+
+  .headerLeft {
+    gap: $space-6;
+  }
+
+  .mainNav {
+    gap: $space-4;
+  }
+
+  .hero {
+    padding: $space-8 0 $space-4;
+  }
+
+  .heroGlassCard {
+    padding: $space-8 $space-6;
+  }
+}
+
+// ─── Tablet → Mobile ─────────────────────────────────────────────────────────
+@include respond-below('md') {
+  .main {
+    width: min(100%, calc(100% - 32px));
+  }
+
+  .searchBar {
+    max-width: 100%;
+  }
+
+  .grid,
+  .similarGrid,
+  .resultsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(192px, 1fr));
+    gap: $space-5 $space-3;
+  }
+
+  .detailHeader h1 {
+    font-size: $font-size-3xl;
+  }
+
+  .detailTrustRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .detailSpecsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .backBar {
+    flex-wrap: wrap;
+    gap: $space-3;
+  }
+
+  .guaranteeBanner {
+    padding: $space-5;
+    gap: $space-4;
+  }
+
+  .stats {
+    gap: $space-6;
+  }
+
+  .title {
+    font-size: $font-size-2xl;
+  }
+
+  .quickPills {
+    display: none;
+  }
+}
+
+// ─── Mobile Small ────────────────────────────────────────────────────────────
+@include respond-below('sm') {
+  .topbarInner {
+    padding: $space-3 $space-4;
+  }
+
+  .topbarActions {
+    gap: $space-3;
+  }
+
+  .mainNav {
+    display: none;
+  }
+
+  .btnSecondary span {
+    display: none;
+  }
+
+  .accountName,
+  .brandTagline {
+    display: none;
+  }
+
+  .hero {
+    padding: $space-6 0 $space-3;
+    margin-bottom: $space-4;
+  }
+
+  .heroGlassCard {
+    padding: $space-6 $space-4;
+    border-radius: $radius-xl;
+  }
+
+  .searchBar {
+    border-radius: $radius-xl;
+    flex-direction: column;
+    padding: $space-2;
+  }
+
+  .searchInputWrap {
+    border-right: 0;
+    border-bottom: 1px solid $color-border;
+    padding: $space-3;
+    width: 100%;
+  }
+
+  .searchDivider {
+    display: none;
+  }
+
+  .searchButton,
+  .searchButtonActive {
+    width: 100%;
+    margin-left: 0;
+    margin-top: $space-2;
+    justify-content: center;
+  }
+
+  .primarySearchBtn {
+    width: 100%;
+    margin-left: 0;
+    margin-top: $space-1;
+    justify-content: center;
+  }
+
+  .categoryCard,
+  .categoryCardActive {
+    padding: $space-1 $space-3 $space-3;
+    gap: 4px;
+  }
+
+  .categoryEmojiWrap {
+    width: 28px;
+    height: 28px;
+  }
+
+  .categoryIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .card {
+    border-radius: $radius-xl;
+    padding: 8px 8px 12px;
+  }
+
+  .cardImageWrap {
+    border-radius: $radius-lg;
+  }
+
+  .detailGallery {
+    border-radius: $radius-xl;
+  }
+
+  .bookingCard {
+    padding: $space-5;
+  }
+
+  .detailSection {
+    padding: $space-5;
+  }
+}

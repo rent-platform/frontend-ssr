@@ -1,0 +1,180 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   SKELETON CARDS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.skeletonCard {
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  padding: 0 4px;
+}
+
+.skeletonImage {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: $color-surface-muted;
+  border-radius: $radius-xl;
+  margin-bottom: $space-4;
+  @include skeleton-shimmer;
+  border: 1px solid $color-border;
+}
+
+.skeletonBody {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.skeletonLine {
+  height: 12px;
+  background: $color-surface-muted;
+  border-radius: $radius-sm;
+  @include skeleton-shimmer;
+  
+  &Short {
+    width: 30%;
+  }
+  
+  &Medium {
+    width: 60%;
+  }
+  
+  &Title {
+    height: 18px;
+    width: 80%;
+    border-radius: $radius-md;
+    margin-bottom: $space-1;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   EMPTY STATE — Green-accented, friendly
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.emptyState {
+  padding: $space-16 $space-8;
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: $space-4;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+
+  svg {
+    color: $color-primary;
+    opacity: 0.6;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: $font-size-xl;
+    font-weight: 800;
+    color: $color-text;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0;
+    max-width: 360px;
+    color: $color-text-secondary;
+    line-height: 1.6;
+    font-size: $font-size-sm;
+  }
+  
+  button {
+    margin-top: $space-2;
+    padding: $space-3 $space-8;
+    background: $gradient-green;
+    color: #fff;
+    border: 0;
+    border-radius: $radius-full;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: $transition-smooth;
+    box-shadow: $shadow-green-sm;
+    
+    &:hover {
+      box-shadow: $shadow-green-md;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.emptyIcon {
+  font-size: 64px;
+  margin-bottom: $space-2;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   LOADING SHELL — Skeleton page structure
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.loadingShell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: $space-8 $space-6;
+}
+
+.loadingHero {
+  height: 180px;
+  border-radius: $radius-2xl;
+  background: $color-surface-muted;
+  margin-bottom: $space-10;
+  @include skeleton-shimmer;
+  border: 1px solid $color-border;
+}
+
+.loadingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: $space-8 $space-5;
+}
+
+/* ─── Load More / Infinite Scroll ─── */
+.loadMoreState {
+  display: grid;
+  gap: $space-4;
+}
+
+.loadMoreHint {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: $color-text-secondary;
+}
+
+.endCap {
+  text-align: center;
+  padding: $space-8 $space-4;
+  font-size: 13px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  opacity: 0.7;
+}
+
+.infiniteSentinel {
+  height: 20px;
+}
+
+.resetBtn {
+  padding: $space-3 $space-8;
+  background: $gradient-green;
+  color: #fff;
+  border: 0;
+  border-radius: $radius-full;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: $transition-smooth;
+  box-shadow: $shadow-green-sm;
+
+  &:hover {
+    box-shadow: $shadow-green-md;
+    transform: translateY(-1px);
+  }
+}

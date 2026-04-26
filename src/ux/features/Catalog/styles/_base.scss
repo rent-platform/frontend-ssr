@@ -1,0 +1,110 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+.page {
+  min-height: 100vh;
+  background: #fff;
+  color: $color-text;
+  font-family: inherit;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+
+.main {
+  width: min(1280px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 0 0 $space-12;
+}
+
+.catalogLayout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: $space-6;
+  margin-top: $space-6;
+  transition: all 0.3s ease;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+    gap: $space-4;
+  }
+}
+
+.catalogLayoutClosed {
+  display: block;
+  margin-top: $space-6;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $space-4;
+  padding-bottom: $space-3;
+  border-bottom: 1px solid $color-border;
+}
+
+.toolbarInfo {
+  display: none;
+}
+
+.toolbarControls {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+}
+
+.resultsCountMinimal {
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  margin: 0;
+  
+  strong {
+    color: $color-text;
+  }
+}
+
+.selectWrap {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  cursor: pointer;
+  
+  span {
+    white-space: nowrap;
+  }
+}
+
+.select {
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  color: $color-text;
+  cursor: pointer;
+  outline: 0;
+  padding: 4px 0;
+  border-bottom: 1.5px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  
+  &:hover, &:focus {
+    color: $color-primary;
+    border-bottom-color: $color-primary;
+  }
+}
