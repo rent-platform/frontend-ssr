@@ -9,7 +9,7 @@ import type {
 export interface UseCreatePaymentResult {
   createPayment: (payload: CreatePaymentRequest) => Promise<unknown>;
   payment: Payment | null;
-  isLoading: boolean;
+  isCreating: boolean;
   isError: boolean;
   isSuccess: boolean;
   reset: () => void;
@@ -24,7 +24,7 @@ export function useCreatePayment(): UseCreatePaymentResult {
   return {
     createPayment: (payload) => createPaymentMutation(payload),
     payment: data ?? null,
-    isLoading: isLoading,
+    isCreating: isLoading,
     isError,
     isSuccess,
     reset,

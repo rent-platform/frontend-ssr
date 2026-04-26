@@ -1,6 +1,7 @@
 import { baseApi } from "@/business/api/baseApi";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import type {
+  CapturePaymentRequest,
   CreatePaymentRequest,
   Payment,
 } from "@/business/types/dto/payments.dto";
@@ -15,6 +16,12 @@ const createCustomError = (message: string): FetchBaseQueryError => ({
 
 const getPaymentTags = (payment?: Payment) =>
   payment ? [{ type: "Payment" as const, id: payment.paymentId }] : [];
+
+const getPaymentInvalidationTags = (paymentId?: string, dealId?: string) => [
+  { type: "Payment" as const, id: PAYMENTS_LIST_TAG_ID },
+  ...(dealId ? [{ type: "Payment" as const, id: `DEAL-${dealId}` }] : []),
+  ...(paymentId ? [{ type: "Payment" as const, id: paymentId }] : []),
+];
 
 export const endpoints = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -48,7 +55,8 @@ export const endpoints = baseApi.injectEndpoints({
 
           if (
             existingPayment.status === "PENDING" ||
-            existingPayment.status === "SUCCEEDED"
+            existingPayment.status === "AUTHORIZED" ||
+            existingPayment.status === "CAPTURED"
           ) {
             return {
               error: createCustomError("Нельзя оплатить сделку дважды"),
@@ -76,10 +84,33 @@ export const endpoints = baseApi.injectEndpoints({
 
         return { data: createPaymentResult.data as Payment };
       },
-      invalidatesTags: (_result, _error, { dealId }) => [
-        { type: "Payment", id: PAYMENTS_LIST_TAG_ID },
-        { type: "Payment", id: `DEAL-${dealId}` },
-      ],
+      invalidatesTags: (result, _error, { dealId }) =>
+        getPaymentInvalidationTags(result?.paymentId, dealId),
+    }),
+
+    capturePayment: build.mutation<
+      Payment,
+      { paymentId: string; body: CapturePaymentRequest; dealId?: string }
+    >({
+      query: ({ paymentId, body }) => ({
+        url: `payments/${paymentId}/capture`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: (result, _error, { paymentId, dealId }) =>
+        getPaymentInvalidationTags(result?.paymentId ?? paymentId, dealId),
+    }),
+
+    cancelPayment: build.mutation<
+      Payment,
+      { paymentId: string; dealId?: string }
+    >({
+      query: ({ paymentId }) => ({
+        url: `payments/${paymentId}/cancel`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, _error, { paymentId, dealId }) =>
+        getPaymentInvalidationTags(result?.paymentId ?? paymentId, dealId),
     }),
 
     fetchPaymentByDeal: build.query<Payment, string>({
@@ -108,6 +139,8 @@ export const endpoints = baseApi.injectEndpoints({
 
 export const {
   useCreatePaymentMutation,
+  useCapturePaymentMutation,
+  useCancelPaymentMutation,
   useFetchPaymentByDealQuery,
   useFetchPaymentByIdQuery,
 } = endpoints;

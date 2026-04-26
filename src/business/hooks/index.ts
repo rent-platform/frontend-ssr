@@ -24,6 +24,8 @@ export { useGetReviewsByUser } from "./reviews/useGetReviewsByUser";
 export { useGetReviewsByAd } from "./reviews/useGetReviewsByAd";
 export { useGetUserRating } from "./reviews/useGetUserRating";
 export { useCreatePayment } from "./payments/useCreatePayment";
+export { useCapturePayment } from "./payments/useCapturePayment";
+export { useCancelPayment } from "./payments/useCancelPayment";
 export { useGetPaymentByDeal } from "./payments/useGetPaymentByDeal";
 export { useGetPaymentById } from "./payments/useGetPaymentById";
 export { useProfile } from "./profile/useProfile";

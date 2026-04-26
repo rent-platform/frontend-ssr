@@ -30,6 +30,8 @@ export {
 
 export {
   useCreatePaymentMutation,
+  useCapturePaymentMutation,
+  useCancelPaymentMutation,
   useFetchPaymentByDealQuery,
   useFetchPaymentByIdQuery,
 } from "./payments/endpoints";

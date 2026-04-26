@@ -121,7 +121,10 @@ export const dealsApi = baseApi.injectEndpoints({
 
         const payment = paymentResult.data as Payment;
 
-        if (payment.status !== "SUCCEEDED") {
+        if (
+          payment.status !== "AUTHORIZED" &&
+          payment.status !== "CAPTURED"
+        ) {
           return {
             error: createCustomError(
               "Нельзя начать сделку без подтвержденной оплаты",
