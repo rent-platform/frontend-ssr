@@ -140,10 +140,6 @@ export function GuestExperience() {
         >
           <div className={styles.heroGrid}>
             <div className={styles.heroCopy}>
-              <span className={styles.eyebrow}>
-                <Sparkles size={15} />
-                Гостевой просмотр
-              </span>
 
               <h1 className={styles.title}>Найдите вещь в аренду рядом с собой</h1>
               <p className={styles.subtitle}>
@@ -213,17 +209,12 @@ export function GuestExperience() {
         <section id="guest-catalog" className={styles.catalogSection}>
           <div className={styles.sectionHeader}>
             <div>
-              <span className={styles.sectionKicker}>Каталог без входа</span>
               <h2>Популярные предложения</h2>
               <p>
                 Показано {filteredItems.length} из {mockCatalogItems.length} объявлений.
                 Детали сделки и контакты доступны после авторизации.
               </p>
             </div>
-            <button type="button" className={styles.trustBadge} onClick={openAuthModal}>
-              <Lock size={17} />
-              Гостевой режим
-            </button>
           </div>
 
           {filteredItems.length > 0 ? (
