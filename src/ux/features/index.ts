@@ -1,6 +1,7 @@
 export { CatalogExperience } from './Catalog';
 export { ChatPage } from './Chat';
 export { CreateListing } from './CreateListing';
+export { GuestExperience } from './Guest';
 export { NotificationsPage } from './Notifications';
 export { ProfileDashboard } from './Profile';
 export { ReviewsPage } from './Reviews';
