@@ -2,7 +2,7 @@
 
 import { useFetchDealsQuery } from "@/business/api";
 import { mapDealToVM } from "@/business/mappers";
-import type { dealsQueryParams } from "@/business/types/entity/deal.types";
+import type { FetchDealsArgs } from "@/business/types/dto/deals.dto";
 import type { DealCardVM } from "@/business/types/view/deal.view";
 
 export interface UseDealsResult {
@@ -13,7 +13,7 @@ export interface UseDealsResult {
   refetch: () => void;
 }
 
-export function useGetDeals(params: dealsQueryParams = {}): UseDealsResult {
+export function useGetDeals(params: FetchDealsArgs = {}): UseDealsResult {
   const { data, isLoading, isFetching, isError, refetch } =
     useFetchDealsQuery(params);
 

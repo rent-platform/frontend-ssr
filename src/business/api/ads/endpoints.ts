@@ -5,8 +5,8 @@ import {
   AdsCreateAd,
   UpdatePlaylistArgs,
   FetchAdsArgs,
+  PhotosList,
 } from "@/business/types/dto/ads.dto";
-import { PhotosList } from "@/business/types/entity/catalog.types";
 
 const ADS_LIST_TAG_ID = "LIST";
 

@@ -1,8 +1,8 @@
 import type {
-  Deal,
-  DealStatus,
   DealStatusHistory,
-} from "@/business/types/entity/deal.types";
+} from "@/business/types/dto/deals.dto";
+import type { Deal } from "@/business/types/dto/deals.dto";
+import type { DealStatus } from "@/business/types/entity";
 import type {
   DealCardVM,
   DealStatusHistoryItemVM,

@@ -1,7 +1,11 @@
-import type { UserUpdate } from "@/business/types/entity";
+import type { UserUpdateDto } from "@/business/types/dto/auth.dto";
+import type { UserRole } from "@/business/types/entity";
 import { normalizePhone } from "@/business/utils/authShecmas/authSchemas";
 
-export type MockUser = Omit<UserUpdate, "password_hash"> & { password: string };
+export type MockUser = Omit<UserUpdateDto, "password_hash" | "role"> & {
+  password: string;
+  role: UserRole;
+};
 
 type GlobalMockUsers = typeof globalThis & {
   __RENT_PLATFORM_MOCK_USERS__?: MockUser[];

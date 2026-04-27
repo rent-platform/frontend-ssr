@@ -2,12 +2,13 @@ import { baseApi } from "@/business/api/baseApi";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import type {
   CreateDealRequestDto,
+  Deal,
+  DealStatusHistory,
   DealsListResponseDto,
   FetchDealsArgs,
   RejectDealRequestDto,
 } from "@/business/types/dto/deals.dto";
 import type { Payment } from "@/business/types/dto/payments.dto";
-import type { Deal, DealStatusHistory } from "@/business/types/entity/deal.types";
 
 const DEALS_LIST_TAG_ID = "LIST";
 const INCOMING_DEALS_TAG_ID = "INCOMING";

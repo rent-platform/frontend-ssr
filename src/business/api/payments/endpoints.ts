@@ -5,7 +5,7 @@ import type {
   CreatePaymentRequest,
   Payment,
 } from "@/business/types/dto/payments.dto";
-import type { Deal } from "@/business/types/entity/deal.types";
+import type { Deal as DealDto } from "@/business/types/dto/deals.dto";
 
 const PAYMENTS_LIST_TAG_ID = "LIST";
 
@@ -35,7 +35,7 @@ export const endpoints = baseApi.injectEndpoints({
           return { error: dealResult.error };
         }
 
-        const deal = dealResult.data as Deal;
+        const deal = dealResult.data as DealDto;
 
         if (deal.status !== "confirmed") {
           return {

@@ -1,4 +1,4 @@
-import type { DealStatus } from '@/business/types/entity/deal.types';
+import type { DealStatus } from '@/business/types/entity';
 
 /* ─── Notification categories ─── */
 

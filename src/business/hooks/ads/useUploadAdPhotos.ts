@@ -1,7 +1,7 @@
 "use client";
 
 import { useUploadAdPhotosMutation } from "@/business/api";
-import type { Photo } from "@/business/types/entity/catalog.types";
+import type { Photo } from "@/business/types/dto/ads.dto";
 
 interface UseUploadAdPhotosResult {
   uploadPhotos: (adId: string, files: File[]) => void;

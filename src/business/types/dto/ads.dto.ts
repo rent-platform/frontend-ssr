@@ -1,6 +1,18 @@
 import type { ItemStatus } from "@/business/types/entity/catalog.types";
 import type { DeepPartial } from "@/business/utils";
 
+export type Photo = {
+  id: string;
+  item_id: string;
+  photo_url: string;
+  sort_order: number;
+  created_at: string;
+};
+
+export type PhotosList = {
+  photos: Photo[];
+};
+
 export type AdsItemResponseDto = {
   id: string;
   owner_id: string;

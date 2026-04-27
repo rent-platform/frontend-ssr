@@ -1,5 +1,3 @@
-import type { UserUpdate } from "@/business/types/entity";
-
 interface FetchApiParams {
   endpoint: string;
   options?: RequestInit;
