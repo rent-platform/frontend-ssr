@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -8,6 +9,7 @@ import {
   CheckCircle2,
   ChevronDown,
   Clock3,
+  LayoutGrid,
   Leaf,
   Lock,
   LogIn,
@@ -27,6 +29,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { CatalogCard } from '../Catalog/components/CatalogCard';
+import { CatalogSearchBar } from '../Catalog/components/CatalogSearchBar';
 import { ProductDetail } from '../Catalog/components/ProductDetail';
 import { CategoryRail } from '../Catalog/components/CategoryRail';
 import { mockCatalogItems } from '../Catalog/mockCatalogItems';
@@ -174,16 +177,19 @@ export function GuestExperience() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
 
-  const filteredItems = useMemo(
-    () => applyCatalogFilters(mockCatalogItems, filters).slice(0, GUEST_ITEM_LIMIT),
+  const allFiltered = useMemo(
+    () => applyCatalogFilters(mockCatalogItems, filters),
     [filters],
   );
 
-  const totalCount = useMemo(
-    () => applyCatalogFilters(mockCatalogItems, filters).length,
-    [filters],
+  const totalCount = allFiltered.length;
+
+  const filteredItems = useMemo(
+    () => allFiltered.slice(0, GUEST_ITEM_LIMIT),
+    [allFiltered],
   );
 
   const similarItems = useMemo(
@@ -241,36 +247,47 @@ export function GuestExperience() {
       {/* ═══════ Header ═══════ */}
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <a href="/dev-ui/guest" className={styles.brandBlock}>
-            <motion.div
-              className={styles.brandSymbol}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span>А</span>
-            </motion.div>
-            <div className={styles.brandTextWrap}>
-              <strong>Арендай</strong>
-              <span className={styles.brandTagline}>Шеринг вещей</span>
-            </div>
-          </a>
+          <div className={styles.headerLeft}>
+            <Link href="/dev-ui/guest" className={styles.brandBlock}>
+              <motion.div
+                className={styles.brandSymbol}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span>А</span>
+              </motion.div>
+              <div className={styles.brandTextWrap}>
+                <strong>Арендай</strong>
+                <span className={styles.brandTagline}>Шеринг вещей</span>
+              </div>
+            </Link>
 
-          <nav className={styles.headerNav} aria-label="Гостевая навигация">
-            <a href="#how-it-works">Как это работает</a>
-            <a href="#guest-catalog">Каталог</a>
-            <a href="#testimonials">Отзывы</a>
-            <a href="#faq">FAQ</a>
-          </nav>
+            <nav className={styles.mainNav} aria-label="Гостевая навигация">
+              <Link href="#guest-catalog" className={styles.navLinkActive}>
+                <LayoutGrid size={18} />
+                <span>Каталог</span>
+              </Link>
+              <Link href="#how-it-works" className={styles.navLink}>
+                Как это работает
+              </Link>
+              <Link href="#testimonials" className={styles.navLink}>
+                Отзывы
+              </Link>
+              <Link href="#faq" className={styles.navLink}>
+                FAQ
+              </Link>
+            </nav>
+          </div>
 
           <div className={styles.authButtons}>
-            <a href="/login" className={styles.loginBtn}>
+            <Link href="/login" className={styles.loginBtn}>
               <LogIn size={18} />
               Войти
-            </a>
-            <a href="/register" className={styles.registerBtn}>
+            </Link>
+            <Link href="/register" className={styles.registerBtn}>
               <UserPlus size={18} />
               Регистрация
-            </a>
+            </Link>
           </div>
         </div>
       </header>
@@ -312,35 +329,12 @@ export function GuestExperience() {
                     тысячи вещей от проверенных владельцев. Выгоднее покупки, безопаснее досок объявлений.
                   </p>
 
-                  <div className={styles.searchPanel}>
-                    <Search size={18} />
-                    <input
-                      value={filters.search}
-                      onChange={(event) => updateFilters({ search: event.target.value })}
-                      placeholder="Что хотите арендовать?"
-                      aria-label="Поиск по гостевому каталогу"
-                    />
-                    {filters.search && (
-                      <button
-                        type="button"
-                        className={styles.searchClear}
-                        onClick={() => updateFilters({ search: '' })}
-                        aria-label="Очистить поиск"
-                      >
-                        <X size={16} />
-                      </button>
-                    )}
-                    <button type="button" onClick={() => document.getElementById('guest-catalog')?.scrollIntoView({ behavior: 'smooth' })}>
-                      Найти
-                    </button>
-                  </div>
-
-                  <div className={styles.popularQueries}>
-                    <span className={styles.popularLabel}>Популярное:</span>
+                  <div className={styles.quickPills}>
                     {POPULAR_QUERIES.map((query) => (
                       <button
                         key={query}
                         type="button"
+                        className={styles.pill}
                         onClick={() => {
                           updateFilters({ search: query });
                           document.getElementById('guest-catalog')?.scrollIntoView({ behavior: 'smooth' });
@@ -352,13 +346,13 @@ export function GuestExperience() {
                   </div>
 
                   <div className={styles.ctaRow}>
-                    <a href="/register" className={styles.primaryCta}>
+                    <Link href="/register" className={styles.primaryCta}>
                       Начать бесплатно
                       <ArrowRight size={18} />
-                    </a>
-                    <a href="#guest-catalog" className={styles.secondaryCta}>
+                    </Link>
+                    <Link href="#guest-catalog" className={styles.secondaryCta}>
                       Смотреть каталог
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -409,6 +403,22 @@ export function GuestExperience() {
               </div>
             </section>
 
+            {/* ═══════ Search Bar (shared with auth) ═══════ */}
+            <section id="guest-catalog" className={styles.searchBarSection}>
+              <CatalogSearchBar
+                filters={filters}
+                resultsCount={totalCount}
+                isFiltersOpen={isFiltersOpen}
+                onToggleFilters={() => setIsFiltersOpen((prev) => !prev)}
+                onCloseFilters={() => setIsFiltersOpen(false)}
+                onChange={updateFilters}
+                onResetFilters={() => {
+                  setFilters(INITIAL_FILTERS);
+                  setIsFiltersOpen(false);
+                }}
+              />
+            </section>
+
             {/* ═══════ Categories ═══════ */}
             <section className={styles.categorySection}>
               <CategoryRail
@@ -419,18 +429,14 @@ export function GuestExperience() {
             </section>
 
             {/* ═══════ Catalog ═══════ */}
-            <section id="guest-catalog" className={styles.catalogSection}>
-              <div className={styles.sectionHeader}>
-                <div>
-                  <h2>Популярные предложения</h2>
-                  <p>
-                    {filteredItems.length < totalCount
-                      ? `Показано ${filteredItems.length} из ${totalCount} объявлений.`
-                      : `${filteredItems.length} ${filteredItems.length === 1 ? 'объявление' : 'объявлений'}.`
-                    }
-                    {' '}Детали и контакты доступны после входа.
-                  </p>
-                </div>
+            <section className={styles.catalogSection}>
+              <div className={styles.toolbar}>
+                <p className={styles.resultsCount}>
+                  {filteredItems.length < totalCount
+                    ? <>Показано <strong>{filteredItems.length}</strong> из <strong>{totalCount}</strong></>
+                    : <><strong>{filteredItems.length}</strong> {filteredItems.length === 1 ? 'объявление' : 'объявлений'}</>
+                  }
+                </p>
               </div>
 
               {filteredItems.length > 0 ? (
@@ -496,13 +502,13 @@ export function GuestExperience() {
                   чтобы бронировать, общаться с владельцами, сохранять избранное и сдавать свои вещи.
                 </p>
                 <div className={styles.promptButtons}>
-                  <a href="/register" className={styles.promptPrimary}>
+                  <Link href="/register" className={styles.promptPrimary}>
                     <UserPlus size={18} />
                     Зарегистрироваться бесплатно
-                  </a>
-                  <a href="/login" className={styles.promptSecondary}>
+                  </Link>
+                  <Link href="/login" className={styles.promptSecondary}>
                     Уже есть аккаунт
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -615,13 +621,13 @@ export function GuestExperience() {
                 <h2>Готовы начать?</h2>
                 <p>Присоединяйтесь к тысячам людей, которые уже экономят с шерингом.</p>
                 <div className={styles.finalCtaButtons}>
-                  <a href="/register" className={styles.finalCtaPrimary}>
+                  <Link href="/register" className={styles.finalCtaPrimary}>
                     <UserPlus size={18} />
                     Создать аккаунт бесплатно
-                  </a>
-                  <a href="/login" className={styles.finalCtaSecondary}>
+                  </Link>
+                  <Link href="/login" className={styles.finalCtaSecondary}>
                     Войти
-                  </a>
+                  </Link>
                 </div>
               </motion.div>
             </section>
@@ -642,10 +648,10 @@ export function GuestExperience() {
             </div>
           </div>
           <div className={styles.footerLinks}>
-            <a href="#how-it-works">Как это работает</a>
-            <a href="#guest-catalog">Каталог</a>
-            <a href="#testimonials">Отзывы</a>
-            <a href="#faq">FAQ</a>
+            <Link href="#how-it-works">Как это работает</Link>
+            <Link href="#guest-catalog">Каталог</Link>
+            <Link href="#testimonials">Отзывы</Link>
+            <Link href="#faq">FAQ</Link>
           </div>
           <div className={styles.footerCopy}>
             <span>&copy; {new Date().getFullYear()} Арендай. Все права защищены.</span>
@@ -655,9 +661,9 @@ export function GuestExperience() {
 
       {/* ═══════ Mobile Floating CTA ═══════ */}
       <div className={`${styles.floatingBar} ${selectedItem ? styles.floatingBarHidden : ''}`}>
-        <a href="/register" className={styles.floatingBtn}>
+        <Link href="/register" className={styles.floatingBtn}>
           Создать аккаунт
-        </a>
+        </Link>
       </div>
 
       {/* ═══════ Scroll-to-top ═══════ */}
@@ -727,14 +733,14 @@ export function GuestExperience() {
               </div>
 
               <div className={styles.modalButtons}>
-                <a href="/register" className={styles.modalPrimary}>
+                <Link href="/register" className={styles.modalPrimary}>
                   <UserPlus size={18} />
                   Создать аккаунт
-                </a>
-                <a href="/login" className={styles.modalSecondary}>
+                </Link>
+                <Link href="/login" className={styles.modalSecondary}>
                   <LogIn size={18} />
                   Войти
-                </a>
+                </Link>
               </div>
 
               <p className={styles.modalFootnote}>
