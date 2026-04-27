@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   ChevronDown,
   Clock3,
-  Heart,
   Leaf,
   Lock,
   LogIn,
@@ -219,6 +218,20 @@ export function GuestExperience() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!showAuthModal) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowAuthModal(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [showAuthModal]);
+
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
@@ -234,7 +247,7 @@ export function GuestExperience() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span style={{ fontSize: '20px', fontWeight: '800', lineHeight: 1 }}>А</span>
+              <span>А</span>
             </motion.div>
             <div className={styles.brandTextWrap}>
               <strong>Арендай</strong>
@@ -307,6 +320,16 @@ export function GuestExperience() {
                       placeholder="Что хотите арендовать?"
                       aria-label="Поиск по гостевому каталогу"
                     />
+                    {filters.search && (
+                      <button
+                        type="button"
+                        className={styles.searchClear}
+                        onClick={() => updateFilters({ search: '' })}
+                        aria-label="Очистить поиск"
+                      >
+                        <X size={16} />
+                      </button>
+                    )}
                     <button type="button" onClick={() => document.getElementById('guest-catalog')?.scrollIntoView({ behavior: 'smooth' })}>
                       Найти
                     </button>
@@ -411,7 +434,7 @@ export function GuestExperience() {
               </div>
 
               {filteredItems.length > 0 ? (
-                <>
+                <div className={styles.catalogGridWrap}>
                   <div className={styles.resultsGrid}>
                     {filteredItems.map((item, index) => (
                       <div key={item.id} className={styles.cardWrapper}>
@@ -430,23 +453,35 @@ export function GuestExperience() {
                   </div>
 
                   {totalCount > GUEST_ITEM_LIMIT && (
-                    <div className={styles.showMoreWrap}>
-                      <button type="button" className={styles.showMoreBtn} onClick={openAuthModal}>
-                        <span>Показать все {totalCount} предложений</span>
-                        <ArrowRight size={16} />
-                      </button>
-                      <p className={styles.showMoreHint}>
-                        <Lock size={13} />
-                        Полный каталог доступен зарегистрированным пользователям
-                      </p>
-                    </div>
+                    <>
+                      <div className={styles.catalogFade} aria-hidden="true" />
+                      <div className={styles.showMoreWrap}>
+                        <button type="button" className={styles.showMoreBtn} onClick={openAuthModal}>
+                          <span>Показать все {totalCount} предложений</span>
+                          <ArrowRight size={16} />
+                        </button>
+                        <p className={styles.showMoreHint}>
+                          <Lock size={13} />
+                          Полный каталог доступен зарегистрированным пользователям
+                        </p>
+                      </div>
+                    </>
                   )}
-                </>
+                </div>
               ) : (
                 <div className={styles.emptyState}>
                   <PackageCheck size={32} />
                   <h3>Ничего не найдено</h3>
                   <p>Попробуйте изменить запрос или выбрать другую категорию.</p>
+                  <button
+                    type="button"
+                    className={styles.emptyStateBtn}
+                    onClick={() => {
+                      updateFilters({ search: '', category: '' });
+                    }}
+                  >
+                    Сбросить фильтры
+                  </button>
                 </div>
               )}
             </section>
