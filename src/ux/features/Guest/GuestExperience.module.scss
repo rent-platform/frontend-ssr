@@ -173,7 +173,7 @@
 .hero {
   display: block;
   padding: 0;
-  margin: 0 0 $space-8;
+  margin: 0 0 $space-10;
   border-radius: $radius-3xl;
   background:
     linear-gradient(135deg, rgba(240, 253, 244, 0.96) 0%, rgba(255, 255, 255, 0.98) 48%, rgba(224, 242, 254, 0.62) 100%);
@@ -306,6 +306,8 @@
 .popularQueries {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   gap: $space-2;
   margin-top: $space-3;
 
@@ -332,6 +334,7 @@
 .ctaRow {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
   gap: $space-3;
   margin-top: $space-7;
@@ -531,6 +534,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   border-top: 1px solid rgba(226, 232, 240, 0.85);
+  border-radius: 0 0 $radius-3xl $radius-3xl;
   background: rgba(255, 255, 255, 0.68);
 }
 
@@ -569,35 +573,41 @@
 }
 
 .categorySection {
-  margin-bottom: $space-8;
+  margin: 0 0 $space-6;
 }
 
 .catalogSection {
   margin-top: 0;
+
+  .sectionHeader {
+    align-items: flex-start;
+    text-align: left;
+  }
 }
 
 .sectionHeader {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: $space-6;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: $space-2;
   margin-bottom: $space-6;
 
   h2 {
-    margin: 0 0 $space-2;
+    margin: $space-1 0 $space-2;
     color: $color-text;
     font-family: $font-family-display;
-    font-size: 22px;
-    font-weight: $font-weight-bold;
-    letter-spacing: 0;
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    font-weight: $font-weight-800;
+    letter-spacing: -0.02em;
   }
 
   p {
-    max-width: 620px;
+    max-width: 540px;
     margin: 0;
     color: $color-text-secondary;
     font-size: $font-size-sm;
-    line-height: 1.6;
+    line-height: 1.65;
   }
 }
 
@@ -634,7 +644,7 @@
 .resultsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: $space-5 $space-4;
+  gap: $space-6 $space-5;
   margin-bottom: 0;
 }
 
@@ -708,7 +718,7 @@
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   gap: $space-10;
   align-items: center;
-  margin-top: $space-12;
+  margin: $space-14 0;
   padding: $space-10;
   border-radius: $radius-3xl;
   background: $gradient-green;
@@ -998,7 +1008,7 @@
 
 // ═══════ How It Works ═══════
 .howSection {
-  margin: $space-12 0;
+  margin: $space-14 0;
   text-align: center;
 }
 
@@ -1112,7 +1122,7 @@
 
 // ═══════ Testimonials ═══════
 .testimonialsSection {
-  margin: $space-12 0;
+  margin: $space-14 0;
   text-align: center;
 }
 
@@ -1191,7 +1201,7 @@
 
 // ═══════ Eco Section ═══════
 .ecoSection {
-  margin: $space-12 0;
+  margin: $space-14 0;
   padding: $space-10;
   border-radius: $radius-3xl;
   background:
@@ -1262,7 +1272,7 @@
 
 // ═══════ FAQ Section ═══════
 .faqSection {
-  margin: $space-12 0;
+  margin: $space-14 0;
   text-align: center;
 }
 
@@ -1331,7 +1341,7 @@
 
 // ═══════ Final CTA ═══════
 .finalCta {
-  margin: $space-12 0 $space-8;
+  margin: $space-14 0 $space-10;
   padding: $space-12 $space-8;
   border-radius: $radius-3xl;
   background: $gradient-green;
@@ -1542,19 +1552,32 @@
     max-width: 460px;
   }
 
+  .resultsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-5 $space-4;
+  }
+
+  .testimonialsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .accessPanel {
     grid-template-columns: 1fr;
   }
 
   .ecoContent {
     grid-template-columns: 1fr;
+    gap: $space-8;
   }
 }
 
 @media (max-width: $bp-md) {
-  .headerContent,
-  .main {
+  .headerContent {
     width: min(100% - 28px, 1180px);
+  }
+
+  .main {
+    width: min(100% - 28px, 1280px);
   }
 
   .headerNav {
@@ -1595,8 +1618,8 @@
   }
 
   .resultsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(192px, 1fr));
-    gap: $space-5 $space-3;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $space-5 $space-4;
   }
 
   .howGrid {
@@ -1611,6 +1634,7 @@
 
   .statsStrip {
     grid-template-columns: repeat(2, 1fr);
+    border-radius: 0 0 $radius-2xl $radius-2xl;
   }
 
   .statItem {
@@ -1626,8 +1650,21 @@
     }
   }
 
-  .sectionHeader {
-    flex-direction: column;
+  .howSection,
+  .testimonialsSection,
+  .ecoSection,
+  .faqSection {
+    margin: $space-12 0;
+  }
+
+  .accessPanel {
+    margin: $space-12 0;
+    padding: $space-8;
+  }
+
+  .finalCta {
+    margin: $space-12 0 $space-8;
+    padding: $space-10 $space-6;
   }
 
   .ecoStats {
@@ -1727,7 +1764,15 @@
     gap: $space-4;
   }
 
+  .howSection,
+  .testimonialsSection,
+  .ecoSection,
+  .faqSection {
+    margin: $space-10 0;
+  }
+
   .accessPanel {
+    margin: $space-10 0;
     padding: $space-7 $space-4;
     border-radius: $radius-2xl;
   }
@@ -1743,6 +1788,7 @@
   }
 
   .finalCta {
+    margin: $space-10 0 $space-8;
     padding: $space-8 $space-4;
     border-radius: $radius-2xl;
   }
