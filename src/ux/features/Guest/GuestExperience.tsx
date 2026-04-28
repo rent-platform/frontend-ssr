@@ -73,7 +73,7 @@ const GUEST_LIMITS = [
   'Избранное, чат и история сохраняются в кабинете',
 ];
 
-const POPULAR_QUERIES = ['Фотоаппарат', 'PlayStation', 'Дрель', 'Проектор', 'Велосипед'];
+const POPULAR_QUERIES = ['Дрель', 'Палатка', 'Камера', 'Велосипед', 'Проектор'];
 
 const ECO_STATS = [
   { icon: Recycle, value: '2 400+', label: 'вещей в повторном использовании' },
@@ -401,8 +401,8 @@ export function GuestExperience() {
               ) : (
                 <div className={styles.emptyState}>
                   <PackageCheck size={32} />
-                  <h3>Ничего не найдено</h3>
-                  <p>Попробуйте изменить запрос или выбрать другую категорию.</p>
+                  <h3>Ничего не нашли</h3>
+                  <p>Попробуйте изменить параметры поиска или фильтры</p>
                   <button
                     type="button"
                     className={styles.emptyStateBtn}
@@ -410,7 +410,7 @@ export function GuestExperience() {
                       updateFilters({ search: '', category: 'Все категории' });
                     }}
                   >
-                    Сбросить фильтры
+                    Сбросить всё
                   </button>
                 </div>
               )}
