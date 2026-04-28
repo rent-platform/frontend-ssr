@@ -1,0 +1,726 @@
+@use '../../styles/vars' as *;
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, $color-surface-muted 0%, $color-bg 320px);
+  font-family: $font-family-base;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid $color-border;
+}
+
+.headerInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: $space-3 $space-6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  text-decoration: none;
+  color: $color-text;
+
+  strong {
+    font-family: $font-family-display;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+}
+
+.brandLogo {
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-md;
+  background: $gradient-green;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: $font-family-display;
+  font-size: 15px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: $color-text-secondary;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+// ═══════ Hero ═══════
+.hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: $space-12 $space-6 $space-8;
+}
+
+.heroEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-xs;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $color-primary;
+  margin-bottom: $space-3;
+}
+
+.heroTitle {
+  font-family: $font-family-display;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: $color-text;
+  margin: 0 0 $space-4;
+  line-height: 1.15;
+}
+
+.heroSubtitle {
+  font-size: $font-size-lg;
+  color: $color-text-secondary;
+  line-height: 1.65;
+  max-width: 640px;
+  margin: 0;
+}
+
+// ═══════ Content ═══════
+.content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 $space-6 $space-16;
+}
+
+// ═══════ Section ═══════
+.section {
+  margin-bottom: $space-12;
+}
+
+.sectionTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-2xl;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: $color-text;
+  margin: 0 0 $space-6;
+}
+
+.sectionText {
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+  line-height: 1.75;
+  margin: 0 0 $space-4;
+  max-width: 760px;
+}
+
+// ═══════ Cards Grid ═══════
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: $space-6;
+}
+
+.card {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  padding: $space-7;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.3);
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+}
+
+.cardIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-lg;
+  background: $color-green-50;
+  display: grid;
+  place-items: center;
+  color: $color-primary;
+  margin-bottom: $space-4;
+}
+
+.cardTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0 0 $space-2;
+}
+
+.cardText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.65;
+  margin: 0;
+}
+
+// ═══════ Steps (How it works) ═══════
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: $space-8;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 48px;
+    bottom: 48px;
+    width: 2px;
+    background: linear-gradient(180deg, $color-primary, rgba($color-primary, 0.1));
+    border-radius: 1px;
+  }
+}
+
+.step {
+  display: flex;
+  gap: $space-5;
+  align-items: flex-start;
+}
+
+.stepNumber {
+  width: 48px;
+  height: 48px;
+  border-radius: $radius-full;
+  background: $gradient-green;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: $font-family-display;
+  font-size: 18px;
+  font-weight: 800;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.stepContent {
+  padding-top: $space-2;
+
+  h3 {
+    font-family: $font-family-display;
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-text;
+    margin: 0 0 $space-2;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: 1.65;
+    margin: 0;
+    max-width: 520px;
+  }
+}
+
+// ═══════ Pricing Table ═══════
+.pricingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $space-6;
+}
+
+.pricingCard {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  padding: $space-8;
+  text-align: center;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.3);
+    box-shadow: $shadow-md;
+  }
+}
+
+.pricingCardFeatured {
+  border-color: $color-primary;
+  box-shadow: 0 0 0 1px $color-primary, $shadow-lg;
+  position: relative;
+}
+
+.pricingBadge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $gradient-green;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: $space-1 $space-4;
+  border-radius: $radius-full;
+}
+
+.pricingName {
+  font-family: $font-family-display;
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0 0 $space-2;
+}
+
+.pricingPrice {
+  font-family: $font-family-display;
+  font-size: 36px;
+  font-weight: 800;
+  color: $color-text;
+  letter-spacing: -0.03em;
+
+  span {
+    font-size: $font-size-sm;
+    font-weight: 500;
+    color: $color-text-secondary;
+  }
+}
+
+.pricingDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: $space-2 0 $space-6;
+}
+
+.pricingFeatures {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 $space-6;
+  text-align: left;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 0;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    border-bottom: 1px solid rgba($color-border, 0.5);
+
+    svg {
+      color: $color-primary;
+      flex-shrink: 0;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.pricingBtn {
+  display: block;
+  width: 100%;
+  padding: $space-3 $space-5;
+  border: none;
+  border-radius: $radius-lg;
+  background: $gradient-green;
+  color: #fff;
+  font-size: $font-size-sm;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $shadow-green-sm;
+  }
+}
+
+.pricingBtnOutline {
+  background: transparent;
+  border: 1.5px solid $color-border;
+  color: $color-text;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    box-shadow: none;
+  }
+}
+
+// ═══════ FAQ / Accordion ═══════
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  max-width: 760px;
+}
+
+.faqItem {
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: $color-surface;
+}
+
+.faqQuestion {
+  width: 100%;
+  padding: $space-4 $space-5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $color-text;
+  text-align: left;
+  transition: color 0.2s ease;
+
+  svg {
+    flex-shrink: 0;
+    color: $color-text-secondary;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.faqQuestionOpen svg {
+  transform: rotate(180deg);
+}
+
+.faqAnswer {
+  padding: 0 $space-5 $space-4;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.7;
+}
+
+// ═══════ Contact Grid ═══════
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: $space-5;
+}
+
+.contactCard {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-5;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  background: $color-surface;
+  text-decoration: none;
+  color: $color-text;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.3);
+    box-shadow: $shadow-sm;
+  }
+
+  strong {
+    display: block;
+    font-size: $font-size-sm;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  span {
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+  }
+}
+
+.contactIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-lg;
+  background: $color-green-50;
+  display: grid;
+  place-items: center;
+  color: $color-primary;
+  flex-shrink: 0;
+}
+
+// ═══════ Team Grid ═══════
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $space-6;
+}
+
+.teamMember {
+  text-align: center;
+}
+
+.teamAvatar {
+  width: 80px;
+  height: 80px;
+  border-radius: $radius-full;
+  background: $color-green-50;
+  display: grid;
+  place-items: center;
+  color: $color-primary;
+  font-family: $font-family-display;
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 auto $space-3;
+}
+
+.teamName {
+  font-family: $font-family-display;
+  font-size: $font-size-base;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0 0 2px;
+}
+
+.teamRole {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+// ═══════ Blog Grid ═══════
+.blogGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: $space-6;
+}
+
+.blogCard {
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  background: $color-surface;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.3);
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+}
+
+.blogThumb {
+  height: 180px;
+  background: linear-gradient(135deg, $color-green-50, $color-surface-muted);
+  display: grid;
+  place-items: center;
+  color: $color-primary;
+  opacity: 0.6;
+}
+
+.blogBody {
+  padding: $space-5;
+}
+
+.blogDate {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin-bottom: $space-2;
+}
+
+.blogTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0 0 $space-2;
+}
+
+.blogExcerpt {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.6;
+  margin: 0;
+}
+
+// ═══════ Stats Row ═══════
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: $space-5;
+  margin-bottom: $space-10;
+}
+
+.statCard {
+  text-align: center;
+  padding: $space-6;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+}
+
+.statValue {
+  font-family: $font-family-display;
+  font-size: 32px;
+  font-weight: 800;
+  color: $color-primary;
+  letter-spacing: -0.03em;
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-top: $space-1;
+}
+
+// ═══════ Legal Prose ═══════
+.prose {
+  max-width: 760px;
+
+  h2 {
+    font-family: $font-family-display;
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-text;
+    margin: $space-10 0 $space-4;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h3 {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $color-text;
+    margin: $space-8 0 $space-3;
+  }
+
+  p {
+    font-size: $font-size-base;
+    color: $color-text-secondary;
+    line-height: 1.75;
+    margin: 0 0 $space-4;
+  }
+
+  ul {
+    padding-left: $space-5;
+    margin: 0 0 $space-4;
+
+    li {
+      font-size: $font-size-base;
+      color: $color-text-secondary;
+      line-height: 1.75;
+      margin-bottom: $space-2;
+    }
+  }
+}
+
+// ═══════ Vacancy ═══════
+.vacancyList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.vacancy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-5 $space-6;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  background: $color-surface;
+  transition: all 0.2s ease;
+  gap: $space-4;
+  flex-wrap: wrap;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.3);
+    box-shadow: $shadow-sm;
+  }
+}
+
+.vacancyInfo {
+  h3 {
+    font-family: $font-family-display;
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $color-text;
+    margin: 0 0 $space-1;
+  }
+
+  span {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+}
+
+.vacancyBtn {
+  padding: $space-2 $space-5;
+  border: 1.5px solid $color-primary;
+  border-radius: $radius-lg;
+  background: transparent;
+  color: $color-primary;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: $color-green-50;
+  }
+}
+
+// ═══════ Responsive ═══════
+@media (max-width: $bp-md) {
+  .hero {
+    padding: $space-8 $space-5 $space-6;
+  }
+
+  .content {
+    padding: 0 $space-5 $space-12;
+  }
+
+  .cardsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pricingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .steps::before {
+    display: none;
+  }
+
+  .blogGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
