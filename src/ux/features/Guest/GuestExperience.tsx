@@ -26,6 +26,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
+import { BrandIcon } from '../Catalog/components/CatalogHeader';
 import { CatalogCard } from '../Catalog/components/CatalogCard';
 import { CatalogSearchBar } from '../Catalog/components/CatalogSearchBar';
 import { CatalogToolbar } from '../Catalog/components/CatalogToolbar';
@@ -215,13 +216,7 @@ export function GuestExperience() {
         <div className={styles.headerContent}>
           <div className={styles.headerLeft}>
             <Link href="/dev-ui/guest" className={styles.brandBlock}>
-              <motion.div
-                className={styles.brandSymbol}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span>А</span>
-              </motion.div>
+              <BrandIcon />
               <div className={styles.brandTextWrap}>
                 <strong>Арендай</strong>
                 <span className={styles.brandTagline}>Шеринг вещей</span>
