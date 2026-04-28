@@ -1524,80 +1524,6 @@
   }
 }
 
-// ═══════ Footer ═══════
-.footer {
-  border-top: 1px solid $color-border;
-  background: $color-surface-muted;
-}
-
-.footerContent {
-  width: min(1180px, calc(100% - 40px));
-  margin: 0 auto;
-  padding: $space-10 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: $space-6;
-  flex-wrap: wrap;
-}
-
-.footerBrand {
-  display: flex;
-  align-items: center;
-  gap: $space-3;
-
-  strong {
-    display: block;
-    color: $color-text;
-    font-family: $font-family-display;
-    font-size: 18px;
-    font-weight: $font-weight-800;
-    letter-spacing: -0.03em;
-  }
-
-  span {
-    color: $color-text-secondary;
-    font-size: $font-size-xs;
-  }
-}
-
-.footerLogo {
-  width: 34px;
-  height: 34px;
-  border-radius: $radius-md;
-  display: grid;
-  place-items: center;
-  background: $gradient-green;
-  color: #fff;
-  font-family: $font-family-display;
-  font-size: 18px;
-  font-weight: $font-weight-800;
-  flex-shrink: 0;
-}
-
-.footerLinks {
-  display: flex;
-  align-items: center;
-  gap: $space-5;
-
-  a {
-    color: $color-text-secondary;
-    font-size: $font-size-sm;
-    font-weight: $font-weight-600;
-    text-decoration: none;
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: $color-primary;
-    }
-  }
-}
-
-.footerCopy {
-  color: $color-text-secondary;
-  font-size: $font-size-xs;
-}
-
 // ═══════ Floating Bar (mobile) ═══════
 .floatingBar {
   display: none;
@@ -1748,16 +1674,6 @@
 
   .ecoStats {
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  .footerContent {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .footerLinks {
-    flex-wrap: wrap;
-    justify-content: center;
   }
 
   .floatingBar {

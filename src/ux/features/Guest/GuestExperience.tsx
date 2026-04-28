@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { CatalogCard } from '../Catalog/components/CatalogCard';
 import { CatalogSearchBar } from '../Catalog/components/CatalogSearchBar';
+import { CatalogFooter } from '../Catalog/components/CatalogFooter';
 import { ProductDetail } from '../Catalog/components/ProductDetail';
 import { CategoryRail } from '../Catalog/components/CategoryRail';
 import { mockCatalogItems } from '../Catalog/mockCatalogItems';
@@ -525,27 +526,7 @@ export function GuestExperience() {
       </main>
 
       {/* ═══════ Footer ═══════ */}
-      <footer className={styles.footer}>
-        <div className={styles.footerContent}>
-          <div className={styles.footerBrand}>
-            <div className={styles.footerLogo}>
-              <span>А</span>
-            </div>
-            <div>
-              <strong>Арендай</strong>
-              <span>Шеринг вещей рядом с вами</span>
-            </div>
-          </div>
-          <div className={styles.footerLinks}>
-            <Link href="#how-it-works">Как это работает</Link>
-            <Link href="#guest-catalog">Каталог</Link>
-            <Link href="#faq">FAQ</Link>
-          </div>
-          <div className={styles.footerCopy}>
-            <span>&copy; {new Date().getFullYear()} Арендай. Все права защищены.</span>
-          </div>
-        </div>
-      </footer>
+      <CatalogFooter />
 
       {/* ═══════ Mobile Floating CTA ═══════ */}
       <div className={`${styles.floatingBar} ${selectedItem ? styles.floatingBarHidden : ''}`}>

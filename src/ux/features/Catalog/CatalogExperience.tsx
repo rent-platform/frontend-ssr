@@ -10,6 +10,7 @@ import { CatalogToolbar } from './components/CatalogToolbar';
 import { CatalogCard } from './components/CatalogCard';
 import { ProductDetail } from './components/ProductDetail';
 import { CatalogSkeletonCard } from './components/CatalogSkeletonCard';
+import { CatalogFooter } from './components/CatalogFooter';
 import { mockCatalogItems } from './mockCatalogItems';
 import type { CatalogUiItem } from './types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from './utils';
@@ -260,6 +261,8 @@ export function CatalogExperience() {
         )}
       </AnimatePresence>
       </main>
+
+      <CatalogFooter />
 
       <AnimatePresence>
         {showScrollTop && (
