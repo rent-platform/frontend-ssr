@@ -22,13 +22,13 @@ import {
   Sparkles,
   TrendingUp,
   UserPlus,
-  Users,
   Wallet,
   X,
   Zap,
 } from 'lucide-react';
 import { CatalogCard } from '../Catalog/components/CatalogCard';
 import { CatalogSearchBar } from '../Catalog/components/CatalogSearchBar';
+import { CatalogToolbar } from '../Catalog/components/CatalogToolbar';
 import { CatalogFooter } from '../Catalog/components/CatalogFooter';
 import { ProductDetail } from '../Catalog/components/ProductDetail';
 import { CategoryRail } from '../Catalog/components/CategoryRail';
@@ -236,8 +236,8 @@ export function GuestExperience() {
               <Link href="#how-it-works" className={styles.navLink}>
                 Как это работает
               </Link>
-              <Link href="#faq" className={styles.navLink}>
-                FAQ
+              <Link href="/safety" className={styles.navLink}>
+                Безопасность
               </Link>
             </nav>
           </div>
@@ -365,14 +365,12 @@ export function GuestExperience() {
 
             {/* ═══════ Catalog ═══════ */}
             <section className={styles.catalogSection}>
-              <div className={styles.toolbar}>
-                <p className={styles.resultsCount}>
-                  {filteredItems.length < totalCount
-                    ? <>Показано <strong>{filteredItems.length}</strong> из <strong>{totalCount}</strong></>
-                    : <><strong>{filteredItems.length}</strong> {filteredItems.length === 1 ? 'объявление' : 'объявлений'}</>
-                  }
-                </p>
-              </div>
+              <CatalogToolbar
+                filters={filters}
+                onChange={updateFilters}
+                visibleCount={filteredItems.length}
+                totalCount={totalCount}
+              />
 
               {filteredItems.length > 0 ? (
                 <div className={styles.catalogGridWrap}>
@@ -409,7 +407,7 @@ export function GuestExperience() {
                     type="button"
                     className={styles.emptyStateBtn}
                     onClick={() => {
-                      updateFilters({ search: '', category: '' });
+                      updateFilters({ search: '', category: 'Все категории' });
                     }}
                   >
                     Сбросить фильтры
