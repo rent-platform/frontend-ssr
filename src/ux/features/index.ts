@@ -4,5 +4,6 @@ export { CreateListing } from './CreateListing';
 export { GuestExperience } from './Guest';
 export { NotificationsPage } from './Notifications';
 export { ProfileDashboard } from './Profile';
+export { PublicProfile } from './PublicProfile';
 export { ReviewsPage } from './Reviews';
 export { SettingsPage } from './Settings';

@@ -40,7 +40,6 @@ const actionIcons = [
 export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProps) {
   return (
     <header className={`${styles.header} ${isHidden ? styles.headerHidden : ''}`}>
-      <div className={styles.topbar}>
         <div className={styles.topbarInner}>
           <div className={styles.headerLeft}>
             <Link href="/dev-ui" className={styles.brandBlock} aria-label="Перейти на главную Арендай">
@@ -166,7 +165,6 @@ export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProp
             </div>
           </div>
         </div>
-      </div>
     </header>
   );
 }
