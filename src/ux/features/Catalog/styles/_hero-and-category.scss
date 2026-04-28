@@ -304,6 +304,7 @@
   font-size: 12px;
   font-weight: 600;
   color: color.adjust($color-primary, $lightness: -6%);
+  cursor: pointer;
   transition: $transition-smooth;
 
   svg { flex-shrink: 0; }

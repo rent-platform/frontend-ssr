@@ -3,7 +3,9 @@
 
 .page {
   min-height: 100vh;
-  background: #fff;
+  background:
+    radial-gradient(ellipse 70% 35% at 50% -10%, rgba(34, 197, 94, 0.06) 0%, transparent 70%),
+    linear-gradient(180deg, #ffffff 0%, #f8fafc 52%, #ffffff 100%);
   color: $color-text;
   font-family: inherit;
   text-rendering: optimizeLegibility;
@@ -14,6 +16,15 @@
   textarea,
   select {
     font: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(34, 197, 94, 0.5);
+    outline-offset: 2px;
+  }
+
+  input:focus-visible {
+    outline: none;
   }
 }
 
@@ -50,28 +61,31 @@
 .toolbar {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: $space-4;
   padding-bottom: $space-3;
   border-bottom: 1px solid $color-border;
+  margin-bottom: $space-4;
 }
 
-.toolbarInfo {
-  display: none;
+.toolbarLeft {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
 }
 
-.toolbarControls {
+.toolbarActions {
   display: flex;
   align-items: center;
   gap: $space-6;
 }
 
-.resultsCountMinimal {
+.resultsCount {
   font-size: 14px;
   font-weight: 600;
   color: $color-text-secondary;
   margin: 0;
-  
+
   strong {
     color: $color-text;
   }

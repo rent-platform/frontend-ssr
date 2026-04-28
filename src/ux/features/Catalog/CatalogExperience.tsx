@@ -1,7 +1,8 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowUp, PackageSearch, Sparkles } from 'lucide-react';
 import { CatalogHeader } from './components/CatalogHeader';
 import { CatalogSearchBar } from './components/CatalogSearchBar';
 import { CategoryRail } from './components/CategoryRail';
@@ -14,6 +15,8 @@ import type { CatalogUiItem } from './types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from './utils';
 import styles from './Catalog.module.scss';
 
+const POPULAR_QUERIES = ['Дрель', 'Палатка', 'Камера', 'Велосипед', 'Проектор'];
+
 const BATCH_SIZE = 8;
 
 export function CatalogExperience() {
@@ -22,6 +25,7 @@ export function CatalogExperience() {
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -82,6 +86,16 @@ export function CatalogExperience() {
     setSelectedItem(null);
   };
 
+  useEffect(() => {
+    const onScroll = () => setShowScrollTop(window.scrollY > 600);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   if (isInitialLoading) {
     return (
       <div className={styles.page}>
@@ -133,6 +147,23 @@ export function CatalogExperience() {
                     Инструменты, техника и товары для досуга в вашем городе.
                   </p>
                   
+                  <div className={styles.quickPills}>
+                    {POPULAR_QUERIES.map((q) => (
+                      <button
+                        key={q}
+                        type="button"
+                        className={styles.pill}
+                        onClick={() => {
+                          updateFilters({ search: q });
+                          document.getElementById('catalog-results')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                      >
+                        <Sparkles size={12} />
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+
                   <div className={styles.stats}>
                     <div className={styles.statCard}>
                       <strong>{mockCatalogItems.length}</strong>
@@ -188,6 +219,8 @@ export function CatalogExperience() {
                 <CatalogToolbar
                   filters={filters}
                   onChange={updateFilters}
+                  visibleCount={visibleItems.length}
+                  totalCount={filteredItems.length}
                 />
 
                 {visibleItems.length > 0 ? (
@@ -199,16 +232,22 @@ export function CatalogExperience() {
                         onOpen={handleOpenItem}
                       />
                     ))}
-                    {hasMore && (
+                    {hasMore ? (
                       <div ref={sentinelRef} className={styles.infiniteSentinel} />
-                    )}
+                    ) : visibleItems.length > BATCH_SIZE ? (
+                      <div className={styles.endCap}>Вы просмотрели все объявления</div>
+                    ) : null}
                   </div>
                 ) : (
                   <div className={styles.emptyState}>
+                    <div className={styles.emptyStateIcon}>
+                      <PackageSearch size={28} />
+                    </div>
                     <h3>Ничего не нашли</h3>
                     <p>Попробуйте изменить параметры поиска или фильтры</p>
-                    <button 
-                      className={styles.resetBtn}
+                    <button
+                      type="button"
+                      className={styles.emptyStateBtn}
                       onClick={() => updateFilters({ search: '', category: 'Все категории' })}
                     >
                       Сбросить всё
@@ -221,6 +260,22 @@ export function CatalogExperience() {
         )}
       </AnimatePresence>
       </main>
+
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            type="button"
+            className={styles.scrollTopBtn}
+            onClick={scrollToTop}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            aria-label="Наверх"
+          >
+            <ArrowUp size={20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

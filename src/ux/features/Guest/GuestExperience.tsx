@@ -20,7 +20,6 @@ import {
   Search,
   Shield,
   Sparkles,
-  Star,
   TrendingUp,
   UserPlus,
   Users,
@@ -38,13 +37,6 @@ import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from '../Catal
 import styles from './GuestExperience.module.scss';
 
 const GUEST_ITEM_LIMIT = 12;
-
-const TRUST_STATS = [
-  { icon: Users, value: '10K+', label: 'пользователей' },
-  { icon: CheckCircle2, value: '50K+', label: 'успешных аренд' },
-  { icon: Star, value: '4.8', label: 'средний рейтинг' },
-  { icon: Clock3, value: '15 мин', label: 'среднее время ответа' },
-];
 
 const HOW_IT_WORKS = [
   {
@@ -81,33 +73,6 @@ const GUEST_LIMITS = [
 ];
 
 const POPULAR_QUERIES = ['Фотоаппарат', 'PlayStation', 'Дрель', 'Проектор', 'Велосипед'];
-
-const TESTIMONIALS = [
-  {
-    name: 'Алексей К.',
-    avatar: 'А',
-    rating: 5,
-    text: 'Арендовал проектор на день рождения — всё прошло отлично. Связался с владельцем за 10 минут, забрал в тот же день.',
-    item: 'Проектор Epson',
-    city: 'Новосибирск',
-  },
-  {
-    name: 'Мария С.',
-    avatar: 'М',
-    rating: 5,
-    text: 'Сдаю дрель и шуруповёрт, когда не пользуюсь. Уже окупила покупку за 2 месяца. Удобный сервис!',
-    item: 'Дрель Bosch',
-    city: 'Новосибирск',
-  },
-  {
-    name: 'Дмитрий В.',
-    avatar: 'Д',
-    rating: 4,
-    text: 'Взял PS5 на выходные для компании друзей. Дешевле, чем идти в клуб, и играли сколько хотели.',
-    item: 'PlayStation 5',
-    city: 'Новосибирск',
-  },
-];
 
 const ECO_STATS = [
   { icon: Recycle, value: '2 400+', label: 'вещей в повторном использовании' },
@@ -270,9 +235,6 @@ export function GuestExperience() {
               <Link href="#how-it-works" className={styles.navLink}>
                 Как это работает
               </Link>
-              <Link href="#testimonials" className={styles.navLink}>
-                Отзывы
-              </Link>
               <Link href="#faq" className={styles.navLink}>
                 FAQ
               </Link>
@@ -329,22 +291,6 @@ export function GuestExperience() {
                     тысячи вещей от проверенных владельцев. Выгоднее покупки, безопаснее досок объявлений.
                   </p>
 
-                  <div className={styles.quickPills}>
-                    {POPULAR_QUERIES.map((query) => (
-                      <button
-                        key={query}
-                        type="button"
-                        className={styles.pill}
-                        onClick={() => {
-                          updateFilters({ search: query });
-                          document.getElementById('guest-catalog')?.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                      >
-                        {query}
-                      </button>
-                    ))}
-                  </div>
-
                   <div className={styles.ctaRow}>
                     <Link href="/register" className={styles.primaryCta}>
                       Начать бесплатно
@@ -357,18 +303,6 @@ export function GuestExperience() {
                 </div>
               </div>
 
-              <div className={styles.statsStrip}>
-                {TRUST_STATS.map((stat) => {
-                  const Icon = stat.icon;
-                  return (
-                    <div key={stat.label} className={styles.statItem}>
-                      <Icon size={18} />
-                      <strong>{stat.value}</strong>
-                      <span>{stat.label}</span>
-                    </div>
-                  );
-                })}
-              </div>
             </motion.section>
 
             {/* ═══════ How It Works ═══════ */}
@@ -445,15 +379,6 @@ export function GuestExperience() {
                     {filteredItems.map((item, index) => (
                       <div key={item.id} className={styles.cardWrapper}>
                         <CatalogCard item={item} onOpen={openItem} index={index} />
-                        <button
-                          type="button"
-                          className={styles.cardGate}
-                          onClick={openAuthModal}
-                          aria-label="Войти для сделки"
-                        >
-                          <Lock size={14} />
-                          <span>Войти</span>
-                        </button>
                       </div>
                     ))}
                   </div>
@@ -537,42 +462,6 @@ export function GuestExperience() {
               </div>
             </section>
 
-            {/* ═══════ Testimonials ═══════ */}
-            <section id="testimonials" className={styles.testimonialsSection}>
-              <div className={styles.sectionHeader}>
-                <span className={styles.sectionKicker}>Отзывы</span>
-                <h2>Что говорят пользователи</h2>
-                <p>Реальные истории людей, которые уже арендуют и сдают вещи на платформе.</p>
-              </div>
-
-              <div className={styles.testimonialsGrid}>
-                {TESTIMONIALS.map((t, i) => (
-                  <motion.div
-                    key={i}
-                    className={styles.testimonialCard}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-40px' }}
-                    transition={{ duration: 0.4, delay: i * 0.1 }}
-                  >
-                    <div className={styles.testimonialStars}>
-                      {Array.from({ length: t.rating }, (_, idx) => (
-                        <Star key={idx} size={14} fill="#f59e0b" color="#f59e0b" />
-                      ))}
-                    </div>
-                    <p className={styles.testimonialText}>{t.text}</p>
-                    <div className={styles.testimonialFooter}>
-                      <div className={styles.testimonialAvatar}>{t.avatar}</div>
-                      <div className={styles.testimonialMeta}>
-                        <strong>{t.name}</strong>
-                        <span>{t.item} · {t.city}</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </section>
-
             {/* ═══════ Eco / Sharing Impact ═══════ */}
             <section className={styles.ecoSection}>
               <div className={styles.ecoContent}>
@@ -650,7 +539,6 @@ export function GuestExperience() {
           <div className={styles.footerLinks}>
             <Link href="#how-it-works">Как это работает</Link>
             <Link href="#guest-catalog">Каталог</Link>
-            <Link href="#testimonials">Отзывы</Link>
             <Link href="#faq">FAQ</Link>
           </div>
           <div className={styles.footerCopy}>

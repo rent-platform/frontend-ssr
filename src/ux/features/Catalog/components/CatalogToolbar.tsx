@@ -5,6 +5,8 @@ import styles from '../Catalog.module.scss';
 type CatalogToolbarProps = {
   filters: CatalogFilterState;
   onChange: (patch: Partial<CatalogFilterState>) => void;
+  visibleCount: number;
+  totalCount: number;
 };
 
 const sortOptions: GlassSelectOption[] = [
@@ -14,9 +16,17 @@ const sortOptions: GlassSelectOption[] = [
   { value: 'priceDesc', label: 'Сначала дороже' },
 ];
 
-export function CatalogToolbar({ filters, onChange }: CatalogToolbarProps) {
+export function CatalogToolbar({ filters, onChange, visibleCount, totalCount }: CatalogToolbarProps) {
   return (
     <div className={styles.toolbar}>
+      <div className={styles.toolbarLeft}>
+        <p className={styles.resultsCount}>
+          {visibleCount < totalCount
+            ? <>Показано <strong>{visibleCount}</strong> из <strong>{totalCount}</strong></>
+            : <><strong>{totalCount}</strong> {totalCount === 1 ? 'объявление' : 'объявлений'}</>
+          }
+        </p>
+      </div>
       <div className={styles.toolbarActions}>
         <GlassSelect
           label="Сортировка"
