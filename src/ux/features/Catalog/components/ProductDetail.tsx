@@ -72,8 +72,6 @@ export function ProductDetail({
     return Math.max(1, Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
   }, [startDate, endDate]);
   const subtotal = dailyPrice * (rentalDays || 1);
-  const serviceFee = Math.max(290, Math.round(subtotal * 0.08));
-  const total = subtotal + serviceFee;
 
   const formatDateShort = (d: Date) =>
     d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
@@ -387,13 +385,9 @@ export function ProductDetail({
               <span>{formatPrice(String(dailyPrice), '')} × {rentalDays || 1} {rentalDays === 1 ? 'день' : rentalDays < 5 ? 'дня' : 'дней'}</span>
               <span>{formatPrice(String(subtotal), '')}</span>
             </div>
-            <div className={styles.totalRow}>
-              <span>Сервисный сбор</span>
-              <span>{formatPrice(String(serviceFee), '')}</span>
-            </div>
             <div className={clsx(styles.totalRow, styles.grandTotal)}>
               <span>Итого</span>
-              <span>{formatPrice(String(total), '')}</span>
+              <span>{formatPrice(String(subtotal), '')}</span>
             </div>
           </div>
 
