@@ -60,13 +60,13 @@ export function ProductDetail({
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   const locationLabel = formatCatalogCardLocation(item);
-  const publishedLabel = formatRelativeDate(item.created_at);
+  const publishedLabel = formatRelativeDate(item.createdAt);
   const primaryPrice = formatCatalogCardPrimaryPrice(item);
   const hourPrice = formatCatalogCardHourSecondary(item);
-  const depositAmount = Number(String(item.deposit_amount ?? '0').replace(/\s/g, ''));
-  const depositLabel = depositAmount > 0 ? formatDepositAmount(item.deposit_amount) : null;
+  const depositAmount = Number(String(item.depositAmount ?? '0').replace(/\s/g, ''));
+  const depositLabel = depositAmount > 0 ? formatDepositAmount(item.depositAmount) : null;
 
-  const dailyPrice = Number(String(item.price_per_day ?? '0').replace(/\s/g, ''));
+  const dailyPrice = Number(String(item.pricePerDay ?? '0').replace(/\s/g, ''));
   const rentalDays = useMemo(() => {
     if (!startDate || !endDate) return 0;
     return Math.max(1, Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
@@ -300,7 +300,7 @@ export function ProductDetail({
             <h2>Описание</h2>
           </div>
           <div className={styles.detailParagraphs}>
-            {(item.description ?? (item.item_description ? item.item_description.split('\n') : [])).map((p, i) => (
+            {(item.description ?? []).map((p: string, i: number) => (
               <p key={i}>{p}</p>
             ))}
           </div>
@@ -360,7 +360,7 @@ export function ProductDetail({
             )}
           >
             {item.isAvailable ? <Zap size={16} /> : <Clock3 size={16} />}
-            {item.isAvailable ? 'Доступно для аренды' : `Доступно с ${item.dateAvailable}`}
+            {item.isAvailable ? 'Доступно для аренды' : `Доступно с ${item.nearestAvailableDate ?? '—'}`}
           </div>
 
           {/* Date Selector */}
