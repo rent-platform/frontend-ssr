@@ -4,7 +4,7 @@ export const MOCK_USER: ProfileUser = {
   id: 'u-001',
   full_name: 'Владислав Петров',
   nickname: 'vlad_rent',
-  avatar_url: null,
+  avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
   bio: 'Сдаю фототехнику и электронику в Новосибирске. Быстрая выдача, всё проверено.',
   phone: '+7 (999) 123-45-67',
   email: 'vlad@example.com',

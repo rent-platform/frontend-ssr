@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -9,11 +9,14 @@ import {
   Award,
   BadgeCheck,
   Calendar,
+  Check,
   CheckCircle2,
   Clock3,
+  Copy,
   ExternalLink,
   Flag,
   Globe,
+  Heart,
   ImageIcon,
   Info,
   MapPin,
@@ -24,6 +27,7 @@ import {
   ShieldCheck,
   Star,
   ThumbsUp,
+  X,
   Zap,
 } from 'lucide-react';
 import { CatalogHeader } from '../Catalog/components/CatalogHeader';
@@ -70,14 +74,151 @@ const RATING_DISTRIBUTION = [
 
 type Tab = 'listings' | 'reviews';
 
+/* ── Skeleton placeholder ── */
+function ProfileSkeleton() {
+  return (
+    <div className={styles.page}>
+      <div className={styles.skeletonHeader}>
+        <div className={styles.shimmer} style={{ width: 140, height: 28, borderRadius: 8 }} />
+        <div style={{ flex: 1 }} />
+        <div className={styles.shimmer} style={{ width: 100, height: 28, borderRadius: 8 }} />
+      </div>
+      <div className={styles.skeletonBreadcrumb}>
+        <div className={styles.shimmer} style={{ width: 200, height: 16, borderRadius: 4 }} />
+      </div>
+      <div className={styles.skeletonLayout}>
+        <div className={styles.skeletonSidebar}>
+          <div className={styles.skeletonCard}>
+            <div className={styles.shimmer} style={{ width: 96, height: 96, borderRadius: '50%' }} />
+            <div className={styles.shimmer} style={{ width: 160, height: 20, borderRadius: 6, marginTop: 16 }} />
+            <div className={styles.shimmer} style={{ width: 100, height: 14, borderRadius: 4, marginTop: 8 }} />
+            <div className={styles.shimmer} style={{ width: '100%', height: 44, borderRadius: 12, marginTop: 20 }} />
+          </div>
+          <div className={styles.skeletonCard}>
+            <div className={styles.shimmer} style={{ width: 140, height: 16, borderRadius: 4 }} />
+            <div className={styles.shimmer} style={{ width: '100%', height: 12, borderRadius: 4, marginTop: 12 }} />
+            <div className={styles.shimmer} style={{ width: '80%', height: 12, borderRadius: 4, marginTop: 8 }} />
+            <div className={styles.shimmer} style={{ width: '60%', height: 12, borderRadius: 4, marginTop: 8 }} />
+          </div>
+        </div>
+        <div className={styles.skeletonMain}>
+          <div className={styles.skeletonCard} style={{ padding: 20 }}>
+            <div className={styles.shimmer} style={{ width: 60, height: 16, borderRadius: 4 }} />
+            <div className={styles.shimmer} style={{ width: '100%', height: 14, borderRadius: 4, marginTop: 12 }} />
+            <div className={styles.shimmer} style={{ width: '85%', height: 14, borderRadius: 4, marginTop: 6 }} />
+          </div>
+          <div className={styles.skeletonStats}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className={styles.skeletonStatCard}>
+                <div className={styles.shimmer} style={{ width: 40, height: 24, borderRadius: 4 }} />
+                <div className={styles.shimmer} style={{ width: 80, height: 10, borderRadius: 3, marginTop: 6 }} />
+              </div>
+            ))}
+          </div>
+          <div className={styles.skeletonGrid}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className={styles.skeletonListingCard}>
+                <div className={styles.shimmer} style={{ width: '100%', aspectRatio: '4/3', borderRadius: 0 }} />
+                <div style={{ padding: 12 }}>
+                  <div className={styles.shimmer} style={{ width: '90%', height: 14, borderRadius: 4 }} />
+                  <div className={styles.shimmer} style={{ width: 50, height: 10, borderRadius: 3, marginTop: 8 }} />
+                  <div className={styles.shimmer} style={{ width: 80, height: 18, borderRadius: 4, marginTop: 10 }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Share modal ── */
+function ShareModal({ url, onClose }: { url: string; onClose: () => void }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* clipboard not available */ }
+  }, [url]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      className={styles.modalOverlay}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className={styles.modalContent}
+        initial={{ opacity: 0, scale: 0.95, y: 16 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 16 }}
+        transition={{ duration: 0.2, ease: EASE }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className={styles.modalHeader}>
+          <h3>Поделиться профилем</h3>
+          <button type="button" className={styles.modalClose} onClick={onClose}><X size={18} /></button>
+        </div>
+        <p className={styles.modalDesc}>Скопируйте ссылку и отправьте друзьям</p>
+        <div className={styles.modalCopyRow}>
+          <input type="text" readOnly value={url} className={styles.modalInput} />
+          <button type="button" className={styles.modalCopyBtn} onClick={handleCopy}>
+            {copied ? <><Check size={14} /> Скопировано</> : <><Copy size={14} /> Копировать</>}
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* ═══ Main component ═══ */
 export function PublicProfile() {
   const user = MOCK_PUBLIC_USER;
   const listings = MOCK_PUBLIC_LISTINGS;
   const reviews = MOCK_PUBLIC_REVIEWS;
 
+  const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('listings');
   const [showAllListings, setShowAllListings] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [helpfulReviews, setHelpfulReviews] = useState<Set<string>>(new Set());
+  const [showShareModal, setShowShareModal] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const toggleFavorite = useCallback((id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setFavorites((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }, []);
+
+  const toggleHelpful = useCallback((id: string) => {
+    setHelpfulReviews((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }, []);
 
   const visibleListings = useMemo(
     () => (showAllListings ? listings : listings.slice(0, VISIBLE_LISTINGS)),
@@ -100,6 +241,12 @@ export function PublicProfile() {
   }, [user.memberSince]);
 
   const maxDistCount = Math.max(...RATING_DISTRIBUTION.map((r) => r.count));
+
+  const profileUrl = typeof window !== 'undefined'
+    ? window.location.href
+    : `https://arendai.ru/user/${user.id}`;
+
+  if (isLoading) return <ProfileSkeleton />;
 
   return (
     <div className={styles.page}>
@@ -177,7 +324,7 @@ export function PublicProfile() {
             </Link>
 
             <div className={styles.secondaryActions}>
-              <button type="button" className={styles.iconBtn} title="Поделиться">
+              <button type="button" className={styles.iconBtn} title="Поделиться" onClick={() => setShowShareModal(true)}>
                 <Share2 size={15} />
               </button>
               <button type="button" className={`${styles.iconBtn} ${styles.iconBtnDanger}`} title="Пожаловаться">
@@ -353,10 +500,18 @@ export function PublicProfile() {
                                 <span className={`${styles.availBadge} ${item.isAvailable ? styles.availBadgeYes : styles.availBadgeNo}`}>
                                   {item.isAvailable ? <><Zap size={11} /> Доступно</> : <><Clock3 size={11} /> Занято</>}
                                 </span>
+                                <button
+                                  type="button"
+                                  className={`${styles.favBtn} ${favorites.has(item.id) ? styles.favBtnActive : ''}`}
+                                  onClick={(e) => toggleFavorite(item.id, e)}
+                                  aria-label="В избранное"
+                                >
+                                  <Heart size={16} />
+                                </button>
                               </div>
                               <div className={styles.listingBody}>
                                 <h3 className={styles.listingTitle}>{item.title}</h3>
-                                <span className={styles.listingCategory}>{item.category}</span>
+                                <span className={styles.categoryChip}>{item.category}</span>
                                 <div className={styles.listingFooter}>
                                   <span className={styles.listingPrice}>{item.pricePerDay} ₽<small>/сут</small></span>
                                   <span className={styles.listingRating}>
@@ -464,6 +619,16 @@ export function PublicProfile() {
                                 </div>
                               </div>
                               <p className={styles.reviewText}>{review.text}</p>
+                              <div className={styles.reviewActions}>
+                                <button
+                                  type="button"
+                                  className={`${styles.helpfulBtn} ${helpfulReviews.has(review.id) ? styles.helpfulBtnActive : ''}`}
+                                  onClick={() => toggleHelpful(review.id)}
+                                >
+                                  <ThumbsUp size={13} />
+                                  {helpfulReviews.has(review.id) ? 'Полезно' : 'Полезный отзыв'}
+                                </button>
+                              </div>
                             </div>
                           </motion.div>
                         );
@@ -504,6 +669,11 @@ export function PublicProfile() {
       </div>
 
       <CatalogFooter />
+
+      {/* ═══ Share modal ═══ */}
+      <AnimatePresence>
+        {showShareModal && <ShareModal url={profileUrl} onClose={() => setShowShareModal(false)} />}
+      </AnimatePresence>
     </div>
   );
 }

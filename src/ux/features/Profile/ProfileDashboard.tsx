@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -9,12 +9,12 @@ import {
   Calendar,
   CalendarCheck,
   Camera,
+  Check,
   CheckCircle2,
+  Copy,
   Edit3,
   Eye,
-  Handshake,
   ImageIcon,
-  LayoutGrid,
   Mail,
   MessageCircle,
   Package,
@@ -23,11 +23,13 @@ import {
   Shield,
   ShoppingBag,
   Star,
-  TrendingUp,
   Upload,
   User,
+  X,
   Zap,
 } from 'lucide-react';
+import { CatalogHeader } from '../Catalog/components/CatalogHeader';
+import { CatalogFooter } from '../Catalog/components/CatalogFooter';
 import type { ItemStatus, DealStatus } from '@/business/types/entity';
 import type { ProfileTab, ProfileListing, ProfileBooking, BookingSide } from './types';
 import { MOCK_USER, MOCK_STATS, MOCK_LISTINGS, MOCK_BOOKINGS } from './mockProfileData';
@@ -80,45 +82,152 @@ function formatShortDate(iso: string) {
   return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 }
 
+function getProfileCompletion(user: typeof MOCK_USER): number {
+  let score = 0;
+  if (user.avatar_url) score += 20;
+  if (user.bio) score += 20;
+  if (user.phone) score += 20;
+  if (user.email) score += 20;
+  if (user.nickname) score += 10;
+  score += 10; // base
+  return Math.min(score, 100);
+}
+
+/* ── Skeleton placeholder ── */
+function DashboardSkeleton() {
+  return (
+    <div className={styles.page}>
+      <div className={styles.skeletonBar}><div className={styles.shimmer} style={{ width: 140, height: 24, borderRadius: 6 }} /></div>
+      <div className={styles.skeletonWrap}>
+        <div className={styles.skeletonCard}>
+          <div style={{ display: 'flex', gap: 16, padding: '24px 24px 16px' }}>
+            <div className={styles.shimmer} style={{ width: 64, height: 64, borderRadius: '50%', flexShrink: 0 }} />
+            <div style={{ flex: 1 }}>
+              <div className={styles.shimmer} style={{ width: 180, height: 20, borderRadius: 6 }} />
+              <div className={styles.shimmer} style={{ width: 260, height: 13, borderRadius: 4, marginTop: 10 }} />
+              <div className={styles.shimmer} style={{ width: 200, height: 13, borderRadius: 4, marginTop: 8 }} />
+            </div>
+          </div>
+          <div style={{ display: 'flex', borderTop: '1px solid #e5e7eb' }}>
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: 14 }}>
+                <div className={styles.shimmer} style={{ width: 32, height: 20, borderRadius: 4 }} />
+                <div className={styles.shimmer} style={{ width: 48, height: 10, borderRadius: 3 }} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className={styles.shimmer} style={{ width: '100%', height: 44, borderRadius: 0 }} />
+        <div className={styles.skeletonCard} style={{ padding: 24 }}>
+          <div className={styles.shimmer} style={{ width: 140, height: 18, borderRadius: 5 }} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginTop: 20 }}>
+            {[1, 2, 3].map((i) => <div key={i} className={styles.shimmer} style={{ height: 72, borderRadius: 12 }} />)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Share modal ── */
+function ShareModal({ url, onClose }: { url: string; onClose: () => void }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* clipboard not available */ }
+  }, [url]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      className={styles.modalOverlay}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className={styles.modalContent}
+        initial={{ opacity: 0, scale: 0.95, y: 16 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 16 }}
+        transition={{ duration: 0.2, ease: EASE }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className={styles.modalHeader}>
+          <h3>Поделиться профилем</h3>
+          <button type="button" className={styles.modalClose} onClick={onClose}><X size={18} /></button>
+        </div>
+        <p className={styles.modalDesc}>Скопируйте ссылку и отправьте друзьям или работодателям</p>
+        <div className={styles.modalCopyRow}>
+          <input type="text" readOnly value={url} className={styles.modalInput} />
+          <button type="button" className={styles.modalCopyBtn} onClick={handleCopy}>
+            {copied ? <><Check size={14} /> Скопировано</> : <><Copy size={14} /> Копировать</>}
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════════
    ProfileDashboard
    ═══════════════════════════════════════════════════════════════════════════════ */
 export function ProfileDashboard() {
+  const [isLoading, setIsLoading] = useState(true);
   const [tab, setTab] = useState<ProfileTab>('overview');
   const [listingFilter, setListingFilter] = useState<ListingFilter>('all');
-  const [outFilter, setOutFilter] = useState<BookingFilter>('all');
-  const [inFilter, setInFilter] = useState<BookingFilter>('all');
+  const [dealSide, setDealSide] = useState<BookingSide>('owner');
+  const [dealFilter, setDealFilter] = useState<BookingFilter>('all');
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const user = MOCK_USER;
   const stats = MOCK_STATS;
 
-  const initials = user.full_name
-    .split(' ')
-    .map((w) => w[0])
-    .join('')
-    .slice(0, 2);
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(t);
+  }, []);
+
+  const initials = user.full_name.split(' ').map((w) => w[0]).join('').slice(0, 2);
+  const profileCompletion = getProfileCompletion(user);
+  const profileUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}/dev-ui/user/${user.id}`
+    : `https://arendai.ru/user/${user.id}`;
+
+  if (isLoading) return <DashboardSkeleton />;
 
   return (
     <div className={styles.page}>
-      <div className={styles.container}>
-        {/* ── Back Button ── */}
-        <Link href="/dev-ui" className={styles.backLink}>
-          <ArrowLeft size={18} />
-          <span>На главную</span>
-        </Link>
+      <CatalogHeader cityLabel="Новосибирск" />
 
-        {/* ═══ Hero Section ═══ */}
-        <motion.div
-          className={styles.hero}
-          initial={{ opacity: 0, y: 24 }}
+      <div className={styles.topBar}>
+        <div className={styles.topBarInner}>
+          <Link href="/dev-ui" className={styles.backLink}><ArrowLeft size={15} /> Каталог</Link>
+          <span className={styles.breadcrumbSep}>/</span>
+          <span className={styles.breadcrumbCurrent}>Мой профиль</span>
+        </div>
+      </div>
+
+      <main className={styles.container}>
+        {/* ── Profile Card ── */}
+        <motion.section
+          className={styles.profileCard}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: EASE }}
+          transition={{ duration: 0.35, ease: EASE }}
         >
-          <div className={styles.heroBanner} />
-
-          <div className={styles.heroBody}>
-            {/* Avatar */}
-            <div className={styles.avatarSection}>
+          <div className={styles.profileHeader}>
+            <div className={styles.avatarWrap}>
               <div className={styles.avatarRing}>
                 {user.avatar_url ? (
                   <img src={user.avatar_url} alt={user.full_name} className={styles.avatar} />
@@ -126,176 +235,147 @@ export function ProfileDashboard() {
                   <div className={styles.avatarFallback}>{initials}</div>
                 )}
               </div>
-              <div className={styles.onlineDot} />
-              <button type="button" className={styles.avatarEditBtn} aria-label="Изменить фото">
-                <Camera size={14} />
+              <button type="button" className={styles.avatarEdit} aria-label="Изменить фото">
+                <Camera size={11} />
               </button>
             </div>
 
-            {/* Info */}
-            <div className={styles.heroInfo}>
+            <div className={styles.nameBlock}>
               <div className={styles.nameRow}>
                 <h1>{user.full_name}</h1>
-                <BadgeCheck size={20} className={styles.verifiedIcon} />
-                {user.nickname && <span className={styles.nickname}>@{user.nickname}</span>}
+                <BadgeCheck size={18} className={styles.verifiedBadge} />
               </div>
-
-              <div className={styles.metaRow}>
-                <Link href="/dev-ui/reviews" className={styles.ratingChip}>
-                  <Star size={13} />
-                  {user.rating.toFixed(1)}
-                  <span className={styles.ratingCount}>({user.reviewCount} отзыва)</span>
-                </Link>
-                <span className={styles.metaSep}>·</span>
-                <span className={styles.metaChip}><Calendar size={13} /> С {formatDate(user.memberSince)}</span>
-                {user.phone && <><span className={styles.metaSep}>·</span><span className={styles.metaChip}><Phone size={13} /> {user.phone}</span></>}
-                {user.email && <><span className={styles.metaSep}>·</span><span className={styles.metaChip}><Mail size={13} /> {user.email}</span></>}
-              </div>
+              {user.nickname && <span className={styles.nickname}>@{user.nickname}</span>}
             </div>
 
-            {/* Actions */}
-            <div className={styles.heroActions}>
+            <div className={styles.profileActions}>
               <Link href="/dev-ui/settings" className={styles.btnPrimary}>
                 <Edit3 size={15} /> Редактировать
               </Link>
-              <button type="button" className={styles.btnGhost}>
-                <Share2 size={15} /> Поделиться
+              <button type="button" className={styles.btnIcon} onClick={() => setShowShareModal(true)} title="Поделиться">
+                <Share2 size={17} />
               </button>
+              <Link href={`/dev-ui/user/${user.id}`} className={styles.btnIcon} title="Публичный профиль">
+                <Eye size={17} />
+              </Link>
             </div>
           </div>
 
-          {/* Counters strip */}
-          <div className={styles.counters}>
-            <div className={styles.counter}>
-              <span className={styles.counterVal}>{stats.activeListings}</span>
-              <span className={styles.counterLbl}>Объявлений</span>
+          <div className={styles.profileBody}>
+            {user.bio && <p className={styles.bio}>{user.bio}</p>}
+
+            <div className={styles.metaRow}>
+              <Link href="/dev-ui/reviews" className={styles.ratingChip}>
+                <Star size={13} />
+                {user.rating.toFixed(1)}
+                <span className={styles.ratingCount}>({user.reviewCount} {pluralize(user.reviewCount, 'отзыв', 'отзыва', 'отзывов')})</span>
+              </Link>
+              <span className={styles.metaDot}>·</span>
+              <span className={styles.metaItem}><Calendar size={13} /> С {formatDate(user.memberSince)}</span>
+              {user.phone && <><span className={styles.metaDot}>·</span><span className={styles.metaItem}><Phone size={13} /> {user.phone}</span></>}
             </div>
-            <div className={styles.counterDiv} />
-            <div className={styles.counter}>
-              <span className={styles.counterVal}>{stats.completedBookings}</span>
-              <span className={styles.counterLbl}>Сдал</span>
-            </div>
-            <div className={styles.counterDiv} />
-            <div className={styles.counter}>
-              <span className={styles.counterVal}>{stats.rentedCount}</span>
-              <span className={styles.counterLbl}>Арендовал</span>
-            </div>
-            <div className={styles.counterDiv} />
-            <div className={styles.counter}>
-              <span className={`${styles.counterVal} ${styles.counterValAccent}`}>{user.rating.toFixed(1)}</span>
-              <span className={styles.counterLbl}>Рейтинг</span>
+
+            <div className={styles.verifyRow}>
+              <VerifyChip icon={<CheckCircle2 size={13} />} label="Телефон" done />
+              <VerifyChip icon={<Mail size={13} />} label="Email" done />
+              <VerifyChip icon={<Shield size={13} />} label="Паспорт" done={false} />
+              <VerifyChip icon={<BadgeCheck size={13} />} label="Фото" done />
             </div>
           </div>
-        </motion.div>
 
-        {/* ═══ Verification bar ═══ */}
-        <motion.div
-          className={styles.verifyBar}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1, ease: EASE }}
-        >
-          <VerifyItem icon={<CheckCircle2 size={15} />} label="Телефон" done />
-          <VerifyItem icon={<Mail size={15} />} label="Email" done />
-          <VerifyItem icon={<Shield size={15} />} label="Паспорт" done={false} />
-          <VerifyItem icon={<BadgeCheck size={15} />} label="Фото" done />
-        </motion.div>
+          {profileCompletion < 100 && (
+            <div className={styles.completionStrip}>
+              <Zap size={14} />
+              <span>Профиль заполнен на <strong>{profileCompletion}%</strong></span>
+              <div className={styles.completionTrack}>
+                <div className={styles.completionFill} style={{ width: `${profileCompletion}%` }} />
+              </div>
+              <Link href="/dev-ui/settings" className={styles.completionLink}>Заполнить →</Link>
+            </div>
+          )}
 
-        {/* ═══ Tabs ═══ */}
+          <div className={styles.statsGrid}>
+            <div className={styles.statCard}>
+              <span className={styles.statNum}>{stats.activeListings}</span>
+              <span className={styles.statLbl}>Вещей</span>
+            </div>
+            <div className={styles.statCard}>
+              <span className={styles.statNum}>{stats.completedBookings}</span>
+              <span className={styles.statLbl}>Сдач</span>
+            </div>
+            <div className={styles.statCard}>
+              <span className={styles.statNum}>{stats.rentedCount}</span>
+              <span className={styles.statLbl}>Аренд</span>
+            </div>
+            <div className={styles.statCard}>
+              <span className={`${styles.statNum} ${styles.statNumAccent}`}>{user.rating.toFixed(1)}</span>
+              <span className={styles.statLbl}>Рейтинг</span>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* ── Tabs ── */}
         <motion.nav
-          className={styles.tabs}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.15, ease: EASE }}
+          className={styles.tabBar}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.1, ease: EASE }}
         >
-          <TabBtn active={tab === 'overview'} icon={<User size={16} />} label="Обзор" onClick={() => setTab('overview')} />
-          <TabBtn active={tab === 'listings'} icon={<LayoutGrid size={16} />} label="Объявления" badge={stats.totalListings} onClick={() => setTab('listings')} />
-          <TabBtn active={tab === 'renting-out'} icon={<Upload size={16} />} label="Сдаю" badge={MOCK_BOOKINGS.filter((b) => b.side === 'owner').length} onClick={() => setTab('renting-out')} />
-          <TabBtn active={tab === 'renting-in'} icon={<ShoppingBag size={16} />} label="Арендую" badge={MOCK_BOOKINGS.filter((b) => b.side === 'renter').length} onClick={() => setTab('renting-in')} />
+          <TabBtn active={tab === 'overview'} label="Обзор" onClick={() => setTab('overview')} />
+          <TabBtn active={tab === 'listings'} label="Мои вещи" count={stats.totalListings} onClick={() => setTab('listings')} />
+          <TabBtn active={tab === 'deals'} label="Сделки" count={MOCK_BOOKINGS.length} onClick={() => setTab('deals')} />
         </motion.nav>
 
-        {/* ═══ Tab Content ═══ */}
+        {/* ── Content ── */}
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.3, ease: EASE }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.25, ease: EASE }}
           >
             {tab === 'overview' && <OverviewPanel />}
             {tab === 'listings' && <ListingsPanel filter={listingFilter} onFilterChange={setListingFilter} />}
-            {tab === 'renting-out' && (
-              <BookingsPanel side="owner" title="Сдаю в аренду" subtitle="Вещи, которые вы сдаёте другим" filter={outFilter} onFilterChange={setOutFilter} />
-            )}
-            {tab === 'renting-in' && (
-              <BookingsPanel side="renter" title="Арендую" subtitle="Вещи, которые вы берёте у других" filter={inFilter} onFilterChange={setInFilter} />
-            )}
+            {tab === 'deals' && <DealsPanel side={dealSide} onSideChange={setDealSide} filter={dealFilter} onFilterChange={setDealFilter} />}
           </motion.div>
         </AnimatePresence>
-      </div>
+      </main>
+
+      <CatalogFooter />
+
+      <AnimatePresence>
+        {showShareModal && <ShareModal url={profileUrl} onClose={() => setShowShareModal(false)} />}
+      </AnimatePresence>
     </div>
   );
 }
 
-/* ═══ Verification item ═══ */
-function VerifyItem({ icon, label, done }: { icon: React.ReactNode; label: string; done: boolean }) {
+/* ── Verify chip (inline) ── */
+function VerifyChip({ icon, label, done }: { icon: React.ReactNode; label: string; done: boolean }) {
   return (
-    <div className={`${styles.verifyItem} ${done ? styles.verifyDone : styles.verifyPending}`}>
-      {icon}
-      <span>{label}</span>
-    </div>
+    <span className={`${styles.verifyChip} ${done ? styles.verifyDone : styles.verifyPending}`}>
+      {icon} {label}
+    </span>
   );
 }
 
-/* ═══ Stat Card ═══ */
-function StatCard({ icon, iconCls, value, label }: { icon: React.ReactNode; iconCls: string; value: string; label: string }) {
-  return (
-    <div className={styles.statCard}>
-      <div className={`${styles.statIcon} ${iconCls}`}>{icon}</div>
-      <div className={styles.statValue}>{value}</div>
-      <div className={styles.statLabel}>{label}</div>
-    </div>
-  );
-}
-
-/* ═══ Tab Button ═══ */
-function TabBtn({ active, icon, label, badge, onClick }: { active: boolean; icon: React.ReactNode; label: string; badge?: number; onClick: () => void }) {
+/* ── Tab button (underline style) ── */
+function TabBtn({ active, label, count, onClick }: { active: boolean; label: string; count?: number; onClick: () => void }) {
   return (
     <button type="button" className={`${styles.tab} ${active ? styles.tabActive : ''}`} onClick={onClick}>
-      {icon}
-      <span>{label}</span>
-      {badge !== undefined && <span className={`${styles.tabBadge} ${!active ? styles.tabBadgeInactive : ''}`}>{badge}</span>}
+      {label}
+      {count !== undefined && <span className={styles.tabCount}>{count}</span>}
     </button>
   );
 }
 
-/* ═══ Overview Panel ═══ */
+/* ── Overview Panel ── */
 function OverviewPanel() {
-  const user = MOCK_USER;
-  const stats = MOCK_STATS;
-  const ownerDeals = MOCK_BOOKINGS.filter((b) => b.side === 'owner');
-  const renterDeals = MOCK_BOOKINGS.filter((b) => b.side === 'renter');
-
   return (
     <div className={styles.panel}>
-      <div className={styles.panelHeader}>
-        <div>
-          <h2 className={styles.panelTitle}>Обзор профиля</h2>
-          <p className={styles.panelSubtitle}>Статистика как арендодателя и арендатора</p>
-        </div>
-      </div>
+      <h2 className={styles.panelTitle}>Быстрые действия</h2>
 
-      <div className={styles.statsGrid}>
-        <StatCard icon={<Package size={20} />} iconCls={styles.statIconGreen} value={`${stats.activeListings} / ${stats.totalListings}`} label="Объявлений (акт. / всего)" />
-        <StatCard icon={<Upload size={20} />} iconCls={styles.statIconBlue} value={`${ownerDeals.length}`} label="Сдал в аренду" />
-        <StatCard icon={<ShoppingBag size={20} />} iconCls={styles.statIconPurple} value={`${renterDeals.length}`} label="Арендовал у других" />
-        <Link href="/dev-ui/reviews" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <StatCard icon={<Star size={20} />} iconCls={styles.statIconAmber} value={user.rating.toFixed(1)} label={`${user.reviewCount} отзывов`} />
-        </Link>
-      </div>
-
-      {/* Quick actions */}
       <div className={styles.quickActions}>
         <Link href="/dev-ui/create-listing" className={styles.quickAction}>
           <Package size={18} />
@@ -322,7 +402,7 @@ function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilter; onFi
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <div>
-          <h2 className={styles.panelTitle}>Мои объявления</h2>
+          <h2 className={styles.panelTitle}>Мои вещи</h2>
           <p className={styles.panelSubtitle}>{filtered.length} {pluralize(filtered.length, 'объявление', 'объявления', 'объявлений')}</p>
         </div>
         <div className={styles.filterPills}>
@@ -345,7 +425,9 @@ function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilter; onFi
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3, delay: i * 0.04, ease: EASE }}
             >
-              <ListingCard item={item} />
+              <Link href={`/dev-ui/listing/${item.id}`} className={styles.listingLink}>
+                <ListingCard item={item} />
+              </Link>
             </motion.div>
           ))}
         </div>
@@ -368,7 +450,7 @@ function ListingCard({ item }: { item: ProfileListing }) {
       </div>
       <div className={styles.listingCardBody}>
         <h3>{item.title}</h3>
-        <span className={styles.listingCardCategory}>{item.category}</span>
+        <span className={styles.categoryChip}>{item.category}</span>
         <div className={styles.listingCardFooter}>
           {item.price_per_day && (
             <span className={styles.listingCardPrice}>{item.price_per_day} ₽<small>/сут</small></span>
@@ -383,8 +465,8 @@ function ListingCard({ item }: { item: ProfileListing }) {
   );
 }
 
-/* ═══ Bookings Panel ═══ */
-function BookingsPanel({ side, title, subtitle, filter, onFilterChange }: { side: BookingSide; title: string; subtitle: string; filter: BookingFilter; onFilterChange: (f: BookingFilter) => void }) {
+/* ═══ Deals Panel (unified) ═══ */
+function DealsPanel({ side, onSideChange, filter, onFilterChange }: { side: BookingSide; onSideChange: (s: BookingSide) => void; filter: BookingFilter; onFilterChange: (f: BookingFilter) => void }) {
   const filtered = useMemo(() => {
     const bySide = MOCK_BOOKINGS.filter((b) => b.side === side);
     return filter === 'all' ? bySide : bySide.filter((b) => b.status === filter);
@@ -396,20 +478,43 @@ function BookingsPanel({ side, title, subtitle, filter, onFilterChange }: { side
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <div>
-          <h2 className={styles.panelTitle}>{title}</h2>
-          <p className={styles.panelSubtitle}>{subtitle} · {filtered.length} {pluralize(filtered.length, 'сделка', 'сделки', 'сделок')}</p>
-        </div>
-        <div className={styles.filterPills}>
-          {BOOKING_FILTERS.map((f) => (
-            <button key={f.value} type="button" className={`${styles.filterPill} ${filter === f.value ? styles.filterPillActive : ''}`} onClick={() => onFilterChange(f.value)}>
-              {f.label}
-            </button>
-          ))}
+          <h2 className={styles.panelTitle}>Сделки</h2>
+          <p className={styles.panelSubtitle}>
+            {side === 'owner' ? 'Вещи, которые вы сдаёте другим' : 'Вещи, которые вы берёте у других'}
+            {' · '}{filtered.length} {pluralize(filtered.length, 'сделка', 'сделки', 'сделок')}
+          </p>
         </div>
       </div>
 
+      {/* Side toggle */}
+      <div className={styles.sideToggle}>
+        <button
+          type="button"
+          className={`${styles.sideToggleBtn} ${side === 'owner' ? styles.sideToggleBtnActive : ''}`}
+          onClick={() => { onSideChange('owner'); onFilterChange('all'); }}
+        >
+          <Upload size={14} /> Сдаю
+        </button>
+        <button
+          type="button"
+          className={`${styles.sideToggleBtn} ${side === 'renter' ? styles.sideToggleBtnActive : ''}`}
+          onClick={() => { onSideChange('renter'); onFilterChange('all'); }}
+        >
+          <ShoppingBag size={14} /> Арендую
+        </button>
+      </div>
+
+      {/* Status filters */}
+      <div className={styles.filterPills}>
+        {BOOKING_FILTERS.map((f) => (
+          <button key={f.value} type="button" className={`${styles.filterPill} ${filter === f.value ? styles.filterPillActive : ''}`} onClick={() => onFilterChange(f.value)}>
+            {f.label}
+          </button>
+        ))}
+      </div>
+
       {filtered.length === 0 ? (
-        <EmptyState icon={side === 'owner' ? <Upload /> : <ShoppingBag />} title={side === 'owner' ? 'Нет сделок по аренде' : 'Вы ещё ничего не арендовали'} text="В этой категории пока ничего нет" />
+        <EmptyState icon={side === 'owner' ? <Upload /> : <ShoppingBag />} title={side === 'owner' ? 'Нет сделок по сдаче' : 'Вы ещё ничего не арендовали'} text="В этой категории пока ничего нет" />
       ) : (
         <div className={styles.bookingsGrid}>
           {filtered.map((b, i) => (

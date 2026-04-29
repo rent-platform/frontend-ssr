@@ -64,7 +64,7 @@ export const MOCK_PUBLIC_LISTINGS: PublicListing[] = [
   {
     id: 'p-005',
     title: 'Генератор Honda EU22i',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=400&h=300&fit=crop',
     category: 'Техника',
     pricePerDay: '2400',
     isAvailable: false,
@@ -74,7 +74,7 @@ export const MOCK_PUBLIC_LISTINGS: PublicListing[] = [
   {
     id: 'p-006',
     title: 'Мойка высокого давления Karcher K5',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1621274147744-cfb5694bb233?w=400&h=300&fit=crop',
     category: 'Для дома',
     pricePerDay: '900',
     isAvailable: true,
@@ -104,7 +104,7 @@ export const MOCK_PUBLIC_LISTINGS: PublicListing[] = [
   {
     id: 'p-009',
     title: 'Лазерный уровень Bosch GLL 3-80',
-    image: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1581783898377-1c85bf937427?w=400&h=300&fit=crop',
     category: 'Инструменты',
     pricePerDay: '700',
     isAvailable: true,
