@@ -1,3 +1,5 @@
+export type TrustLevel = 'new' | 'verified' | 'experienced' | 'super';
+
 export type PublicUser = {
   id: string;
   full_name: string;
@@ -13,6 +15,9 @@ export type PublicUser = {
   responseRate: number;
   completedDeals: number;
   activeListings: number;
+  lastOnline: string;
+  languages: string[];
+  trustLevel: TrustLevel;
 };
 
 export type PublicListing = {
