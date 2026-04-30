@@ -48,6 +48,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
     e.preventDefault();
     if (onBrandClick) onBrandClick();
     router.push('/dev-ui');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
