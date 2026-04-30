@@ -12,12 +12,10 @@ const VALUES = [
 ];
 
 const TEAM = [
-  { name: 'Алексей К.', role: 'CEO & Founder', initials: 'А' },
-  { name: 'Мария С.', role: 'CTO', initials: 'М' },
-  { name: 'Дмитрий В.', role: 'Head of Product', initials: 'Д' },
-  { name: 'Елена Т.', role: 'Head of Marketing', initials: 'Е' },
-  { name: 'Игорь Н.', role: 'Lead Developer', initials: 'И' },
-  { name: 'Анна Р.', role: 'Head of Support', initials: 'А' },
+  { name: 'Красков В.', role: 'Frontend Developer', initials: 'В' },
+  { name: 'Юнашев Е.', role: 'Backend Java Developer', initials: 'Е' },
+  { name: 'Юнашев А.', role: 'Mobile Developer', initials: 'А' },
+  { name: 'Шипеев И.', role: 'Frontend Developer', initials: 'И' },
 ];
 
 export default function AboutPage() {
@@ -27,12 +25,13 @@ export default function AboutPage() {
       title="О нас"
       subtitle="Арендай — платформа шеринга вещей, которая делает аренду простой, безопасной и выгодной для каждого."
     >
+      <h2 className={styles.sectionTitle} style={{ color: '#22c55e' }}>Приоритеты</h2>
       <div className={styles.statsRow}>
         {[
           { value: '15 000+', label: 'Пользователей' },
-          { value: '8 200+', label: 'Объявлений' },
-          { value: '42 000+', label: 'Успешных аренд' },
-          { value: '4.8', label: 'Средний рейтинг' },
+          { value: '5 000+', label: 'Объявлений' },
+          { value: '15 000+', label: 'Успешных аренд' },
+          { value: '4.9', label: 'Средний рейтинг' },
         ].map((s) => (
           <div key={s.label} className={styles.statCard}>
             <div className={styles.statValue}>{s.value}</div>
@@ -45,7 +44,7 @@ export default function AboutPage() {
         <h2 className={styles.sectionTitle}>Наша история</h2>
         <div className={styles.prose}>
           <p>
-            Арендай появился в 2023 году в Новосибирске из простой идеи: у каждого дома есть вещи, которые
+            Арендай появился в 2026 году в Новосибирске из простой идеи: у каждого дома есть вещи, которые
             используются от силы пару раз в год — дрель, проектор, палатка, камера. А кому-то рядом они
             нужны прямо сейчас.
           </p>
