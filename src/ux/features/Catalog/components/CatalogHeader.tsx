@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
   Heart, 
@@ -17,6 +20,7 @@ import styles from '../Catalog.module.scss';
 type CatalogHeaderProps = {
   cityLabel: string;
   isHidden?: boolean;
+  onBrandClick?: () => void;
 };
 
 export function BrandIcon() {
@@ -37,12 +41,20 @@ const actionIcons = [
   { label: 'Сообщения', count: 9, Icon: MessageSquare, href: '/dev-ui/chat' },
 ] as const;
 
-export function CatalogHeader({ cityLabel, isHidden = false }: CatalogHeaderProps) {
+export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: CatalogHeaderProps) {
+  const router = useRouter();
+
+  const handleBrandClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onBrandClick) onBrandClick();
+    router.push('/dev-ui');
+  };
+
   return (
     <header className={`${styles.header} ${isHidden ? styles.headerHidden : ''}`}>
         <div className={styles.topbarInner}>
           <div className={styles.headerLeft}>
-            <Link href="/dev-ui" className={styles.brandBlock} aria-label="Перейти на главную Арендай">
+            <Link href="/dev-ui" className={styles.brandBlock} aria-label="Перейти на главную Арендай" onClick={handleBrandClick}>
               <BrandIcon />
               <div className={styles.brandTextWrap}>
                 <strong>Арендай</strong>

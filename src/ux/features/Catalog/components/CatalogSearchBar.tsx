@@ -14,6 +14,8 @@ type CatalogSearchBarProps = {
   onCloseFilters: () => void;
   onChange: (patch: Partial<CatalogFilterState>) => void;
   onResetFilters: () => void;
+  onSearch?: () => void;
+  onFiltersConfirm?: () => void;
 };
 
 export function CatalogSearchBar({
@@ -24,6 +26,8 @@ export function CatalogSearchBar({
   onCloseFilters,
   onChange,
   onResetFilters,
+  onSearch,
+  onFiltersConfirm,
 }: CatalogSearchBarProps) {
   const shellRef = useRef<HTMLElement | null>(null);
 
@@ -106,6 +110,11 @@ export function CatalogSearchBar({
   }, [filters]);
 
   const handleSearchAction = () => {
+    if (onSearch) {
+      onSearch();
+      return;
+    }
+
     if (isFiltersOpen) {
       onCloseFilters();
     }
@@ -198,6 +207,7 @@ export function CatalogSearchBar({
             onChange={onChange}
             onReset={onResetFilters}
             onClose={onCloseFilters}
+            onConfirm={onFiltersConfirm}
           />
         )}
       </AnimatePresence>

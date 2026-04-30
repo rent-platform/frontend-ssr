@@ -123,6 +123,48 @@
   }
 }
 
+/* ═══════ Search Results Header ═══════ */
+
+.searchResultsHeader {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-4 0 0;
+  flex-wrap: wrap;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  font-size: 13px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.searchResultsTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: $color-text;
+  font-family: $font-family-display;
+  letter-spacing: -0.02em;
+}
+
+.searchResultsCount {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: $color-text-secondary;
+}
+
 /* ═══════ Footer ═══════ */
 .footer {
   margin-top: $space-16;

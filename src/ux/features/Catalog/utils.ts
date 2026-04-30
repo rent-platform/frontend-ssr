@@ -72,18 +72,18 @@ export const getAnnouncementsLabel = (count: number) => {
 
 /** Карточка каталога: основная строка — только сутки. */
 export const formatCatalogCardPrimaryPrice = (item: CatalogUiItem) =>
-  formatPrice(item.price_per_day, '/сутки');
+  formatPrice(item.pricePerDay, '/сутки');
 
 /** Вторая строка под ценой: только ₽/час, если заданы и сутки, и час. */
 export const formatCatalogCardHourSecondary = (item: CatalogUiItem): string | null =>
-  item.price_per_day && item.price_per_hour
-    ? formatPrice(item.price_per_hour, '/час')
+  item.pricePerDay && item.pricePerHour
+    ? formatPrice(item.pricePerHour, '/час')
     : null;
 
 /** Город и адрес/район без дублирования города в строке выдачи. */
 export const formatCatalogCardLocation = (item: CatalogUiItem): string => {
   const city = (item.city ?? '').trim();
-  const detail = (item.pickup_location ?? item.location ?? '').trim();
+  const detail = (item.pickupLocation ?? '').trim();
   if (!detail) {
     return city || 'Адрес не указан';
   }
@@ -118,18 +118,48 @@ export const sortCatalogItems = (items: CatalogUiItem[], sortBy: CatalogSortKey)
 
   switch (sortBy) {
     case 'priceAsc':
-      return sorted.sort((a, b) => priceToNumber(a.price_per_day) - priceToNumber(b.price_per_day));
+      return sorted.sort((a, b) => priceToNumber(a.pricePerDay) - priceToNumber(b.pricePerDay));
     case 'priceDesc':
-      return sorted.sort((a, b) => priceToNumber(b.price_per_day) - priceToNumber(a.price_per_day));
+      return sorted.sort((a, b) => priceToNumber(b.pricePerDay) - priceToNumber(a.pricePerDay));
     case 'newest':
       return sorted.sort(
-        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
     case 'popular':
     default:
-      return sorted.sort((a, b) => b.views_count - a.views_count);
+      return sorted.sort((a, b) => b.viewsCount - a.viewsCount);
   }
 };
+
+/* ─── URL ↔ Filters serialization ─── */
+
+export const filtersToSearchParams = (filters: CatalogFilterState): string => {
+  const params = new URLSearchParams();
+
+  if (filters.search.trim()) params.set('search', filters.search.trim());
+  if (filters.city !== INITIAL_FILTERS.city) params.set('city', filters.city);
+  if (filters.category !== INITIAL_FILTERS.category) params.set('category', filters.category);
+  if (filters.minPrice) params.set('minPrice', filters.minPrice);
+  if (filters.maxPrice) params.set('maxPrice', filters.maxPrice);
+  if (filters.onlyAvailable !== INITIAL_FILTERS.onlyAvailable) params.set('onlyAvailable', String(filters.onlyAvailable));
+  if (filters.sortBy !== INITIAL_FILTERS.sortBy) params.set('sortBy', filters.sortBy);
+  if (filters.quickFilter) params.set('quickFilter', filters.quickFilter);
+  if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit) params.set('hasDeposit', filters.hasDeposit);
+
+  return params.toString();
+};
+
+export const searchParamsToFilters = (params: URLSearchParams): CatalogFilterState => ({
+  search: params.get('search') ?? INITIAL_FILTERS.search,
+  city: params.get('city') ?? INITIAL_FILTERS.city,
+  category: params.get('category') ?? INITIAL_FILTERS.category,
+  minPrice: params.get('minPrice') ?? INITIAL_FILTERS.minPrice,
+  maxPrice: params.get('maxPrice') ?? INITIAL_FILTERS.maxPrice,
+  onlyAvailable: params.has('onlyAvailable') ? params.get('onlyAvailable') === 'true' : INITIAL_FILTERS.onlyAvailable,
+  sortBy: (params.get('sortBy') as CatalogSortKey) ?? INITIAL_FILTERS.sortBy,
+  quickFilter: params.get('quickFilter') ?? INITIAL_FILTERS.quickFilter,
+  hasDeposit: (params.get('hasDeposit') as CatalogFilterState['hasDeposit']) ?? INITIAL_FILTERS.hasDeposit,
+});
 
 export const applyCatalogFilters = (
   items: CatalogUiItem[],
@@ -141,12 +171,12 @@ export const applyCatalogFilters = (
 
   return sortCatalogItems(
     items.filter((item) => {
-      const primaryPrice = Number(item.price_per_day ?? 0);
+      const primaryPrice = Number(item.pricePerDay ?? 0);
 
       const matchesQuery =
         !query ||
         item.title.toLowerCase().includes(query) ||
-        item.item_description?.toLowerCase().includes(query) ||
+        (item.description ?? []).some((d) => d.toLowerCase().includes(query)) ||
         (item.tags ?? []).some((tag) => tag.toLowerCase().includes(query));
 
       const matchesCategory =

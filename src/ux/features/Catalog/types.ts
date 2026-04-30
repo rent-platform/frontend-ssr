@@ -11,6 +11,8 @@ export type CatalogUiItem = CatalogItemCardVM & {
   ownerRating?: number;
 
   /* ── No DB backing yet — kept optional for forward-compat ── */
+  itemDescription?: string;
+  dateAvailable?: string;
   city?: string;
   responseTime?: string;
   tags?: string[];

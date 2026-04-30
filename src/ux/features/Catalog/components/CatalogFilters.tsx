@@ -38,6 +38,7 @@ type CatalogFiltersProps = {
   onChange: (patch: Partial<CatalogFilterState>) => void;
   onReset: () => void;
   onClose: () => void;
+  onConfirm?: () => void;
 };
 
 type FilterSectionKey = 'main' | 'terms' | 'extras';
@@ -172,6 +173,7 @@ export function CatalogFilters({
   onChange,
   onReset,
   onClose,
+  onConfirm,
 }: CatalogFiltersProps) {
   const [activeSection, setActiveSection] = useState<FilterSectionKey>('main');
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -628,7 +630,7 @@ export function CatalogFilters({
           <motion.button
             type="button"
             className={styles.primaryAction}
-            onClick={onClose}
+            onClick={onConfirm ?? onClose}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
           >

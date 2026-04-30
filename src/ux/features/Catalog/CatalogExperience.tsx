@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { ArrowUp, PackageSearch } from 'lucide-react';
 import { CatalogHeader } from './components/CatalogHeader';
 import { CatalogSearchBar } from './components/CatalogSearchBar';
@@ -13,13 +14,14 @@ import { CatalogSkeletonCard } from './components/CatalogSkeletonCard';
 import { CatalogFooter } from './components/CatalogFooter';
 import { mockCatalogItems } from './mockCatalogItems';
 import type { CatalogUiItem } from './types';
-import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from './utils';
+import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters, filtersToSearchParams } from './utils';
 import styles from './Catalog.module.scss';
 
 
 const BATCH_SIZE = 8;
 
 export function CatalogExperience() {
+  const router = useRouter();
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
@@ -55,6 +57,12 @@ export function CatalogExperience() {
     setFilters((prev) => ({ ...prev, ...patch }));
     setVisibleCount(BATCH_SIZE);
   };
+
+  const navigateToSearch = useCallback(() => {
+    if (isFiltersOpen) setIsFiltersOpen(false);
+    const qs = filtersToSearchParams(filters);
+    router.push(`/dev-ui/search${qs ? `?${qs}` : ''}`);
+  }, [filters, isFiltersOpen, router]);
 
   useEffect(() => {
     if (!hasMore || !sentinelRef.current || selectedItem) {
@@ -116,7 +124,7 @@ export function CatalogExperience() {
 
   return (
     <div className={styles.page}>
-      <CatalogHeader cityLabel={filters.city} isHidden={isFiltersOpen} />
+      <CatalogHeader cityLabel={filters.city} isHidden={isFiltersOpen} onBrandClick={() => setSelectedItem(null)} />
 
       <main className={styles.main}>
         <CatalogSearchBar
@@ -127,6 +135,8 @@ export function CatalogExperience() {
           onCloseFilters={onCloseFilters}
           onChange={updateFilters}
           onResetFilters={() => setFilters(INITIAL_FILTERS)}
+          onSearch={navigateToSearch}
+          onFiltersConfirm={navigateToSearch}
         />
 
         {selectedItem ? null : (

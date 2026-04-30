@@ -127,13 +127,13 @@ function ImageCarousel({
 export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const locationLabel = formatCatalogCardLocation(item);
-  const publishedLabel = formatRelativeDate(item.created_at);
+  const publishedLabel = formatRelativeDate(item.createdAt);
   const hourPrice = formatCatalogCardHourSecondary(item);
-  const depositLabel = item.deposit_amount
-    ? `Залог ${formatDepositAmount(item.deposit_amount)}`
+  const depositLabel = item.depositAmount
+    ? `Залог ${formatDepositAmount(item.depositAmount)}`
     : null;
   const highlightItems = (item.quickFilters ?? []).slice(0, 2);
-  const allImages = item.images?.length > 0 ? item.images : (item.imageUrl ? [item.imageUrl] : []);
+  const allImages = item.images?.length > 0 ? item.images : (item.coverImageUrl ? [item.coverImageUrl] : []);
 
   return (
     <motion.article
