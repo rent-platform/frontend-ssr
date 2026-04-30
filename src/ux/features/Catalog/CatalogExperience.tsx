@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowUp, PackageSearch, Sparkles } from 'lucide-react';
+import { ArrowUp, PackageSearch } from 'lucide-react';
 import { CatalogHeader } from './components/CatalogHeader';
 import { CatalogSearchBar } from './components/CatalogSearchBar';
 import { CategoryRail } from './components/CategoryRail';
@@ -16,7 +16,6 @@ import type { CatalogUiItem } from './types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from './utils';
 import styles from './Catalog.module.scss';
 
-const POPULAR_QUERIES = ['Дрель', 'Палатка', 'Камера', 'Велосипед', 'Проектор'];
 
 const BATCH_SIZE = 8;
 
@@ -148,23 +147,6 @@ export function CatalogExperience() {
                     Инструменты, техника и товары для досуга в вашем городе.
                   </p>
                   
-                  <div className={styles.quickPills}>
-                    {POPULAR_QUERIES.map((q) => (
-                      <button
-                        key={q}
-                        type="button"
-                        className={styles.pill}
-                        onClick={() => {
-                          updateFilters({ search: q });
-                          document.getElementById('catalog-results')?.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                      >
-                        <Sparkles size={12} />
-                        {q}
-                      </button>
-                    ))}
-                  </div>
-
                   <div className={styles.stats}>
                     <div className={styles.statCard}>
                       <strong>{mockCatalogItems.length}</strong>
