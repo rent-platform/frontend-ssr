@@ -149,16 +149,16 @@ export function CatalogExperience() {
                   
                   <div className={styles.stats}>
                     <div className={styles.statCard}>
-                      <strong>{mockCatalogItems.length}</strong>
-                      <span>Объявлений</span>
+                      <strong>1 000+</strong>
+                      <span>вещей</span>
                     </div>
                     <div className={styles.statCard}>
-                      <strong>{CATEGORY_OPTIONS.length}</strong>
-                      <span>Категорий</span>
+                      <strong>50+</strong>
+                      <span>городов</span>
                     </div>
                     <div className={styles.statCard}>
-                      <strong>24/7</strong>
-                      <span>Поддержка</span>
+                      <strong>100%</strong>
+                      <span>защита сделок</span>
                     </div>
                   </div>
                 </div>

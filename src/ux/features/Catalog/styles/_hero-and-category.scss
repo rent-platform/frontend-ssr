@@ -207,26 +207,27 @@
 .statCard {
   display: flex;
   align-items: baseline;
-  gap: 5px;
-  padding: 6px 16px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(34, 197, 94, 0.08);
+  gap: 6px;
+  padding: 8px 20px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(34, 197, 94, 0.1);
   border-radius: $radius-full;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
 
   strong {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
-    color: $color-text;
+    color: $color-primary;
     font-family: $font-family-display;
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
   }
 
   span {
     font-size: 12px;
-    font-weight: 600;
-    color: $color-text-secondary;
+    font-weight: 500;
+    color: $color-text;
+    letter-spacing: -0.01em;
   }
 }
 
