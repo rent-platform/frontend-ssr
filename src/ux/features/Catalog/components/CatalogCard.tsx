@@ -27,6 +27,8 @@ type CatalogCardProps = {
   item: CatalogUiItem;
   onOpen?: (item: CatalogUiItem) => void;
   index?: number;
+  initialFavorite?: boolean;
+  onFavoriteChange?: (id: string, value: boolean) => void;
 };
 
 const highlightVisuals = {
@@ -124,8 +126,8 @@ function ImageCarousel({
   );
 }
 
-export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
+export function CatalogCard({ item, onOpen = () => {}, index = 0, initialFavorite = false, onFavoriteChange }: CatalogCardProps) {
+  const [isFavorite, setIsFavorite] = useState(initialFavorite);
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.createdAt);
   const hourPrice = formatCatalogCardHourSecondary(item);
@@ -148,7 +150,7 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0 }: CatalogCardP
           type="button"
           className={`${styles.cardFavorite} ${isFavorite ? styles.cardFavoriteActive : ''}`}
           aria-label={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
-          onClick={(e) => { e.stopPropagation(); setIsFavorite(!isFavorite); }}
+          onClick={(e) => { e.stopPropagation(); const next = !isFavorite; setIsFavorite(next); onFavoriteChange?.(item.id, next); }}
         >
           <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
         </button>

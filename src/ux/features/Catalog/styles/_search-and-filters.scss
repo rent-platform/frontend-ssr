@@ -222,35 +222,35 @@
 
 .glassSelectDropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 6px);
   left: 0;
   right: 0;
   background: #fff;
-  border-radius: $radius-2xl;
+  border-radius: $radius-xl;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   border: 1px solid $color-border;
   overflow: hidden;
   z-index: 2100;
-  padding: $space-2;
+  padding: 4px;
 }
 
 .glassSelectOptions {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  max-height: 300px;
+  gap: 1px;
+  max-height: 260px;
   overflow-y: auto;
-  padding-right: 4px;
+  padding-right: 2px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(34, 197, 94, 0.55) transparent;
-  @include scrollbar(10px, rgba(34, 197, 94, 0.55), rgba(15, 23, 42, 0.06));
+  scrollbar-color: rgba(34, 197, 94, 0.45) transparent;
+  @include scrollbar(5px, rgba(34, 197, 94, 0.45), transparent);
 }
 
 .glassSelectOption, .glassSelectOptionActive {
   display: flex;
   flex-direction: column;
-  padding: $space-3 $space-4;
-  border-radius: $radius-lg;
+  padding: 8px 12px;
+  border-radius: $radius-md;
   border: 0;
   background: transparent;
   cursor: pointer;
@@ -271,29 +271,29 @@
 }
 
 .filterLabel {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12.5px;
+  font-weight: 600;
   color: $color-text;
 }
 
 .glassSelectOptionDescription {
-  font-size: 12px;
+  font-size: 11px;
   color: $color-text-secondary;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .glassSelectSearchWrap {
-  padding: $space-2;
-  margin-bottom: $space-2;
+  padding: 4px;
+  margin-bottom: 4px;
   border-bottom: 1px solid $color-border;
 }
 
 .glassSelectSearchInput {
   width: 100%;
-  padding: $space-2 $space-4;
+  padding: 6px 10px;
   border: 1px solid $color-border;
-  border-radius: $radius-lg;
-  font-size: 14px;
+  border-radius: $radius-md;
+  font-size: 12.5px;
   outline: 0;
   transition: $transition-smooth;
   
@@ -303,12 +303,12 @@
 }
 
 .glassSelectFooter {
-  padding: $space-3 $space-4;
-  font-size: 11px;
+  padding: 6px 12px;
+  font-size: 10.5px;
   color: $color-text-secondary;
   background: $color-surface-muted;
-  border-radius: 0 0 $radius-2xl $radius-2xl;
-  margin: $space-2 -#{$space-2} -#{$space-2} -#{$space-2};
+  border-radius: 0 0 $radius-xl $radius-xl;
+  margin: 4px -4px -4px -4px;
 }
 
 .glassSelect {

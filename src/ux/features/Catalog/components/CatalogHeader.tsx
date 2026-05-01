@@ -36,7 +36,7 @@ export function BrandIcon() {
 }
 
 const actionIcons = [
-  { label: 'Избранное', count: 2, Icon: Heart, href: '' },
+  { label: 'Избранное', count: 2, Icon: Heart, href: '/dev-ui/favorites' },
   { label: 'Уведомления', count: 5, Icon: Bell, href: '/dev-ui/notifications' },
   { label: 'Сообщения', count: 9, Icon: MessageSquare, href: '/dev-ui/chat' },
 ] as const;
