@@ -586,7 +586,8 @@
 
 /* ═══ Quick Actions ═══ */
 .quickActions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: $space-3;
   margin-top: $space-6;
   padding-top: $space-6;
@@ -594,158 +595,73 @@
 }
 
 .quickAction {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $space-2;
-  padding: $space-4;
-  border-radius: $radius-xl;
-  border: 1px solid $color-border;
-  background: $color-surface-muted;
-  color: $color-text-secondary;
-  font-size: $font-size-sm;
-  font-weight: $font-weight-600;
-  text-decoration: none;
-  transition: $transition-smooth;
-
-  svg { width: 18px; height: 18px; }
-
-  &:hover {
-    border-color: rgba(34, 197, 94, 0.3);
-    background: rgba(34, 197, 94, 0.04);
-    color: $color-primary;
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.08);
-  }
-}
-
-/* ═══ Listings Grid (cards) ═══ */
-.listingsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: $space-4;
-}
-
-.listingCard {
-  border-radius: $radius-xl;
-  border: 1px solid $color-border;
-  background: $color-surface-muted;
-  overflow: hidden;
-  transition: $transition-smooth;
-}
-
-.listingCardImage {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  background: $color-border;
-  overflow: hidden;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-  }
-}
-
-.listingCardPlaceholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $color-text-secondary;
-  background: linear-gradient(135deg, $color-surface-muted 0%, #eef2f7 100%);
-
-  svg { width: 28px; height: 28px; opacity: 0.3; }
-}
-
-.listingCardStatus {
-  position: absolute;
-  top: $space-2;
-  left: $space-2;
-}
-
-.listingCardBody {
-  padding: $space-4;
-
-  h3 {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-600;
-    color: $color-text;
-    margin: 0 0 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-.categoryChip {
-  display: inline-block;
-  padding: 2px 8px;
-  background: $color-surface-muted;
-  border-radius: $radius-full;
-  font-size: 10px;
-  color: $color-text-secondary;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: $font-weight-bold;
-  border: 1px solid $color-border;
-}
-
-.listingLink {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-
-  &:hover .listingCard {
-    border-color: rgba(34, 197, 94, 0.25);
-    box-shadow: $shadow-card-hover;
-    transform: translateY(-3px);
-  }
-
-  &:hover .listingCardImage img { transform: scale(1.04); }
-}
-
-.listingCardFooter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: $space-3;
-  padding-top: $space-3;
-  border-top: 1px solid $color-border;
-}
-
-.listingCardPrice {
-  font-family: $font-family-display;
-  font-size: $font-size-base;
-  font-weight: $font-weight-800;
-  color: $color-text;
-  letter-spacing: -0.3px;
-
-  small {
-    font-size: $font-size-xs;
-    font-weight: $font-weight-regular;
-    color: $color-text-secondary;
-    font-family: $font-family-base;
-    letter-spacing: 0;
-  }
-}
-
-.listingCardStats {
   display: flex;
   align-items: center;
   gap: $space-3;
-  font-size: $font-size-xs;
-  color: $color-text-secondary;
+  padding: $space-4 $space-4;
+  border-radius: $radius-xl;
+  border: 1px solid $color-border;
+  background: #fff;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
 
-  span {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    svg { width: 12px; height: 12px; opacity: 0.5; }
+  &:hover {
+    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.02);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.1);
+    transform: translateY(-2px);
+
+    .quickActionIcon {
+      background: $gradient-green;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+    }
   }
 }
+
+.quickActionIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-lg;
+  background: rgba(34, 197, 94, 0.08);
+  color: $color-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.quickActionText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.quickActionLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+  line-height: 1.2;
+}
+
+.quickActionHint {
+  font-size: 11px;
+  color: $color-text-secondary;
+  line-height: 1.2;
+}
+
+/* ═══ Listings Grid (matches catalog grid exactly) ═══ */
+.listingsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-5 $space-4;
+  padding: $space-2 0;
+
+  @media (max-width: 560px) { grid-template-columns: 1fr; }
+}
+
 
 /* ═══ Status Badge ═══ */
 .statusBadge {
@@ -784,22 +700,23 @@
   gap: $space-3;
 }
 
-.bookingRow {
+.bookingCard {
   position: relative;
   display: flex;
   align-items: center;
-  gap: $space-4;
-  padding: $space-4 $space-4 $space-4 $space-5;
+  gap: $space-3;
+  padding: $space-3 $space-4 $space-3 $space-5;
   border: 1px solid $color-border;
-  border-radius: $radius-xl;
+  border-radius: $radius-2xl;
   background: #fff;
+  box-shadow: $shadow-card;
   overflow: hidden;
-  transition: $transition-smooth;
+  transition: border-color 0.25s ease, box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
 
   &:hover {
-    border-color: rgba(34, 197, 94, 0.2);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-    transform: translateX(2px);
+    border-color: rgba(34, 197, 94, 0.25);
+    box-shadow: 0 12px 28px -12px rgba(34, 197, 94, 0.12), $shadow-card-hover;
+    transform: translateY(-2px);
   }
 }
 
@@ -810,62 +727,56 @@
   bottom: 0;
   width: 3px;
   background: currentColor;
-  border-radius: 3px 0 0 3px;
 }
 
 .bookingImg {
-  width: 60px;
-  height: 60px;
-  border-radius: $radius-lg;
+  width: 52px;
+  height: 52px;
+  border-radius: $radius-xl;
   object-fit: cover;
   flex-shrink: 0;
-  border: 1px solid $color-border;
 }
 
 .bookingImgFallback {
-  width: 60px;
-  height: 60px;
-  border-radius: $radius-lg;
-  background: $color-surface-muted;
-  border: 1px solid $color-border;
+  width: 52px;
+  height: 52px;
+  border-radius: $radius-xl;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   color: $color-text-secondary;
-  svg { width: 20px; height: 20px; opacity: 0.35; }
+  svg { opacity: 0.25; }
 }
 
 .bookingInfo {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .bookingTitle {
-  display: block;
-  font-size: $font-size-sm;
-  font-weight: $font-weight-600;
+  font-size: 14px;
+  font-weight: 700;
   color: $color-text;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 5px;
+  letter-spacing: -0.01em;
 }
 
 .bookingMeta {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: $space-4;
-  font-size: $font-size-xs;
-  color: $color-text-secondary;
-  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(100, 116, 139, 0.72);
 
-  span {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    svg { width: 12px; height: 12px; opacity: 0.5; }
-  }
+  svg { opacity: 0.6; flex-shrink: 0; }
 }
 
 .bookingRight {
@@ -877,11 +788,10 @@
 }
 
 .bookingPrice {
-  font-family: $font-family-display;
-  font-size: $font-size-base;
-  font-weight: $font-weight-800;
+  font-size: 15px;
+  font-weight: 700;
   color: $color-text;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.01em;
 }
 
 /* ═══ Empty State ═══ */
@@ -890,36 +800,39 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: $space-20 $space-4;
+  padding: $space-16 $space-4;
   text-align: center;
 }
 
 .emptyIcon {
-  width: 72px;
-  height: 72px;
-  border-radius: $radius-2xl;
-  background: $color-surface-muted;
-  border: 1px solid $color-border;
+  width: 80px;
+  height: 80px;
+  border-radius: $radius-full;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(34, 197, 94, 0.02) 100%);
+  border: 1.5px dashed rgba(34, 197, 94, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: $space-5;
-  color: $color-text-secondary;
-  svg { width: 28px; height: 28px; opacity: 0.35; }
+  color: $color-primary;
+  svg { width: 30px; height: 30px; opacity: 0.5; }
 }
 
 .emptyTitle {
   font-family: $font-family-display;
-  font-size: $font-size-base;
-  font-weight: $font-weight-600;
+  font-size: 16px;
+  font-weight: $font-weight-bold;
   color: $color-text;
-  margin: 0 0 $space-1;
+  margin: 0 0 $space-2;
+  letter-spacing: -0.2px;
 }
 
 .emptyText {
   font-size: $font-size-sm;
   color: $color-text-secondary;
   margin: 0;
+  max-width: 280px;
+  line-height: 1.5;
 }
 
 /* ═══ Earnings row ═══ */

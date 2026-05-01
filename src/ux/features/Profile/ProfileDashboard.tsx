@@ -7,14 +7,12 @@ import {
   ArrowLeft,
   BadgeCheck,
   Calendar,
-  CalendarCheck,
   Camera,
   Check,
   CheckCircle2,
   Copy,
   Edit3,
   Eye,
-  ImageIcon,
   Mail,
   MessageCircle,
   Package,
@@ -30,6 +28,8 @@ import {
 } from 'lucide-react';
 import { CatalogHeader } from '../Catalog/components/CatalogHeader';
 import { CatalogFooter } from '../Catalog/components/CatalogFooter';
+import { CatalogCard } from '../Catalog/components/CatalogCard';
+import type { CatalogUiItem } from '../Catalog/types';
 import type { ItemStatus, DealStatus } from '@/business/types/entity';
 import type { ProfileTab, ProfileListing, ProfileBooking, BookingSide } from './types';
 import { MOCK_USER, MOCK_STATS, MOCK_LISTINGS, MOCK_BOOKINGS } from './mockProfileData';
@@ -51,6 +51,7 @@ const DEAL_STATUS_MAP: Record<DealStatus, { label: string; cls: string }> = {
   active:    { label: 'Активна',     cls: styles.statusActive },
   completed: { label: 'Завершена',   cls: styles.statusCompleted },
   rejected:  { label: 'Отклонена',   cls: styles.statusRejected },
+  cancelled: { label: 'Отменена',    cls: styles.statusArchived },
 };
 
 type ListingFilter = 'all' | ItemStatus;
@@ -73,6 +74,30 @@ const BOOKING_FILTERS: { value: BookingFilter; label: string }[] = [
 ];
 
 const EASE = [0.23, 1, 0.32, 1] as const;
+
+function profileListingToCatalogItem(listing: ProfileListing): CatalogUiItem {
+  return {
+    id: listing.id,
+    title: listing.title,
+    coverImageUrl: listing.image ?? '',
+    images: listing.image ? [listing.image] : [],
+    category: listing.category,
+    pricePerDay: listing.price_per_day ?? null,
+    pricePerHour: null,
+    depositAmount: '',
+    pickupLocation: 'Новосибирск',
+    status: listing.status,
+    isAvailable: listing.status === 'active',
+    viewsCount: listing.views_count,
+    createdAt: listing.created_at,
+    nearestAvailableDate: null,
+    ownerName: MOCK_USER.full_name,
+    ownerAvatar: MOCK_USER.avatar_url,
+    ownerRating: MOCK_USER.rating,
+    quickFilters: [],
+    featured: listing.bookingsCount > 10,
+  } as CatalogUiItem;
+}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -184,7 +209,7 @@ function ShareModal({ url, onClose }: { url: string; onClose: () => void }) {
    ═══════════════════════════════════════════════════════════════════════════════ */
 export function ProfileDashboard() {
   const [isLoading, setIsLoading] = useState(true);
-  const [tab, setTab] = useState<ProfileTab>('overview');
+  const [tab, setTab] = useState<ProfileTab>('listings');
   const [listingFilter, setListingFilter] = useState<ListingFilter>('all');
   const [dealSide, setDealSide] = useState<BookingSide>('owner');
   const [dealFilter, setDealFilter] = useState<BookingFilter>('all');
@@ -321,7 +346,6 @@ export function ProfileDashboard() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.1, ease: EASE }}
         >
-          <TabBtn active={tab === 'overview'} label="Обзор" onClick={() => setTab('overview')} />
           <TabBtn active={tab === 'listings'} label="Мои вещи" count={stats.totalListings} onClick={() => setTab('listings')} />
           <TabBtn active={tab === 'deals'} label="Сделки" count={MOCK_BOOKINGS.length} onClick={() => setTab('deals')} />
         </motion.nav>
@@ -335,7 +359,6 @@ export function ProfileDashboard() {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.25, ease: EASE }}
           >
-            {tab === 'overview' && <OverviewPanel />}
             {tab === 'listings' && <ListingsPanel filter={listingFilter} onFilterChange={setListingFilter} />}
             {tab === 'deals' && <DealsPanel side={dealSide} onSideChange={setDealSide} filter={dealFilter} onFilterChange={setDealFilter} />}
           </motion.div>
@@ -370,30 +393,6 @@ function TabBtn({ active, label, count, onClick }: { active: boolean; label: str
   );
 }
 
-/* ── Overview Panel ── */
-function OverviewPanel() {
-  return (
-    <div className={styles.panel}>
-      <h2 className={styles.panelTitle}>Быстрые действия</h2>
-
-      <div className={styles.quickActions}>
-        <Link href="/dev-ui/create-listing" className={styles.quickAction}>
-          <Package size={18} />
-          <span>Сдать вещь</span>
-        </Link>
-        <Link href="/dev-ui" className={styles.quickAction}>
-          <ShoppingBag size={18} />
-          <span>Найти вещь</span>
-        </Link>
-        <Link href="/dev-ui/chat" className={styles.quickAction}>
-          <MessageCircle size={18} />
-          <span>Сообщения</span>
-        </Link>
-      </div>
-    </div>
-  );
-}
-
 /* ═══ Listings Panel ═══ */
 function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilter; onFilterChange: (f: ListingFilter) => void }) {
   const filtered = useMemo(() => (filter === 'all' ? MOCK_LISTINGS : MOCK_LISTINGS.filter((l) => l.status === filter)), [filter]);
@@ -419,48 +418,14 @@ function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilter; onFi
       ) : (
         <div className={styles.listingsGrid}>
           {filtered.map((item, i) => (
-            <motion.div
+            <CatalogCard
               key={item.id}
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: i * 0.04, ease: EASE }}
-            >
-              <Link href={`/dev-ui/listing/${item.id}`} className={styles.listingLink}>
-                <ListingCard item={item} />
-              </Link>
-            </motion.div>
+              item={profileListingToCatalogItem(item)}
+              index={i}
+            />
           ))}
         </div>
       )}
-    </div>
-  );
-}
-
-function ListingCard({ item }: { item: ProfileListing }) {
-  const st = ITEM_STATUS_MAP[item.status];
-  return (
-    <div className={styles.listingCard}>
-      <div className={styles.listingCardImage}>
-        {item.image ? (
-          <img src={item.image} alt={item.title} />
-        ) : (
-          <div className={styles.listingCardPlaceholder}><ImageIcon size={28} /></div>
-        )}
-        <span className={`${styles.statusBadge} ${st.cls} ${styles.listingCardStatus}`}>{st.label}</span>
-      </div>
-      <div className={styles.listingCardBody}>
-        <h3>{item.title}</h3>
-        <span className={styles.categoryChip}>{item.category}</span>
-        <div className={styles.listingCardFooter}>
-          {item.price_per_day && (
-            <span className={styles.listingCardPrice}>{item.price_per_day} ₽<small>/сут</small></span>
-          )}
-          <div className={styles.listingCardStats}>
-            <span><Eye size={12} /> {item.views_count}</span>
-            <span><CalendarCheck size={12} /> {item.bookingsCount}</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -532,22 +497,24 @@ function BookingRow({ booking, counterLabel }: { booking: ProfileBooking; counte
   const st = DEAL_STATUS_MAP[booking.status];
 
   return (
-    <div className={styles.bookingRow}>
+    <div className={styles.bookingCard}>
       <div className={`${styles.bookingStripe} ${st.cls}`} />
       {booking.itemImage ? (
         <img src={booking.itemImage} alt={booking.itemTitle} className={styles.bookingImg} />
       ) : (
-        <div className={styles.bookingImgFallback}><Camera size={20} /></div>
+        <div className={styles.bookingImgFallback}><Camera size={18} /></div>
       )}
       <div className={styles.bookingInfo}>
         <span className={styles.bookingTitle}>{booking.itemTitle}</span>
-        <div className={styles.bookingMeta}>
-          <span><User size={12} /> {counterLabel}: {booking.counterpartyName}</span>
-          <span><Calendar size={12} /> {formatShortDate(booking.start_date)} — {formatShortDate(booking.end_date)}</span>
-        </div>
+        <span className={styles.bookingMeta}>
+          <User size={11} /> {counterLabel}: {booking.counterpartyName}
+        </span>
+        <span className={styles.bookingMeta}>
+          <Calendar size={11} /> {formatShortDate(booking.start_date)} — {formatShortDate(booking.end_date)}
+        </span>
       </div>
       <div className={styles.bookingRight}>
-        <span className={styles.bookingPrice}>{booking.total_price} ₽</span>
+        <span className={styles.bookingPrice}>{Number(booking.total_price).toLocaleString('ru-RU')} ₽</span>
         <span className={`${styles.statusBadge} ${st.cls}`}>{st.label}</span>
       </div>
     </div>

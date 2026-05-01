@@ -11,13 +11,10 @@ import {
   Calendar,
   Check,
   CheckCircle2,
-  Clock3,
   Copy,
   ExternalLink,
   Flag,
   Globe,
-  Heart,
-  ImageIcon,
   Info,
   MapPin,
   MessageCircle,
@@ -32,13 +29,38 @@ import {
 } from 'lucide-react';
 import { CatalogHeader } from '../Catalog/components/CatalogHeader';
 import { CatalogFooter } from '../Catalog/components/CatalogFooter';
+import { CatalogCard } from '../Catalog/components/CatalogCard';
+import type { CatalogUiItem } from '../Catalog/types';
 import { MOCK_PUBLIC_USER, MOCK_PUBLIC_LISTINGS, MOCK_PUBLIC_REVIEWS } from './mockPublicProfileData';
-import type { TrustLevel } from './types';
+import type { TrustLevel, PublicListing, PublicUser } from './types';
 import styles from './PublicProfile.module.scss';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 const VISIBLE_LISTINGS = 6;
 const VISIBLE_REVIEWS = 4;
+
+function publicListingToCatalogItem(listing: PublicListing, user: PublicUser): CatalogUiItem {
+  return {
+    id: listing.id,
+    title: listing.title,
+    coverImageUrl: listing.image ?? '',
+    images: listing.image ? [listing.image] : [],
+    category: listing.category,
+    pricePerDay: listing.pricePerDay,
+    pricePerHour: null,
+    depositAmount: '',
+    pickupLocation: user.city,
+    status: 'active' as const,
+    isAvailable: listing.isAvailable,
+    viewsCount: 0,
+    createdAt: user.memberSince,
+    nearestAvailableDate: null,
+    ownerName: user.full_name,
+    ownerAvatar: user.avatar_url,
+    ownerRating: listing.rating,
+    quickFilters: [],
+  } as CatalogUiItem;
+}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -193,23 +215,12 @@ export function PublicProfile() {
   const [activeTab, setActiveTab] = useState<Tab>('listings');
   const [showAllListings, setShowAllListings] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [helpfulReviews, setHelpfulReviews] = useState<Set<string>>(new Set());
   const [showShareModal, setShowShareModal] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1200);
     return () => clearTimeout(timer);
-  }, []);
-
-  const toggleFavorite = useCallback((id: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setFavorites((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
   }, []);
 
   const toggleHelpful = useCallback((id: string) => {
@@ -483,46 +494,11 @@ export function PublicProfile() {
                   <>
                     <div className={styles.listingsGrid}>
                       {visibleListings.map((item, i) => (
-                        <motion.div
+                        <CatalogCard
                           key={item.id}
-                          initial={{ opacity: 0, scale: 0.97 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.3, delay: i * 0.04, ease: EASE }}
-                        >
-                          <Link href={`/dev-ui/listing/${item.id}`} className={styles.listingLink}>
-                            <div className={styles.listingCard}>
-                              <div className={styles.listingImage}>
-                                {item.image ? (
-                                  <img src={item.image} alt={item.title} />
-                                ) : (
-                                  <div className={styles.listingPlaceholder}><ImageIcon size={28} /></div>
-                                )}
-                                <span className={`${styles.availBadge} ${item.isAvailable ? styles.availBadgeYes : styles.availBadgeNo}`}>
-                                  {item.isAvailable ? <><Zap size={11} /> Доступно</> : <><Clock3 size={11} /> Занято</>}
-                                </span>
-                                <button
-                                  type="button"
-                                  className={`${styles.favBtn} ${favorites.has(item.id) ? styles.favBtnActive : ''}`}
-                                  onClick={(e) => toggleFavorite(item.id, e)}
-                                  aria-label="В избранное"
-                                >
-                                  <Heart size={16} />
-                                </button>
-                              </div>
-                              <div className={styles.listingBody}>
-                                <h3 className={styles.listingTitle}>{item.title}</h3>
-                                <span className={styles.categoryChip}>{item.category}</span>
-                                <div className={styles.listingFooter}>
-                                  <span className={styles.listingPrice}>{item.pricePerDay} ₽<small>/сут</small></span>
-                                  <span className={styles.listingRating}>
-                                    <Star size={12} /> {item.rating.toFixed(1)}
-                                    <span>({item.reviewCount})</span>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </Link>
-                        </motion.div>
+                          item={publicListingToCatalogItem(item, user)}
+                          index={i}
+                        />
                       ))}
                     </div>
 

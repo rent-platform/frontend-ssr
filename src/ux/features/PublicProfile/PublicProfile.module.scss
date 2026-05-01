@@ -464,8 +464,9 @@
 /* ═══ Listings ═══ */
 .listingsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: $space-4;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-5 $space-4;
+  padding: $space-2 0;
   margin-bottom: $space-4;
 }
 

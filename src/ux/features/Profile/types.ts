@@ -61,4 +61,4 @@ export type ProfileBooking = {
 
 /* ═══ Tabs ═══ */
 
-export type ProfileTab = 'overview' | 'listings' | 'deals';
+export type ProfileTab = 'listings' | 'deals';
