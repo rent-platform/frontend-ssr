@@ -28,9 +28,13 @@ export function useLoginForm() {
 
   const onSubmit = async (data: LoginFormValues) => {
     setApiError(null);
-    const { ok, error } = await login(data.tel, data.password, data.rememberMe);
+    const { ok, error, redirectTo } = await login(
+      data.tel,
+      data.password,
+      data.rememberMe,
+    );
     if (ok) {
-      router.replace(ROUTE_PATHS.HOME); // TODO: idk if its should be like that
+      router.replace(redirectTo ?? ROUTE_PATHS.HOME);
     } else {
       setApiError(
         error === "CredentialsSignin"

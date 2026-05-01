@@ -1,13 +1,19 @@
 "use client";
 
 import {
+  getSession,
   signIn,
   signOut,
   useSession as useNextAuthSession,
 } from "next-auth/react";
+import { getDefaultRouteForRole } from "@/business/utils/auth/roles";
 import { fetchApi } from "@/business/api/auth/nextAuthApi";
 
-export type AuthResult = { ok: boolean; error: string | null };
+export type AuthResult = {
+  ok: boolean;
+  error: string | null;
+  redirectTo?: string;
+};
 
 interface RegisterApiResponse {
   success: boolean;
@@ -27,6 +33,8 @@ export function useSession() {
     rememberMe = false,
   ): Promise<AuthResult> => {
     try {
+      // Credentials sign-in delegates validation to Auth.js authorize().
+      // redirect: false lets the form handle errors and route selection.
       const res = await signIn("credentials", {
         tel,
         password,
@@ -34,7 +42,18 @@ export function useSession() {
         redirect: false,
       });
       const error = res?.error ?? null;
-      return { ok: !error, error };
+
+      if (error) {
+        return { ok: false, error };
+      }
+
+      // Read the freshly issued session to redirect users by their stored role.
+      const session = await getSession();
+      return {
+        ok: true,
+        error: null,
+        redirectTo: getDefaultRouteForRole(session?.user?.role),
+      };
     } catch (e) {
       const message = e instanceof Error ? e.message : "MyCredentialsSignin";
       return { ok: false, error: message };

@@ -84,10 +84,14 @@ export const dealsApi = baseApi.injectEndpoints({
         url: `deals/${id}/confirm`,
         method: "PATCH",
       }),
-      invalidatesTags: (_result, _error, id) => getDealMutationInvalidationTags(id),
+      invalidatesTags: (_result, _error, id) =>
+        getDealMutationInvalidationTags(id),
     }),
 
-    rejectDeal: build.mutation<Deal, { id: string; body?: RejectDealRequestDto }>({
+    rejectDeal: build.mutation<
+      Deal,
+      { id: string; body?: RejectDealRequestDto }
+    >({
       query: ({ id, body }) => ({
         url: `deals/${id}/reject`,
         method: "PATCH",
@@ -102,7 +106,8 @@ export const dealsApi = baseApi.injectEndpoints({
         url: `deals/${id}/cancel`,
         method: "PATCH",
       }),
-      invalidatesTags: (_result, _error, id) => getDealMutationInvalidationTags(id),
+      invalidatesTags: (_result, _error, id) =>
+        getDealMutationInvalidationTags(id),
     }),
 
     startDeal: build.mutation<Deal, string>({
@@ -111,7 +116,6 @@ export const dealsApi = baseApi.injectEndpoints({
           url: "payments",
           params: { dealId },
         });
-
         if ("error" in paymentResult) {
           return {
             error: createCustomError(
@@ -119,32 +123,26 @@ export const dealsApi = baseApi.injectEndpoints({
             ),
           };
         }
-
         const payment = paymentResult.data as Payment;
-
-        if (
-          payment.status !== "AUTHORIZED" &&
-          payment.status !== "CAPTURED"
-        ) {
+        if (payment.status !== "AUTHORIZED" && payment.status !== "CAPTURED") {
           return {
             error: createCustomError(
               "Нельзя начать сделку без подтвержденной оплаты",
             ),
           };
         }
-
         const startDealResult = await baseQuery({
           url: `deals/${dealId}/start`,
           method: "PATCH",
         });
-
         if ("error" in startDealResult && startDealResult.error) {
           return { error: startDealResult.error };
         }
 
         return { data: startDealResult.data as Deal };
       },
-      invalidatesTags: (_result, _error, id) => getDealMutationInvalidationTags(id),
+      invalidatesTags: (_result, _error, id) =>
+        getDealMutationInvalidationTags(id),
     }),
 
     completeDeal: build.mutation<Deal, string>({
@@ -152,7 +150,8 @@ export const dealsApi = baseApi.injectEndpoints({
         url: `deals/${id}/complete`,
         method: "PATCH",
       }),
-      invalidatesTags: (_result, _error, id) => getDealMutationInvalidationTags(id),
+      invalidatesTags: (_result, _error, id) =>
+        getDealMutationInvalidationTags(id),
     }),
 
     fetchMyIncomingDeals: build.query<DealsListResponseDto, void>({

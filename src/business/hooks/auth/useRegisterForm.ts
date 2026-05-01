@@ -27,10 +27,14 @@ export function useRegisterForm() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     setApiError(null);
-    const { ok, error } = await signUp(data.name, data.tel, data.password);
+    const { ok, error, redirectTo } = await signUp(
+      data.name,
+      data.tel,
+      data.password,
+    );
     console.log(ok, error);
     if (ok) {
-      router.replace(ROUTE_PATHS.HOME); // TODO: ошибки расширить
+      router.replace(redirectTo ?? ROUTE_PATHS.HOME);
     } else {
       setApiError(
         error === "REGISTERED_BUT_LOGIN_FAILED"

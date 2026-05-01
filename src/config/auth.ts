@@ -12,6 +12,16 @@ import { decodeJwt } from "jose";
 
 const SESSION_MAX_AGE = 30 * 24 * 60 * 60;
 const isMockingEnabled = process.env.NEXT_PUBLIC_API_MOCKING === "enabled";
+
+function getAccessTokenExpiresAt(accessToken: string): number | undefined {
+  try {
+    return decodeJwt(accessToken).exp;
+  } catch (error) {
+    console.error("Не удалось декодировать accessToken:", error);
+    return undefined;
+  }
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   providers: [
@@ -102,7 +112,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         try {
-          const decoded = decodeJwt(user.accessToken);
+          const decoded = { exp: getAccessTokenExpiresAt(user.accessToken) };
           return {
             ...token,
             id: user.id,
@@ -188,7 +198,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.full_name = token.full_name;
       session.user.nickname = token.nickname;
       session.user.avatar_url = token.avatar_url;
-      session.accessToken = token.accessToken;
       return session;
     },
   },

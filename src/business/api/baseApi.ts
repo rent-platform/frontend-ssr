@@ -1,18 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getSession } from "next-auth/react";
 
+// Общий API-слой приложения на базе RTK Query.
 export const baseApi = createApi({
-  reducerPath: "api",
+  reducerPath: "api", // Имя раздела RTK Query в Redux store.
+  // Базовая настройка HTTP-запросов.
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL ?? "/api",
-    prepareHeaders: async (headers) => {
-      const session = await getSession();
-      if (session?.accessToken) {
-        headers.set("Authorization", `Bearer ${session.accessToken}`);
-      }
-      return headers;
-    },
+    // Клиент не читает accessToken: все запросы идут через BFF-прокси.
+    baseUrl: "/api/proxy",
+    credentials: "same-origin",
   }),
+  // Типы тегов для кэширования и инвалидации данных.
   tagTypes: [
     "Ads",
     "AdsItem",
@@ -24,6 +21,6 @@ export const baseApi = createApi({
     "UserRating",
     "Payment",
   ],
-  refetchOnReconnect: true,
+  refetchOnReconnect: true, // Повторная загрузка данных при восстановлении соединения.
   endpoints: () => ({}),
 });
