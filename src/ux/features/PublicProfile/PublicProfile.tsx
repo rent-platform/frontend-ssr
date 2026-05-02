@@ -389,23 +389,9 @@ export function PublicProfile() {
                 <span>На платформе с {formatMemberSince(user.memberSince)}</span>
               </div>
               <div className={styles.aboutRow}>
-                <Zap size={15} />
-                <span>Отвечает {user.responseTime}</span>
-              </div>
-              <div className={styles.aboutRow}>
-                <ThumbsUp size={15} />
-                <span>{user.responseRate}% отклик</span>
-              </div>
-              <div className={styles.aboutRow}>
                 <Package size={15} />
                 <span>{user.completedDeals} успешных сделок</span>
               </div>
-              {user.languages.length > 0 && (
-                <div className={styles.aboutRow}>
-                  <Globe size={15} />
-                  <span>{user.languages.join(', ')}</span>
-                </div>
-              )}
             </div>
           </motion.div>
 
