@@ -37,7 +37,7 @@ import styles from './ProfileDashboard.module.scss';
 /* ─── Helpers ─── */
 
 const DEAL_STATUS_MAP: Record<DealStatus, { label: string; cls: string }> = {
-  new:       { label: 'Новая',       cls: styles.statusNew },
+  new:       { label: 'Ожидает',     cls: styles.statusNew },
   confirmed: { label: 'Подтверждена', cls: styles.statusConfirmed },
   active:    { label: 'Активна',     cls: styles.statusActive },
   completed: { label: 'Завершена',   cls: styles.statusCompleted },
@@ -183,7 +183,7 @@ function ShareModal({ url, onClose }: { url: string; onClose: () => void }) {
           <h3>Поделиться профилем</h3>
           <button type="button" className={styles.modalClose} onClick={onClose}><X size={18} /></button>
         </div>
-        <p className={styles.modalDesc}>Скопируйте ссылку и отправьте друзьям или работодателям</p>
+        <p className={styles.modalDesc}>Скопируйте ссылку и поделитесь с друзьями</p>
         <div className={styles.modalCopyRow}>
           <input type="text" readOnly value={url} className={styles.modalInput} />
           <button type="button" className={styles.modalCopyBtn} onClick={handleCopy}>
@@ -313,15 +313,15 @@ export function ProfileDashboard() {
           <div className={styles.statsGrid}>
             <div className={styles.statCard}>
               <span className={styles.statNum}>{stats.activeListings}</span>
-              <span className={styles.statLbl}>Вещей</span>
+              <span className={styles.statLbl}>Объявлений</span>
             </div>
             <div className={styles.statCard}>
               <span className={styles.statNum}>{stats.completedBookings}</span>
-              <span className={styles.statLbl}>Сдач</span>
+              <span className={styles.statLbl}>Сдано</span>
             </div>
             <div className={styles.statCard}>
               <span className={styles.statNum}>{stats.rentedCount}</span>
-              <span className={styles.statLbl}>Аренд</span>
+              <span className={styles.statLbl}>Арендовано</span>
             </div>
             <div className={styles.statCard}>
               <span className={`${styles.statNum} ${styles.statNumAccent}`}>{user.rating.toFixed(1)}</span>
@@ -337,8 +337,8 @@ export function ProfileDashboard() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.1, ease: EASE }}
         >
-          <TabBtn active={tab === 'listings'} label="Мои вещи" count={stats.totalListings} onClick={() => setTab('listings')} />
-          <TabBtn active={tab === 'deals'} label="Сделки" count={MOCK_BOOKINGS.length} onClick={() => setTab('deals')} />
+          <TabBtn active={tab === 'listings'} label="Мои объявления" count={stats.totalListings} onClick={() => setTab('listings')} />
+          <TabBtn active={tab === 'deals'} label="Мои аренды" count={MOCK_BOOKINGS.length} onClick={() => setTab('deals')} />
         </motion.nav>
 
         {/* ── Content ── */}
@@ -392,7 +392,7 @@ function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilter; onFi
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <div>
-          <h2 className={styles.panelTitle}>Мои вещи</h2>
+          <h2 className={styles.panelTitle}>Мои объявления</h2>
           <p className={styles.panelSubtitle}>{filtered.length} {pluralize(filtered.length, 'объявление', 'объявления', 'объявлений')}</p>
         </div>
         <div className={styles.filterPills}>
@@ -405,7 +405,7 @@ function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilter; onFi
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState icon={<Package />} title="Нет объявлений" text="В этой категории пока ничего нет" />
+        <EmptyState icon={<Package />} title="Нет объявлений" text="По этому фильтру ничего не найдено" />
       ) : (
         <div className={styles.listingsGrid}>
           {filtered.map((item, i) => (
@@ -434,9 +434,9 @@ function DealsPanel({ side, onSideChange, filter, onFilterChange }: { side: Book
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <div>
-          <h2 className={styles.panelTitle}>Сделки</h2>
+          <h2 className={styles.panelTitle}>Мои аренды</h2>
           <p className={styles.panelSubtitle}>
-            {side === 'owner' ? 'Вещи, которые вы сдаёте другим' : 'Вещи, которые вы берёте у других'}
+            {side === 'owner' ? 'Вещи, которые вы сдаёте в аренду' : 'Вещи, которые вы арендуете'}
             {' · '}{filtered.length} {pluralize(filtered.length, 'сделка', 'сделки', 'сделок')}
           </p>
         </div>
@@ -470,7 +470,7 @@ function DealsPanel({ side, onSideChange, filter, onFilterChange }: { side: Book
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState icon={side === 'owner' ? <Upload /> : <ShoppingBag />} title={side === 'owner' ? 'Нет сделок по сдаче' : 'Вы ещё ничего не арендовали'} text="В этой категории пока ничего нет" />
+        <EmptyState icon={side === 'owner' ? <Upload /> : <ShoppingBag />} title={side === 'owner' ? 'Нет аренд по сдаче' : 'Вы пока ничего не арендовали'} text="По этому фильтру ничего не найдено" />
       ) : (
         <div className={styles.bookingsGrid}>
           {filtered.map((b, i) => (

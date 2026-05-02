@@ -41,18 +41,18 @@ import styles from './SettingsPage.module.scss';
 /* ─── Sidebar items ─── */
 
 const SIDEBAR_ITEMS: { tab: SettingsTab; icon: React.ReactNode; label: string }[] = [
-  { tab: 'profile', icon: <User size={18} />, label: 'Профиль' },
-  { tab: 'security', icon: <Lock size={18} />, label: 'Безопасность' },
+  { tab: 'profile', icon: <User size={18} />, label: 'Личные данные' },
+  { tab: 'security', icon: <Lock size={18} />, label: 'Вход и безопасность' },
   { tab: 'notifications', icon: <Bell size={18} />, label: 'Уведомления' },
-  { tab: 'payment', icon: <CreditCard size={18} />, label: 'Оплата' },
+  { tab: 'payment', icon: <CreditCard size={18} />, label: 'Способы оплаты' },
   { tab: 'privacy', icon: <Shield size={18} />, label: 'Конфиденциальность' },
 ];
 
 /* ─── Notification meta ─── */
 
 const NOTIF_META: Record<string, { label: string; hint: string }> = {
-  new_deal: { label: 'Новые заявки', hint: 'Уведомлять когда кто-то хочет арендовать вашу вещь' },
-  deal_status_changed: { label: 'Изменение статуса', hint: 'Уведомлять об изменении статуса сделки' },
+  new_deal: { label: 'Запросы на аренду', hint: 'Когда кто-то хочет арендовать вашу вещь' },
+  deal_status_changed: { label: 'Статус аренды', hint: 'Когда меняется статус вашей аренды' },
   new_message: { label: 'Сообщения', hint: 'Уведомлять о новых сообщениях в чатах' },
   review_received: { label: 'Отзывы', hint: 'Уведомлять о новых отзывах на ваши объявления' },
   payment_status: { label: 'Платежи', hint: 'Уведомлять о статусе платежей и выплат' },
@@ -253,8 +253,8 @@ function SecuritySection() {
 
   return (
     <div className={styles.section}>
-      <h2 className={styles.sectionTitle}>Безопасность</h2>
-      <p className={styles.sectionSubtitle}>Управление паролем, почтой и активными сессиями</p>
+      <h2 className={styles.sectionTitle}>Вход и безопасность</h2>
+      <p className={styles.sectionSubtitle}>Пароль, email и устройства</p>
 
       {/* Password */}
       <h3 className={styles.sectionTitle}>Пароль</h3>
@@ -543,7 +543,7 @@ function PrivacySection() {
 
       {/* Danger Zone */}
       <div className={styles.dangerZone}>
-        <h3 className={styles.dangerZoneTitle}>Опасная зона</h3>
+        <h3 className={styles.dangerZoneTitle}>Удаление аккаунта</h3>
         <p className={styles.dangerZoneText}>
           Удаление аккаунта необратимо. Все ваши объявления, сделки и данные будут удалены навсегда.
         </p>
