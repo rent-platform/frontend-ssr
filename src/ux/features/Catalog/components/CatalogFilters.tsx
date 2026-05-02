@@ -18,7 +18,7 @@ import {
   Zap,
   type LucideIcon,
 } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
 import type { CatalogFilterState } from '../types';
 import {
   CATEGORY_OPTIONS,
@@ -67,8 +67,12 @@ const cityOptions: GlassSelectOption[] = [
 
 function normalizePriceValue(v: string) { return v.replace(/[^\d]/g, '').slice(0, 10); }
 function formatPriceDisplay(v: string): string { return v ? new Intl.NumberFormat('ru-RU').format(Number(v)) : ''; }
+function getFiltersLabel(count: number) {
+  if (count % 10 === 1 && count % 100 !== 11) return 'фильтр';
+  if ([2, 3, 4].includes(count % 10) && ![12, 13, 14].includes(count % 100)) return 'фильтра';
+  return 'фильтров';
+}
 
-/* ─── Section label ─── */
 function SectionLabel({ icon: Icon, children }: { icon: LucideIcon; children: React.ReactNode }) {
   return (
     <div className={styles.sectionLabel}>
@@ -78,30 +82,32 @@ function SectionLabel({ icon: Icon, children }: { icon: LucideIcon; children: Re
   );
 }
 
-/* ─── Toggle Switch ─── */
 function ToggleSwitch({ checked, onChange: onToggle, label, hint }: { checked: boolean; onChange: (v: boolean) => void; label: string; hint?: string }) {
+  const hintId = useId();
+
   return (
-    <div className={styles.toggleRow} onClick={() => onToggle(!checked)}>
+    <button
+      type="button"
+      className={checked ? styles.toggleRowOn : styles.toggleRow}
+      role="switch"
+      aria-checked={checked}
+      aria-describedby={hint ? hintId : undefined}
+      onClick={() => onToggle(!checked)}
+    >
       <span className={styles.toggleText}>
         <span className={styles.toggleLabel}>{label}</span>
-        {hint ? <span className={styles.toggleHint}>{hint}</span> : null}
+        {hint ? <span id={hintId} className={styles.toggleHint}>{hint}</span> : null}
       </span>
-      <span
-        role="switch"
-        aria-checked={checked}
-        tabIndex={0}
-        className={checked ? styles.toggleTrackOn : styles.toggleTrack}
-        onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); onToggle(!checked); } }}
-      >
+      <span className={checked ? styles.toggleTrackOn : styles.toggleTrack} aria-hidden="true">
         <motion.span className={styles.toggleThumb} layout transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
       </span>
-    </div>
+    </button>
   );
 }
 
-/* ═══ Main component ═══ */
 export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClose, onConfirm }: CatalogFiltersProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -120,6 +126,11 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
     if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit) n++;
     return n;
   }, [filters]);
+
+  const hasPriceError = useMemo(() => {
+    if (!filters.minPrice || !filters.maxPrice) return false;
+    return Number(filters.minPrice) > Number(filters.maxPrice);
+  }, [filters.maxPrice, filters.minPrice]);
 
   const chips = useMemo(() => {
     const list: Array<{ key: string; label: string; icon: LucideIcon; onRemove: () => void }> = [];
@@ -157,25 +168,29 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
         className={styles.panel}
         role="dialog"
         aria-modal="true"
-        aria-label="Фильтры поиска"
+        aria-labelledby={titleId}
         initial={{ opacity: 0, y: 32, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 24, scale: 0.97 }}
         transition={{ duration: 0.28, ease: EASE }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* ── Header ── */}
         <div className={styles.header}>
           <div className={styles.headerLeft}>
             <div className={styles.headerIcon}><SlidersHorizontal size={16} /></div>
-            <h3 className={styles.headerTitle}>Фильтры</h3>
-            {activeCount > 0 && (
-              <span className={styles.headerBadge}>{activeCount}</span>
-            )}
+            <div className={styles.headerCopy}>
+              <h3 id={titleId} className={styles.headerTitle}>Фильтры</h3>
+              <p className={styles.headerMeta}>
+                {activeCount > 0
+                  ? `${activeCount} ${getFiltersLabel(activeCount)} активно`
+                  : 'Уточните выдачу'}
+              </p>
+            </div>
+            {activeCount > 0 && <span className={styles.headerBadge}>{activeCount}</span>}
           </div>
           <div className={styles.headerRight}>
             {activeCount > 0 && (
-              <button type="button" className={styles.resetBtn} onClick={handleReset} title="Сбросить все">
+              <button type="button" className={styles.resetBtn} onClick={handleReset} aria-label="Сбросить все фильтры">
                 <RotateCcw size={13} />
                 <span>Сбросить</span>
               </button>
@@ -186,7 +201,6 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
           </div>
         </div>
 
-        {/* ── Active chips ── */}
         <AnimatePresence>
           {chips.length > 0 && (
             <motion.div
@@ -197,7 +211,7 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
               transition={{ duration: 0.18 }}
             >
               {chips.map((c) => (
-                <motion.button key={c.key} type="button" className={styles.chip} onClick={c.onRemove} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
+                <motion.button key={c.key} type="button" className={styles.chip} onClick={c.onRemove} aria-label={`Убрать фильтр ${c.label}`} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
                   <c.icon size={11} />
                   <span>{c.label}</span>
                   <X size={10} />
@@ -207,9 +221,7 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
           )}
         </AnimatePresence>
 
-        {/* ── Scrollable body ── */}
         <div className={styles.body} ref={scrollRef}>
-          {/* Section: Поиск */}
           <div className={styles.section}>
             <SectionLabel icon={LayoutGrid}>Категория</SectionLabel>
             <GlassSelect label="Категория" value={filters.category} options={categoryOptions} onChange={(v) => onChange({ category: v })} triggerClassName={styles.compactTrigger} />
@@ -221,25 +233,38 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
           </div>
 
           <div className={styles.section}>
-            <SectionLabel icon={Wallet}>Цена за сутки</SectionLabel>
+            <div className={styles.sectionTopline}>
+              <SectionLabel icon={Wallet}>Цена за сутки</SectionLabel>
+              {(filters.minPrice || filters.maxPrice) && (
+                <button
+                  type="button"
+                  className={styles.inlineReset}
+                  onClick={() => onChange({ minPrice: '', maxPrice: '' })}
+                >
+                  Очистить
+                </button>
+              )}
+            </div>
             <div className={styles.priceRow}>
-              <div className={styles.priceInput}>
+              <label className={hasPriceError ? styles.priceInputError : styles.priceInput}>
                 <span className={styles.pricePrefix}>от</span>
                 <input type="text" value={filters.minPrice} onChange={(e) => onChange({ minPrice: normalizePriceValue(e.target.value) })} placeholder="0" inputMode="numeric" autoComplete="off" aria-label="Минимальная цена" />
                 <span className={styles.priceSuffix}>₽</span>
-              </div>
+              </label>
               <span className={styles.priceDash}>—</span>
-              <div className={styles.priceInput}>
+              <label className={hasPriceError ? styles.priceInputError : styles.priceInput}>
                 <span className={styles.pricePrefix}>до</span>
-                <input type="text" value={filters.maxPrice} onChange={(e) => onChange({ maxPrice: normalizePriceValue(e.target.value) })} placeholder="∞" inputMode="numeric" autoComplete="off" aria-label="Максимальная цена" />
+                <input type="text" value={filters.maxPrice} onChange={(e) => onChange({ maxPrice: normalizePriceValue(e.target.value) })} placeholder="∞" inputMode="numeric" autoComplete="off" aria-label="Максимальная цена" aria-invalid={hasPriceError} />
                 <span className={styles.priceSuffix}>₽</span>
-              </div>
+              </label>
             </div>
+            {hasPriceError && (
+              <p className={styles.fieldError}>Максимальная цена должна быть выше минимальной</p>
+            )}
           </div>
 
           <hr className={styles.divider} />
 
-          {/* Section: Условия */}
           <div className={styles.section}>
             <ToggleSwitch checked={filters.onlyAvailable} onChange={(v) => onChange({ onlyAvailable: v })} label="Только доступные сейчас" hint="Скрыть вещи, которые сейчас заняты" />
           </div>
@@ -248,7 +273,7 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
             <SectionLabel icon={ShieldCheck}>Залог</SectionLabel>
             <div className={styles.segmented}>
               {DEPOSIT_OPTIONS.map((opt) => (
-                <button key={opt.value} type="button" className={filters.hasDeposit === opt.value ? styles.segBtnActive : styles.segBtn} onClick={() => onChange({ hasDeposit: opt.value as CatalogFilterState['hasDeposit'] })}>
+                <button key={opt.value} type="button" className={filters.hasDeposit === opt.value ? styles.segBtnActive : styles.segBtn} aria-pressed={filters.hasDeposit === opt.value} onClick={() => onChange({ hasDeposit: opt.value as CatalogFilterState['hasDeposit'] })}>
                   {opt.label}
                 </button>
               ))}
@@ -257,7 +282,6 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
 
           <hr className={styles.divider} />
 
-          {/* Section: Quick filters */}
           <div className={styles.section}>
             <SectionLabel icon={Zap}>Быстрые фильтры</SectionLabel>
             <div className={styles.quickGrid}>
@@ -266,7 +290,7 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
                 const Icon = meta.icon;
                 const active = filters.quickFilter === option;
                 return (
-                  <button key={option} type="button" className={active ? styles.quickChipActive : styles.quickChip} onClick={() => onChange({ quickFilter: filters.quickFilter === option ? null : option })}>
+                  <button key={option} type="button" className={active ? styles.quickChipActive : styles.quickChip} aria-pressed={active} onClick={() => onChange({ quickFilter: filters.quickFilter === option ? null : option })}>
                     <Icon size={12} />
                     <span>{meta.label}</span>
                     {active && <Check size={12} className={styles.quickChipCheck} />}
@@ -277,14 +301,16 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
           </div>
         </div>
 
-        {/* ── Footer ── */}
         <div className={styles.footer}>
-          <span className={styles.footerCount}>
-            {resultsCount} {getAnnouncementsLabel(resultsCount)}
+          <span className={styles.footerCountBlock}>
+            <span className={styles.footerCount}>
+              {resultsCount} {getAnnouncementsLabel(resultsCount)}
+            </span>
+            <span className={styles.footerHint}>по выбранным условиям</span>
           </span>
-          <motion.button type="button" className={styles.applyBtn} onClick={onConfirm ?? onClose} whileTap={{ scale: 0.98 }}>
+          <motion.button type="button" className={styles.applyBtn} onClick={onConfirm ?? onClose} disabled={hasPriceError} whileTap={{ scale: hasPriceError ? 1 : 0.98 }}>
             <Search size={13} />
-            Показать результаты
+            {hasPriceError ? 'Исправьте цену' : 'Показать результаты'}
           </motion.button>
         </div>
       </motion.aside>

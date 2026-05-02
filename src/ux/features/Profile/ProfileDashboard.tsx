@@ -14,7 +14,6 @@ import {
   Edit3,
   Eye,
   Mail,
-  MessageCircle,
   Package,
   Phone,
   Share2,
@@ -36,14 +35,6 @@ import { MOCK_USER, MOCK_STATS, MOCK_LISTINGS, MOCK_BOOKINGS } from './mockProfi
 import styles from './ProfileDashboard.module.scss';
 
 /* ─── Helpers ─── */
-
-const ITEM_STATUS_MAP: Record<ItemStatus, { label: string; cls: string }> = {
-  active:     { label: 'Активно',      cls: styles.statusActive },
-  moderation: { label: 'На модерации', cls: styles.statusModeration },
-  draft:      { label: 'Черновик',     cls: styles.statusDraft },
-  archived:   { label: 'В архиве',     cls: styles.statusArchived },
-  rejected:   { label: 'Отклонено',    cls: styles.statusRejected },
-};
 
 const DEAL_STATUS_MAP: Record<DealStatus, { label: string; cls: string }> = {
   new:       { label: 'Новая',       cls: styles.statusNew },
@@ -498,24 +489,41 @@ function BookingRow({ booking, counterLabel }: { booking: ProfileBooking; counte
 
   return (
     <div className={styles.bookingCard}>
-      <div className={`${styles.bookingStripe} ${st.cls}`} />
-      {booking.itemImage ? (
-        <img src={booking.itemImage} alt={booking.itemTitle} className={styles.bookingImg} />
-      ) : (
-        <div className={styles.bookingImgFallback}><Camera size={18} /></div>
-      )}
-      <div className={styles.bookingInfo}>
-        <span className={styles.bookingTitle}>{booking.itemTitle}</span>
-        <span className={styles.bookingMeta}>
-          <User size={11} /> {counterLabel}: {booking.counterpartyName}
-        </span>
-        <span className={styles.bookingMeta}>
-          <Calendar size={11} /> {formatShortDate(booking.start_date)} — {formatShortDate(booking.end_date)}
-        </span>
+      <div className={styles.bookingImageArea}>
+        <div className={styles.bookingBadgeRow}>
+          <span className={`${styles.statusBadge} ${st.cls}`}>{st.label}</span>
+        </div>
+        {booking.itemImage ? (
+          <img src={booking.itemImage} alt={booking.itemTitle} className={styles.bookingImg} />
+        ) : (
+          <div className={styles.bookingImgFallback}><Camera size={24} /></div>
+        )}
       </div>
-      <div className={styles.bookingRight}>
-        <span className={styles.bookingPrice}>{Number(booking.total_price).toLocaleString('ru-RU')} ₽</span>
-        <span className={`${styles.statusBadge} ${st.cls}`}>{st.label}</span>
+
+      <div className={styles.bookingInfo}>
+        <div className={styles.bookingTop}>
+          <span className={styles.bookingTitle}>{booking.itemTitle}</span>
+          <span className={styles.bookingMeta}>
+            <User size={14} /> {counterLabel}: {booking.counterpartyName}
+          </span>
+          <span className={styles.bookingMeta}>
+            <Calendar size={14} /> {formatShortDate(booking.start_date)} — {formatShortDate(booking.end_date)}
+          </span>
+        </div>
+
+        <div className={styles.bookingChips}>
+          <span className={styles.bookingChip}>
+            <Shield size={12} />
+            Залог {Number(booking.deposit_amount).toLocaleString('ru-RU')} ₽
+          </span>
+        </div>
+
+        <div className={styles.bookingFooter}>
+          <div className={styles.bookingPriceBlock}>
+            <strong>{Number(booking.total_price).toLocaleString('ru-RU')} ₽</strong>
+            <span>за период</span>
+          </div>
+        </div>
       </div>
     </div>
   );
