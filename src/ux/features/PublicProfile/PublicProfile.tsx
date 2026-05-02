@@ -14,7 +14,6 @@ import {
   Copy,
   ExternalLink,
   Flag,
-  Globe,
   Info,
   MapPin,
   MessageCircle,
@@ -25,7 +24,6 @@ import {
   Star,
   ThumbsUp,
   X,
-  Zap,
 } from 'lucide-react';
 import { CatalogHeader } from '../Catalog/components/CatalogHeader';
 import { CatalogFooter } from '../Catalog/components/CatalogFooter';
@@ -306,26 +304,24 @@ export function PublicProfile() {
             {user.nickname && <span className={styles.userNickname}>@{user.nickname}</span>}
 
             {user.trustLevel === 'super' && (
-              <div className={styles.trustBadge}>
+              <div className={`${styles.trustBadge} ${styles.tooltipWrap}`}>
                 <Award size={14} />
                 {TRUST_LABELS[user.trustLevel]}
+                <span className={styles.tooltipBubble}>Надёжный арендодатель с высоким рейтингом</span>
               </div>
             )}
 
             <div className={styles.quickStats}>
-              <div className={styles.quickStat}>
+              <div className={`${styles.quickStat} ${styles.tooltipWrap}`}>
                 <Star size={14} className={styles.starFilled} />
                 <strong>{user.rating.toFixed(1)}</strong>
+                <span className={styles.tooltipBubble}>Средняя оценка от арендаторов</span>
               </div>
               <span className={styles.quickStatSep} />
-              <div className={styles.quickStat}>
+              <div className={`${styles.quickStat} ${styles.tooltipWrap}`}>
                 <strong>{user.reviewCount}</strong>
                 <span>{pluralize(user.reviewCount, 'отзыв', 'отзыва', 'отзывов')}</span>
-              </div>
-              <span className={styles.quickStatSep} />
-              <div className={styles.quickStat}>
-                <strong>{memberMonths}</strong>
-                <span>{pluralize(memberMonths, 'месяц', 'месяца', 'месяцев')}</span>
+                <span className={styles.tooltipBubble}>Количество отзывов от пользователей</span>
               </div>
             </div>
 
@@ -356,18 +352,21 @@ export function PublicProfile() {
             </h3>
             <ul className={styles.verifyList}>
               {user.isVerified && (
-                <li className={styles.verifyItem}>
+                <li className={`${styles.verifyItem} ${styles.tooltipWrap}`}>
                   <CheckCircle2 size={15} />
                   Личность подтверждена
+                  <span className={styles.tooltipBubble}>Паспорт проверен модератором</span>
                 </li>
               )}
-              <li className={styles.verifyItem}>
+              <li className={`${styles.verifyItem} ${styles.tooltipWrap}`}>
                 <CheckCircle2 size={15} />
                 Номер телефона
+                <span className={styles.tooltipBubble}>Телефон подтверждён по SMS</span>
               </li>
-              <li className={styles.verifyItem}>
+              <li className={`${styles.verifyItem} ${styles.tooltipWrap}`}>
                 <CheckCircle2 size={15} />
                 Электронная почта
+                <span className={styles.tooltipBubble}>Email подтверждён</span>
               </li>
             </ul>
           </motion.div>
@@ -388,22 +387,9 @@ export function PublicProfile() {
                 <Calendar size={15} />
                 <span>На платформе с {formatMemberSince(user.memberSince)}</span>
               </div>
-              <div className={styles.aboutRow}>
-                <Package size={15} />
-                <span>{user.completedDeals} успешных сделок</span>
-              </div>
             </div>
           </motion.div>
 
-          <motion.div
-            className={styles.contactNote}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.16, ease: EASE }}
-          >
-            <Info size={14} />
-            <span>Контактные данные предоставляются после подтверждения бронирования</span>
-          </motion.div>
         </aside>
 
         {/* ── Main ── */}
@@ -426,21 +412,20 @@ export function PublicProfile() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1, ease: EASE }}
           >
-            <div className={styles.statCard}>
+            <div className={`${styles.statCard} ${styles.tooltipWrap}`}>
               <span className={styles.statVal}>{user.activeListings}</span>
               <span className={styles.statLabel}>Активных объявлений</span>
+              <span className={styles.tooltipBubble}>Вещи, доступные для аренды сейчас</span>
             </div>
-            <div className={styles.statCard}>
+            <div className={`${styles.statCard} ${styles.tooltipWrap}`}>
               <span className={styles.statVal}>{user.completedDeals}</span>
-              <span className={styles.statLabel}>Завершённых сделок</span>
+              <span className={styles.statLabel}>Завершённых аренд</span>
+              <span className={styles.tooltipBubble}>Успешно завершённых аренд</span>
             </div>
-            <div className={styles.statCard}>
+            <div className={`${styles.statCard} ${styles.tooltipWrap}`}>
               <span className={`${styles.statVal} ${styles.statValAccent}`}>{user.rating.toFixed(1)}</span>
               <span className={styles.statLabel}>Средний рейтинг</span>
-            </div>
-            <div className={styles.statCard}>
-              <span className={styles.statVal}>{user.responseRate}%</span>
-              <span className={styles.statLabel}>Частота отклика</span>
+              <span className={styles.tooltipBubble}>Средняя оценка от арендаторов</span>
             </div>
           </motion.div>
 
@@ -448,21 +433,23 @@ export function PublicProfile() {
           <div className={styles.tabBar}>
             <button
               type="button"
-              className={`${styles.tab} ${activeTab === 'listings' ? styles.tabActive : ''}`}
+              className={`${styles.tab} ${activeTab === 'listings' ? styles.tabActive : ''} ${styles.tooltipWrap}`}
               onClick={() => setActiveTab('listings')}
             >
               <Package size={16} />
               Объявления
               <span className={styles.tabCount}>{listings.length}</span>
+              <span className={styles.tooltipBubble}>Вещи, которые можно арендовать</span>
             </button>
             <button
               type="button"
-              className={`${styles.tab} ${activeTab === 'reviews' ? styles.tabActive : ''}`}
+              className={`${styles.tab} ${activeTab === 'reviews' ? styles.tabActive : ''} ${styles.tooltipWrap}`}
               onClick={() => setActiveTab('reviews')}
             >
               <Star size={16} />
               Отзывы
               <span className={styles.tabCount}>{user.reviewCount}</span>
+              <span className={styles.tooltipBubble}>Оценки и отзывы арендаторов</span>
             </button>
           </div>
 
@@ -610,7 +597,7 @@ export function PublicProfile() {
                   <div className={styles.emptyState}>
                     <Star size={32} />
                     <h3>Пока нет отзывов</h3>
-                    <p>Отзывы появятся после завершённых сделок</p>
+                    <p>Отзывы появятся после завершённых аренд</p>
                   </div>
                 )}
               </motion.div>
@@ -624,8 +611,8 @@ export function PublicProfile() {
         <div className={styles.safetyInner}>
           <Shield size={20} />
           <div>
-            <strong>Безопасные сделки на платформе Арендай</strong>
-            <p>Все арендодатели проходят верификацию. Вещи застрахованы, оплата через безопасную сделку.</p>
+            <strong>Безопасная аренда на платформе Арендай</strong>
+            <p>Все арендодатели проходят верификацию. Вещи застрахованы, оплата через безопасную аренду.</p>
           </div>
         </div>
       </div>

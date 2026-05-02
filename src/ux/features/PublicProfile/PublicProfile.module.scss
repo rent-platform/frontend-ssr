@@ -369,7 +369,7 @@
 /* Stats strip */
 .statsStrip {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: $space-3;
   margin-bottom: $space-6;
 }
@@ -1178,6 +1178,50 @@
 
   .tabBar {
     overflow-x: auto;
+  }
+}
+
+/* ═══ Tooltip ═══ */
+.tooltipWrap {
+  position: relative;
+
+  &:hover > .tooltipBubble {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.tooltipBubble {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 8px 14px;
+  background: #1e293b;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  border-radius: 10px;
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+  z-index: 50;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1e293b;
   }
 }
 
