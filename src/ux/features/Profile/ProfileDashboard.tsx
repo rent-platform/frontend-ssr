@@ -48,20 +48,20 @@ const DEAL_STATUS_MAP: Record<DealStatus, { label: string; cls: string }> = {
 type ListingFilter = 'all' | ItemStatus;
 type BookingFilter = 'all' | DealStatus;
 
-const LISTING_FILTERS: { value: ListingFilter; label: string }[] = [
-  { value: 'all', label: 'Все' },
-  { value: 'active', label: 'Активные' },
-  { value: 'moderation', label: 'Модерация' },
-  { value: 'draft', label: 'Черновики' },
-  { value: 'archived', label: 'Архив' },
+const LISTING_FILTERS: { value: ListingFilter; label: string; tip: string }[] = [
+  { value: 'all', label: 'Все', tip: 'Показать все объявления' },
+  { value: 'active', label: 'Активные', tip: 'Опубликованы и доступны для аренды' },
+  { value: 'moderation', label: 'Модерация', tip: 'На проверке модератором' },
+  { value: 'draft', label: 'Черновики', tip: 'Незавершённые объявления' },
+  { value: 'archived', label: 'Архив', tip: 'Снятые с публикации' },
 ];
 
-const BOOKING_FILTERS: { value: BookingFilter; label: string }[] = [
-  { value: 'all', label: 'Все' },
-  { value: 'active', label: 'Активные' },
-  { value: 'confirmed', label: 'Подтверждённые' },
-  { value: 'completed', label: 'Завершённые' },
-  { value: 'rejected', label: 'Отклонённые' },
+const BOOKING_FILTERS: { value: BookingFilter; label: string; tip: string }[] = [
+  { value: 'all', label: 'Все', tip: 'Показать все аренды' },
+  { value: 'active', label: 'Активные', tip: 'Вещь сейчас у арендатора' },
+  { value: 'confirmed', label: 'Подтверждённые', tip: 'Ожидают начала аренды' },
+  { value: 'completed', label: 'Завершённые', tip: 'Аренда успешно завершена' },
+  { value: 'rejected', label: 'Отклонённые', tip: 'Запрос на аренду отклонён' },
 ];
 
 const EASE = [0.23, 1, 0.32, 1] as const;
@@ -292,10 +292,10 @@ export function ProfileDashboard() {
             </div>
 
             <div className={styles.verifyRow}>
-              <VerifyChip icon={<CheckCircle2 size={13} />} label="Телефон" done />
-              <VerifyChip icon={<Mail size={13} />} label="Email" done />
-              <VerifyChip icon={<Shield size={13} />} label="Паспорт" done={false} />
-              <VerifyChip icon={<BadgeCheck size={13} />} label="Фото" done />
+              <VerifyChip icon={<CheckCircle2 size={13} />} label="Телефон" done tooltip="Номер телефона подтверждён" />
+              <VerifyChip icon={<Mail size={13} />} label="Email" done tooltip="Электронная почта подтверждена" />
+              <VerifyChip icon={<Shield size={13} />} label="Паспорт" done={false} tooltip="Пройдите верификацию документа" />
+              <VerifyChip icon={<BadgeCheck size={13} />} label="Фото" done tooltip="Фото профиля подтверждено" />
             </div>
           </div>
 
@@ -311,21 +311,25 @@ export function ProfileDashboard() {
           )}
 
           <div className={styles.statsGrid}>
-            <div className={styles.statCard}>
+            <div className={`${styles.statCard} ${styles.tooltipWrap}`}>
               <span className={styles.statNum}>{stats.activeListings}</span>
               <span className={styles.statLbl}>Объявлений</span>
+              <span className={styles.tooltipBubble}>Активных объявлений на платформе</span>
             </div>
-            <div className={styles.statCard}>
+            <div className={`${styles.statCard} ${styles.tooltipWrap}`}>
               <span className={styles.statNum}>{stats.completedBookings}</span>
               <span className={styles.statLbl}>Сдано</span>
+              <span className={styles.tooltipBubble}>Успешных сдач в аренду</span>
             </div>
-            <div className={styles.statCard}>
+            <div className={`${styles.statCard} ${styles.tooltipWrap}`}>
               <span className={styles.statNum}>{stats.rentedCount}</span>
               <span className={styles.statLbl}>Арендовано</span>
+              <span className={styles.tooltipBubble}>Вещей взято в аренду</span>
             </div>
-            <div className={styles.statCard}>
+            <div className={`${styles.statCard} ${styles.tooltipWrap}`}>
               <span className={`${styles.statNum} ${styles.statNumAccent}`}>{user.rating.toFixed(1)}</span>
               <span className={styles.statLbl}>Рейтинг</span>
+              <span className={styles.tooltipBubble}>Средняя оценка от пользователей</span>
             </div>
           </div>
         </motion.section>
@@ -337,8 +341,8 @@ export function ProfileDashboard() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.1, ease: EASE }}
         >
-          <TabBtn active={tab === 'listings'} label="Мои объявления" count={stats.totalListings} onClick={() => setTab('listings')} />
-          <TabBtn active={tab === 'deals'} label="Мои аренды" count={MOCK_BOOKINGS.length} onClick={() => setTab('deals')} />
+          <TabBtn active={tab === 'listings'} label="Мои объявления" count={stats.totalListings} onClick={() => setTab('listings')} tooltip="Вещи, которые вы выставили на аренду" />
+          <TabBtn active={tab === 'deals'} label="Мои аренды" count={MOCK_BOOKINGS.length} onClick={() => setTab('deals')} tooltip="История сдачи и аренды вещей" />
         </motion.nav>
 
         {/* ── Content ── */}
@@ -366,20 +370,22 @@ export function ProfileDashboard() {
 }
 
 /* ── Verify chip (inline) ── */
-function VerifyChip({ icon, label, done }: { icon: React.ReactNode; label: string; done: boolean }) {
+function VerifyChip({ icon, label, done, tooltip }: { icon: React.ReactNode; label: string; done: boolean; tooltip: string }) {
   return (
-    <span className={`${styles.verifyChip} ${done ? styles.verifyDone : styles.verifyPending}`}>
+    <span className={`${styles.verifyChip} ${done ? styles.verifyDone : styles.verifyPending} ${styles.tooltipWrap}`}>
       {icon} {label}
+      <span className={styles.tooltipBubble}>{tooltip}</span>
     </span>
   );
 }
 
 /* ── Tab button (underline style) ── */
-function TabBtn({ active, label, count, onClick }: { active: boolean; label: string; count?: number; onClick: () => void }) {
+function TabBtn({ active, label, count, onClick, tooltip }: { active: boolean; label: string; count?: number; onClick: () => void; tooltip?: string }) {
   return (
-    <button type="button" className={`${styles.tab} ${active ? styles.tabActive : ''}`} onClick={onClick}>
+    <button type="button" className={`${styles.tab} ${active ? styles.tabActive : ''} ${tooltip ? styles.tooltipWrap : ''}`} onClick={onClick}>
       {label}
       {count !== undefined && <span className={styles.tabCount}>{count}</span>}
+      {tooltip && <span className={styles.tooltipBubble}>{tooltip}</span>}
     </button>
   );
 }
@@ -397,8 +403,9 @@ function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilter; onFi
         </div>
         <div className={styles.filterPills}>
           {LISTING_FILTERS.map((f) => (
-            <button key={f.value} type="button" className={`${styles.filterPill} ${filter === f.value ? styles.filterPillActive : ''}`} onClick={() => onFilterChange(f.value)}>
+            <button key={f.value} type="button" className={`${styles.filterPill} ${filter === f.value ? styles.filterPillActive : ''} ${styles.tooltipWrap}`} onClick={() => onFilterChange(f.value)}>
               {f.label}
+              <span className={styles.tooltipBubble}>{f.tip}</span>
             </button>
           ))}
         </div>
@@ -463,8 +470,9 @@ function DealsPanel({ side, onSideChange, filter, onFilterChange }: { side: Book
       {/* Status filters */}
       <div className={styles.filterPills}>
         {BOOKING_FILTERS.map((f) => (
-          <button key={f.value} type="button" className={`${styles.filterPill} ${filter === f.value ? styles.filterPillActive : ''}`} onClick={() => onFilterChange(f.value)}>
+          <button key={f.value} type="button" className={`${styles.filterPill} ${filter === f.value ? styles.filterPillActive : ''} ${styles.tooltipWrap}`} onClick={() => onFilterChange(f.value)}>
             {f.label}
+            <span className={styles.tooltipBubble}>{f.tip}</span>
           </button>
         ))}
       </div>
