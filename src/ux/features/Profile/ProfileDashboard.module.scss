@@ -65,7 +65,6 @@
   border: 1px solid $color-border;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.02);
   margin: 0 0 $space-6;
-  overflow: hidden;
 }
 
 /* ─── Profile Header ─── */
@@ -316,14 +315,14 @@
 
   svg { width: 13px; height: 13px; flex-shrink: 0; }
 
-  > .tooltipBubble {
+  &.tooltipWrap > .tooltipBubble {
     left: 0;
     transform: translateX(0) translateY(4px);
 
     &::after { left: 20px; transform: none; }
   }
 
-  &:hover > .tooltipBubble {
+  &.tooltipWrap:hover > .tooltipBubble {
     transform: translateX(0) translateY(0);
   }
 }
