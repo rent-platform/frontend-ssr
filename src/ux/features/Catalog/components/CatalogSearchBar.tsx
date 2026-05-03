@@ -126,78 +126,80 @@ export function CatalogSearchBar({
   };
 
   return (
-    <motion.section
-      ref={shellRef}
-      className={styles.searchShell}
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className={styles.searchBar}>
-        <div className={styles.searchInputWrap}>
-          <Search size={20} className={styles.searchIcon} />
-          <input
-            value={filters.search}
-            onChange={(event) => onChange({ search: event.target.value })}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearchAction()}
-            className={styles.searchInput}
-            placeholder="Что вы хотите арендовать?"
-          />
-        </div>
-
-        <div className={styles.searchDivider} />
-
-        <motion.button
-          type="button"
-          className={isFiltersOpen ? styles.searchButtonActive : styles.searchButton}
-          onClick={onToggleFilters}
-          aria-expanded={isFiltersOpen}
-          aria-controls="catalog-filters-panel"
-          whileHover={{ scale: 1.02, y: -1 }}
-          whileTap={{ scale: 0.98, y: 0 }}
-        >
-          <SlidersHorizontal size={18} />
-          <span>
-            {isFiltersOpen
-              ? `Скрыть`
-              : 'Фильтры'}
-          </span>
-          {activeFiltersCount > 0 && (
-            <span className={styles.filtersCount}>
-              {activeFiltersCount}
-            </span>
-          )}
-        </motion.button>
-
-        <motion.button
-          type="button"
-          className={styles.primarySearchBtn}
-          onClick={handleSearchAction}
-          whileHover={{ scale: 1.02, y: -1 }}
-          whileTap={{ scale: 0.98, y: 0 }}
-        >
-          <Search size={18} />
-          <span>Найти</span>
-        </motion.button>
-      </div>
-
-      {(filters.search.trim() || summaryItems.length > 0) && (
-        <div className={styles.searchMetaRow}>
-          <div className={styles.searchSummary}>
-            {filters.search.trim() ? (
-              <span className={styles.searchSummaryChip}>
-                Поиск: «{filters.search.trim()}»
-              </span>
-            ) : null}
-
-            {summaryItems.map((item) => (
-              <span key={item} className={styles.searchSummaryChip}>
-                {item}
-              </span>
-            ))}
+    <>
+      <motion.section
+        ref={shellRef}
+        className={styles.searchShell}
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className={styles.searchBar}>
+          <div className={styles.searchInputWrap}>
+            <Search size={20} className={styles.searchIcon} />
+            <input
+              value={filters.search}
+              onChange={(event) => onChange({ search: event.target.value })}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearchAction()}
+              className={styles.searchInput}
+              placeholder="Что вы хотите арендовать?"
+            />
           </div>
+
+          <div className={styles.searchDivider} />
+
+          <motion.button
+            type="button"
+            className={isFiltersOpen ? styles.searchButtonActive : styles.searchButton}
+            onClick={onToggleFilters}
+            aria-expanded={isFiltersOpen}
+            aria-controls="catalog-filters-panel"
+            whileHover={{ scale: 1.02, y: -1 }}
+            whileTap={{ scale: 0.98, y: 0 }}
+          >
+            <SlidersHorizontal size={18} />
+            <span>
+              {isFiltersOpen
+                ? `Скрыть`
+                : 'Фильтры'}
+            </span>
+            {activeFiltersCount > 0 && (
+              <span className={styles.filtersCount}>
+                {activeFiltersCount}
+              </span>
+            )}
+          </motion.button>
+
+          <motion.button
+            type="button"
+            className={styles.primarySearchBtn}
+            onClick={handleSearchAction}
+            whileHover={{ scale: 1.02, y: -1 }}
+            whileTap={{ scale: 0.98, y: 0 }}
+          >
+            <Search size={18} />
+            <span>Найти</span>
+          </motion.button>
         </div>
-      )}
+
+        {(filters.search.trim() || summaryItems.length > 0) && (
+          <div className={styles.searchMetaRow}>
+            <div className={styles.searchSummary}>
+              {filters.search.trim() ? (
+                <span className={styles.searchSummaryChip}>
+                  Поиск: «{filters.search.trim()}»
+                </span>
+              ) : null}
+
+              {summaryItems.map((item) => (
+                <span key={item} className={styles.searchSummaryChip}>
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </motion.section>
 
       <AnimatePresence>
         {isFiltersOpen && (
@@ -211,6 +213,6 @@ export function CatalogSearchBar({
           />
         )}
       </AnimatePresence>
-    </motion.section>
+    </>
   );
 }

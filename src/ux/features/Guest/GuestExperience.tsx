@@ -224,13 +224,13 @@ export function GuestExperience() {
             </Link>
 
             <nav className={styles.mainNav} aria-label="Гостевая навигация">
-              <Link href="#guest-catalog" className={styles.navLinkActive}>
+              <a href="#guest-catalog" className={styles.navLinkActive}>
                 <LayoutGrid size={18} />
                 <span>Каталог</span>
-              </Link>
-              <Link href="#how-it-works" className={styles.navLink}>
+              </a>
+              <a href="#how-it-works" className={styles.navLink}>
                 Как это работает
-              </Link>
+              </a>
               <Link href="/safety" className={styles.navLink}>
                 Безопасность
               </Link>
@@ -292,9 +292,9 @@ export function GuestExperience() {
                       Начать бесплатно
                       <ArrowRight size={18} />
                     </Link>
-                    <Link href="#guest-catalog" className={styles.secondaryCta}>
+                    <a href="#guest-catalog" className={styles.secondaryCta}>
                       Смотреть каталог
-                    </Link>
+                    </a>
                   </div>
                 </div>
               </div>
