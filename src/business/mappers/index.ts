@@ -7,4 +7,7 @@ export {
   mapDealStatusHistoryToVM,
   mapDealStatusToLabel,
 } from "./deals/deal.mapper";
-export { mapProfileToVM, mapSessionUserToProfileVM } from "./auth/user.mapper";
+export {
+  mapProfileToVM,
+  mapSessionUserToProfileVM,
+} from "./profile/profile.mapper";

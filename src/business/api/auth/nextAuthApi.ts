@@ -1,10 +1,12 @@
+import { getApiErrorMessage } from "@/business/utils";
+
 interface FetchApiParams {
   endpoint: string;
   options?: RequestInit;
 }
 
-const JAVA_BACKEND_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const BASE_URL = process.env.NEXTAUTH_URL ?? "localhost:3000";
+
 export async function fetchApi<T = unknown>({
   endpoint,
   options,
@@ -16,9 +18,11 @@ export async function fetchApi<T = unknown>({
   });
 
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({})); //чтобы кэч не упал от парсинга json
-    const message = errorData.message || `Ошибка сервера (${res.status})`;
-    throw new Error(message);
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(
+      getApiErrorMessage({ status: res.status, data: errorData }),
+    );
   }
+
   return await res.json();
 }

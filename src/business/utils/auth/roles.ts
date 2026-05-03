@@ -1,5 +1,5 @@
-import type { UserRole } from "@/business/types/entity/user.types";
-import ROUTE_PATHS from "@/business/utils/routes/routes";
+import type { UserRole } from "@/business/types";
+import ROUTE_PATHS from "../routes/routes";
 
 const ROLE_PRIORITY: Record<UserRole, number> = {
   user: 0,

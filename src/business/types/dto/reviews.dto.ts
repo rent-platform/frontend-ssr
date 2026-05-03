@@ -1,4 +1,4 @@
-export interface Review {
+export interface ReviewDTO {
   id: string;
   dealId: string;
   adId?: string;

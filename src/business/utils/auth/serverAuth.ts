@@ -3,12 +3,12 @@ import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import type { Session } from "next-auth";
-import type { UserRole } from "@/business/types/entity/user.types";
+import type { UserRole } from "@/business/types";
 import {
   getDefaultRouteForRole,
   hasRequiredRole,
 } from "@/business/utils/auth/roles";
-import ROUTE_PATHS from "@/business/utils/routes/routes";
+import ROUTE_PATHS from "../routes/routes";
 import { auth } from "@/config/auth";
 
 export const getAuthSession = cache(async () => auth());

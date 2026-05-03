@@ -3,9 +3,9 @@ import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import type {
   CapturePaymentRequest,
   CreatePaymentRequest,
+  Deal as DealDto,
   Payment,
-} from "@/business/types/dto/payments.dto";
-import type { Deal as DealDto } from "@/business/types/dto/deals.dto";
+} from "@/business/types";
 
 const PAYMENTS_LIST_TAG_ID = "LIST";
 

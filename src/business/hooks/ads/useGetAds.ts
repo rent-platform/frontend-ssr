@@ -2,23 +2,24 @@
 
 import { useFetchAdsInfiniteQuery } from "@/business/api";
 import { mapCatalogItemToCardVM } from "@/business/mappers";
-import type { FetchAdsArgs } from "@/business/types/dto/ads.dto";
-import type { CatalogItemCardVM } from "@/business/types/view/catalog.view";
+import { getApiError } from "@/business/utils";
+import { type ApiUiError } from "@/business/types";
+import type { CatalogItemCardVM, FetchAdsArgs } from "@/business/types";
 
 // Контракт данных и состояний, который hook отдаёт в UI.
 export interface UseAdsResult {
-  products: CatalogItemCardVM[];
-  total: number;
-  isLoading: boolean; // первая загрузка
-  isFetching: boolean; // любой запрос
-  isFetchingNextPage: boolean; // догрузка следующей страницы
-  isError: boolean;
-  hasNextPage: boolean;
-  fetchNextPage: () => void;
-  refetch: () => void;
+  products: CatalogItemCardVM[]; // Карточки объявлений в формате, удобном для UI.
+  total: number; // Общее количество объявлений по ответу первой страницы.
+  isLoading: boolean; // Первая загрузка, когда данных ещё нет.
+  isFetching: boolean; // Любой активный запрос: первичный, refetch или догрузка.
+  isFetchingNextPage: boolean; // Отдельный флаг догрузки следующей страницы.
+  isError: boolean; // Признак ошибки запроса.
+  error: ApiUiError | null; // Нормализованная ошибка для отображения в UI.
+  hasNextPage: boolean; // Есть ли следующая страница для infinite scroll.
+  fetchNextPage: () => void; // Запускает догрузку следующей страницы.
+  refetch: () => void; // Повторяет текущий запрос вручную.
 }
 
-// Пользовательский hook объединяет query, маппинг и контракт для UI.
 export function useGetAds(params: FetchAdsArgs = {}): UseAdsResult {
   // Вызов RTK Query hook для загрузки списка объявлений.
   const {
@@ -27,31 +28,24 @@ export function useGetAds(params: FetchAdsArgs = {}): UseAdsResult {
     isFetching,
     isFetchingNextPage,
     isError,
+    error,
     hasNextPage,
     fetchNextPage,
     refetch,
   } = useFetchAdsInfiniteQuery(params);
 
   return {
-    // Преобразование списка DTO в view-модели карточек.
     products: (data?.pages.flatMap((page) => page.items) ?? []).map(
       mapCatalogItemToCardVM,
-    ),
-    // Получение общего количества объявлений из первой страницы.
-    total: data?.pages[0]?.meta.totalCount ?? 0,
-    // Признак первичной загрузки данных.
-    isLoading,
-    // Признак любого активного запроса.
-    isFetching,
-    // Признак загрузки следующей страницы.
-    isFetchingNextPage,
-    // Признак ошибки выполнения запроса.
-    isError,
-    // Признак наличия следующей страницы.
-    hasNextPage: hasNextPage ?? false,
-    // Функция догрузки следующей страницы.
-    fetchNextPage,
-    // Функция принудительного обновления данных.
-    refetch,
+    ), // Преобразование DTO из всех страниц в карточки каталога.
+    total: data?.pages[0]?.meta.totalCount ?? 0, // Берём total из первой страницы ответа.
+    isLoading, // Первичная загрузка списка объявлений.
+    isFetching, // Любой активный запрос по этому query.
+    isFetchingNextPage, // Загрузка следующей страницы infinite query.
+    isError, // Флаг ошибки
+    error: getApiError(error), // Приводим сырой RTK Query error к единому UI-типу.
+    hasNextPage: hasNextPage ?? false, // RTK может вернуть undefined, UI получает boolean.
+    fetchNextPage, // Метод догрузки следующей страницы.
+    refetch, // Метод ручного обновления текущего query.
   };
 }

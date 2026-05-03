@@ -17,3 +17,4 @@ export type RootDispatch = typeof store.dispatch;
 
 export const useAppSelector = useSelector.withTypes<RootState>();
 export const useAppDispatch = useDispatch.withTypes<RootDispatch>();
+export { default as StoreProvider } from "./StoreProvider";

@@ -1,53 +1,55 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react"; // React hooks для ref, эффекта и мемоизации callback.
 
 type Props = {
-  hasNextPage: boolean;
-  isFetching: boolean;
-  fetchNextPage: () => void;
-  rootMargin?: string;
-  threshold?: number;
+  // Параметры hook бесконечной прокрутки.
+  hasNextPage: boolean; // Есть ли следующая страница данных.
+  isFetching: boolean; // Выполняется ли сейчас запрос.
+  fetchNextPage: () => void; // Функция загрузки следующей страницы.
+  rootMargin?: string; // Отступ до sentinel-элемента для раннего срабатывания.
+  threshold?: number; // Минимальная видимая доля sentinel-элемента.
 };
 
+// Hook, который возвращает ref для элемента-наблюдателя.
 export const useInfiniteScroll = ({
-  hasNextPage,
-  isFetching,
-  fetchNextPage,
-  rootMargin = "100px",
-  threshold = 0.1, // 10% элемента должно быть видно
+  hasNextPage, // Флаг наличия следующей страницы.
+  isFetching, // Флаг активного запроса.
+  fetchNextPage, // Команда догрузки страницы.
+  rootMargin = "100px", // Значение по умолчанию для ранней догрузки.
+  threshold = 0.1, // Observer сработает, когда видно 10% элемента
 }: Props) => {
-  const observerRef = useRef<HTMLDivElement>(null);
-
+  const observerRef = useRef<HTMLDivElement>(null); // ref для элемента-наблюдателя.
   const loadMoreHandler = useCallback(() => {
     if (hasNextPage && !isFetching) {
-      fetchNextPage();
+      fetchNextPage(); // Запускает загрузку следующей страницы.
     }
-  }, [hasNextPage, isFetching, fetchNextPage]);
-
+  }, [hasNextPage, isFetching, fetchNextPage]); // Обновляет callback при изменении условий догрузки.
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    // Создаёт и очищает IntersectionObserver.
+    const observer = new IntersectionObserver( // Наблюдатель за появлением элемента в viewport.
       (entries) => {
+        // Callback observer получает список наблюдаемых элементов.
         if (entries.length > 0 && entries[0].isIntersecting) {
-          loadMoreHandler();
+          // Проверяет, что элемент появился в зоне видимости.
+          loadMoreHandler(); // При появлении элемента запускает обработчик догрузки.
         }
       },
       {
-        root: null,
-        rootMargin,
-        threshold,
+        root: null, // Наблюдение относительно viewport браузера.
+        rootMargin, // Отступ, позволяющий начать загрузку заранее.
+        threshold, // Доля видимости элемента для срабатывания.
       },
     );
-
-    const currentObserverRef = observerRef.current;
+    const currentObserverRef = observerRef.current; // Запоминает текущий DOM-элемент.
+    // Проверяет, что элемент уже отрендерился.
     if (currentObserverRef) {
-      observer.observe(currentObserverRef);
+      observer.observe(currentObserverRef); // Начинает наблюдение за элементом.
     }
-
     return () => {
+      // Проверяет, был ли элемент под наблюдением.
       if (currentObserverRef) {
-        observer.unobserve(currentObserverRef);
+        observer.unobserve(currentObserverRef); // Снимает наблюдение с элемента.
       }
     };
-  }, [loadMoreHandler, rootMargin, threshold]);
-
-  return { observerRef };
+  }, [loadMoreHandler, rootMargin, threshold]); // Пересоздаёт observer при изменении обработчика или настроек.
+  return { observerRef }; // ref для элемента-наблюдателя.
 };

@@ -6,9 +6,9 @@ import type {
   DealStatusHistory,
   DealsListResponseDto,
   FetchDealsArgs,
+  Payment,
   RejectDealRequestDto,
-} from "@/business/types/dto/deals.dto";
-import type { Payment } from "@/business/types/dto/payments.dto";
+} from "@/business/types";
 
 const DEALS_LIST_TAG_ID = "LIST";
 const INCOMING_DEALS_TAG_ID = "INCOMING";

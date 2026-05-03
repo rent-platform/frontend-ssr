@@ -1,9 +1,7 @@
 "use client";
-import { redirect } from "next/navigation";
-import ROUTE_PATHS from "@/business/utils/routes/routes";
 
 import { useSession } from "@/business/hooks";
-import { adsApi } from "@/business/api/ads/endpoints";
+import { adsApi } from "@/business/api";
 import { store } from "@/business/store";
 import { useEffect } from "react";
 

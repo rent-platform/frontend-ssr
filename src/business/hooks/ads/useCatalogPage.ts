@@ -6,9 +6,8 @@ import { useFilters } from "@/business/hooks/filters/useFilters";
 import { useDebouncedValue } from "@/business/hooks/utils/useDebouncedValue";
 
 export function useCatalogPage() {
-  const { filters } = useFilters(); // Чтение фильтров из URL.
-
-  const debouncedSearch = useDebouncedValue(filters.search, 400); // задержка вызова поисковой строки.
+  const { filters } = useFilters(); // Читаем фильтры каталога из URL.
+  const debouncedSearch = useDebouncedValue(filters.search, 400); // Не отправляем запрос на каждый ввод символа.
 
   const {
     products,
@@ -17,29 +16,29 @@ export function useCatalogPage() {
     isFetching,
     isFetchingNextPage,
     isError,
+    error,
     hasNextPage,
     fetchNextPage,
     refetch,
   } = useGetAds({
-    // Загрузка данных каталога.
-    search: debouncedSearch || undefined, // Поиск с задержкой.
-    pageSize: 20, // Размер страницы выборки.
+    search: debouncedSearch || undefined,
+    pageSize: 20,
   });
 
   const { observerRef } = useInfiniteScroll({
-    // Настройка бесконечной прокрутки.
-    hasNextPage, // Есть ли следующая страница.
-    isFetching, // Идёт ли сейчас загрузка.
-    fetchNextPage, // Команда догрузки.
+    hasNextPage, // Запускаем observer только если есть следующая страница.
+    isFetching, // Блокируем повторный вызов, пока текущий запрос активен.
+    fetchNextPage, // Команда RTK Query для догрузки следующей страницы.
   });
 
   return {
-    products, // Карточки объявлений для UI.
-    total, // Общее количество результатов.
-    isLoading, // Состояние первичной загрузки.
-    isFetchingNextPage, // Состояние догрузки страницы.
-    isError, // Признак ошибки запроса.
-    observerRef, // Ref наблюдаемого элемента.
-    refetch, // Принудительное обновление.
+    products, // Карточки объявлений, уже приведённые к view-model.
+    total, // Общее количество найденных объявлений.
+    isLoading, // Первичная загрузка каталога без готовых данных.
+    isFetchingNextPage, // Догрузка следующей страницы в infinite scroll.
+    isError, // Флаг ошибки запроса каталога.
+    error, // Нормализованная ошибка для UI; уже обработана в useGetAds.
+    observerRef, // Ref sentinel-элемента, за которым следит IntersectionObserver.
+    refetch, // Ручное повторное получение текущей выборки.
   };
 }

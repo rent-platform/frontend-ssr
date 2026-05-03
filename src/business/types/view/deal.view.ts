@@ -1,8 +1,4 @@
-import type {
-  ChangeSource,
-  DealStatus,
-  PricingMode,
-} from "@/business/types/entity/deal.types";
+import type { ChangeSource, DealStatus, PricingMode } from "../entity";
 
 export type DealCardVM = {
   id: string;

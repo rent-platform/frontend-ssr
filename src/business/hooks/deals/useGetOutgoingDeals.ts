@@ -2,18 +2,21 @@
 
 import { useFetchMyOutgoingDealsQuery } from "@/business/api";
 import { mapDealToVM } from "@/business/mappers";
-import type { DealCardVM } from "@/business/types/view";
+import { getApiError } from "@/business/utils";
+import { type ApiUiError } from "@/business/types";
+import type { DealCardVM } from "@/business/types";
 
 export interface UseGetOutgoingDealsResult {
   deals: DealCardVM[];
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;
+  error: ApiUiError | null;
   refetch: () => void;
 }
 
 export function useGetOutgoingDeals(): UseGetOutgoingDealsResult {
-  const { data, isLoading, isFetching, isError, refetch } =
+  const { data, isLoading, isFetching, isError, error, refetch } =
     useFetchMyOutgoingDealsQuery();
 
   return {
@@ -21,6 +24,7 @@ export function useGetOutgoingDeals(): UseGetOutgoingDealsResult {
     isLoading,
     isFetching,
     isError,
+    error: getApiError(error),
     refetch,
   };
 }

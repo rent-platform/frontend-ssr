@@ -1,4 +1,4 @@
-import { ItemStatus } from "@/business/types/entity";
+import { ItemStatus } from "../entity";
 
 export type CatalogItemBaseVM = {
   id: string;

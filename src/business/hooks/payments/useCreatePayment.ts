@@ -1,16 +1,16 @@
 "use client";
 
 import { useCreatePaymentMutation } from "@/business/api";
-import type {
-  CreatePaymentRequest,
-  Payment,
-} from "@/business/types/dto/payments.dto";
+import { getApiError } from "@/business/utils";
+import { type ApiUiError } from "@/business/types";
+import type { CreatePaymentRequest, Payment } from "@/business/types";
 
 export interface UseCreatePaymentResult {
   createPayment: (payload: CreatePaymentRequest) => Promise<unknown>;
   payment: Payment | null;
   isCreating: boolean;
   isError: boolean;
+  createError: ApiUiError | null;
   isSuccess: boolean;
   reset: () => void;
 }
@@ -18,7 +18,7 @@ export interface UseCreatePaymentResult {
 export function useCreatePayment(): UseCreatePaymentResult {
   const [
     createPaymentMutation,
-    { data, isLoading, isError, isSuccess, reset },
+    { data, isLoading, isError, isSuccess, error, reset },
   ] = useCreatePaymentMutation();
 
   return {
@@ -26,6 +26,7 @@ export function useCreatePayment(): UseCreatePaymentResult {
     payment: data ?? null,
     isCreating: isLoading,
     isError,
+    createError: getApiError(error),
     isSuccess,
     reset,
   };

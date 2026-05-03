@@ -6,7 +6,7 @@ import {
   signOut,
   useSession as useNextAuthSession,
 } from "next-auth/react";
-import { getDefaultRouteForRole } from "@/business/utils/auth/roles";
+import { getDefaultRouteForRole } from "@/business/utils";
 import { fetchApi } from "@/business/api/auth/nextAuthApi";
 
 export type AuthResult = {

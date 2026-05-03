@@ -6,7 +6,7 @@ import {
   UpdatePlaylistArgs,
   FetchAdsArgs,
   PhotosList,
-} from "@/business/types/dto/ads.dto";
+} from "@/business/types";
 
 const ADS_LIST_TAG_ID = "LIST";
 

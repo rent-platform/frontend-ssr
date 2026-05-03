@@ -1,20 +1,20 @@
 import { baseApi } from "@/business/api/baseApi";
 import type {
   CreateReviewRequest,
-  Review,
+  ReviewDTO,
   UserRating,
-} from "@/business/types/dto/reviews.dto";
+} from "@/business/types";
 
 const REVIEWS_BY_USER_TAG_ID = "BY_USER";
 const REVIEWS_BY_AD_TAG_ID = "BY_AD";
 const USER_RATING_TAG_ID = "LIST";
 
-const getReviewTags = (reviews?: Review[]) =>
+const getReviewTags = (reviews?: ReviewDTO[]) =>
   reviews?.map((review) => ({ type: "Review" as const, id: review.id })) ?? [];
 
 export const reviewsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    createReview: build.mutation<Review, CreateReviewRequest>({
+    createReview: build.mutation<ReviewDTO, CreateReviewRequest>({
       query: (body) => ({
         url: "reviews",
         method: "POST",
@@ -24,12 +24,14 @@ export const reviewsApi = baseApi.injectEndpoints({
         { type: "Review", id: REVIEWS_BY_USER_TAG_ID },
         { type: "Review", id: REVIEWS_BY_AD_TAG_ID },
         { type: "UserRating", id: USER_RATING_TAG_ID },
-        ...(result?.userId ? [{ type: "UserRating" as const, id: result.userId }] : []),
+        ...(result?.userId
+          ? [{ type: "UserRating" as const, id: result.userId }]
+          : []),
         ...(result ? [{ type: "Review" as const, id: result.id }] : []),
       ],
     }),
 
-    fetchReviewsByUser: build.query<Review[], string>({
+    fetchReviewsByUser: build.query<ReviewDTO[], string>({
       query: (userId) => ({
         url: "reviews",
         params: { userId },
@@ -41,7 +43,7 @@ export const reviewsApi = baseApi.injectEndpoints({
       ],
     }),
 
-    fetchReviewsByAd: build.query<Review[], string>({
+    fetchReviewsByAd: build.query<ReviewDTO[], string>({
       query: (adId) => ({
         url: "reviews",
         params: { adId },

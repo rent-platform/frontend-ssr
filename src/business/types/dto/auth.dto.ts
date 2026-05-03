@@ -1,4 +1,5 @@
-import type { UserRole } from "@/business/types/entity";
+import type { UserRole } from "../entity";
+import type { DeepPartial } from "../common/utilityTypes";
 
 export type LoginRequestDTO = {
   tel: string;
@@ -21,7 +22,7 @@ export type UserResponseDTO = {
   role: UserRole;
 };
 
-export type UserUpdateDto = Partial<{
+export type UserUpdateDto = DeepPartial<{
   id: string;
   email: string | null;
   phone: string;

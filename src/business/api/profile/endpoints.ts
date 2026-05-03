@@ -1,8 +1,5 @@
 import { baseApi } from "@/business/api/baseApi";
-import type {
-  ProfileResponseDto,
-  ProfileUpdateDto,
-} from "@/business/types/dto/profile.dto";
+import type { ProfileResponseDto, ProfileUpdateDto } from "@/business/types";
 
 export const profileApi = baseApi.injectEndpoints({
   endpoints: (build) => ({

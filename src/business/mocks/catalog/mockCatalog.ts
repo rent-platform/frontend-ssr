@@ -1,4 +1,4 @@
-import type { AdsItemResponseDto } from "@/business/types/dto/ads.dto";
+import type { AdsItemResponseDto } from "@/business/types";
 
 export const MOCK_CATALOG_ITEMS: AdsItemResponseDto[] = [
   {

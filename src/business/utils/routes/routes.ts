@@ -2,7 +2,6 @@ const ROUTE_PATHS = {
   HOME: "/",
   CATALOG: "/catalog",
   FAVORITES: "/favorites",
-  ADS: "/ads",
   PROFILE: "/profile",
   ORDERS: "/orders",
   CART: "/cart",

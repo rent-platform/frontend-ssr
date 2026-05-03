@@ -4,10 +4,11 @@ export type {
   CatalogItemDetailsVM,
   CatalogListVM,
   Availability,
-} from "@/business/types/view/catalog.view";
+} from "./catalog.view";
 export type {
   DealCardVM,
   DealDetailsVM,
   DealStatusHistoryItemVM,
   DealsListVM,
-} from "@/business/types/view/deal.view";
+} from "./deal.view";
+export type { ProfileVM } from "./profile.view";

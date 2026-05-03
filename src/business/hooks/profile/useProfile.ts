@@ -5,17 +5,21 @@ import {
   useGetProfileQuery,
   useUpdateUserInfoMutation,
   useUploadAvatarMutation,
-} from "@/business/api/profile/endpoints";
+} from "@/business/api";
 import { mapProfileToVM, mapSessionUserToProfileVM } from "@/business/mappers";
-import type { ProfileUpdateDto } from "@/business/types/dto/profile.dto";
-import type { ProfileVM } from "@/business/types/view/profile.view";
+import { getApiError } from "@/business/utils";
+import { type ApiUiError } from "@/business/types";
+import type { ProfileUpdateDto, ProfileVM } from "@/business/types";
 
 export interface UseProfileResult {
   profile: ProfileVM | null;
   isLoading: boolean;
   isError: boolean;
+  error: ApiUiError | null;
   isUpdating: boolean;
   isUploadingAvatar: boolean;
+  updateError: ApiUiError | null;
+  uploadError: ApiUiError | null;
   updateProfile: (data: ProfileUpdateDto) => void;
   uploadAvatar: (file: File) => void;
 }
@@ -25,14 +29,16 @@ export function useProfile(): UseProfileResult {
   const userId = user?.id;
 
   // TODO: убрать skip когда бекенд будет готов
-  const { data, isLoading, isError } = useGetProfileQuery(userId!, {
+  const { data, isLoading, isError, error } = useGetProfileQuery(userId!, {
     skip: !userId, // запрос падает
   });
 
-  const [updateUserInfo, { isLoading: isUpdating }] =
+  const [updateUserInfo, { isLoading: isUpdating, error: updateProfileError }] =
     useUpdateUserInfoMutation();
-  const [uploadAvatarMutation, { isLoading: isUploadingAvatar }] =
-    useUploadAvatarMutation();
+  const [
+    uploadAvatarMutation,
+    { isLoading: isUploadingAvatar, error: uploadAvatarError },
+  ] = useUploadAvatarMutation();
 
   // пока бекенда нет data undefined, берём из сессии
   const profile: ProfileVM | null = data
@@ -45,8 +51,11 @@ export function useProfile(): UseProfileResult {
     profile,
     isLoading,
     isError,
+    error: getApiError(error),
     isUpdating,
     isUploadingAvatar,
+    updateError: getApiError(updateProfileError),
+    uploadError: getApiError(uploadAvatarError),
     updateProfile: (data: ProfileUpdateDto) => {
       if (userId) updateUserInfo({ userId, data });
     },

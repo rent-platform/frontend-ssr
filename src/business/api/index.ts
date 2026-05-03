@@ -1,4 +1,5 @@
 export {
+  adsApi,
   useFetchAdByIdQuery,
   useFetchAdsInfiniteQuery,
   useCreateAdMutation,
@@ -8,6 +9,7 @@ export {
 } from "./ads/endpoints";
 
 export {
+  dealsApi,
   useFetchDealsQuery,
   useCreateDealRequestMutation,
   useFetchDealByIdQuery,
@@ -22,6 +24,7 @@ export {
 } from "./deals/endpoints";
 
 export {
+  reviewsApi,
   useCreateReviewMutation,
   useFetchReviewsByUserQuery,
   useFetchReviewsByAdQuery,
@@ -29,6 +32,7 @@ export {
 } from "./reviews/endpoints";
 
 export {
+  endpoints as paymentsApi,
   useCreatePaymentMutation,
   useCapturePaymentMutation,
   useCancelPaymentMutation,
@@ -37,6 +41,7 @@ export {
 } from "./payments/endpoints";
 
 export {
+  profileApi,
   useGetProfileQuery,
   useUploadAvatarMutation,
   useUpdateUserInfoMutation,

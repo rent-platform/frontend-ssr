@@ -1,6 +1,5 @@
-import type { UserUpdateDto } from "@/business/types/dto/auth.dto";
-import type { UserRole } from "@/business/types/entity";
-import { normalizePhone } from "@/business/utils/authShecmas/authSchemas";
+import type { UserRole, UserUpdateDto } from "@/business/types";
+import { normalizePhone } from "@/business/utils";
 
 export type MockUser = Omit<UserUpdateDto, "password_hash" | "role"> & {
   password: string;

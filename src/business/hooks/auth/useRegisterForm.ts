@@ -1,14 +1,16 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "@/business/hooks";
+import { useSession } from "../session/useSession";
 import {
+  getApiErrorMessage,
   registerSchema,
+  ROUTE_PATHS,
   type RegisterFormValues,
-} from "@/business/utils/authShecmas/authSchemas";
-import ROUTE_PATHS from "@/business/utils/routes/routes";
+} from "@/business/utils";
 
 export function useRegisterForm() {
   const router = useRouter();
@@ -32,16 +34,17 @@ export function useRegisterForm() {
       data.tel,
       data.password,
     );
-    console.log(ok, error);
+
     if (ok) {
       router.replace(redirectTo ?? ROUTE_PATHS.HOME);
-    } else {
-      setApiError(
-        error === "REGISTERED_BUT_LOGIN_FAILED"
-          ? "Аккаунт создан, но войти не удалось. Попробуйте войти вручную."
-          : (error ?? "Ошибка регистрации. Попробуйте позже."),
-      );
+      return;
     }
+
+    setApiError(
+      error === "REGISTERED_BUT_LOGIN_FAILED"
+        ? "Аккаунт создан, но войти не удалось. Попробуйте войти вручную."
+        : getApiErrorMessage(error),
+    );
   };
 
   return {

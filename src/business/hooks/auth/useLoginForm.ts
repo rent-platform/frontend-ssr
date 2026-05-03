@@ -4,12 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "@/business/hooks";
+import { useSession } from "../session/useSession";
 import {
+  getApiErrorMessage,
   loginFormSchema,
+  ROUTE_PATHS,
   type LoginFormValues,
-} from "@/business/utils/authShecmas/authSchemas";
-import ROUTE_PATHS from "@/business/utils/routes/routes";
+} from "@/business/utils";
 
 export function useLoginForm() {
   const router = useRouter();
@@ -33,15 +34,17 @@ export function useLoginForm() {
       data.password,
       data.rememberMe,
     );
+
     if (ok) {
       router.replace(redirectTo ?? ROUTE_PATHS.HOME);
-    } else {
-      setApiError(
-        error === "CredentialsSignin"
-          ? "Неверный телефон или пароль. Попробуйте снова."
-          : "Ошибка входа. Попробуйте позже.",
-      );
+      return;
     }
+
+    setApiError(
+      error === "CredentialsSignin"
+        ? "Неверный телефон или пароль. Попробуйте снова."
+        : getApiErrorMessage(error),
+    );
   };
 
   return {

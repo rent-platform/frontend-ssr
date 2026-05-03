@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { registerApiSchema } from "@/business/utils/authShecmas/authSchemas";
+import { registerApiSchema } from "@/business/utils";
 import {
   findMockUserByPhone,
   addMockUser,

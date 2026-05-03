@@ -1,5 +1,5 @@
-import type { ItemStatus } from "@/business/types/entity/catalog.types";
-import type { DeepPartial } from "@/business/utils";
+import type { ItemStatus } from "../entity";
+import type { DeepPartial } from "../common/utilityTypes";
 
 export type Photo = {
   id: string;

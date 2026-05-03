@@ -2,19 +2,21 @@
 
 import { useFetchDealsQuery } from "@/business/api";
 import { mapDealToVM } from "@/business/mappers";
-import type { FetchDealsArgs } from "@/business/types/dto/deals.dto";
-import type { DealCardVM } from "@/business/types/view/deal.view";
+import { getApiError } from "@/business/utils";
+import { type ApiUiError } from "@/business/types";
+import type { DealCardVM, FetchDealsArgs } from "@/business/types";
 
 export interface UseDealsResult {
   deals: DealCardVM[];
   isLoading: boolean; // первая загрузка - нет данных
   isFetching: boolean; // фоновое обновление - данные уже есть
   isError: boolean;
+  error: ApiUiError | null;
   refetch: () => void;
 }
 
 export function useGetDeals(params: FetchDealsArgs = {}): UseDealsResult {
-  const { data, isLoading, isFetching, isError, refetch } =
+  const { data, isLoading, isFetching, isError, error, refetch } =
     useFetchDealsQuery(params);
 
   return {
@@ -22,6 +24,7 @@ export function useGetDeals(params: FetchDealsArgs = {}): UseDealsResult {
     isLoading,
     isFetching,
     isError,
+    error: getApiError(error),
     refetch,
   };
 }

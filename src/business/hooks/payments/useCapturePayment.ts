@@ -1,10 +1,9 @@
 "use client";
 
 import { useCapturePaymentMutation } from "@/business/api";
-import type {
-  CapturePaymentRequest,
-  Payment,
-} from "@/business/types/dto/payments.dto";
+import { getApiError } from "@/business/utils";
+import { type ApiUiError } from "@/business/types";
+import type { CapturePaymentRequest, Payment } from "@/business/types";
 
 export interface UseCapturePaymentResult {
   capturePayment: (
@@ -15,13 +14,16 @@ export interface UseCapturePaymentResult {
   payment: Payment | null;
   isCapturing: boolean;
   isError: boolean;
+  captureError: ApiUiError | null;
   isSuccess: boolean;
   reset: () => void;
 }
 
 export function useCapturePayment(): UseCapturePaymentResult {
-  const [capturePaymentMutation, { data, isLoading, isError, isSuccess, reset }] =
-    useCapturePaymentMutation();
+  const [
+    capturePaymentMutation,
+    { data, isLoading, isError, isSuccess, error, reset },
+  ] = useCapturePaymentMutation();
 
   return {
     capturePayment: (paymentId, body, dealId) =>
@@ -29,6 +31,7 @@ export function useCapturePayment(): UseCapturePaymentResult {
     payment: data ?? null,
     isCapturing: isLoading,
     isError,
+    captureError: getApiError(error),
     isSuccess,
     reset,
   };

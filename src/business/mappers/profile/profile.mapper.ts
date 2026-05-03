@@ -1,5 +1,4 @@
-import type { ProfileResponseDto } from "@/business/types/dto/profile.dto";
-import type { ProfileVM } from "@/business/types/view/profile.view";
+import type { ProfileResponseDto, ProfileVM } from "@/business/types";
 
 export function mapProfileToVM(dto: ProfileResponseDto): ProfileVM {
   return {

@@ -1,4 +1,4 @@
-import type { UserRole } from "@/business/types/entity/user.types";
+import type { UserRole } from "../entity";
 
 export type ProfileVM = {
   id: string;

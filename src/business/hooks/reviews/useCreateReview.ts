@@ -1,32 +1,33 @@
 "use client";
 
 import { useCreateReviewMutation } from "@/business/api";
-import type {
-  CreateReviewRequest,
-  Review,
-} from "@/business/types/dto/reviews.dto";
+import { getApiError } from "@/business/utils";
+import { type ApiUiError } from "@/business/types";
+import type { CreateReviewRequest, ReviewDTO } from "@/business/types";
 
 export interface UseCreateReviewResult {
-  // Контракт hook для UI.
-  createReview: (payload: CreateReviewRequest) => Promise<unknown>; // Команда создания отзыва.
-  review: Review | null; // Созданный отзыв.
-  isCreating: boolean; // Состояние выполнения команды.
-  isError: boolean; // Признак ошибки запроса.
-  isSuccess: boolean; // Признак успешного создания.
-  reset: () => void; // Сброс состояния mutation.
+  createReview: (payload: CreateReviewRequest) => Promise<unknown>; // Запускает mutation создания отзыва.
+  review: ReviewDTO | null; // Созданный отзыв из успешного ответа.
+  isCreating: boolean; // Активно ли сейчас создание отзыва.
+  isError: boolean; // Завершилась ли mutation ошибкой.
+  createError: ApiUiError | null; // Нормализованная ошибка создания для UI.
+  isSuccess: boolean; // Успешно ли завершилась mutation.
+  reset: () => void; // Сбрасывает состояние mutation.
 }
 
 export function useCreateReview(): UseCreateReviewResult {
-  // Подключение RTK Query mutation.
-  const [createReviewMutation, { data, isLoading, isError, isSuccess, reset }] =
-    useCreateReviewMutation();
+  const [
+    createReviewMutation,
+    { data, isLoading, isError, isSuccess, error, reset },
+  ] = useCreateReviewMutation();
 
   return {
-    createReview: (payload) => createReviewMutation(payload), // Вызов команды создания.
-    review: data ?? null, // Данные созданного отзыва.
-    isCreating: isLoading, // Статуса загрузки.
-    isError, // Ошибка выполнения mutation.
-    isSuccess, // Успешное завершение mutation.
-    reset, // Очистка текущего состояния.
+    createReview: (payload) => createReviewMutation(payload), // Передаём payload в RTK Query mutation.
+    review: data ?? null, // Если ответа ещё нет, UI получает null.
+    isCreating: isLoading, // Переименовываем isLoading в предметное состояние.
+    isError, // Оставляем стандартный флаг ошибки.
+    createError: getApiError(error), // Преобразуем сырой error в ApiUiError.
+    isSuccess, // Флаг успешного создания.
+    reset, // Даём UI возможность очистить mutation state.
   };
 }
