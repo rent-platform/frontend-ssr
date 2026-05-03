@@ -492,28 +492,6 @@ export function GuestExperience() {
               <FaqAccordion items={FAQ_ITEMS} />
             </section>
 
-            {/* ═══════ Final CTA ═══════ */}
-            <section className={styles.finalCta}>
-              <motion.div
-                className={styles.finalCtaContent}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
-                <h2>Готовы начать?</h2>
-                <p>Присоединяйтесь к тысячам людей, которые уже экономят с шерингом.</p>
-                <div className={styles.finalCtaButtons}>
-                  <Link href="/register" className={styles.finalCtaPrimary}>
-                    <UserPlus size={18} />
-                    Создать аккаунт бесплатно
-                  </Link>
-                  <Link href="/login" className={styles.finalCtaSecondary}>
-                    Войти
-                  </Link>
-                </div>
-              </motion.div>
-            </section>
           </>
         )}
       </main>
