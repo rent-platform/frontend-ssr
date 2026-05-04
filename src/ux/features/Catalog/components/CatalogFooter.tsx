@@ -1,33 +1,34 @@
 import Link from 'next/link';
 import { Mail, MapPin, Phone } from 'lucide-react';
+import { ROUTES } from '@/ux/utils';
 import styles from '../Catalog.module.scss';
 
 const FOOTER_NAV = {
   platform: {
     title: 'Платформа',
     links: [
-      { label: 'Каталог', href: '/dev-ui' },
-      { label: 'Как это работает', href: '/how-it-works' },
-      { label: 'Цены и тарифы', href: '/pricing' },
-      { label: 'Для бизнеса', href: '/business' },
+      { label: 'Каталог', href: ROUTES.catalog },
+      { label: 'Как это работает', href: ROUTES.howItWorks },
+      { label: 'Цены и тарифы', href: ROUTES.pricing },
+      { label: 'Для бизнеса', href: ROUTES.business },
     ],
   },
   support: {
     title: 'Поддержка',
     links: [
-      { label: 'Центр помощи', href: '/help' },
-      { label: 'Безопасность', href: '/safety' },
-      { label: 'Условия сервиса', href: '/terms' },
-      { label: 'Политика конфиденциальности', href: '/privacy' },
+      { label: 'Центр помощи', href: ROUTES.help },
+      { label: 'Безопасность', href: ROUTES.safety },
+      { label: 'Условия сервиса', href: ROUTES.terms },
+      { label: 'Политика конфиденциальности', href: ROUTES.privacy },
     ],
   },
   company: {
     title: 'Компания',
     links: [
-      { label: 'О нас', href: '/about' },
-      { label: 'Блог', href: '/blog' },
-      { label: 'Карьера', href: '/careers' },
-      { label: 'Контакты', href: '/contacts' },
+      { label: 'О нас', href: ROUTES.about },
+      { label: 'Блог', href: ROUTES.blog },
+      { label: 'Карьера', href: ROUTES.careers },
+      { label: 'Контакты', href: ROUTES.contacts },
     ],
   },
 };
@@ -89,9 +90,9 @@ export function CatalogFooter() {
             &copy; {new Date().getFullYear()} Арендай. Все права защищены.
           </span>
           <div className={styles.footerLegal}>
-            <Link href="/terms">Условия</Link>
-            <Link href="/privacy">Конфиденциальность</Link>
-            <Link href="/cookies">Cookies</Link>
+            <Link href={ROUTES.terms}>Условия</Link>
+            <Link href={ROUTES.privacy}>Конфиденциальность</Link>
+            <Link href={ROUTES.cookies}>Cookies</Link>
           </div>
         </div>
       </div>

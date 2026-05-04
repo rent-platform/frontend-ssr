@@ -13,16 +13,20 @@ import {
   Sparkles,
   UserPlus,
 } from 'lucide-react';
-import { BrandIcon } from '../Catalog/components/CatalogHeader';
-import { CatalogCard } from '../Catalog/components/CatalogCard';
-import { CatalogSearchBar } from '../Catalog/components/CatalogSearchBar';
-import { CatalogToolbar } from '../Catalog/components/CatalogToolbar';
-import { CatalogFooter } from '../Catalog/components/CatalogFooter';
-import { ProductDetail } from '../Catalog/components/ProductDetail';
-import { CategoryRail } from '../Catalog/components/CategoryRail';
-import { mockCatalogItems } from '../Catalog/mockCatalogItems';
-import type { CatalogUiItem } from '../Catalog/types';
-import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from '../Catalog/utils';
+import {
+  BrandIcon,
+  CatalogCard,
+  CatalogSearchBar,
+  CatalogToolbar,
+  CatalogFooter,
+  ProductDetail,
+  CategoryRail,
+  mockCatalogItems,
+  CATEGORY_OPTIONS,
+  INITIAL_FILTERS,
+  applyCatalogFilters,
+  type CatalogUiItem,
+} from '../Catalog';
 import { ROUTES } from '@/ux/utils';
 import { GUEST_ITEM_LIMIT } from './guestConstants';
 import { GuestAuthModal } from './components/GuestAuthModal';

@@ -58,6 +58,8 @@ export function GlassSelect({
   );
 
   useEffect(() => {
+    if (!open) return undefined;
+
     const handleClickOutside = (event: MouseEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) {
         setOpen(false);
@@ -79,7 +81,7 @@ export function GlassSelect({
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
     };
-  }, []);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return undefined;

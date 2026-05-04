@@ -115,12 +115,6 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
     [cities],
   );
 
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [onClose]);
-
   const activeCount = useMemo(() => {
     let n = 0;
     if (filters.category !== INITIAL_FILTERS.category) n++;

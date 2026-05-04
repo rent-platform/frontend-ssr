@@ -33,9 +33,12 @@ export function ChatListItem({ chat, isActive, onClick }: ChatListItemProps) {
   }
 
   return (
-    <div
+    <button
+      type="button"
       className={`${styles.chatItem} ${isActive ? styles.chatItemActive : ''}`}
       onClick={onClick}
+      aria-current={isActive ? 'true' : undefined}
+      aria-label={`Чат с ${chat.counterpartyName} — ${chat.itemTitle}`}
     >
       {chat.pinned && (
         <div className={styles.pinIcon}><Pin size={10} /></div>
@@ -71,6 +74,6 @@ export function ChatListItem({ chat, isActive, onClick }: ChatListItemProps) {
           )}
         </div>
       </div>
-    </div>
+    </button>
   );
 }

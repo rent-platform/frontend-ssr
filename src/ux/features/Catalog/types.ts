@@ -7,8 +7,9 @@ export type CatalogUiItem = CatalogItemCardVM & {
   ownerAvatar: string | null;
   images: string[];
 
-  /* ── Computed (AVG reviews.rating) ── */
+  /* ── Computed (AVG reviews.rating, COUNT reviews) ── */
   ownerRating?: number;
+  ownerReviewCount?: number;
 
   /* ── No DB backing yet — kept optional for forward-compat ── */
   itemDescription?: string;

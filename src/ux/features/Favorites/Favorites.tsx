@@ -13,11 +13,13 @@ import {
   X,
 } from 'lucide-react';
 import { getNumericPrice, pluralize, ROUTES } from '@/ux/utils';
-import { CatalogCard } from '../Catalog/components/CatalogCard';
-import { CatalogHeader } from '../Catalog/components/CatalogHeader';
-import { ProductDetail } from '../Catalog/components/ProductDetail';
-import { mockCatalogItems } from '../Catalog/mockCatalogItems';
-import type { CatalogUiItem } from '../Catalog/types';
+import {
+  CatalogCard,
+  CatalogHeader,
+  ProductDetail,
+  mockCatalogItems,
+  type CatalogUiItem,
+} from '../Catalog';
 import styles from './Favorites.module.scss';
 
 /* ─── Types ─── */

@@ -1,5 +1,5 @@
 import type { ItemStatus, DealStatus } from '@/business/types/entity';
-import type { CatalogUiItem } from '../Catalog/types';
+import type { CatalogUiItem } from '../Catalog';
 import type { ProfileListing } from './types';
 import { MOCK_USER } from './mockProfileData';
 import styles from './ProfileDashboard.module.scss';

@@ -25,10 +25,7 @@ import {
   ThumbsUp,
   X,
 } from 'lucide-react';
-import { CatalogHeader } from '../Catalog/components/CatalogHeader';
-import { CatalogFooter } from '../Catalog/components/CatalogFooter';
-import { CatalogCard } from '../Catalog/components/CatalogCard';
-import type { CatalogUiItem } from '../Catalog/types';
+import { CatalogHeader, CatalogFooter, CatalogCard, type CatalogUiItem } from '../Catalog';
 import { MOCK_PUBLIC_USER, MOCK_PUBLIC_LISTINGS, MOCK_PUBLIC_REVIEWS } from './mockPublicProfileData';
 import type { TrustLevel, PublicListing, PublicUser } from './types';
 import { pluralize, formatDate, ROUTES } from '@/ux/utils';

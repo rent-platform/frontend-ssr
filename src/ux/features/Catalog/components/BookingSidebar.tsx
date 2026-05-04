@@ -204,7 +204,7 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
           <span className={styles.ownerName}>{item.ownerName}</span>
           <div className={styles.ownerMeta}>
             <Star size={14} fill="#f59e0b" color="#f59e0b" />
-            {(item.ownerRating ?? 0).toFixed(1)} · 54 отзыва
+            {(item.ownerRating ?? 0).toFixed(1)} · {item.ownerReviewCount ?? 0} {pluralize(item.ownerReviewCount ?? 0, 'отзыв', 'отзыва', 'отзывов')}
           </div>
         </div>
       </div>

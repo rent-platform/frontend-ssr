@@ -130,7 +130,13 @@ function ImageCarousel({
   );
 }
 
-export function CatalogCard({ item, onOpen = () => {}, index = 0, initialFavorite = false, onFavoriteChange }: CatalogCardProps) {
+export function CatalogCard({
+  item,
+  onOpen = () => {},
+  index = 0,
+  initialFavorite = false,
+  onFavoriteChange,
+}: CatalogCardProps) {
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.createdAt);

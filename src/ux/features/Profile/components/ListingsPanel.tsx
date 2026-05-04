@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { Package } from 'lucide-react';
-import { CatalogCard } from '../../Catalog/components/CatalogCard';
+import { CatalogCard } from '../../Catalog';
 import { pluralize } from '@/ux/utils';
 import { MOCK_LISTINGS } from '../mockProfileData';
 import { LISTING_FILTERS, profileListingToCatalogItem } from '../profileHelpers';

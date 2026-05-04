@@ -3,6 +3,7 @@ export { ChatPage } from './Chat';
 export { CreateListing } from './CreateListing';
 export { Favorites } from './Favorites';
 export { GuestExperience } from './Guest';
+export { InfoPageLayout } from './InfoPages';
 export { NotificationsPage } from './Notifications';
 export { ProfileDashboard } from './Profile';
 export { PublicProfile } from './PublicProfile';

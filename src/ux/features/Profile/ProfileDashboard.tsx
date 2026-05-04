@@ -18,8 +18,7 @@ import {
   Star,
   Zap,
 } from 'lucide-react';
-import { CatalogHeader } from '../Catalog/components/CatalogHeader';
-import { CatalogFooter } from '../Catalog/components/CatalogFooter';
+import { CatalogHeader, CatalogFooter } from '../Catalog';
 import { pluralize, formatDate, ROUTES } from '@/ux/utils';
 import type { ProfileTab, BookingSide } from './types';
 import { MOCK_USER, MOCK_STATS, MOCK_BOOKINGS } from './mockProfileData';
