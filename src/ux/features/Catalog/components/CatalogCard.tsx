@@ -114,8 +114,10 @@ function ImageCarousel({
 
           <div className={styles.carouselDots}>
             {images.slice(0, 5).map((_, i) => (
-              <span
+              <button
                 key={i}
+                type="button"
+                aria-label={`Фото ${i + 1}`}
                 className={i === current ? styles.carouselDotActive : styles.carouselDot}
                 onClick={(e) => { e.stopPropagation(); goTo(i); }}
               />
@@ -176,9 +178,9 @@ export function CatalogCard({ item, onOpen = () => {}, index = 0, initialFavorit
               onImageClick={() => onOpen(item)}
             />
           ) : (
-            <div className={styles.cardImagePlaceholder} onClick={() => onOpen(item)}>
+            <button type="button" className={styles.cardImagePlaceholder} onClick={() => onOpen(item)} aria-label={`Открыть ${item.title}`}>
               <Eye size={32} />
-            </div>
+            </button>
           )}
         </div>
       </div>

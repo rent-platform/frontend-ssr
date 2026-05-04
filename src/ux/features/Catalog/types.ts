@@ -31,28 +31,6 @@ export type CatalogSortKey =
   | 'newest'
   | 'rating';
 
-export type AvailabilityFilter = 'all' | 'available' | 'soon';
-export type CatalogSort = CatalogSortKey;
-export type CatalogCategory =
-  | 'Электроника'
-  | 'Фото и видео'
-  | 'Инструменты'
-  | 'Для дома'
-  | 'Спорт и отдых'
-  | 'Детские товары'
-  | 'Мероприятия';
-
-export type CatalogQuickFiltersState = {
-  instantBook: boolean;
-  noDeposit: boolean;
-  newArrival: boolean;
-  delivery: boolean;
-};
-
-export type QuickFilterKey = keyof CatalogQuickFiltersState;
-
-export type CatalogViewMode = 'catalog' | 'detail';
-
 export type CatalogFilterState = {
   search: string;
   city: string;

@@ -1,4 +1,7 @@
+'use client';
+
 import type { CatalogFilterState } from '../types';
+import { pluralize } from '@/ux/utils';
 import { GlassSelect, type GlassSelectOption } from './GlassSelect';
 import styles from '../Catalog.module.scss';
 
@@ -23,7 +26,7 @@ export function CatalogToolbar({ filters, onChange, visibleCount, totalCount }: 
         <p className={styles.resultsCount}>
           {visibleCount < totalCount
             ? <>Показано <strong>{visibleCount}</strong> из <strong>{totalCount}</strong></>
-            : <><strong>{totalCount}</strong> {totalCount === 1 ? 'объявление' : 'объявлений'}</>
+            : <><strong>{totalCount}</strong> {pluralize(totalCount, 'объявление', 'объявления', 'объявлений')}</>
           }
         </p>
       </div>

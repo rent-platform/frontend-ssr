@@ -207,8 +207,11 @@ export function ChatPage() {
             {quickActions.length > 0 && <QuickActionsBar actions={quickActions} />}
 
             <div className={styles.messagesArea}>
-              {timeline.map((entry, i) => (
-                <TimelineItem key={i} entry={entry} />
+              {timeline.map((entry) => (
+                <TimelineItem
+                  key={entry.kind === 'date' ? `date-${entry.label}` : entry.data.id}
+                  entry={entry}
+                />
               ))}
               {activeChat.isTyping && <TypingIndicator />}
               <div ref={messagesEndRef} />

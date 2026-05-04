@@ -302,7 +302,10 @@ function NotificationCard({
   const card = (
     <div
       className={`${styles.card} ${!ntf.isRead ? styles.cardUnread : ''} ${priorityCls}`}
+      role="button"
+      tabIndex={0}
       onClick={handleClick}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } }}
     >
       <div className={`${styles.iconCircle} ${iconCls}`}>
         <Icon />

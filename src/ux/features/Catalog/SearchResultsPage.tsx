@@ -20,7 +20,7 @@ import {
   searchParamsToFilters,
   filtersToSearchParams,
 } from './utils';
-import { ROUTES } from '@/ux/utils';
+import { ROUTES, pluralize } from '@/ux/utils';
 import styles from './Catalog.module.scss';
 
 const BATCH_SIZE = 8;
@@ -144,7 +144,7 @@ export function SearchResultsPage() {
                 : 'Результаты поиска'}
             </h2>
             <span className={styles.searchResultsCount}>
-              {filteredItems.length} {filteredItems.length === 1 ? 'объявление' : filteredItems.length < 5 ? 'объявления' : 'объявлений'}
+              {filteredItems.length} {pluralize(filteredItems.length, 'объявление', 'объявления', 'объявлений')}
             </span>
           </div>
         )}

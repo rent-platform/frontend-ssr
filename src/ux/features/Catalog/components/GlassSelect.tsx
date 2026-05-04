@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from '../Catalog.module.scss';
 
 export type GlassSelectOption = {
@@ -50,6 +50,7 @@ export function GlassSelect({
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [highlightIndex, setHighlightIndex] = useState(-1);
 
   const selectedOption = useMemo(
     () => options.find((option) => option.value === value),
@@ -166,7 +167,28 @@ export function GlassSelect({
   const handleSelect = (nextValue: string) => {
     onChange(nextValue);
     setOpen(false);
+    setHighlightIndex(-1);
   };
+
+  const handleListKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setHighlightIndex((prev) =>
+          prev < filteredOptions.length - 1 ? prev + 1 : 0,
+        );
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setHighlightIndex((prev) =>
+          prev > 0 ? prev - 1 : filteredOptions.length - 1,
+        );
+      } else if (e.key === 'Enter' && highlightIndex >= 0) {
+        e.preventDefault();
+        handleSelect(filteredOptions[highlightIndex].value);
+      }
+    },
+    [filteredOptions, highlightIndex],
+  );
 
   return (
     <div ref={rootRef} className={styles.glassSelect}>
@@ -191,6 +213,7 @@ export function GlassSelect({
         <div
           ref={dropdownRef}
           className={`${styles.glassSelectDropdown}${dropdownClassName ? ` ${dropdownClassName}` : ''}`}
+          onKeyDown={handleListKeyDown}
         >
           {searchable ? (
             <div className={styles.glassSelectSearchWrap}>
@@ -204,9 +227,13 @@ export function GlassSelect({
             </div>
           ) : null}
 
-          <div className={styles.glassSelectOptions} role="listbox" aria-label={label}>
+          <div
+            className={styles.glassSelectOptions}
+            role="listbox"
+            aria-label={label}
+          >
             {filteredOptions.length > 0 ? (
-              filteredOptions.map((option) => {
+              filteredOptions.map((option, index) => {
                 const active = option.value === value;
 
                 return (
@@ -215,8 +242,10 @@ export function GlassSelect({
                     type="button"
                     role="option"
                     aria-selected={active}
+                    data-highlighted={index === highlightIndex || undefined}
                     className={active ? styles.glassSelectOptionActive : styles.glassSelectOption}
                     onClick={() => handleSelect(option.value)}
+                    onMouseEnter={() => setHighlightIndex(index)}
                   >
                     <span className={styles.glassSelectOptionLabel}>{option.label}</span>
                     {option.description ? (

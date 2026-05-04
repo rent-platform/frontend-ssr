@@ -36,7 +36,7 @@ import { CategoryRail } from '../Catalog/components/CategoryRail';
 import { mockCatalogItems } from '../Catalog/mockCatalogItems';
 import type { CatalogUiItem } from '../Catalog/types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from '../Catalog/utils';
-import { ROUTES } from '@/ux/utils';
+import { ROUTES, useFocusTrap } from '@/ux/utils';
 import styles from './GuestExperience.module.scss';
 
 const GUEST_ITEM_LIMIT = 12;
@@ -74,8 +74,6 @@ const GUEST_LIMITS = [
   'Бронирование доступно только зарегистрированным',
   'Избранное, чат и история сохраняются в кабинете',
 ];
-
-const POPULAR_QUERIES = ['Дрель', 'Палатка', 'Камера', 'Велосипед', 'Проектор'];
 
 const ECO_STATS = [
   { icon: Recycle, value: '2 400+', label: 'вещей в повторном использовании' },
@@ -143,6 +141,7 @@ function FaqAccordion({ items }: { items: typeof FAQ_ITEMS }) {
 export function GuestExperience() {
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const authTrapRef = useFocusTrap<HTMLDivElement>(showAuthModal);
   const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -232,18 +231,18 @@ export function GuestExperience() {
               <a href="#how-it-works" className={styles.navLink}>
                 Как это работает
               </a>
-              <Link href="/safety" className={styles.navLink}>
+              <Link href={ROUTES.safety} className={styles.navLink}>
                 Безопасность
               </Link>
             </nav>
           </div>
 
           <div className={styles.authButtons}>
-            <Link href="/login" className={styles.loginBtn}>
+            <Link href={ROUTES.login} className={styles.loginBtn}>
               <LogIn size={18} />
               Войти
             </Link>
-            <Link href="/register" className={styles.registerBtn}>
+            <Link href={ROUTES.register} className={styles.registerBtn}>
               <UserPlus size={18} />
               Регистрация
             </Link>
@@ -289,7 +288,7 @@ export function GuestExperience() {
                   </p>
 
                   <div className={styles.ctaRow}>
-                    <Link href="/register" className={styles.primaryCta}>
+                    <Link href={ROUTES.register} className={styles.primaryCta}>
                       Начать бесплатно
                       <ArrowRight size={18} />
                     </Link>
@@ -422,11 +421,11 @@ export function GuestExperience() {
                   чтобы бронировать, общаться с владельцами, сохранять избранное и сдавать свои вещи.
                 </p>
                 <div className={styles.promptButtons}>
-                  <Link href="/register" className={styles.promptPrimary}>
+                  <Link href={ROUTES.register} className={styles.promptPrimary}>
                     <UserPlus size={18} />
                     Зарегистрироваться бесплатно
                   </Link>
-                  <Link href="/login" className={styles.promptSecondary}>
+                  <Link href={ROUTES.login} className={styles.promptSecondary}>
                     Уже есть аккаунт
                   </Link>
                 </div>
@@ -502,7 +501,7 @@ export function GuestExperience() {
 
       {/* ═══════ Mobile Floating CTA ═══════ */}
       <div className={`${styles.floatingBar} ${selectedItem ? styles.floatingBarHidden : ''}`}>
-        <Link href="/register" className={styles.floatingBtn}>
+        <Link href={ROUTES.register} className={styles.floatingBtn}>
           Создать аккаунт
         </Link>
       </div>
@@ -535,6 +534,7 @@ export function GuestExperience() {
             onClick={() => setShowAuthModal(false)}
           >
             <motion.div
+              ref={authTrapRef}
               className={styles.modalContent}
               role="dialog"
               aria-modal="true"
@@ -574,11 +574,11 @@ export function GuestExperience() {
               </div>
 
               <div className={styles.modalButtons}>
-                <Link href="/register" className={styles.modalPrimary}>
+                <Link href={ROUTES.register} className={styles.modalPrimary}>
                   <UserPlus size={18} />
                   Создать аккаунт
                 </Link>
-                <Link href="/login" className={styles.modalSecondary}>
+                <Link href={ROUTES.login} className={styles.modalSecondary}>
                   <LogIn size={18} />
                   Войти
                 </Link>

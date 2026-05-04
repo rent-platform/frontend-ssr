@@ -69,10 +69,10 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
                 <LayoutGrid size={18} />
                 <span>Каталог</span>
               </Link>
-              <Link href="/how-it-works" className={styles.navLink}>
+              <Link href={ROUTES.howItWorks} className={styles.navLink}>
                 Как это работает
               </Link>
-              <Link href="/safety" className={styles.navLink}>
+              <Link href={ROUTES.safety} className={styles.navLink}>
                 Безопасность
               </Link>
             </nav>

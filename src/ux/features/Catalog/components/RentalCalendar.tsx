@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { pluralize, useFocusTrap } from '@/ux/utils';
 import styles from './RentalCalendar.module.scss';
 
 type RentalCalendarProps = {
@@ -118,9 +119,11 @@ export function RentalCalendar({
     if (!startDate) return null;
     if (!endDate) return 'Выберите дату окончания';
     const diff = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    const dayWord = diff === 1 ? 'день' : diff < 5 ? 'дня' : 'дней';
+    const dayWord = pluralize(diff, 'день', 'дня', 'дней');
     return `${diff} ${dayWord}`;
   }, [startDate, endDate]);
+
+  const trapRef = useFocusTrap<HTMLDivElement>(true);
 
   return createPortal(
     <motion.div
@@ -132,6 +135,7 @@ export function RentalCalendar({
       onClick={onClose}
     >
       <motion.div
+        ref={trapRef}
         className={styles.calendar}
         initial={{ opacity: 0, y: 16, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}

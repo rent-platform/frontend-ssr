@@ -9,6 +9,10 @@ const BASE = '/dev-ui';
 export const ROUTES = {
   home: BASE,
   catalog: BASE,
+  login: '/login',
+  register: '/register',
+  howItWorks: '/how-it-works',
+  safety: '/safety',
   search: `${BASE}/search`,
   chat: `${BASE}/chat`,
   createListing: `${BASE}/create-listing`,

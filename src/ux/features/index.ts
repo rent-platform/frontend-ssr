@@ -1,4 +1,4 @@
-export { CatalogExperience } from './Catalog';
+export { CatalogExperience, SearchResultsPage } from './Catalog';
 export { ChatPage } from './Chat';
 export { CreateListing } from './CreateListing';
 export { Favorites } from './Favorites';

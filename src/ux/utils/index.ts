@@ -9,3 +9,4 @@ export {
   getInitials,
 } from './format';
 export { ROUTES } from './routes';
+export { useFocusTrap } from './useFocusTrap';

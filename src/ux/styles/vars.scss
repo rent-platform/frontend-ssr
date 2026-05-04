@@ -2,7 +2,6 @@
 $color-primary:        #22c55e; // Яркий зеленый для экологичного и свежего вида
 $color-primary-hover:  #16a34a;
 $color-secondary:      #f43f5e; // Яркий розовый для акцентов (избранное, ошибки)
-$color-accent:         #0f172a;
 
 $color-bg:             #ffffff;
 $color-surface:        #ffffff;
@@ -40,8 +39,6 @@ $font-family-display:
   'Inter',
   system-ui,
   sans-serif;
-$font-family-marketplace-body: $font-family-base;
-$font-family-marketplace-display: $font-family-display;
 $font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
 $font-size-xs:   0.75rem;   // 12px
@@ -164,7 +161,6 @@ $breakpoint-sm:   $bp-sm;
   --color-primary:        #{$color-primary};
   --color-primary-hover:  #{$color-primary-hover};
   --color-secondary:      #{$color-secondary};
-  --color-accent:         #{$color-accent};
   --color-bg:             #{$color-bg};
   --color-surface:        #{$color-surface};
   --color-surface-muted:  #{$color-surface-muted};
@@ -177,8 +173,6 @@ $breakpoint-sm:   $bp-sm;
   --color-error:          #{$color-error};
   --font-family-base:     #{$font-family-base};
   --font-family-display:  #{$font-family-display};
-  --font-family-marketplace-body: #{$font-family-marketplace-body};
-  --font-family-marketplace-display: #{$font-family-marketplace-display};
   --font-family-mono:     #{$font-family-mono};
   --radius-sm:  #{$radius-sm};
   --radius-md:  #{$radius-md};

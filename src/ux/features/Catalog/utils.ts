@@ -1,4 +1,4 @@
-import { pluralize } from '@/ux/utils';
+import { pluralize, formatPrice, getNumericPrice, timeAgo } from '@/ux/utils';
 import type { CatalogFilterState, CatalogSortKey, CatalogUiItem } from './types';
 
 export const CATEGORY_OPTIONS = [
@@ -32,16 +32,7 @@ export const INITIAL_FILTERS: CatalogFilterState = {
   hasDeposit: 'all',
 };
 
-export const getNumericPrice = (value: string | null) => {
-  if (!value) return 0;
-  return Number(value.replace(/\s/g, '').replace(',', '.'));
-};
-
-export const formatPrice = (value: string | null, suffix: string) => {
-  if (!value) return 'По запросу';
-
-  return `${new Intl.NumberFormat('ru-RU').format(Number(value))} ₽${suffix}`;
-};
+export { formatPrice, getNumericPrice };
 
 const normalizeNumberish = (value: string | null) => {
   if (!value) return null;
@@ -86,20 +77,7 @@ export const formatCatalogCardLocation = (item: CatalogUiItem): string => {
   return `${city}, ${detail}`;
 };
 
-export const formatRelativeDate = (isoDate: string) => {
-  const diffHours = Math.max(
-    1,
-    Math.round((Date.now() - new Date(isoDate).getTime()) / (1000 * 60 * 60)),
-  );
-
-  if (diffHours < 24) {
-    return `${diffHours} ч назад`;
-  }
-
-  const days = Math.round(diffHours / 24);
-
-  return `${days} дн назад`;
-};
+export const formatRelativeDate = timeAgo;
 
 const priceToNumber = (value: string | null) => (value ? Number(value) : Infinity);
 

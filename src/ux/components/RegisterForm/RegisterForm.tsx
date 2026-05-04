@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import AppInput from "@/ux/components/AppInput";
 import { useRegisterForm } from "@/business/hooks";
-import ROUTE_PATHS from "@/business/utils/routes/routes";
+import { ROUTES } from "@/ux/utils";
 import styles from "@/ux/layouts/AuthLayout/AuthForm.module.scss";
 
 export const RegisterForm = () => {
@@ -81,7 +81,7 @@ export const RegisterForm = () => {
 
       <p className={styles.footer}>
         Уже есть аккаунт?{" "}
-        <Link href={ROUTE_PATHS.LOGIN} className={styles.link}>
+        <Link href={ROUTES.login} className={styles.link}>
           Войти
         </Link>
       </p>

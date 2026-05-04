@@ -24,6 +24,7 @@ import {
   Zap,
 } from 'lucide-react';
 import type { CatalogUiItem } from '../types';
+import { pluralize } from '@/ux/utils';
 import {
   formatCatalogCardHourSecondary,
   formatCatalogCardLocation,
@@ -382,7 +383,7 @@ export function ProductDetail({
           {/* Pricing Breakdown */}
           <div className={styles.bookingTotal}>
             <div className={styles.totalRow}>
-              <span>{formatPrice(String(dailyPrice), '')} × {rentalDays || 1} {rentalDays === 1 ? 'день' : rentalDays < 5 ? 'дня' : 'дней'}</span>
+              <span>{formatPrice(String(dailyPrice), '')} × {rentalDays || 1} {pluralize(rentalDays || 1, 'день', 'дня', 'дней')}</span>
               <span>{formatPrice(String(subtotal), '')}</span>
             </div>
             <div className={clsx(styles.totalRow, styles.grandTotal)}>
