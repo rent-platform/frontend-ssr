@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -119,9 +119,31 @@ const DEAL_STATUS_LABEL: Record<string, string> = {
    NotificationsPage
    ═══════════════════════════════════════════════════════════════════════════════ */
 
-export function NotificationsPage() {
+export type NotificationsPageProps = {
+  /** Notifications from API. Falls back to mock data. */
+  notifications?: NotificationItem[];
+  /** True while loading from API. */
+  isLoading?: boolean;
+  /** Called when a notification is marked as read. */
+  onMarkRead?: (id: string) => void;
+  /** Called when all notifications are marked as read. */
+  onMarkAllRead?: () => void;
+};
+
+export function NotificationsPage({
+  notifications: externalNotifications,
+  isLoading: externalLoading,
+  onMarkRead,
+  onMarkAllRead,
+}: NotificationsPageProps = {}) {
   const [tab, setTab] = useState<NotificationTab>('all');
-  const [notifications, setNotifications] = useState<NotificationItem[]>(MOCK_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<NotificationItem[]>(
+    externalNotifications ?? MOCK_NOTIFICATIONS,
+  );
+
+  useEffect(() => {
+    if (externalNotifications) setNotifications(externalNotifications);
+  }, [externalNotifications]);
 
   const filtered = useMemo(() => {
     const types = TAB_TYPE_MAP[tab];

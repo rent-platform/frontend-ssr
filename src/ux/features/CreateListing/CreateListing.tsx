@@ -42,7 +42,18 @@ const MAX_IMAGES = 10;
 /* ═══════════════════════════════════════════════════════════════════════════════
    CreateListing — 4-step wizard
    ═══════════════════════════════════════════════════════════════════════════════ */
-export function CreateListing() {
+
+export type CreateListingProps = {
+  /** Called with form data on publish. Wire to useCreateAd + useUploadAdPhotos. */
+  onSubmit?: (data: CreateListingFormData) => void | Promise<void>;
+  /** True while API is processing the submission. */
+  isSubmitting?: boolean;
+};
+
+export function CreateListing({
+  onSubmit,
+  isSubmitting = false,
+}: CreateListingProps = {}) {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<CreateListingFormData>(INITIAL);
   const [published, setPublished] = useState(false);
@@ -135,7 +146,10 @@ export function CreateListing() {
     [addImages],
   );
 
-  const handlePublish = () => setPublished(true);
+  const handlePublish = async () => {
+    if (onSubmit) await onSubmit(form);
+    setPublished(true);
+  };
 
   /* ─── Success screen ─── */
   if (published) {
@@ -260,9 +274,10 @@ export function CreateListing() {
               type="button"
               className={`${styles.navNext} ${styles.publishBtn}`}
               onClick={handlePublish}
+              disabled={isSubmitting}
             >
               <Sparkles size={16} />
-              Опубликовать
+              {isSubmitting ? 'Публикация…' : 'Опубликовать'}
             </button>
           )}
         </div>

@@ -45,16 +45,35 @@ const RECEIVED_FILTERS: { value: ReceivedFilter; label: string }[] = [
 /* ═══════════════════════════════════════════════════════════════════════════════
    ReviewsPage
    ═══════════════════════════════════════════════════════════════════════════════ */
-export function ReviewsPage() {
+
+export type ReviewsPageProps = {
+  /** Reviews received from API. Falls back to mock. */
+  received?: ProfileReview[];
+  /** Reviews given from API. Falls back to mock. */
+  given?: ProfileReview[];
+  /** Rating breakdown from API. Falls back to mock. */
+  breakdown?: RatingBreakdown;
+  /** True while loading from API. */
+  isLoading?: boolean;
+};
+
+export function ReviewsPage({
+  received: externalReceived,
+  given: externalGiven,
+  breakdown: externalBreakdown,
+  isLoading: _externalLoading,
+}: ReviewsPageProps = {}) {
   const [tab, setTab] = useState<ReviewsTab>('received');
   const [receivedFilter, setReceivedFilter] = useState<ReceivedFilter>('all');
   const [starFilter, setStarFilter] = useState<StarFilter>(0);
   const [sort, setSort] = useState<ReviewSort>('newest');
 
-  const breakdown = MOCK_RATING_BREAKDOWN;
+  const receivedReviews = externalReceived ?? MOCK_REVIEWS_RECEIVED;
+  const givenReviews = externalGiven ?? MOCK_REVIEWS_GIVEN;
+  const breakdown = externalBreakdown ?? MOCK_RATING_BREAKDOWN;
 
   const reviews = useMemo(() => {
-    const source = tab === 'received' ? MOCK_REVIEWS_RECEIVED : MOCK_REVIEWS_GIVEN;
+    const source = tab === 'received' ? receivedReviews : givenReviews;
 
     let filtered = source;
 

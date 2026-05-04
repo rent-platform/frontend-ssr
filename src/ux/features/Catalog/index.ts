@@ -1,4 +1,5 @@
 export { CatalogExperience } from './CatalogExperience';
+export type { CatalogExperienceProps } from './CatalogExperience';
 export { SearchResultsPage } from './SearchResultsPage';
 
 export { CatalogCard } from './components/CatalogCard';
@@ -16,3 +17,4 @@ export {
   INITIAL_FILTERS,
   applyCatalogFilters,
 } from './utils';
+export { mapCardVMtoUiItem, mapCardVMsToUiItems } from './mappers';

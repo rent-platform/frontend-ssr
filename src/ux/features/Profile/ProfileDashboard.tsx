@@ -68,21 +68,36 @@ function DashboardSkeleton() {
 /* ═══════════════════════════════════════════════════════════════════════════════
    ProfileDashboard
    ═══════════════════════════════════════════════════════════════════════════════ */
-export function ProfileDashboard() {
-  const [isLoading, setIsLoading] = useState(true);
+export type ProfileDashboardProps = {
+  /** User data from useProfile(). Falls back to mock. */
+  user?: typeof MOCK_USER;
+  /** Stats from API. Falls back to mock. */
+  stats?: typeof MOCK_STATS;
+  /** True while loading from API. */
+  isLoading?: boolean;
+};
+
+export function ProfileDashboard({
+  user: externalUser,
+  stats: externalStats,
+  isLoading: externalLoading,
+}: ProfileDashboardProps = {}) {
+  const [mockLoading, setMockLoading] = useState(!externalUser);
   const [tab, setTab] = useState<ProfileTab>('listings');
   const [listingFilter, setListingFilter] = useState<ListingFilter>('all');
   const [dealSide, setDealSide] = useState<BookingSide>('owner');
   const [dealFilter, setDealFilter] = useState<BookingFilter>('all');
   const [showShareModal, setShowShareModal] = useState(false);
 
-  const user = MOCK_USER;
-  const stats = MOCK_STATS;
+  const user = externalUser ?? MOCK_USER;
+  const stats = externalStats ?? MOCK_STATS;
+  const isLoading = externalLoading ?? mockLoading;
 
   useEffect(() => {
-    const t = setTimeout(() => setIsLoading(false), 800);
+    if (externalUser) return undefined;
+    const t = setTimeout(() => setMockLoading(false), 800);
     return () => clearTimeout(t);
-  }, []);
+  }, [externalUser]);
 
   const initials = user.full_name.split(' ').map((w) => w[0]).join('').slice(0, 2);
   const profileCompletion = getProfileCompletion(user);

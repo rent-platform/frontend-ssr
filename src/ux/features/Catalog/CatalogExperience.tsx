@@ -21,27 +21,52 @@ import styles from './Catalog.module.scss';
 
 const BATCH_SIZE = 8;
 
-export function CatalogExperience() {
+export type CatalogExperienceProps = {
+  /** External items from API hook (e.g. useGetAds). Falls back to mock data. */
+  items?: CatalogUiItem[];
+  /** Total count from API (for toolbar). Falls back to items.length. */
+  total?: number;
+  /** True while first page is loading. Shows skeleton. */
+  isLoading?: boolean;
+  /** True when API returned an error. */
+  isError?: boolean;
+  /** Called when more items are needed (infinite scroll). */
+  onLoadMore?: () => void;
+  /** Whether there are more pages available from API. */
+  hasMore?: boolean;
+};
+
+export function CatalogExperience({
+  items: externalItems,
+  total: externalTotal,
+  isLoading: externalLoading,
+  isError = false,
+  onLoadMore,
+  hasMore: externalHasMore,
+}: CatalogExperienceProps = {}) {
   const router = useRouter();
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(!externalItems);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
+  const useMockMode = !externalItems;
+
   useEffect(() => {
+    if (!useMockMode) return undefined;
     const timer = setTimeout(() => setIsInitialLoading(false), 800);
     return () => clearTimeout(timer);
-  }, []);
+  }, [useMockMode]);
 
   const filteredItems = useMemo(
-    () => applyCatalogFilters(mockCatalogItems, filters),
-    [filters],
+    () => useMockMode ? applyCatalogFilters(mockCatalogItems, filters) : externalItems!,
+    [useMockMode, externalItems, filters],
   );
 
-  const visibleItems = filteredItems.slice(0, visibleCount);
+  const visibleItems = useMockMode ? filteredItems.slice(0, visibleCount) : filteredItems;
 
   const similarItems = selectedItem
     ? mockCatalogItems
@@ -49,7 +74,9 @@ export function CatalogExperience() {
         .slice(0, 4)
     : [];
 
-  const hasMore = visibleCount < filteredItems.length;
+  const hasMore = useMockMode
+    ? visibleCount < filteredItems.length
+    : (externalHasMore ?? false);
 
   const onCloseFilters = () => setIsFiltersOpen(false);
   const onToggleFilters = () => setIsFiltersOpen(!isFiltersOpen);
@@ -74,7 +101,11 @@ export function CatalogExperience() {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
-          setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length));
+          if (useMockMode) {
+            setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length));
+          } else {
+            onLoadMore?.();
+          }
         }
       },
       { rootMargin: '360px 0px' },
@@ -105,7 +136,7 @@ export function CatalogExperience() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  if (isInitialLoading) {
+  if (externalLoading || isInitialLoading) {
     return (
       <div className={styles.page}>
         <CatalogHeader cityLabel={filters.city} />
@@ -119,6 +150,31 @@ export function CatalogExperience() {
             </div>
           </div>
         </main>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className={styles.page}>
+        <CatalogHeader cityLabel={filters.city} />
+        <main className={styles.main}>
+          <div className={styles.emptyState}>
+            <div className={styles.emptyStateIcon}>
+              <PackageSearch size={28} />
+            </div>
+            <h3>Не удалось загрузить каталог</h3>
+            <p>Проверьте подключение к интернету и попробуйте снова</p>
+            <button
+              type="button"
+              className={styles.emptyStateBtn}
+              onClick={() => window.location.reload()}
+            >
+              Обновить страницу
+            </button>
+          </div>
+        </main>
+        <CatalogFooter />
       </div>
     );
   }
@@ -213,8 +269,8 @@ export function CatalogExperience() {
                 <CatalogToolbar
                   filters={filters}
                   onChange={updateFilters}
-                  visibleCount={visibleItems.length}
-                  totalCount={filteredItems.length}
+                  visibleCount={useMockMode ? visibleItems.length : filteredItems.length}
+                  totalCount={externalTotal ?? filteredItems.length}
                 />
 
                 {visibleItems.length > 0 ? (
