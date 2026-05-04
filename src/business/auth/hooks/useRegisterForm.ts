@@ -33,6 +33,7 @@ export function useRegisterForm() {
       data.name,
       data.tel,
       data.password,
+      data.confirmPassword,
     );
 
     if (ok) {

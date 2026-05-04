@@ -1,3 +1,1 @@
-﻿export * from "./nextAuthApi";
-
-
+export * from "./nextAuthApi";

@@ -1,13 +1,14 @@
 import type { AdsItemResponseDto } from "@/business/ads/types";
 
-export type FavoriteAdId = string;
+export type FavoriteItemId = string;
 
 export type FavoriteMutationArgs = {
-  adId: FavoriteAdId;
+  itemId: FavoriteItemId;
 };
 
 export type FavoriteResponseDto = {
-  adId: FavoriteAdId;
-  isFavorite: boolean;
+  message?: string;
+  itemId?: FavoriteItemId;
+  isFavorite?: boolean;
   ad?: AdsItemResponseDto;
 };

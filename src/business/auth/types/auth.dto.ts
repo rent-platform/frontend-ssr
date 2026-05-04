@@ -1,25 +1,29 @@
-﻿import type { UserRole } from "./user.types";
+import type { UserRole } from "./user.types";
 import type { DeepPartial } from "@/business/shared";
 
 export type LoginRequestDTO = {
-  tel: string;
+  login: string;
   password: string;
+  rememberMe?: boolean;
 };
 
 export type RegisterRequestDTO = {
-  name: string;
-  tel: string;
+  phone: string;
   password: string;
+  confirmPassword: string;
+  nickname: string;
 };
 
 export type UserResponseDTO = {
   id: string;
   email: string | null;
   phone: string;
-  full_name: string;
+  fullName: string | null;
   nickname: string | null;
-  avatar_url: string | null;
-  role: UserRole;
+  avatarUrl: string | null;
+  bio: string | null;
+  role: UserRole | string;
+  isActive: boolean;
 };
 
 export type UserUpdateDto = DeepPartial<{
@@ -38,8 +42,7 @@ export type UserUpdateDto = DeepPartial<{
 
 export type AuthResponseDTO = {
   accessToken: string;
-  user: UserResponseDTO;
+  refreshToken?: string;
+  tokenType?: string;
+  expiresIn?: number;
 };
-
-
-

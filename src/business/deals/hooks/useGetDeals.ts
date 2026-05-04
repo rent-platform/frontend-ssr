@@ -20,7 +20,7 @@ export function useGetDeals(params: FetchDealsArgs = {}): UseDealsResult {
     useFetchDealsQuery(params);
 
   return {
-    deals: (data?.deals ?? []).map(mapDealToVM),
+    deals: (data?.content ?? []).map(mapDealToVM),
     isLoading,
     isFetching,
     isError,

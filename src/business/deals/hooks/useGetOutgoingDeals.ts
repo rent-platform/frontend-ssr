@@ -20,7 +20,7 @@ export function useGetOutgoingDeals(): UseGetOutgoingDealsResult {
     useFetchMyOutgoingDealsQuery();
 
   return {
-    deals: (data?.deals ?? []).map(mapDealToVM),
+    deals: (data?.content ?? []).map(mapDealToVM),
     isLoading,
     isFetching,
     isError,

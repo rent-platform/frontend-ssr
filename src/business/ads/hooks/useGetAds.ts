@@ -35,10 +35,10 @@ export function useGetAds(params: FetchAdsArgs = {}): UseAdsResult {
   } = useFetchAdsInfiniteQuery(params);
 
   return {
-    products: (data?.pages.flatMap((page) => page.items) ?? []).map(
+    products: (data?.pages.flatMap((page) => page.content) ?? []).map(
       mapCatalogItemToCardVM,
     ), // Преобразование DTO из всех страниц в карточки каталога.
-    total: data?.pages[0]?.meta.totalCount ?? 0, // Берём total из первой страницы ответа.
+    total: data?.pages[0]?.totalElements ?? 0, // Берём total из первой страницы ответа.
     isLoading, // Первичная загрузка списка объявлений.
     isFetching, // Любой активный запрос по этому query.
     isFetchingNextPage, // Загрузка следующей страницы infinite query.

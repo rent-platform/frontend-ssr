@@ -34,12 +34,12 @@ export function useToggleFavorite({
   ] = useRemoveFavoriteMutation();
 
   const addFavorite = useCallback(
-    () => addFavoriteMutation({ adId }),
+    () => addFavoriteMutation({ itemId: adId }),
     [addFavoriteMutation, adId],
   );
 
   const removeFavorite = useCallback(
-    () => removeFavoriteMutation({ adId }),
+    () => removeFavoriteMutation({ itemId: adId }),
     [removeFavoriteMutation, adId],
   );
 
@@ -64,4 +64,3 @@ export function useToggleFavorite({
     reset,
   };
 }
-

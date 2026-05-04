@@ -10,7 +10,7 @@ import type { FavoriteMutationArgs, FavoriteResponseDto } from "../types";
 
 const FAVORITES_LIST_TAG_ID = "LIST";
 
-type AdsInfiniteData = InfiniteData<AdsListResponseDto, string | undefined>;
+type AdsInfiniteData = InfiniteData<AdsListResponseDto, number>;
 type OptimisticPatch = {
   undo: () => void;
 };
@@ -21,7 +21,7 @@ const patchAdFavoriteStatus = (
   isFavorite: boolean,
 ) => {
   if (ad.id === adId) {
-    ad.is_favorite = isFavorite;
+    ad.isFavorite = isFavorite;
   }
 };
 
@@ -33,11 +33,11 @@ const patchAdsListFavoriteStatus = (
 ) => {
   for (const page of draft.pages) {
     if (!isFavorite && queryArgs.favoritesOnly) {
-      page.items = page.items.filter((item) => item.id !== adId);
+      page.content = page.content.filter((item) => item.id !== adId);
       continue;
     }
 
-    for (const item of page.items) {
+    for (const item of page.content) {
       patchAdFavoriteStatus(item, adId, isFavorite);
     }
   }
@@ -46,16 +46,15 @@ const patchAdsListFavoriteStatus = (
 export const favoritesApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     addFavorite: build.mutation<FavoriteResponseDto, FavoriteMutationArgs>({
-      query: ({ adId }) => ({
-        url: "favorites",
+      query: ({ itemId }) => ({
+        url: `api/catalog/favorites/${itemId}`,
         method: "POST",
-        body: { adId },
       }),
-      async onQueryStarted({ adId }, { dispatch, getState, queryFulfilled }) {
+      async onQueryStarted({ itemId }, { dispatch, getState, queryFulfilled }) {
         const patches: OptimisticPatch[] = [
           dispatch(
-            adsApi.util.updateQueryData("fetchAdById", adId, (draft) => {
-              patchAdFavoriteStatus(draft, adId, true);
+            adsApi.util.updateQueryData("fetchAdById", itemId, (draft) => {
+              patchAdFavoriteStatus(draft, itemId, true);
             }),
           ),
         ];
@@ -69,7 +68,7 @@ export const favoritesApi = baseApi.injectEndpoints({
           patches.push(
             dispatch(
               adsApi.util.updateQueryData("fetchAds", args, (draft) => {
-                patchAdsListFavoriteStatus(draft, adId, true, args);
+                patchAdsListFavoriteStatus(draft, itemId, true, args);
               }),
             ),
           );
@@ -81,23 +80,23 @@ export const favoritesApi = baseApi.injectEndpoints({
           patches.forEach((patch) => patch.undo());
         }
       },
-      invalidatesTags: (_result, _error, { adId }) => [
+      invalidatesTags: (_result, _error, { itemId }) => [
         { type: "Favorites", id: FAVORITES_LIST_TAG_ID },
-        { type: "Favorites", id: adId },
-        { type: "AdsItem", id: adId },
+        { type: "Favorites", id: itemId },
+        { type: "AdsItem", id: itemId },
       ],
     }),
 
     removeFavorite: build.mutation<FavoriteResponseDto, FavoriteMutationArgs>({
-      query: ({ adId }) => ({
-        url: `favorites/${adId}`,
+      query: ({ itemId }) => ({
+        url: `api/catalog/favorites/${itemId}`,
         method: "DELETE",
       }),
-      async onQueryStarted({ adId }, { dispatch, getState, queryFulfilled }) {
+      async onQueryStarted({ itemId }, { dispatch, getState, queryFulfilled }) {
         const patches: OptimisticPatch[] = [
           dispatch(
-            adsApi.util.updateQueryData("fetchAdById", adId, (draft) => {
-              patchAdFavoriteStatus(draft, adId, false);
+            adsApi.util.updateQueryData("fetchAdById", itemId, (draft) => {
+              patchAdFavoriteStatus(draft, itemId, false);
             }),
           ),
         ];
@@ -111,7 +110,7 @@ export const favoritesApi = baseApi.injectEndpoints({
           patches.push(
             dispatch(
               adsApi.util.updateQueryData("fetchAds", args, (draft) => {
-                patchAdsListFavoriteStatus(draft, adId, false, args);
+                patchAdsListFavoriteStatus(draft, itemId, false, args);
               }),
             ),
           );
@@ -123,10 +122,10 @@ export const favoritesApi = baseApi.injectEndpoints({
           patches.forEach((patch) => patch.undo());
         }
       },
-      invalidatesTags: (_result, _error, { adId }) => [
+      invalidatesTags: (_result, _error, { itemId }) => [
         { type: "Favorites", id: FAVORITES_LIST_TAG_ID },
-        { type: "Favorites", id: adId },
-        { type: "AdsItem", id: adId },
+        { type: "Favorites", id: itemId },
+        { type: "AdsItem", id: itemId },
       ],
     }),
   }),

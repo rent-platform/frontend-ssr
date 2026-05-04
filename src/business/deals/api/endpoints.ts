@@ -1,20 +1,32 @@
-﻿import { baseApi } from "@/business/shared";
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { baseApi } from "@/business/shared";
 import type {
+  CancelDealRequestDto,
   CreateDealRequestDto,
   Deal,
-  DealStatusHistory,
   DealsListResponseDto,
+  DealStatusHistory,
   FetchDealsArgs,
-  Payment,
   RejectDealRequestDto,
 } from "../types";
 
+const DEALS_URL = "api/deals";
 const DEALS_LIST_TAG_ID = "LIST";
 const INCOMING_DEALS_TAG_ID = "INCOMING";
 const OUTGOING_DEALS_TAG_ID = "OUTGOING";
 
-const getDealTags = (deals?: Deal[]) =>
+const emptyDealsPage = (): DealsListResponseDto => ({
+  totalElements: 0,
+  totalPages: 0,
+  first: true,
+  last: true,
+  size: 0,
+  content: [],
+  number: 0,
+  numberOfElements: 0,
+  empty: true,
+});
+
+const getDealTags = (deals?: Array<{ id: string }>) =>
   deals?.map((deal) => ({ type: "Deals" as const, id: deal.id })) ?? [];
 
 const getDealHistoryTag = (dealId: string) => ({
@@ -22,18 +34,40 @@ const getDealHistoryTag = (dealId: string) => ({
   id: `HISTORY-${dealId}`,
 });
 
-const getDealsListQuery = ({
-  page = 1,
-  limit = 10,
-  search,
-}: FetchDealsArgs = {}) => ({
-  url: "deals",
-  params: {
-    page,
-    limit,
-    ...(search !== undefined && { search }),
-  },
-});
+function buildPageParams({
+  status,
+  page = 0,
+  size = 20,
+  sort,
+}: FetchDealsArgs = {}): Record<string, string | string[]> {
+  return {
+    ...(status ? { status } : {}),
+    page: String(page),
+    size: String(size),
+    ...(sort && sort.length > 0 ? { sort } : {}),
+  };
+}
+
+function mergeDealsPages(
+  renterPage?: DealsListResponseDto,
+  ownerPage?: DealsListResponseDto,
+): DealsListResponseDto {
+  const renter = renterPage ?? emptyDealsPage();
+  const owner = ownerPage ?? emptyDealsPage();
+  const content = [...renter.content, ...owner.content];
+
+  return {
+    totalElements: renter.totalElements + owner.totalElements,
+    totalPages: Math.max(renter.totalPages, owner.totalPages),
+    first: renter.first && owner.first,
+    last: renter.last && owner.last,
+    size: renter.size + owner.size,
+    content,
+    number: Math.min(renter.number, owner.number),
+    numberOfElements: content.length,
+    empty: content.length === 0,
+  };
+}
 
 const getDealMutationInvalidationTags = (dealId: string) => [
   { type: "Deals" as const, id: dealId },
@@ -43,24 +77,43 @@ const getDealMutationInvalidationTags = (dealId: string) => [
   getDealHistoryTag(dealId),
 ];
 
-const createCustomError = (message: string): FetchBaseQueryError => ({
-  status: "CUSTOM_ERROR" as const,
-  error: message,
-});
-
 export const dealsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     fetchDeals: build.query<DealsListResponseDto, FetchDealsArgs | undefined>({
-      query: (params) => getDealsListQuery(params),
+      async queryFn(params, _api, _extraOptions, baseQuery) {
+        const queryParams = buildPageParams(params);
+        const renterResult = await baseQuery({
+          url: `${DEALS_URL}/my/renter`,
+          params: queryParams,
+        });
+        const ownerResult = await baseQuery({
+          url: `${DEALS_URL}/my/owner`,
+          params: queryParams,
+        });
+
+        if ("error" in renterResult && renterResult.error) {
+          return { error: renterResult.error };
+        }
+        if ("error" in ownerResult && ownerResult.error) {
+          return { error: ownerResult.error };
+        }
+
+        return {
+          data: mergeDealsPages(
+            renterResult.data as DealsListResponseDto,
+            ownerResult.data as DealsListResponseDto,
+          ),
+        };
+      },
       providesTags: (result) => [
         { type: "Deals", id: DEALS_LIST_TAG_ID },
-        ...getDealTags(result?.deals),
+        ...getDealTags(result?.content),
       ],
     }),
 
     createDealRequest: build.mutation<Deal, CreateDealRequestDto>({
       query: (body) => ({
-        url: "deals",
+        url: DEALS_URL,
         method: "POST",
         body,
       }),
@@ -74,15 +127,18 @@ export const dealsApi = baseApi.injectEndpoints({
 
     fetchDealById: build.query<Deal, string>({
       query: (id) => ({
-        url: `deals/${id}`,
+        url: `${DEALS_URL}/${id}`,
       }),
-      providesTags: (_result, _error, id) => [{ type: "Deals", id }],
+      providesTags: (result, _error, id) => [
+        { type: "Deals", id },
+        ...(result?.history ? [getDealHistoryTag(id)] : []),
+      ],
     }),
 
     confirmDeal: build.mutation<Deal, string>({
       query: (id) => ({
-        url: `deals/${id}/confirm`,
-        method: "PATCH",
+        url: `${DEALS_URL}/${id}/confirm`,
+        method: "POST",
       }),
       invalidatesTags: (_result, _error, id) =>
         getDealMutationInvalidationTags(id),
@@ -90,100 +146,81 @@ export const dealsApi = baseApi.injectEndpoints({
 
     rejectDeal: build.mutation<
       Deal,
-      { id: string; body?: RejectDealRequestDto }
+      { id: string; body: RejectDealRequestDto }
     >({
       query: ({ id, body }) => ({
-        url: `deals/${id}/reject`,
-        method: "PATCH",
+        url: `${DEALS_URL}/${id}/reject`,
+        method: "POST",
         body,
       }),
       invalidatesTags: (_result, _error, { id }) =>
         getDealMutationInvalidationTags(id),
     }),
 
-    cancelDeal: build.mutation<Deal, string>({
-      query: (id) => ({
-        url: `deals/${id}/cancel`,
-        method: "PATCH",
+    cancelDeal: build.mutation<
+      Deal,
+      { id: string; body: CancelDealRequestDto }
+    >({
+      query: ({ id, body }) => ({
+        url: `${DEALS_URL}/${id}/cancel`,
+        method: "POST",
+        body,
       }),
-      invalidatesTags: (_result, _error, id) =>
+      invalidatesTags: (_result, _error, { id }) =>
         getDealMutationInvalidationTags(id),
     }),
 
     startDeal: build.mutation<Deal, string>({
-      async queryFn(dealId, _api, _extraOptions, baseQuery) {
-        const paymentResult = await baseQuery({
-          url: "payments",
-          params: { dealId },
-        });
-        if ("error" in paymentResult) {
-          return {
-            error: createCustomError(
-              "Нельзя начать сделку без подтвержденной оплаты",
-            ),
-          };
-        }
-        const payment = paymentResult.data as Payment;
-        if (payment.status !== "AUTHORIZED" && payment.status !== "CAPTURED") {
-          return {
-            error: createCustomError(
-              "Нельзя начать сделку без подтвержденной оплаты",
-            ),
-          };
-        }
-        const startDealResult = await baseQuery({
-          url: `deals/${dealId}/start`,
-          method: "PATCH",
-        });
-        if ("error" in startDealResult && startDealResult.error) {
-          return { error: startDealResult.error };
-        }
-
-        return { data: startDealResult.data as Deal };
-      },
+      query: (dealId) => ({
+        url: `${DEALS_URL}/${dealId}/start`,
+        method: "POST",
+      }),
       invalidatesTags: (_result, _error, id) =>
         getDealMutationInvalidationTags(id),
     }),
 
     completeDeal: build.mutation<Deal, string>({
       query: (id) => ({
-        url: `deals/${id}/complete`,
-        method: "PATCH",
+        url: `${DEALS_URL}/${id}/complete`,
+        method: "POST",
       }),
       invalidatesTags: (_result, _error, id) =>
         getDealMutationInvalidationTags(id),
     }),
 
-    fetchMyIncomingDeals: build.query<DealsListResponseDto, void>({
-      query: () => ({
-        url: "deals",
-        params: {
-          type: "incoming",
-        },
+    fetchMyIncomingDeals: build.query<
+      DealsListResponseDto,
+      FetchDealsArgs | void
+    >({
+      query: (params) => ({
+        url: `${DEALS_URL}/my/owner`,
+        params: buildPageParams(params || undefined),
       }),
       providesTags: (result) => [
         { type: "Deals", id: INCOMING_DEALS_TAG_ID },
-        ...getDealTags(result?.deals),
+        ...getDealTags(result?.content),
       ],
     }),
 
-    fetchMyOutgoingDeals: build.query<DealsListResponseDto, void>({
-      query: () => ({
-        url: "deals",
-        params: {
-          type: "outgoing",
-        },
+    fetchMyOutgoingDeals: build.query<
+      DealsListResponseDto,
+      FetchDealsArgs | void
+    >({
+      query: (params) => ({
+        url: `${DEALS_URL}/my/renter`,
+        params: buildPageParams(params || undefined),
       }),
       providesTags: (result) => [
         { type: "Deals", id: OUTGOING_DEALS_TAG_ID },
-        ...getDealTags(result?.deals),
+        ...getDealTags(result?.content),
       ],
     }),
 
     fetchDealStatusHistory: build.query<DealStatusHistory[], string>({
       query: (id) => ({
-        url: `deals/${id}/history`,
+        url: `${DEALS_URL}/${id}`,
       }),
+      transformResponse: (response: Deal) => response.history ?? [],
       providesTags: (_result, _error, id) => [getDealHistoryTag(id)],
     }),
   }),
@@ -202,7 +239,3 @@ export const {
   useFetchMyOutgoingDealsQuery,
   useFetchDealStatusHistoryQuery,
 } = dealsApi;
-
-
-
-

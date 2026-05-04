@@ -1,4 +1,4 @@
-﻿import type {
+import type {
   AdsItemResponseDto,
   CatalogItemBaseVM,
   CatalogItemCardVM,
@@ -6,36 +6,43 @@
 } from "../types";
 
 function getSortedPhotoUrls(dto: AdsItemResponseDto): string[] {
-  return [...(dto.photos ?? [])]
-    .sort((a, b) => a.sort_order - b.sort_order) // Сортировка по порядку
-    .map((photo) => photo.photo_url); // Для UI остается только URL изображения.
+  const photoUrls = [...(dto.photos ?? [])]
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .map((photo) => photo.photoUrl)
+    .filter((url): url is string => Boolean(url));
+
+  if (photoUrls.length > 0) return photoUrls;
+  return dto.mainPhotoUrl ? [dto.mainPhotoUrl] : [];
 }
+
+function toNullableString(value: number | string | null | undefined) {
+  return value === null || value === undefined ? null : String(value);
+}
+
 function mapCatalogItemToBaseVM(dto: AdsItemResponseDto): CatalogItemBaseVM {
   return {
-    // Базовая view model содержит общие поля карточки и деталей.
-    id: dto.id, // Идентификатор объявления сохраняется без изменения.
-    title: dto.title, // Название объявления передается в UI.
-    pricePerDay: dto.price_per_day, // price_per_day приводится к camelCase.
-    pricePerHour: dto.price_per_hour, // price_per_hour приводится к camelCase.
-    depositAmount: dto.deposit_amount, // deposit_amount приводится к camelCase.
-    pickupLocation: dto.pickup_location, // pickup_location приводится к camelCase.
-    status: dto.status, // Статус объявления берется из DTO.
-    viewsCount: dto.views_count, // views_count приводится к camelCase.
-    createdAt: dto.created_at, // created_at приводится к camelCase.
-    isAvailable: dto.is_available, // is_available приводится к camelCase.
-    nearestAvailableDate: dto.nearest_available_date, // Дата доступности для UI.
+    id: dto.id,
+    title: dto.title,
+    pricePerDay: toNullableString(dto.pricePerDay),
+    pricePerHour: toNullableString(dto.pricePerHour),
+    depositAmount: toNullableString(dto.depositAmount) ?? "0",
+    pickupLocation: dto.pickupLocation ?? dto.city ?? null,
+    status: dto.status,
+    viewsCount: dto.viewsCount ?? 0,
+    createdAt: dto.createdAt ?? "",
+    isAvailable: dto.isAvailable ?? dto.status === "ACTIVE",
+    nearestAvailableDate: dto.nearestAvailableDate ?? null,
   };
 }
 
 export function mapCatalogItemToCardVM(
   dto: AdsItemResponseDto,
 ): CatalogItemCardVM {
-  const photoUrls = getSortedPhotoUrls(dto); // Подготовленный список URL фото.
+  const photoUrls = getSortedPhotoUrls(dto);
 
   return {
-    // View model для карточки каталога.
-    ...mapCatalogItemToBaseVM(dto), // Общие поля объявления.
-    coverImageUrl: photoUrls[0] ?? null, // Первое фото используется как обложка.
+    ...mapCatalogItemToBaseVM(dto),
+    coverImageUrl: photoUrls[0] ?? null,
   };
 }
 
@@ -43,12 +50,8 @@ export function mapCatalogItemToDetailsVM(
   dto: AdsItemResponseDto,
 ): CatalogItemDetailsVM {
   return {
-    // View model для детальной страницы объявления.
-    ...mapCatalogItemToBaseVM(dto), // Общие поля объявления.
-    description: dto.item_description, // item_description приводится к description.
-    photos: getSortedPhotoUrls(dto), // Детальная страница получает все фото.
+    ...mapCatalogItemToBaseVM(dto),
+    description: dto.itemDescription ?? null,
+    photos: getSortedPhotoUrls(dto),
   };
 }
-
-
-

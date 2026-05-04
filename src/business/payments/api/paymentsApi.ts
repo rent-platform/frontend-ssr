@@ -28,7 +28,7 @@ export const paymentsApi = baseApi.injectEndpoints({
     createPayment: build.mutation<Payment, CreatePaymentRequest>({
       async queryFn({ dealId }, _api, _extraOptions, baseQuery) {
         const dealResult = await baseQuery({
-          url: `deals/${dealId}`,
+          url: `api/deals/${dealId}`,
         });
 
         if ("error" in dealResult && dealResult.error) {
@@ -37,7 +37,7 @@ export const paymentsApi = baseApi.injectEndpoints({
 
         const deal = dealResult.data as DealDto;
 
-        if (deal.status !== "confirmed") {
+        if (deal.status !== "CONFIRMED") {
           return {
             error: createCustomError(
               "Нельзя оплатить сделку, пока она не подтверждена",

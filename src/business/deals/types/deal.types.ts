@@ -1,12 +1,11 @@
-﻿export type PricingMode = "hour" | "day";
+export type PricingMode = string;
 
 export type DealStatus =
-  | "new"
-  | "confirmed"
-  | "active"
-  | "completed"
-  | "cancelled"
-  | "rejected";
+  | "PENDING"
+  | "CONFIRMED"
+  | "ACTIVE"
+  | "COMPLETED"
+  | "REJECTED"
+  | "CANCELLED";
 
-export type ChangeSource = "user" | "system" | "payment_webhook" | "moderator";
-
+export type ChangeSource = string;

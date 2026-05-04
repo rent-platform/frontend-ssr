@@ -7,21 +7,13 @@ import {
   useSession as useNextAuthSession,
 } from "next-auth/react";
 import { getDefaultRouteForRole } from "../utils";
-import { fetchApi } from "../api/nextAuthApi";
+import { registerApi } from "../api";
 
 export type AuthResult = {
   ok: boolean;
   error: string | null;
   redirectTo?: string;
 };
-
-interface RegisterApiResponse {
-  success: boolean;
-  user?: { id: string; phone: string; full_name: string | null; role: string };
-  accessToken?: string;
-  expiresIn?: number;
-  error?: string;
-}
 
 export function useSession() {
   const { data: session, status } = useNextAuthSession();
@@ -61,21 +53,18 @@ export function useSession() {
   };
 
   const signUp = async (
-    name: string,
+    nickname: string,
     tel: string,
     password: string,
+    confirmPassword: string,
   ): Promise<AuthResult> => {
     try {
-      const data = await fetchApi<RegisterApiResponse>({
-        endpoint: "/api/register",
-        options: {
-          // auth if real
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, tel, password }),
-        },
+      await registerApi({
+        phone: tel,
+        password,
+        confirmPassword,
+        nickname,
       });
-      console.log(data);
 
       const autoLoginResult = await login(tel, password);
 

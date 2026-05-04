@@ -29,9 +29,9 @@ export type CatalogListVM = {
 };
 
 export type Availability = {
-  item_id: string;
-  date: string;
-  is_available: boolean;
+  itemId: string;
+  availableDate: string;
+  isAvailable: boolean;
 };
 
 

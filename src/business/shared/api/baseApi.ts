@@ -19,7 +19,6 @@ export const baseApi = createApi({
     "Notifications",
     "Favorites",
     "Review",
-    "UserRating",
     "Payment",
   ],
   refetchOnReconnect: true, // Повторная загрузка данных при восстановлении соединения.

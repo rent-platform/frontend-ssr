@@ -12,7 +12,7 @@ const phoneSchema = z
 const passwordSchema = z
   .string()
   .min(1, "Пароль обязателен")
-  .min(6, "Пароль должен содержать минимум 6 символов");
+  .min(8, "Пароль должен содержать минимум 8 символов");
 
 export const loginFormSchema = z.object({
   tel: phoneSchema,
@@ -55,7 +55,7 @@ export const registerSchema = z
     password: z
       .string()
       .min(1, "Пароль обязателен")
-      .min(6, "Пароль должен содержать минимум 6 символов"),
+      .min(8, "Пароль должен содержать минимум 8 символов"),
     confirmPassword: z.string().min(1, "Подтвердите пароль"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -67,12 +67,13 @@ export type RegisterFormValues = z.infer<typeof registerSchema>;
 
 // серверные поля
 export const registerApiSchema = z.object({
-  name: z
+  nickname: z
     .string()
-    .min(2, "Имя должно содержать минимум 2 символа")
+    .min(1, "Никнейм обязателен")
     .max(50, "Имя не может быть длиннее 50 символов"),
-  tel: phoneSchema,
-  password: z.string().min(6, "Пароль должен содержать минимум 6 символов"),
+  phone: phoneSchema,
+  password: z.string().min(8, "Пароль должен содержать минимум 8 символов"),
+  confirmPassword: z.string().min(1, "Подтвердите пароль"),
 });
 
 export type RegisterApiPayload = z.infer<typeof registerApiSchema>;

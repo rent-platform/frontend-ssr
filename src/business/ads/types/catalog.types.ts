@@ -1,7 +1,6 @@
-﻿export type ItemStatus =
-  | "draft"
-  | "moderation"
-  | "active"
-  | "rejected"
-  | "archived";
-
+export type ItemStatus =
+  | "DRAFT"
+  | "MODERATION"
+  | "ACTIVE"
+  | "REJECTED"
+  | "ARCHIVED";

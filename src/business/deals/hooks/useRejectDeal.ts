@@ -23,7 +23,8 @@ export function useRejectDeal(): UseRejectDealResult {
   ] = useRejectDealMutation();
 
   return {
-    rejectDeal: (dealId, body) => rejectDealMutation({ id: dealId, body }),
+    rejectDeal: (dealId, body) =>
+      rejectDealMutation({ id: dealId, body: body ?? { reason: "" } }),
     deal: data ? mapDealToVM(data) : null,
     isRejecting: isLoading,
     isError,

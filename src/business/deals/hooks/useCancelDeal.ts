@@ -7,7 +7,7 @@ import { type ApiUiError } from "@/business/shared";
 import type { DealDetailsVM } from "../types";
 
 export interface UseCancelDealResult {
-  cancelDeal: (dealId: string) => Promise<unknown>;
+  cancelDeal: (dealId: string, reason?: string) => Promise<unknown>;
   deal: DealDetailsVM | null;
   isCancelling: boolean;
   isError: boolean;
@@ -23,7 +23,8 @@ export function useCancelDeal(): UseCancelDealResult {
   ] = useCancelDealMutation();
 
   return {
-    cancelDeal: (dealId) => cancelDealMutation(dealId),
+    cancelDeal: (dealId, reason = "") =>
+      cancelDealMutation({ id: dealId, body: { reason } }),
     deal: data ? mapDealToVM(data) : null,
     isCancelling: isLoading,
     isError,

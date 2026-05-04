@@ -1,50 +1,96 @@
-﻿import type { ItemStatus } from "./catalog.types";
+import type { ItemStatus } from "./catalog.types";
 import type { DeepPartial } from "@/business/shared";
 
 export type Photo = {
-  id: string;
-  item_id: string;
-  photo_url: string;
-  sort_order: number;
-  created_at: string;
+  id?: string;
+  itemId?: string;
+  photoUrl: string;
+  sortOrder: number;
+  createdAt?: string;
 };
 
 export type PhotosList = {
   photos: Photo[];
 };
 
-export type AdsItemResponseDto = {
+export type OwnerShortResponseDto = {
   id: string;
-  owner_id: string;
-  title: string;
-  item_description: string | null;
-  price_per_day: string | null;
-  price_per_hour: string | null;
-  deposit_amount: string;
-  pickup_location: string | null;
-  status: ItemStatus;
-  views_count: number;
-  created_at: string;
-  photos?: Array<{ photo_url: string; sort_order: number }>;
-  is_available: boolean;
-  is_favorite?: boolean;
-  nearest_available_date: string | null;
+  nickname?: string | null;
+  avatarUrl?: string | null;
+  rating?: number | null;
 };
 
-export type Meta = {
-  page: number;
-  pageSize: number;
-  totalCount: number;
-  pagesCount: number;
-  nextCursor?: string;
+export type CategoryResponseDto = {
+  id: number;
+  categoryName?: string | null;
+  slug?: string | null;
+  parentId?: number | null;
+  sortOrder?: number | null;
+  isActive?: boolean | null;
+};
+
+export type PhotoResponseDto = {
+  id?: string;
+  photoUrl: string;
+  sortOrder: number;
+};
+
+export type AdsItemResponseDto = {
+  id: string;
+  ownerId?: string;
+  owner?: OwnerShortResponseDto | null;
+  category?: CategoryResponseDto | null;
+  title: string;
+  itemDescription?: string | null;
+  city?: string | null;
+  pricePerDay?: number | null;
+  pricePerHour?: number | null;
+  depositAmount?: number | null;
+  pickupLocation?: string | null;
+  status: ItemStatus;
+  moderationComment?: string | null;
+  viewsCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  photos?: PhotoResponseDto[];
+  mainPhotoUrl?: string | null;
+  isFavorite?: boolean;
+  isAvailable?: boolean;
+  nearestAvailableDate?: string | null;
+};
+
+export type SortObjectDto = {
+  empty?: boolean;
+  sorted?: boolean;
+  unsorted?: boolean;
 };
 
 export type AdsListResponseDto = {
-  items: AdsItemResponseDto[];
-  meta: Meta;
+  totalElements: number;
+  totalPages: number;
+  first: boolean;
+  last: boolean;
+  size: number;
+  content: AdsItemResponseDto[];
+  number: number;
+  sort?: SortObjectDto;
+  numberOfElements?: number;
+  empty?: boolean;
+};
+
+export type AvailabilityResponseDto = {
+  availableDate: string;
+  isAvailable: boolean;
+};
+
+export type FetchAvailabilityArgs = {
+  itemId: string;
+  startDate: string;
+  endDate: string;
 };
 
 export interface AdsFilterParams {
+  categoryId?: number;
   search?: string;
   category?: string;
   subCategory?: string;
@@ -69,15 +115,17 @@ export interface FetchAdsArgs extends AdsFilterParams {
 export type UpdatePlaylistArgs = DeepPartial<AdsCreateAd>;
 
 export type AdsCreateAd = {
+  categoryId?: number;
   title: string;
-  item_description: string | null;
-  price_per_day?: string | null;
-  price_per_hour?: string | null;
-  deposit_amount: string;
-  pickup_location: string | null;
-  photos?: Array<{ photo_url: string; sort_order: number }>;
-  nearest_available_date: string | null;
+  itemDescription?: string | null;
+  pricePerDay?: number | null;
+  pricePerHour?: number | null;
+  depositAmount?: number | null;
+  city?: string;
+  pickupLocation?: string | null;
+  photos?: Array<{
+    photoUrl?: string;
+    sortOrder?: number;
+  }>;
+  nearestAvailableDate?: string | null;
 };
-
-
-
