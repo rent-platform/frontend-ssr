@@ -179,7 +179,7 @@ export function NotificationsPage() {
             <h1 className={styles.title}>
               Уведомления
               {totalUnread > 0 && (
-                <span className={styles.unreadBadge}>{totalUnread}</span>
+                <span className={styles.unreadBadge} aria-live="polite" aria-label={`${totalUnread} непрочитанных`}>{totalUnread}</span>
               )}
             </h1>
           </div>

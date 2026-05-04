@@ -23,7 +23,7 @@ export function CatalogToolbar({ filters, onChange, visibleCount, totalCount }: 
   return (
     <div className={styles.toolbar}>
       <div className={styles.toolbarLeft}>
-        <p className={styles.resultsCount}>
+        <p className={styles.resultsCount} aria-live="polite" aria-atomic="true">
           {visibleCount < totalCount
             ? <>Показано <strong>{visibleCount}</strong> из <strong>{totalCount}</strong></>
             : <><strong>{totalCount}</strong> {pluralize(totalCount, 'объявление', 'объявления', 'объявлений')}</>
