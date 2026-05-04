@@ -1,40 +1,28 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useCallback, useState } from 'react';
+import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import {
   ArrowLeft,
-  Calendar,
-  CheckCircle2,
-  ChevronLeft,
   ChevronRight,
   Clock3,
-  CreditCard,
-  Eye,
   Heart,
-  Info,
   MapPin,
-  MessageCircle,
   Package,
   Share2,
   ShieldCheck,
   Star,
   Truck,
-  Zap,
 } from 'lucide-react';
 import type { CatalogUiItem } from '../types';
-import { pluralize } from '@/ux/utils';
 import {
-  formatCatalogCardHourSecondary,
   formatCatalogCardLocation,
-  formatCatalogCardPrimaryPrice,
-  formatDepositAmount,
-  formatPrice,
   formatRelativeDate,
 } from '../utils';
 import { CatalogCard } from './CatalogCard';
-import { RentalCalendar } from './RentalCalendar';
+import { ProductGallery } from './ProductGallery';
+import { BookingSidebar } from './BookingSidebar';
 import styles from '../Catalog.module.scss';
 
 type ProductDetailProps = {
@@ -54,66 +42,18 @@ export function ProductDetail({
   isGuest = false,
   onAuthRequired,
 }: ProductDetailProps) {
-  const [activeImage, setActiveImage] = useState(0);
   const [isFav, setIsFav] = useState(false);
-  const [calendarOpen, setCalendarOpen] = useState(false);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.createdAt);
-  const primaryPrice = formatCatalogCardPrimaryPrice(item);
-  const hourPrice = formatCatalogCardHourSecondary(item);
-  const depositAmount = Number(String(item.depositAmount ?? '0').replace(/\s/g, ''));
-  const depositLabel = depositAmount > 0 ? formatDepositAmount(item.depositAmount) : null;
-
-  const dailyPrice = Number(String(item.pricePerDay ?? '0').replace(/\s/g, ''));
-  const rentalDays = useMemo(() => {
-    if (!startDate || !endDate) return 0;
-    return Math.max(1, Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
-  }, [startDate, endDate]);
-  const subtotal = dailyPrice * (rentalDays || 1);
-
-  const formatDateShort = (d: Date) =>
-    d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-
-  const handleDateSelect = useCallback((start: Date | null, end: Date | null) => {
-    setStartDate(start);
-    setEndDate(end);
-  }, []);
-
-  const handleCalendarConfirm = useCallback(() => {
-    setCalendarOpen(false);
-  }, []);
-
-  const handleProtectedAction = useCallback(() => {
-    if (isGuest) {
-      onAuthRequired?.();
-      return;
-    }
-
-    setCalendarOpen(true);
-  }, [isGuest, onAuthRequired]);
 
   const handleFavoriteToggle = useCallback(() => {
     if (isGuest) {
       onAuthRequired?.();
       return;
     }
-
     setIsFav((v) => !v);
   }, [isGuest, onAuthRequired]);
-
-  const canPrev = activeImage > 0;
-  const canNext = activeImage < item.images.length - 1;
-
-  const goPrev = useCallback(() => {
-    if (canPrev) setActiveImage((i) => i - 1);
-  }, [canPrev]);
-
-  const goNext = useCallback(() => {
-    if (canNext) setActiveImage((i) => i + 1);
-  }, [canNext]);
 
   return (
     <motion.div
@@ -146,74 +86,7 @@ export function ProductDetail({
         </nav>
 
         {/* ─── Gallery ─── */}
-        <section className={styles.detailGallery}>
-          <div className={styles.mainImageWrap}>
-            <img
-              src={item.images[activeImage]}
-              aria-hidden="true"
-              className={styles.detailMainImageBlur}
-            />
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={activeImage}
-                src={item.images[activeImage]}
-                alt={item.title}
-                className={styles.detailMainImage}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-              />
-            </AnimatePresence>
-
-            {/* Arrow Navigation */}
-            <div className={styles.galleryNav}>
-              <button
-                type="button"
-                className={styles.galleryNavBtn}
-                onClick={goPrev}
-                disabled={!canPrev}
-                aria-label="Предыдущее фото"
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <button
-                type="button"
-                className={styles.galleryNavBtn}
-                onClick={goNext}
-                disabled={!canNext}
-                aria-label="Следующее фото"
-              >
-                <ChevronRight size={20} />
-              </button>
-            </div>
-
-            <div className={styles.detailGalleryOverlay}>
-              <div className={styles.detailGalleryBadges}>
-                <span className={styles.detailCategory}>{item.category}</span>
-                {item.featured && <span className={styles.detailFeaturedBadge}>Топ выбор</span>}
-              </div>
-              <span className={styles.detailImageCounter}>
-                {activeImage + 1} / {item.images.length}
-              </span>
-            </div>
-          </div>
-
-          {item.images.length > 1 && (
-            <div className={styles.detailThumbs}>
-              {item.images.map((img, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  className={clsx(styles.detailThumb, idx === activeImage && styles.detailThumbActive)}
-                  onClick={() => setActiveImage(idx)}
-                >
-                  <img src={img} alt={`${item.title} — фото ${idx + 1}`} />
-                </button>
-              ))}
-            </div>
-          )}
-        </section>
+        <ProductGallery item={item} />
 
         {/* ─── Header ─── */}
         <motion.section
@@ -340,155 +213,7 @@ export function ProductDetail({
       </div>
 
       {/* ═══════ Sidebar ═══════ */}
-      <aside className={styles.detailSidebar}>
-        <motion.div
-          className={styles.bookingCard}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.15 }}
-        >
-          {/* Price */}
-          <div className={styles.bookingPriceRow}>
-            <strong>{primaryPrice}</strong>
-            {hourPrice && <span className={styles.bookingHourPrice}>· {hourPrice}</span>}
-          </div>
-
-          {/* Availability */}
-          <div
-            className={clsx(
-              styles.bookingAvailability,
-              item.isAvailable ? styles.bookingAvailabilityAvailable : styles.bookingAvailabilitySoon,
-            )}
-          >
-            {item.isAvailable ? <Zap size={16} /> : <Clock3 size={16} />}
-            {item.isAvailable ? 'Доступно для аренды' : `Доступно с ${item.nearestAvailableDate ?? '—'}`}
-          </div>
-
-          {/* Date Selector */}
-          <div className={styles.bookingDates}>
-            <div className={styles.bookingDateBtn}>
-              <span className={styles.dateLabel}>Начало</span>
-              <span className={startDate ? styles.dateValueActive : styles.dateValue}>
-                <Calendar size={14} /> {startDate ? formatDateShort(startDate) : 'Не выбрано'}
-              </span>
-            </div>
-            <div className={styles.bookingDateBtn}>
-              <span className={styles.dateLabel}>Конец</span>
-              <span className={endDate ? styles.dateValueActive : styles.dateValue}>
-                <Calendar size={14} /> {endDate ? formatDateShort(endDate) : 'Не выбрано'}
-              </span>
-            </div>
-          </div>
-
-          {/* Pricing Breakdown */}
-          <div className={styles.bookingTotal}>
-            <div className={styles.totalRow}>
-              <span>{formatPrice(String(dailyPrice), '')} × {rentalDays || 1} {pluralize(rentalDays || 1, 'день', 'дня', 'дней')}</span>
-              <span>{formatPrice(String(subtotal), '')}</span>
-            </div>
-            <div className={clsx(styles.totalRow, styles.grandTotal)}>
-              <span>Итого</span>
-              <span>{formatPrice(String(subtotal), '')}</span>
-            </div>
-          </div>
-
-          {/* Deposit */}
-          {depositLabel && (
-            <div className={styles.depositRow}>
-              <span><Info size={15} /> Залог (возвратный)</span>
-              <span>{depositLabel}</span>
-            </div>
-          )}
-
-          {/* Actions */}
-          <AnimatePresence mode="wait">
-            {startDate && endDate ? (
-              <motion.div
-                key="booked-actions"
-                className={styles.bookedActions}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.22 }}
-              >
-                <button type="button" className={styles.primaryAction} onClick={isGuest ? onAuthRequired : undefined}>
-                  <CreditCard size={18} />
-                  Перейти к оплате
-                </button>
-                <button
-                  type="button"
-                  className={styles.changeDateBtn}
-                  onClick={handleProtectedAction}
-                >
-                  <Calendar size={15} />
-                  Изменить дату
-                </button>
-              </motion.div>
-            ) : (
-              <motion.button
-                key="book-btn"
-                type="button"
-                className={styles.primaryAction}
-                onClick={handleProtectedAction}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.22 }}
-              >
-                <Calendar size={18} />
-                Забронировать
-              </motion.button>
-            )}
-          </AnimatePresence>
-
-          <AnimatePresence>
-            {calendarOpen ? (
-              <RentalCalendar
-                startDate={startDate}
-                endDate={endDate}
-                onSelect={handleDateSelect}
-                onConfirm={handleCalendarConfirm}
-                onClose={() => setCalendarOpen(false)}
-              />
-            ) : null}
-          </AnimatePresence>
-
-          <div className={styles.bookingActions}>
-            <button type="button" className={styles.secondaryAction} onClick={isGuest ? onAuthRequired : undefined}>
-              <MessageCircle size={17} /> Написать
-            </button>
-          </div>
-        </motion.div>
-
-        {/* ─── Owner Card ─── */}
-        <div className={styles.ownerCardCompact}>
-          <div className={styles.ownerAvatarWrap}>
-            <div className={styles.ownerAvatarFallback}>
-              {item.ownerName.charAt(0)}
-            </div>
-            <div className={styles.ownerVerifiedBadge}>
-              <CheckCircle2 />
-            </div>
-          </div>
-          <div className={styles.ownerInfo}>
-            <span className={styles.sidebarEyebrow}>Владелец</span>
-            <span className={styles.ownerName}>{item.ownerName}</span>
-            <div className={styles.ownerMeta}>
-              <Star size={14} fill="#f59e0b" color="#f59e0b" />
-              {(item.ownerRating ?? 0).toFixed(1)} · 54 отзыва
-            </div>
-          </div>
-        </div>
-
-        {/* ─── Guarantee Card ─── */}
-        <div className={styles.guaranteeCard}>
-          <ShieldCheck size={20} />
-          <div className={styles.guaranteeCardText}>
-            <strong>Безопасная сделка</strong>
-            <span>Оплата через платформу. Деньги списываются только после получения товара.</span>
-          </div>
-        </div>
-      </aside>
+      <BookingSidebar item={item} isGuest={isGuest} onAuthRequired={onAuthRequired} />
     </motion.div>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -8,104 +8,27 @@ import {
   BadgeCheck,
   Calendar,
   Camera,
-  Check,
   CheckCircle2,
-  Copy,
   Edit3,
   Eye,
   Mail,
-  Package,
   Phone,
   Share2,
   Shield,
-  ShoppingBag,
   Star,
-  Upload,
-  User,
-  X,
   Zap,
 } from 'lucide-react';
 import { CatalogHeader } from '../Catalog/components/CatalogHeader';
 import { CatalogFooter } from '../Catalog/components/CatalogFooter';
-import { CatalogCard } from '../Catalog/components/CatalogCard';
-import type { CatalogUiItem } from '../Catalog/types';
 import { pluralize, formatDate, ROUTES } from '@/ux/utils';
-import type { ItemStatus, DealStatus } from '@/business/types/entity';
-import type { ProfileTab, ProfileListing, ProfileBooking, BookingSide } from './types';
-import { MOCK_USER, MOCK_STATS, MOCK_LISTINGS, MOCK_BOOKINGS } from './mockProfileData';
+import type { ProfileTab, BookingSide } from './types';
+import { MOCK_USER, MOCK_STATS, MOCK_BOOKINGS } from './mockProfileData';
+import { EASE, getProfileCompletion } from './profileHelpers';
+import type { ListingFilter, BookingFilter } from './profileHelpers';
+import { ListingsPanel } from './components/ListingsPanel';
+import { DealsPanel } from './components/DealsPanel';
+import { ShareModal } from './components/ShareModal';
 import styles from './ProfileDashboard.module.scss';
-
-/* ─── Helpers ─── */
-
-const DEAL_STATUS_MAP: Record<DealStatus, { label: string; cls: string }> = {
-  new:       { label: 'Ожидает',     cls: styles.statusNew },
-  confirmed: { label: 'Подтверждена', cls: styles.statusConfirmed },
-  active:    { label: 'Активна',     cls: styles.statusActive },
-  completed: { label: 'Завершена',   cls: styles.statusCompleted },
-  rejected:  { label: 'Отклонена',   cls: styles.statusRejected },
-  cancelled: { label: 'Отменена',    cls: styles.statusArchived },
-};
-
-type ListingFilter = 'all' | ItemStatus;
-type BookingFilter = 'all' | DealStatus;
-
-const LISTING_FILTERS: { value: ListingFilter; label: string; tip: string }[] = [
-  { value: 'all', label: 'Все', tip: 'Показать все объявления' },
-  { value: 'active', label: 'Активные', tip: 'Опубликованы и доступны для аренды' },
-  { value: 'moderation', label: 'Модерация', tip: 'На проверке модератором' },
-  { value: 'draft', label: 'Черновики', tip: 'Незавершённые объявления' },
-  { value: 'archived', label: 'Архив', tip: 'Снятые с публикации' },
-];
-
-const BOOKING_FILTERS: { value: BookingFilter; label: string; tip: string }[] = [
-  { value: 'all', label: 'Все', tip: 'Показать все аренды' },
-  { value: 'active', label: 'Активные', tip: 'Вещь сейчас у арендатора' },
-  { value: 'confirmed', label: 'Подтверждённые', tip: 'Ожидают начала аренды' },
-  { value: 'completed', label: 'Завершённые', tip: 'Аренда успешно завершена' },
-  { value: 'rejected', label: 'Отклонённые', tip: 'Запрос на аренду отклонён' },
-];
-
-const EASE = [0.23, 1, 0.32, 1] as const;
-
-function profileListingToCatalogItem(listing: ProfileListing): CatalogUiItem {
-  return {
-    id: listing.id,
-    title: listing.title,
-    coverImageUrl: listing.image ?? '',
-    images: listing.image ? [listing.image] : [],
-    category: listing.category,
-    pricePerDay: listing.price_per_day ?? null,
-    pricePerHour: null,
-    depositAmount: '',
-    pickupLocation: 'Новосибирск',
-    status: listing.status,
-    isAvailable: listing.status === 'active',
-    viewsCount: listing.views_count,
-    createdAt: listing.created_at,
-    nearestAvailableDate: null,
-    ownerName: MOCK_USER.full_name,
-    ownerAvatar: MOCK_USER.avatar_url,
-    ownerRating: MOCK_USER.rating,
-    quickFilters: [],
-    featured: listing.bookingsCount > 10,
-  } as CatalogUiItem;
-}
-
-
-function formatShortDate(iso: string) {
-  return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-}
-
-function getProfileCompletion(user: typeof MOCK_USER): number {
-  let score = 0;
-  if (user.avatar_url) score += 20;
-  if (user.bio) score += 20;
-  if (user.phone) score += 20;
-  if (user.email) score += 20;
-  if (user.nickname) score += 10;
-  score += 10; // base
-  return Math.min(score, 100);
-}
 
 /* ── Skeleton placeholder ── */
 function DashboardSkeleton() {
@@ -140,56 +63,6 @@ function DashboardSkeleton() {
         </div>
       </div>
     </div>
-  );
-}
-
-/* ── Share modal ── */
-function ShareModal({ url, onClose }: { url: string; onClose: () => void }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch { /* clipboard not available */ }
-  }, [url]);
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [onClose]);
-
-  return (
-    <motion.div
-      className={styles.modalOverlay}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-    >
-      <motion.div
-        className={styles.modalContent}
-        initial={{ opacity: 0, scale: 0.95, y: 16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 16 }}
-        transition={{ duration: 0.2, ease: EASE }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className={styles.modalHeader}>
-          <h3>Поделиться профилем</h3>
-          <button type="button" className={styles.modalClose} onClick={onClose}><X size={18} /></button>
-        </div>
-        <p className={styles.modalDesc}>Скопируйте ссылку и поделитесь с друзьями</p>
-        <div className={styles.modalCopyRow}>
-          <input type="text" readOnly value={url} className={styles.modalInput} />
-          <button type="button" className={styles.modalCopyBtn} onClick={handleCopy}>
-            {copied ? <><Check size={14} /> Скопировано</> : <><Copy size={14} /> Копировать</>}
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
   );
 }
 
@@ -388,160 +261,3 @@ function TabBtn({ active, label, count, onClick, tooltip }: { active: boolean; l
   );
 }
 
-/* ═══ Listings Panel ═══ */
-function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilter; onFilterChange: (f: ListingFilter) => void }) {
-  const filtered = useMemo(() => (filter === 'all' ? MOCK_LISTINGS : MOCK_LISTINGS.filter((l) => l.status === filter)), [filter]);
-
-  return (
-    <div className={styles.panel}>
-      <div className={styles.panelHeader}>
-        <div>
-          <h2 className={styles.panelTitle}>Мои объявления</h2>
-          <p className={styles.panelSubtitle}>{filtered.length} {pluralize(filtered.length, 'объявление', 'объявления', 'объявлений')}</p>
-        </div>
-        <div className={styles.filterPills}>
-          {LISTING_FILTERS.map((f) => (
-            <button key={f.value} type="button" className={`${styles.filterPill} ${filter === f.value ? styles.filterPillActive : ''} ${styles.tooltipWrap}`} onClick={() => onFilterChange(f.value)}>
-              {f.label}
-              <span className={styles.tooltipBubble}>{f.tip}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {filtered.length === 0 ? (
-        <EmptyState icon={<Package />} title="Нет объявлений" text="По этому фильтру ничего не найдено" />
-      ) : (
-        <div className={styles.listingsGrid}>
-          {filtered.map((item, i) => (
-            <CatalogCard
-              key={item.id}
-              item={profileListingToCatalogItem(item)}
-              index={i}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ═══ Deals Panel (unified) ═══ */
-function DealsPanel({ side, onSideChange, filter, onFilterChange }: { side: BookingSide; onSideChange: (s: BookingSide) => void; filter: BookingFilter; onFilterChange: (f: BookingFilter) => void }) {
-  const filtered = useMemo(() => {
-    const bySide = MOCK_BOOKINGS.filter((b) => b.side === side);
-    return filter === 'all' ? bySide : bySide.filter((b) => b.status === filter);
-  }, [side, filter]);
-
-  const counterLabel = side === 'owner' ? 'Арендатор' : 'Владелец';
-
-  return (
-    <div className={styles.panel}>
-      <div className={styles.panelHeader}>
-        <div>
-          <h2 className={styles.panelTitle}>Мои аренды</h2>
-          <p className={styles.panelSubtitle}>
-            {side === 'owner' ? 'Вещи, которые вы сдаёте в аренду' : 'Вещи, которые вы арендуете'}
-            {' · '}{filtered.length} {pluralize(filtered.length, 'сделка', 'сделки', 'сделок')}
-          </p>
-        </div>
-      </div>
-
-      {/* Side toggle */}
-      <div className={styles.sideToggle}>
-        <button
-          type="button"
-          className={`${styles.sideToggleBtn} ${side === 'owner' ? styles.sideToggleBtnActive : ''}`}
-          onClick={() => { onSideChange('owner'); onFilterChange('all'); }}
-        >
-          <Upload size={14} /> Сдаю
-        </button>
-        <button
-          type="button"
-          className={`${styles.sideToggleBtn} ${side === 'renter' ? styles.sideToggleBtnActive : ''}`}
-          onClick={() => { onSideChange('renter'); onFilterChange('all'); }}
-        >
-          <ShoppingBag size={14} /> Арендую
-        </button>
-      </div>
-
-      {/* Status filters */}
-      <div className={styles.filterPills}>
-        {BOOKING_FILTERS.map((f) => (
-          <button key={f.value} type="button" className={`${styles.filterPill} ${filter === f.value ? styles.filterPillActive : ''} ${styles.tooltipWrap}`} onClick={() => onFilterChange(f.value)}>
-            {f.label}
-            <span className={styles.tooltipBubble}>{f.tip}</span>
-          </button>
-        ))}
-      </div>
-
-      {filtered.length === 0 ? (
-        <EmptyState icon={side === 'owner' ? <Upload /> : <ShoppingBag />} title={side === 'owner' ? 'Нет аренд по сдаче' : 'Вы пока ничего не арендовали'} text="По этому фильтру ничего не найдено" />
-      ) : (
-        <div className={styles.bookingsGrid}>
-          {filtered.map((b, i) => (
-            <motion.div key={b.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: i * 0.04, ease: EASE }}>
-              <BookingRow booking={b} counterLabel={counterLabel} />
-            </motion.div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function BookingRow({ booking, counterLabel }: { booking: ProfileBooking; counterLabel: string }) {
-  const st = DEAL_STATUS_MAP[booking.status];
-
-  return (
-    <div className={styles.bookingCard}>
-      <div className={styles.bookingImageArea}>
-        <div className={styles.bookingBadgeRow}>
-          <span className={`${styles.statusBadge} ${st.cls}`}>{st.label}</span>
-        </div>
-        {booking.itemImage ? (
-          <img src={booking.itemImage} alt={booking.itemTitle} className={styles.bookingImg} />
-        ) : (
-          <div className={styles.bookingImgFallback}><Camera size={24} /></div>
-        )}
-      </div>
-
-      <div className={styles.bookingInfo}>
-        <div className={styles.bookingTop}>
-          <span className={styles.bookingTitle}>{booking.itemTitle}</span>
-          <span className={styles.bookingMeta}>
-            <User size={14} /> {counterLabel}: {booking.counterpartyName}
-          </span>
-          <span className={styles.bookingMeta}>
-            <Calendar size={14} /> {formatShortDate(booking.start_date)} — {formatShortDate(booking.end_date)}
-          </span>
-        </div>
-
-        <div className={styles.bookingChips}>
-          <span className={styles.bookingChip}>
-            <Shield size={12} />
-            Залог {Number(booking.deposit_amount).toLocaleString('ru-RU')} ₽
-          </span>
-        </div>
-
-        <div className={styles.bookingFooter}>
-          <div className={styles.bookingPriceBlock}>
-            <strong>{Number(booking.total_price).toLocaleString('ru-RU')} ₽</strong>
-            <span>за период</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ═══ Empty State ═══ */
-function EmptyState({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
-  return (
-    <div className={styles.emptyState}>
-      <div className={styles.emptyIcon}>{icon}</div>
-      <h3 className={styles.emptyTitle}>{title}</h3>
-      <p className={styles.emptyText}>{text}</p>
-    </div>
-  );
-}

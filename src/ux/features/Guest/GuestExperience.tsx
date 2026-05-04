@@ -6,25 +6,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowRight,
   ArrowUp,
-  CheckCircle2,
-  ChevronDown,
-  Clock3,
   LayoutGrid,
-  Leaf,
   Lock,
   LogIn,
-  MessageCircle,
   PackageCheck,
-  Percent,
-  Recycle,
-  Search,
-  Shield,
   Sparkles,
-  TrendingUp,
   UserPlus,
-  Wallet,
-  X,
-  Zap,
 } from 'lucide-react';
 import { BrandIcon } from '../Catalog/components/CatalogHeader';
 import { CatalogCard } from '../Catalog/components/CatalogCard';
@@ -36,112 +23,15 @@ import { CategoryRail } from '../Catalog/components/CategoryRail';
 import { mockCatalogItems } from '../Catalog/mockCatalogItems';
 import type { CatalogUiItem } from '../Catalog/types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from '../Catalog/utils';
-import { ROUTES, useFocusTrap } from '@/ux/utils';
+import { ROUTES } from '@/ux/utils';
+import { GUEST_ITEM_LIMIT } from './guestConstants';
+import { GuestAuthModal } from './components/GuestAuthModal';
+import { HowItWorksSection, ValuePropsSection, EcoSection, FaqSection } from './components/GuestLandingSections';
 import styles from './GuestExperience.module.scss';
-
-const GUEST_ITEM_LIMIT = 12;
-
-const HOW_IT_WORKS = [
-  {
-    step: '01',
-    icon: Search,
-    title: 'Найдите вещь',
-    description: 'Введите название или выберите категорию. Фильтры помогут сузить поиск по цене, району и доступности.',
-  },
-  {
-    step: '02',
-    icon: MessageCircle,
-    title: 'Свяжитесь с владельцем',
-    description: 'Обсудите условия и дату в чате платформы. Все переписки сохраняются для вашей безопасности.',
-  },
-  {
-    step: '03',
-    icon: CheckCircle2,
-    title: 'Забронируйте и пользуйтесь',
-    description: 'Оплатите через платформу, заберите вещь и пользуйтесь. Возврат денег гарантирован, если что-то не так.',
-  },
-];
-
-const VALUE_PROPS = [
-  { icon: Shield, title: 'Безопасная сделка', description: 'Верификация профилей, рейтинги, отзывы и защита платформой каждой аренды.' },
-  { icon: Zap, title: 'Быстрый старт', description: 'От поиска до бронирования — 2 минуты. Без звонков и ожидания.' },
-  { icon: TrendingUp, title: 'Выгоднее покупки', description: 'Берите технику, инструменты и спортинвентарь только на нужный срок.' },
-  { icon: Wallet, title: 'Зарабатывайте на вещах', description: 'Сдавайте то, чем не пользуетесь. Ваши вещи работают, пока вы отдыхаете.' },
-];
-
-const GUEST_LIMITS = [
-  'Контакты владельца открываются после входа',
-  'Бронирование доступно только зарегистрированным',
-  'Избранное, чат и история сохраняются в кабинете',
-];
-
-const ECO_STATS = [
-  { icon: Recycle, value: '2 400+', label: 'вещей в повторном использовании' },
-  { icon: Leaf, value: '−12 т', label: 'CO₂ сохранено за год' },
-  { icon: Percent, value: '70%', label: 'экономия vs покупка' },
-];
-
-const FAQ_ITEMS = [
-  {
-    q: 'Как работает оплата?',
-    a: 'Оплата проходит через платформу. Деньги резервируются при бронировании и переводятся владельцу после подтверждения получения вещи.',
-  },
-  {
-    q: 'Что, если вещь повреждена?',
-    a: 'Каждая аренда защищена: при несоответствии описанию или повреждении мы вернём деньги в течение 24 часов. Залог покрывает мелкие риски.',
-  },
-  {
-    q: 'Могу ли я сдавать свои вещи?',
-    a: 'Да! Зарегистрируйтесь, добавьте объявление с фото и условиями — и начните зарабатывать на вещах, которыми не пользуетесь.',
-  },
-  {
-    q: 'Нужно ли встречаться лично?',
-    a: 'Зависит от владельца. Часть предложений включает доставку курьером. Способ передачи указан в каждом объявлении.',
-  },
-];
-
-function FaqAccordion({ items }: { items: typeof FAQ_ITEMS }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  return (
-    <div className={styles.faqList}>
-      {items.map((item, i) => {
-        const isOpen = openIndex === i;
-        return (
-          <div key={i} className={`${styles.faqItem} ${isOpen ? styles.faqItemOpen : ''}`}>
-            <button
-              type="button"
-              className={styles.faqQuestion}
-              onClick={() => setOpenIndex(isOpen ? null : i)}
-              aria-expanded={isOpen}
-            >
-              <span>{item.q}</span>
-              <ChevronDown size={18} className={isOpen ? styles.faqChevronOpen : ''} />
-            </button>
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.div
-                  className={styles.faqAnswer}
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-                >
-                  <p>{item.a}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 export function GuestExperience() {
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const authTrapRef = useFocusTrap<HTMLDivElement>(showAuthModal);
   const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -302,36 +192,7 @@ export function GuestExperience() {
             </motion.section>
 
             {/* ═══════ How It Works ═══════ */}
-            <section id="how-it-works" className={styles.howSection}>
-              <div className={styles.sectionHeader}>
-                <span className={styles.sectionKicker}>Просто и быстро</span>
-                <h2>Как это работает</h2>
-                <p>Три шага от поиска до аренды — без лишних звонков и бумаг.</p>
-              </div>
-
-              <div className={styles.howGrid}>
-                {HOW_IT_WORKS.map((item, i) => {
-                  const Icon = item.icon;
-                  return (
-                    <motion.div
-                      key={item.step}
-                      className={styles.howCard}
-                      initial={{ opacity: 0, y: 24 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: '-60px' }}
-                      transition={{ duration: 0.45, delay: i * 0.1, ease: [0.23, 1, 0.32, 1] }}
-                    >
-                      <div className={styles.howStepBadge}>{item.step}</div>
-                      <div className={styles.howIconWrap}>
-                        <Icon size={28} />
-                      </div>
-                      <h3>{item.title}</h3>
-                      <p>{item.description}</p>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </section>
+            <HowItWorksSection />
 
             {/* ═══════ Search Bar (shared with auth) ═══════ */}
             <section id="guest-catalog" className={styles.searchBarSection}>
@@ -412,85 +273,13 @@ export function GuestExperience() {
             </section>
 
             {/* ═══════ Value Props ═══════ */}
-            <section id="guest-access" className={styles.accessPanel}>
-              <div className={styles.accessCopy}>
-                <span className={styles.sectionKicker}>Полный доступ</span>
-                <h2>Зарегистрируйтесь и арендуйте безопасно</h2>
-                <p>
-                  Гостевой режим помогает оценить ассортимент. Создайте аккаунт,
-                  чтобы бронировать, общаться с владельцами, сохранять избранное и сдавать свои вещи.
-                </p>
-                <div className={styles.promptButtons}>
-                  <Link href={ROUTES.register} className={styles.promptPrimary}>
-                    <UserPlus size={18} />
-                    Зарегистрироваться бесплатно
-                  </Link>
-                  <Link href={ROUTES.login} className={styles.promptSecondary}>
-                    Уже есть аккаунт
-                  </Link>
-                </div>
-              </div>
-
-              <div className={styles.benefitsList}>
-                {VALUE_PROPS.map((feature, i) => {
-                  const Icon = feature.icon;
-                  return (
-                    <motion.div
-                      key={feature.title}
-                      className={styles.benefitItem}
-                      initial={{ opacity: 0, x: 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true, margin: '-40px' }}
-                      transition={{ duration: 0.4, delay: i * 0.08 }}
-                    >
-                      <div className={styles.benefitIcon}>
-                        <Icon size={20} />
-                      </div>
-                      <div className={styles.benefitText}>
-                        <strong>{feature.title}</strong>
-                        <span>{feature.description}</span>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </section>
+            <ValuePropsSection />
 
             {/* ═══════ Eco / Sharing Impact ═══════ */}
-            <section className={styles.ecoSection}>
-              <div className={styles.ecoContent}>
-                <div className={styles.ecoCopy}>
-                  <span className={styles.sectionKicker}>Осознанное потребление</span>
-                  <h2>Шеринг — это разумно</h2>
-                  <p>
-                    Аренда вместо покупки сокращает перепроизводство, экономит ресурсы
-                    и помогает вам тратить деньги только на то, что действительно нужно.
-                  </p>
-                </div>
-                <div className={styles.ecoStats}>
-                  {ECO_STATS.map((stat) => {
-                    const Icon = stat.icon;
-                    return (
-                      <div key={stat.label} className={styles.ecoStatItem}>
-                        <Icon size={22} />
-                        <strong>{stat.value}</strong>
-                        <span>{stat.label}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </section>
+            <EcoSection />
 
             {/* ═══════ FAQ ═══════ */}
-            <section id="faq" className={styles.faqSection}>
-              <div className={styles.sectionHeader}>
-                <span className={styles.sectionKicker}>Частые вопросы</span>
-                <h2>FAQ</h2>
-                <p>Ответы на самые популярные вопросы о сервисе.</p>
-              </div>
-              <FaqAccordion items={FAQ_ITEMS} />
-            </section>
+            <FaqSection />
 
           </>
         )}
@@ -525,71 +314,7 @@ export function GuestExperience() {
 
       {/* ═══════ Auth Modal ═══════ */}
       <AnimatePresence>
-        {showAuthModal && (
-          <motion.div
-            className={styles.modal}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowAuthModal(false)}
-          >
-            <motion.div
-              ref={authTrapRef}
-              className={styles.modalContent}
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="guest-auth-title"
-              initial={{ opacity: 0, y: 18, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 8, scale: 0.98 }}
-              transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-              onClick={(event) => event.stopPropagation()}
-            >
-              <button
-                type="button"
-                className={styles.modalClose}
-                onClick={() => setShowAuthModal(false)}
-                aria-label="Закрыть окно"
-              >
-                <X size={18} />
-              </button>
-
-              <div className={styles.modalIcon}>
-                <Lock size={26} />
-              </div>
-
-              <h3 id="guest-auth-title">Войдите, чтобы продолжить</h3>
-              <p>
-                Каталог доступен без регистрации. Для бронирования, контактов
-                владельца и чата нужен аккаунт — это бесплатно.
-              </p>
-
-              <div className={styles.modalLimits}>
-                {GUEST_LIMITS.map((item) => (
-                  <span key={item}>
-                    <CheckCircle2 size={15} />
-                    {item}
-                  </span>
-                ))}
-              </div>
-
-              <div className={styles.modalButtons}>
-                <Link href={ROUTES.register} className={styles.modalPrimary}>
-                  <UserPlus size={18} />
-                  Создать аккаунт
-                </Link>
-                <Link href={ROUTES.login} className={styles.modalSecondary}>
-                  <LogIn size={18} />
-                  Войти
-                </Link>
-              </div>
-
-              <p className={styles.modalFootnote}>
-                Регистрация займёт меньше минуты
-              </p>
-            </motion.div>
-          </motion.div>
-        )}
+        {showAuthModal && <GuestAuthModal onClose={() => setShowAuthModal(false)} />}
       </AnimatePresence>
     </div>
   );
