@@ -15,6 +15,7 @@ import { CatalogFooter } from './components/CatalogFooter';
 import { mockCatalogItems } from './mockCatalogItems';
 import type { CatalogUiItem } from './types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters, filtersToSearchParams } from './utils';
+import { ROUTES } from '@/ux/utils';
 import styles from './Catalog.module.scss';
 
 
@@ -61,7 +62,7 @@ export function CatalogExperience() {
   const navigateToSearch = useCallback(() => {
     if (isFiltersOpen) setIsFiltersOpen(false);
     const qs = filtersToSearchParams(filters);
-    router.push(`/dev-ui/search${qs ? `?${qs}` : ''}`);
+    router.push(`${ROUTES.search}${qs ? `?${qs}` : ''}`);
   }, [filters, isFiltersOpen, router]);
 
   useEffect(() => {

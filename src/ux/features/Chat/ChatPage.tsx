@@ -19,34 +19,10 @@ import {
 import type { ChatPreview, ChatMessage, ChatListTab, TimelineEntry, QuickAction } from './types';
 import { CURRENT_USER_ID } from './types';
 import { MOCK_CHATS, MOCK_TIMELINES, QUICK_ACTIONS } from './mockChatData';
+import { timeAgo, formatTime, formatDateRange, getInitials, ROUTES } from '@/ux/utils';
 import styles from './ChatPage.module.scss';
 
 /* ─── Helpers ─── */
-
-function timeAgo(iso: string) {
-  const now = Date.now();
-  const d = new Date(iso).getTime();
-  const diff = Math.floor((now - d) / 1000);
-  if (diff < 60) return 'только что';
-  if (diff < 3600) return `${Math.floor(diff / 60)} мин`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)} ч`;
-  return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-}
-
-function formatTime(iso: string) {
-  return new Date(iso).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-}
-
-function formatDateRange(start: string, end: string) {
-  const s = new Date(start);
-  const e = new Date(end);
-  const opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
-  return `${s.toLocaleDateString('ru-RU', opts)} — ${e.toLocaleDateString('ru-RU', opts)}`;
-}
-
-function getInitials(name: string) {
-  return name.split(' ').map((w) => w[0]).join('').slice(0, 2);
-}
 
 const DEAL_STATUS_LABELS: Record<string, { label: string; cls: string }> = {
   new: { label: 'Новая заявка', cls: styles.dealBadgeNew },
@@ -158,7 +134,7 @@ export function ChatPage() {
         <div className={styles.sidebarHeader}>
           <h2 className={styles.sidebarTitle}>Сообщения</h2>
           <div className={styles.sidebarActions}>
-            <Link href="/dev-ui" className={styles.sidebarBtn} aria-label="Назад">
+            <Link href={ROUTES.home} className={styles.sidebarBtn} aria-label="Назад">
               <ArrowLeft />
             </Link>
           </div>

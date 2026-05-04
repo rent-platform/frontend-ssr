@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import Favorites from '@/ux/features/Favorites/Favorites';
+import { Favorites } from '@/ux/features/Favorites';
 
 export default function FavoritesPage() {
   return (

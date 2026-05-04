@@ -36,6 +36,7 @@ import {
   MOCK_SESSIONS,
   MOCK_PAYMENTS,
 } from './mockSettingsData';
+import { ROUTES } from '@/ux/utils';
 import styles from './SettingsPage.module.scss';
 
 /* ─── Sidebar items ─── */
@@ -88,7 +89,7 @@ export function SettingsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <Link href="/dev-ui/profile" className={styles.backLink}>
+        <Link href={ROUTES.profile} className={styles.backLink}>
           <ArrowLeft size={16} />
           <span>Назад в профиль</span>
         </Link>

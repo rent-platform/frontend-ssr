@@ -15,31 +15,11 @@ import {
   Tag,
   X,
 } from 'lucide-react';
+import type { ListingCondition, CreateListingFormData, ImagePreview } from './types';
 import styles from './CreateListing.module.scss';
 
-/* ─── Types ─── */
-type Condition = 'new' | 'like_new' | 'good' | 'used';
-
-type ImagePreview = {
-  id: string;
-  url: string;
-};
-
-type FormData = {
-  title: string;
-  category: string;
-  condition: Condition;
-  description: string;
-  images: ImagePreview[];
-  pricePerDay: string;
-  pricePerHour: string;
-  depositAmount: string;
-  noDeposit: boolean;
-  pickupLocation: string;
-};
-
 /* ─── Constants ─── */
-const CONDITIONS: { value: Condition; label: string; desc: string }[] = [
+const CONDITIONS: { value: ListingCondition; label: string; desc: string }[] = [
   { value: 'new', label: 'Новый', desc: 'В оригинальной упаковке' },
   { value: 'like_new', label: 'Как новый', desc: 'Без следов износа' },
   { value: 'good', label: 'Хорошее', desc: 'Незначительные следы' },
@@ -64,7 +44,7 @@ const STEPS = [
   { id: 'review', label: 'Публикация', Icon: Eye },
 ] as const;
 
-const INITIAL: FormData = {
+const INITIAL: CreateListingFormData = {
   title: '',
   category: '',
   condition: 'good',
@@ -84,7 +64,7 @@ const MAX_IMAGES = 10;
    ═══════════════════════════════════════════════════════════════════════════════ */
 export function CreateListing() {
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState<FormData>(INITIAL);
+  const [form, setForm] = useState<CreateListingFormData>(INITIAL);
   const [published, setPublished] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
@@ -93,7 +73,7 @@ export function CreateListing() {
 
   /* ─── Helpers ─── */
   const patch = useCallback(
-    (updates: Partial<FormData>) => setForm((prev) => ({ ...prev, ...updates })),
+    (updates: Partial<CreateListingFormData>) => setForm((prev) => ({ ...prev, ...updates })),
     [],
   );
 

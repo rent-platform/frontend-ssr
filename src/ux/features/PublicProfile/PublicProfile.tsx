@@ -31,6 +31,7 @@ import { CatalogCard } from '../Catalog/components/CatalogCard';
 import type { CatalogUiItem } from '../Catalog/types';
 import { MOCK_PUBLIC_USER, MOCK_PUBLIC_LISTINGS, MOCK_PUBLIC_REVIEWS } from './mockPublicProfileData';
 import type { TrustLevel, PublicListing, PublicUser } from './types';
+import { pluralize, ROUTES } from '@/ux/utils';
 import styles from './PublicProfile.module.scss';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
@@ -66,15 +67,6 @@ function formatDate(iso: string) {
 
 function formatMemberSince(iso: string) {
   return new Date(iso).toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
-}
-
-function pluralize(n: number, one: string, few: string, many: string) {
-  const abs = Math.abs(n) % 100;
-  const last = abs % 10;
-  if (abs > 10 && abs < 20) return many;
-  if (last > 1 && last < 5) return few;
-  if (last === 1) return one;
-  return many;
 }
 
 const TRUST_LABELS: Record<TrustLevel, string> = {
@@ -265,7 +257,7 @@ export function PublicProfile() {
       {/* ── Breadcrumb bar ── */}
       <div className={styles.topBar}>
         <div className={styles.topBarInner}>
-          <Link href="/dev-ui" className={styles.backLink}>
+          <Link href={ROUTES.home} className={styles.backLink}>
             <ArrowLeft size={16} />
             Каталог
           </Link>
@@ -325,7 +317,7 @@ export function PublicProfile() {
               </div>
             </div>
 
-            <Link href="/dev-ui/chat" className={styles.ctaBtn}>
+            <Link href={ROUTES.chat} className={styles.ctaBtn}>
               <MessageCircle size={16} />
               Написать сообщение
             </Link>

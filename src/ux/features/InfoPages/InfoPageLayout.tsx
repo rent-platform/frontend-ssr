@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { CatalogFooter } from '../Catalog/components/CatalogFooter';
+import { ROUTES } from '@/ux/utils';
 import styles from './InfoPage.module.scss';
 import type { PropsWithChildren } from 'react';
 
@@ -17,11 +18,11 @@ export function InfoPageLayout({ eyebrow, title, subtitle, children }: InfoPageL
     <div className={styles.page}>
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <Link href="/dev-ui" className={styles.brand}>
+          <Link href={ROUTES.home} className={styles.brand}>
             <div className={styles.brandLogo}>А</div>
             <strong>Арендай</strong>
           </Link>
-          <Link href="/dev-ui" className={styles.backLink}>
+          <Link href={ROUTES.home} className={styles.backLink}>
             <ArrowLeft size={15} />
             Вернуться
           </Link>

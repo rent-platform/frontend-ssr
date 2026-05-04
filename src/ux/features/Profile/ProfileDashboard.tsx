@@ -29,6 +29,7 @@ import { CatalogHeader } from '../Catalog/components/CatalogHeader';
 import { CatalogFooter } from '../Catalog/components/CatalogFooter';
 import { CatalogCard } from '../Catalog/components/CatalogCard';
 import type { CatalogUiItem } from '../Catalog/types';
+import { pluralize, ROUTES } from '@/ux/utils';
 import type { ItemStatus, DealStatus } from '@/business/types/entity';
 import type { ProfileTab, ProfileListing, ProfileBooking, BookingSide } from './types';
 import { MOCK_USER, MOCK_STATS, MOCK_LISTINGS, MOCK_BOOKINGS } from './mockProfileData';
@@ -228,7 +229,7 @@ export function ProfileDashboard() {
 
       <div className={styles.topBar}>
         <div className={styles.topBarInner}>
-          <Link href="/dev-ui" className={styles.backLink}><ArrowLeft size={15} /> Каталог</Link>
+          <Link href={ROUTES.home} className={styles.backLink}><ArrowLeft size={15} /> Каталог</Link>
           <span className={styles.breadcrumbSep}>/</span>
           <span className={styles.breadcrumbCurrent}>Мой профиль</span>
         </div>
@@ -265,13 +266,13 @@ export function ProfileDashboard() {
             </div>
 
             <div className={styles.profileActions}>
-              <Link href="/dev-ui/settings" className={styles.btnPrimary}>
+              <Link href={ROUTES.settings} className={styles.btnPrimary}>
                 <Edit3 size={15} /> Редактировать
               </Link>
               <button type="button" className={styles.btnIcon} onClick={() => setShowShareModal(true)} title="Поделиться">
                 <Share2 size={17} />
               </button>
-              <Link href={`/dev-ui/user/${user.id}`} className={styles.btnIcon} title="Публичный профиль">
+              <Link href={ROUTES.publicProfile(user.id)} className={styles.btnIcon} title="Публичный профиль">
                 <Eye size={17} />
               </Link>
             </div>
@@ -281,7 +282,7 @@ export function ProfileDashboard() {
             {user.bio && <p className={styles.bio}>{user.bio}</p>}
 
             <div className={styles.metaRow}>
-              <Link href="/dev-ui/reviews" className={styles.ratingChip}>
+              <Link href={ROUTES.reviews} className={styles.ratingChip}>
                 <Star size={13} />
                 {user.rating.toFixed(1)}
                 <span className={styles.ratingCount}>({user.reviewCount} {pluralize(user.reviewCount, 'отзыв', 'отзыва', 'отзывов')})</span>
@@ -306,7 +307,7 @@ export function ProfileDashboard() {
               <div className={styles.completionTrack}>
                 <div className={styles.completionFill} style={{ width: `${profileCompletion}%` }} />
               </div>
-              <Link href="/dev-ui/settings" className={styles.completionLink}>Заполнить →</Link>
+              <Link href={ROUTES.settings} className={styles.completionLink}>Заполнить →</Link>
             </div>
           )}
 
@@ -546,14 +547,4 @@ function EmptyState({ icon, title, text }: { icon: React.ReactNode; title: strin
       <p className={styles.emptyText}>{text}</p>
     </div>
   );
-}
-
-/* ─── Pluralize helper ─── */
-function pluralize(n: number, one: string, few: string, many: string) {
-  const abs = Math.abs(n) % 100;
-  const last = abs % 10;
-  if (abs > 10 && abs < 20) return many;
-  if (last > 1 && last < 5) return few;
-  if (last === 1) return one;
-  return many;
 }

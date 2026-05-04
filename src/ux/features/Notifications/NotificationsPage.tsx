@@ -31,20 +31,10 @@ import {
   TAB_TYPE_MAP,
 } from './types';
 import { MOCK_NOTIFICATIONS } from './mockNotifications';
+import { timeAgo, ROUTES } from '@/ux/utils';
 import styles from './NotificationsPage.module.scss';
 
 /* ─── Helpers ─── */
-
-function timeAgo(iso: string): string {
-  const now = Date.now();
-  const d = new Date(iso).getTime();
-  const diff = Math.floor((now - d) / 1000);
-  if (diff < 60) return 'только что';
-  if (diff < 3600) return `${Math.floor(diff / 60)} мин назад`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)} ч назад`;
-  if (diff < 172800) return 'вчера';
-  return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-}
 
 function groupByDate(items: NotificationItem[]): { label: string; items: NotificationItem[] }[] {
   const groups = new Map<string, NotificationItem[]>();
@@ -183,7 +173,7 @@ export function NotificationsPage() {
         {/* ─── Header ─── */}
         <div className={styles.header}>
           <div className={styles.headerLeft}>
-            <Link href="/dev-ui" className={styles.backBtn} aria-label="Назад">
+            <Link href={ROUTES.home} className={styles.backBtn} aria-label="Назад">
               <ArrowLeft />
             </Link>
             <h1 className={styles.title}>
@@ -203,7 +193,7 @@ export function NotificationsPage() {
               <CheckCheck size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: 4 }} />
               Прочитать все
             </button>
-            <Link href="/dev-ui/settings" className={styles.settingsBtn} aria-label="Настройки уведомлений">
+            <Link href={ROUTES.settings} className={styles.settingsBtn} aria-label="Настройки уведомлений">
               <Settings />
             </Link>
           </div>

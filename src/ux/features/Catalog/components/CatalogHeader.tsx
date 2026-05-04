@@ -15,6 +15,7 @@ import {
   LogOut,
   Settings,
 } from 'lucide-react';
+import { ROUTES } from '@/ux/utils';
 import styles from '../Catalog.module.scss';
 
 type CatalogHeaderProps = {
@@ -36,10 +37,10 @@ export function BrandIcon() {
 }
 
 const actionIcons = [
-  { label: 'Избранное', count: 2, Icon: Heart, href: '/dev-ui/favorites' },
-  { label: 'Уведомления', count: 5, Icon: Bell, href: '/dev-ui/notifications' },
-  { label: 'Сообщения', count: 9, Icon: MessageSquare, href: '/dev-ui/chat' },
-] as const;
+  { label: 'Избранное', count: 2, Icon: Heart, href: ROUTES.favorites },
+  { label: 'Уведомления', count: 5, Icon: Bell, href: ROUTES.notifications },
+  { label: 'Сообщения', count: 9, Icon: MessageSquare, href: ROUTES.chat },
+];
 
 export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: CatalogHeaderProps) {
   const router = useRouter();
@@ -47,7 +48,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
   const handleBrandClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (onBrandClick) onBrandClick();
-    router.push('/dev-ui');
+    router.push(ROUTES.home);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -55,7 +56,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
     <header className={`${styles.header} ${isHidden ? styles.headerHidden : ''}`}>
         <div className={styles.topbarInner}>
           <div className={styles.headerLeft}>
-            <Link href="/dev-ui" className={styles.brandBlock} aria-label="Перейти на главную Арендай" onClick={handleBrandClick}>
+            <Link href={ROUTES.home} className={styles.brandBlock} aria-label="Перейти на главную Арендай" onClick={handleBrandClick}>
               <BrandIcon />
               <div className={styles.brandTextWrap}>
                 <strong>Арендай</strong>
@@ -64,7 +65,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
             </Link>
 
             <nav className={styles.mainNav}>
-              <Link href="/dev-ui" className={styles.navLinkActive}>
+              <Link href={ROUTES.catalog} className={styles.navLinkActive}>
                 <LayoutGrid size={18} />
                 <span>Каталог</span>
               </Link>
@@ -79,7 +80,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
 
           <div className={styles.topbarActions}>
             <div className={styles.actionButtons}>
-              <Link href="/dev-ui/create-listing" style={{ textDecoration: 'none' }}>
+              <Link href={ROUTES.createListing} style={{ textDecoration: 'none' }}>
                 <motion.button 
                   type="button" 
                   className={styles.btnSecondary}
@@ -137,7 +138,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
               </motion.div>
               
               <div className={styles.profileDropdown}>
-                <Link href="/dev-ui/profile" style={{ textDecoration: 'none' }}>
+                <Link href={ROUTES.profile} style={{ textDecoration: 'none' }}>
                   <motion.button 
                     type="button" 
                     className={styles.profileTrigger}
@@ -152,19 +153,19 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
                 </Link>
 
                 <div className={styles.profileMenu}>
-                  <Link href="/dev-ui/profile" className={styles.profileMenuItem}>
+                  <Link href={ROUTES.profile} className={styles.profileMenuItem}>
                     <User size={16} />
                     <span>Мой профиль</span>
                   </Link>
-                  <Link href="/dev-ui/notifications" className={styles.profileMenuItem}>
+                  <Link href={ROUTES.notifications} className={styles.profileMenuItem}>
                     <Bell size={16} />
                     <span>Уведомления</span>
                   </Link>
-                  <Link href="/dev-ui/chat" className={styles.profileMenuItem}>
+                  <Link href={ROUTES.chat} className={styles.profileMenuItem}>
                     <MessageSquare size={16} />
                     <span>Сообщения</span>
                   </Link>
-                  <Link href="/dev-ui/settings" className={styles.profileMenuItem}>
+                  <Link href={ROUTES.settings} className={styles.profileMenuItem}>
                     <Settings size={16} />
                     <span>Настройки</span>
                   </Link>

@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useMemo, useState } from 'react';
+import Link from 'next/link';
 import {
   ArrowDownUp,
   ArrowLeft,
@@ -11,6 +12,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
+import { getNumericPrice, ROUTES } from '@/ux/utils';
 import { CatalogCard } from '../Catalog/components/CatalogCard';
 import { CatalogHeader } from '../Catalog/components/CatalogHeader';
 import { ProductDetail } from '../Catalog/components/ProductDetail';
@@ -31,12 +33,7 @@ const SORT_LABELS: Record<SortOption, string> = {
 const EASE = [0.23, 1, 0.32, 1] as const;
 
 /* ─── Helpers ─── */
-function getNumericPrice(val: string | null): number {
-  if (!val) return 0;
-  return Number(val.replace(/[\s,]/g, ''));
-}
-
-function pluralize(n: number): string {
+function favoritesCountLabel(n: number): string {
   const mod10 = n % 10;
   const mod100 = n % 100;
   if (mod10 === 1 && mod100 !== 11) return 'вещь';
@@ -45,7 +42,7 @@ function pluralize(n: number): string {
 }
 
 /* ═══ Main component ═══ */
-export default function Favorites() {
+export function Favorites() {
   // Mock: first 5 catalog items as "favorites", in real app — from API/store
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(
     () => new Set(mockCatalogItems.slice(0, 5).map((i) => i.id)),
@@ -73,10 +70,10 @@ export default function Favorites() {
     // sort
     switch (sort) {
       case 'priceAsc':
-        items.sort((a, b) => getNumericPrice(a.pricePerDay) - getNumericPrice(b.pricePerDay));
+        items.sort((a, b) => getNumericPrice(a.pricePerDay ?? null) - getNumericPrice(b.pricePerDay ?? null));
         break;
       case 'priceDesc':
-        items.sort((a, b) => getNumericPrice(b.pricePerDay) - getNumericPrice(a.pricePerDay));
+        items.sort((a, b) => getNumericPrice(b.pricePerDay ?? null) - getNumericPrice(a.pricePerDay ?? null));
         break;
       case 'name':
         items.sort((a, b) => a.title.localeCompare(b.title, 'ru'));
@@ -151,10 +148,10 @@ export default function Favorites() {
       <div className={styles.container}>
         {/* ── Navigation ── */}
         <nav className={styles.nav}>
-          <a href="/dev-ui/search" className={styles.navBack}>
+          <Link href={ROUTES.search} className={styles.navBack}>
             <ArrowLeft size={16} />
             <span>Каталог</span>
-          </a>
+          </Link>
         </nav>
 
         {/* ── Header ── */}
@@ -168,7 +165,7 @@ export default function Favorites() {
               <p className={styles.subtitle}>
                 {isEmpty
                   ? 'Здесь будут ваши сохранённые вещи'
-                  : `${favoriteIds.size} ${pluralize(favoriteIds.size)} сохранено`}
+                  : `${favoriteIds.size} ${favoritesCountLabel(favoriteIds.size)} сохранено`}
               </p>
             </div>
           </div>
@@ -277,10 +274,10 @@ export default function Favorites() {
               Нажмите <Heart size={14} className={styles.emptyHeartInline} /> на
               карточке вещи, чтобы добавить её в избранное и быстро вернуться к ней позже.
             </p>
-            <a href="/dev-ui/search" className={styles.emptyBtn}>
+            <Link href={ROUTES.search} className={styles.emptyBtn}>
               <PackageSearch size={16} />
               <span>Перейти в каталог</span>
-            </a>
+            </Link>
           </motion.div>
         ) : favorites.length === 0 ? (
           <motion.div

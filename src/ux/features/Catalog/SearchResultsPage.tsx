@@ -20,6 +20,7 @@ import {
   searchParamsToFilters,
   filtersToSearchParams,
 } from './utils';
+import { ROUTES } from '@/ux/utils';
 import styles from './Catalog.module.scss';
 
 const BATCH_SIZE = 8;
@@ -66,7 +67,7 @@ export function SearchResultsPage() {
   const navigateWithFilters = useCallback(
     (currentFilters: typeof filters) => {
       const qs = filtersToSearchParams(currentFilters);
-      router.push(`/dev-ui/search${qs ? `?${qs}` : ''}`);
+      router.push(`${ROUTES.search}${qs ? `?${qs}` : ''}`);
     },
     [router],
   );
@@ -133,7 +134,7 @@ export function SearchResultsPage() {
 
         {!selectedItem && (
           <div className={styles.searchResultsHeader}>
-            <Link href="/dev-ui" className={styles.backLink}>
+            <Link href={ROUTES.home} className={styles.backLink}>
               <ArrowLeft size={16} />
               <span>На главную</span>
             </Link>

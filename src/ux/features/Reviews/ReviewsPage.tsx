@@ -25,6 +25,7 @@ import {
   MOCK_REVIEWS_GIVEN,
   MOCK_RATING_BREAKDOWN,
 } from './mockReviewsData';
+import { pluralize, getInitials, ROUTES } from '@/ux/utils';
 import styles from './ReviewsPage.module.scss';
 
 /* ─── Helpers ─── */
@@ -37,22 +38,6 @@ function formatDate(iso: string) {
   });
 }
 
-function pluralize(n: number, one: string, few: string, many: string) {
-  const abs = Math.abs(n) % 100;
-  const last = abs % 10;
-  if (abs > 10 && abs < 20) return many;
-  if (last > 1 && last < 5) return few;
-  if (last === 1) return one;
-  return many;
-}
-
-function getInitials(name: string) {
-  return name
-    .split(' ')
-    .map((w) => w[0])
-    .join('')
-    .slice(0, 2);
-}
 
 const SORT_OPTIONS: { value: ReviewSort; label: string }[] = [
   { value: 'newest', label: 'Сначала новые' },
@@ -114,7 +99,7 @@ export function ReviewsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <Link href="/dev-ui/profile" className={styles.backLink}>
+        <Link href={ROUTES.profile} className={styles.backLink}>
           <ArrowLeft size={16} />
           <span>Назад в профиль</span>
         </Link>

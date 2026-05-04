@@ -36,6 +36,7 @@ import { CategoryRail } from '../Catalog/components/CategoryRail';
 import { mockCatalogItems } from '../Catalog/mockCatalogItems';
 import type { CatalogUiItem } from '../Catalog/types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS, applyCatalogFilters } from '../Catalog/utils';
+import { ROUTES } from '@/ux/utils';
 import styles from './GuestExperience.module.scss';
 
 const GUEST_ITEM_LIMIT = 12;
@@ -215,7 +216,7 @@ export function GuestExperience() {
       <header className={styles.header}>
         <div className={styles.headerContent}>
           <div className={styles.headerLeft}>
-            <Link href="/dev-ui/guest" className={styles.brandBlock}>
+            <Link href={ROUTES.guest} className={styles.brandBlock}>
               <BrandIcon />
               <div className={styles.brandTextWrap}>
                 <strong>Арендай</strong>
