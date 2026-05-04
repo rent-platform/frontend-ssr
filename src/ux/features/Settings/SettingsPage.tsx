@@ -36,7 +36,7 @@ import {
   MOCK_SESSIONS,
   MOCK_PAYMENTS,
 } from './mockSettingsData';
-import { ROUTES } from '@/ux/utils';
+import { formatDate, ROUTES } from '@/ux/utils';
 import styles from './SettingsPage.module.scss';
 
 /* ─── Sidebar items ─── */
@@ -60,14 +60,6 @@ const NOTIF_META: Record<string, { label: string; hint: string }> = {
 };
 
 /* ─── Helpers ─── */
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
-}
 
 function relativeTime(iso: string) {
   const diff = Date.now() - new Date(iso).getTime();

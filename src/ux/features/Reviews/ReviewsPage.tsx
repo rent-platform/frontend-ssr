@@ -25,18 +25,8 @@ import {
   MOCK_REVIEWS_GIVEN,
   MOCK_RATING_BREAKDOWN,
 } from './mockReviewsData';
-import { pluralize, getInitials, ROUTES } from '@/ux/utils';
+import { pluralize, getInitials, formatDate, ROUTES } from '@/ux/utils';
 import styles from './ReviewsPage.module.scss';
-
-/* ─── Helpers ─── */
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-}
 
 
 const SORT_OPTIONS: { value: ReviewSort; label: string }[] = [
@@ -278,7 +268,7 @@ function ReviewCard({ review, isGiven }: { review: ProfileReview; isGiven: boole
                 />
               ))}
             </div>
-            <span className={styles.reviewDate}>{formatDate(review.created_at)}</span>
+            <span className={styles.reviewDate}>{formatDate(review.created_at, 'long')}</span>
           </div>
         </div>
       </div>
@@ -302,7 +292,7 @@ function ReviewCard({ review, isGiven }: { review: ProfileReview; isGiven: boole
           <div className={styles.replyHeader}>
             <Pencil size={12} />
             <span className={styles.replyLabel}>Ваш ответ</span>
-            <span className={styles.replyDate}>{formatDate(review.reply.created_at)}</span>
+            <span className={styles.replyDate}>{formatDate(review.reply.created_at, 'long')}</span>
           </div>
           <p className={styles.replyText}>{review.reply.text}</p>
         </div>

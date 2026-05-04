@@ -5,6 +5,7 @@ export {
   timeAgo,
   formatTime,
   formatDateRange,
+  formatDate,
   getInitials,
 } from './format';
 export { ROUTES } from './routes';

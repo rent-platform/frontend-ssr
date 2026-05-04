@@ -8,35 +8,15 @@ import {
   ChevronRight,
   Eye,
   FileText,
-  GripVertical,
   Plus,
-  Shield,
   Sparkles,
   Tag,
-  X,
 } from 'lucide-react';
-import type { ListingCondition, CreateListingFormData, ImagePreview } from './types';
+import type { CreateListingFormData, ImagePreview } from './types';
+import { StepPhotos, StepInfo, StepPricing, StepReview } from './components';
 import styles from './CreateListing.module.scss';
 
 /* ─── Constants ─── */
-const CONDITIONS: { value: ListingCondition; label: string; desc: string }[] = [
-  { value: 'new', label: 'Новый', desc: 'В оригинальной упаковке' },
-  { value: 'like_new', label: 'Как новый', desc: 'Без следов износа' },
-  { value: 'good', label: 'Хорошее', desc: 'Незначительные следы' },
-  { value: 'used', label: 'Б/у', desc: 'Видимые следы использования' },
-];
-
-const CATEGORIES = [
-  'Электроника',
-  'Фото и видео',
-  'Инструменты',
-  'Для дома',
-  'Спорт и отдых',
-  'Детские товары',
-  'Мероприятия',
-];
-
-
 const STEPS = [
   { id: 'photos', label: 'Фотографии', Icon: Camera },
   { id: 'info', label: 'Описание', Icon: FileText },
@@ -233,10 +213,25 @@ export function CreateListing() {
 
         {/* Step Content */}
         <div className={styles.card} key={step}>
-          {step === 0 && StepPhotos()}
-          {step === 1 && StepInfo()}
-          {step === 2 && StepPricing()}
-          {step === 3 && StepReview()}
+          {step === 0 && (
+            <StepPhotos
+              images={form.images}
+              dragging={dragging}
+              dragOverId={dragOverId}
+              fileInputRef={fileInputRef}
+              dragSourceId={dragSourceId}
+              maxImages={MAX_IMAGES}
+              onAddImages={addImages}
+              onRemoveImage={removeImage}
+              onReorderImages={reorderImages}
+              onSetDragging={setDragging}
+              onSetDragOverId={setDragOverId}
+              onDrop={handleDrop}
+            />
+          )}
+          {step === 1 && <StepInfo form={form} onPatch={patch} />}
+          {step === 2 && <StepPricing form={form} onPatch={patch} />}
+          {step === 3 && <StepReview form={form} />}
         </div>
 
         {/* Navigation */}
@@ -272,328 +267,6 @@ export function CreateListing() {
           )}
         </div>
       </div>
-    </div>
-  );
-
-  /* ═══ Step 0 — Фотографии ═══ */
-  function StepPhotos() {
-    return (
-      <>
-        <h2 className={styles.sectionTitle}>Фотографии</h2>
-        <p className={styles.sectionSubtitle}>
-          Добавьте до {MAX_IMAGES} фотографий. Первая станет обложкой объявления.
-        </p>
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          multiple
-          hidden
-          onChange={(e) => {
-            addImages(e.target.files);
-            e.target.value = '';
-          }}
-        />
-
-        {form.images.length === 0 ? (
-          <div
-            className={`${styles.uploadZone} ${dragging ? styles.uploadZoneDragging : ''}`}
-            onClick={() => fileInputRef.current?.click()}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragging(true);
-            }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={handleDrop}
-          >
-            <div className={styles.uploadIcon}>
-              <Camera size={24} />
-            </div>
-            <p className={styles.uploadText}>Нажмите или перетащите фото сюда</p>
-            <p className={styles.uploadHint}>JPG, PNG или WEBP · до 10 МБ</p>
-          </div>
-        ) : (
-          <div className={styles.imageGrid}>
-            {form.images.map((img, i) => (
-              <div
-                key={img.id}
-                className={`${styles.imageThumb} ${dragOverId === img.id ? styles.imageThumbDragOver : ''}`}
-                draggable
-                onDragStart={() => { dragSourceId.current = img.id; }}
-                onDragOver={(e) => { e.preventDefault(); setDragOverId(img.id); }}
-                onDragLeave={() => setDragOverId(null)}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  if (dragSourceId.current) reorderImages(dragSourceId.current, img.id);
-                  dragSourceId.current = null;
-                  setDragOverId(null);
-                }}
-                onDragEnd={() => { dragSourceId.current = null; setDragOverId(null); }}
-              >
-                <img src={img.url} alt={`Фото ${i + 1}`} />
-                <span className={styles.imageDragHandle}>
-                  <GripVertical size={14} />
-                </span>
-                {i === 0 && <span className={styles.imageMainBadge}>Обложка</span>}
-                <button
-                  type="button"
-                  className={styles.imageRemove}
-                  onClick={() => removeImage(img.id)}
-                >
-                  <X size={12} />
-                </button>
-              </div>
-            ))}
-            {form.images.length < MAX_IMAGES && (
-              <button
-                type="button"
-                className={styles.addMoreBtn}
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Plus size={20} />
-                <span>Ещё</span>
-              </button>
-            )}
-          </div>
-        )}
-      </>
-    );
-  }
-
-  /* ═══ Step 1 — Описание ═══ */
-  function StepInfo() {
-    return (
-      <>
-        <h2 className={styles.sectionTitle}>Описание вещи</h2>
-        <p className={styles.sectionSubtitle}>
-          Подробное описание помогает арендаторам быстрее найти вашу вещь.
-        </p>
-
-        <div className={styles.fieldGroup}>
-          <div className={styles.field}>
-            <label className={styles.fieldLabel}>Название</label>
-            <input
-              className={styles.input}
-              placeholder="Например: Canon EOS R5 с объективом 24-70mm"
-              value={form.title}
-              onChange={(e) => patch({ title: e.target.value })}
-            />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.fieldLabel}>Категория</label>
-            <select
-              className={styles.select}
-              value={form.category}
-              onChange={(e) => patch({ category: e.target.value })}
-            >
-              <option value="">Выберите категорию</option>
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.fieldLabel}>Состояние</label>
-            <div className={styles.conditionGrid}>
-              {CONDITIONS.map((c) => (
-                <div
-                  key={c.value}
-                  className={`${styles.conditionCard} ${
-                    form.condition === c.value ? styles.conditionCardActive : ''
-                  }`}
-                  onClick={() => patch({ condition: c.value })}
-                >
-                  <span className={styles.conditionLabel}>{c.label}</span>
-                  <span className={styles.conditionDesc}>{c.desc}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.fieldLabel}>Описание</label>
-            <textarea
-              className={styles.textarea}
-              placeholder="Расскажите о вещи: что входит в комплект, особенности, правила использования..."
-              value={form.description}
-              onChange={(e) => patch({ description: e.target.value })}
-              rows={5}
-            />
-          </div>
-
-        </div>
-      </>
-    );
-  }
-
-  /* ═══ Step 2 — Стоимость и условия ═══ */
-  function StepPricing() {
-    return (
-      <>
-        <h2 className={styles.sectionTitle}>Стоимость и условия</h2>
-        <p className={styles.sectionSubtitle}>
-          Установите цены и условия аренды. Конкурентная цена повышает число заявок.
-        </p>
-
-        <div className={styles.fieldGroup}>
-          {/* Prices */}
-          <div className={styles.fieldRow}>
-            <div className={styles.field}>
-              <label className={styles.fieldLabel}>Цена за сутки</label>
-              <div className={styles.inputWithPrefix}>
-                <span className={styles.inputPrefix}>₽</span>
-                <input
-                  className={`${styles.input} ${styles.inputPrefixed}`}
-                  type="number"
-                  placeholder="500"
-                  value={form.pricePerDay}
-                  onChange={(e) => patch({ pricePerDay: e.target.value })}
-                />
-              </div>
-            </div>
-            <div className={styles.field}>
-              <label className={styles.fieldLabel}>Цена за час</label>
-              <div className={styles.inputWithPrefix}>
-                <span className={styles.inputPrefix}>₽</span>
-                <input
-                  className={`${styles.input} ${styles.inputPrefixed}`}
-                  type="number"
-                  placeholder="100"
-                  value={form.pricePerHour}
-                  onChange={(e) => patch({ pricePerHour: e.target.value })}
-                />
-              </div>
-              <span className={styles.fieldHint}>Необязательно</span>
-            </div>
-          </div>
-
-          {/* Deposit toggle */}
-          <div
-            className={`${styles.toggleRow} ${form.noDeposit ? styles.toggleRowActive : ''}`}
-            onClick={() => patch({ noDeposit: !form.noDeposit, depositAmount: '' })}
-          >
-            <div className={styles.toggleInfo}>
-              <span className={styles.toggleLabel}>
-                <Shield size={14} />
-                Без залога
-              </span>
-              <span className={styles.toggleHint}>Повышает привлекательность объявления</span>
-            </div>
-            <button
-              type="button"
-              className={`${styles.toggle} ${form.noDeposit ? styles.toggleOn : ''}`}
-              onClick={(e) => { e.stopPropagation(); patch({ noDeposit: !form.noDeposit, depositAmount: '' }); }}
-            />
-          </div>
-
-          {!form.noDeposit && (
-            <div className={styles.field}>
-              <label className={styles.fieldLabel}>Сумма залога</label>
-              <div className={styles.inputWithPrefix}>
-                <span className={styles.inputPrefix}>₽</span>
-                <input
-                  className={`${styles.input} ${styles.inputPrefixed}`}
-                  type="number"
-                  placeholder="2000"
-                  value={form.depositAmount}
-                  onChange={(e) => patch({ depositAmount: e.target.value })}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Pickup location — maps to Item.pickup_location */}
-          <div className={styles.field}>
-            <label className={styles.fieldLabel}>Место выдачи</label>
-            <input
-              className={styles.input}
-              placeholder="Новосибирск, Центральный район"
-              value={form.pickupLocation}
-              onChange={(e) => patch({ pickupLocation: e.target.value })}
-            />
-            <span className={styles.fieldHint}>Город, район или адрес для самовывоза</span>
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  /* ═══ Step 3 — Обзор и публикация ═══ */
-  function StepReview() {
-    return (
-      <>
-        <h2 className={styles.sectionTitle}>Проверьте перед публикацией</h2>
-        <p className={styles.sectionSubtitle}>
-          Убедитесь, что всё заполнено верно. Вы сможете отредактировать объявление позже.
-        </p>
-
-        {/* Photos */}
-        {form.images.length > 0 && (
-          <div className={styles.reviewBlock}>
-            <h3 className={styles.reviewBlockTitle}>Фотографии</h3>
-            <div className={styles.reviewImages}>
-              {form.images.map((img, i) => (
-                <div key={img.id} className={styles.reviewImageThumb}>
-                  <img src={img.url} alt={`Фото ${i + 1}`} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Info */}
-        <div className={styles.reviewBlock}>
-          <h3 className={styles.reviewBlockTitle}>Описание</h3>
-          <ReviewRow label="Название" value={form.title} />
-          <ReviewRow label="Категория" value={form.category} />
-          <ReviewRow label="Состояние" value={CONDITIONS.find((c) => c.value === form.condition)?.label ?? form.condition} />
-        </div>
-
-        {/* Pricing */}
-        <div className={styles.reviewBlock}>
-          <h3 className={styles.reviewBlockTitle}>Стоимость</h3>
-          <ReviewRow
-            label="Цена за сутки"
-            value={form.pricePerDay ? `${form.pricePerDay} ₽` : undefined}
-          />
-          {form.pricePerHour && (
-            <ReviewRow label="Цена за час" value={`${form.pricePerHour} ₽`} />
-          )}
-          <ReviewRow
-            label="Залог"
-            value={
-              form.noDeposit
-                ? 'Без залога'
-                : form.depositAmount
-                  ? `${form.depositAmount} ₽`
-                  : undefined
-            }
-          />
-        </div>
-
-        {/* Location */}
-        {form.pickupLocation && (
-          <div className={styles.reviewBlock}>
-            <h3 className={styles.reviewBlockTitle}>Место выдачи</h3>
-            <ReviewRow label="Адрес" value={form.pickupLocation} />
-          </div>
-        )}
-      </>
-    );
-  }
-}
-
-/* ─── Tiny helper ─── */
-function ReviewRow({ label, value }: { label: string; value?: string }) {
-  return (
-    <div className={styles.reviewRow}>
-      <span className={styles.reviewLabel}>{label}</span>
-      <span className={styles.reviewValue}>{value || '—'}</span>
     </div>
   );
 }

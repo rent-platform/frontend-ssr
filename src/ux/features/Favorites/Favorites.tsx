@@ -12,7 +12,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import { getNumericPrice, ROUTES } from '@/ux/utils';
+import { getNumericPrice, pluralize, ROUTES } from '@/ux/utils';
 import { CatalogCard } from '../Catalog/components/CatalogCard';
 import { CatalogHeader } from '../Catalog/components/CatalogHeader';
 import { ProductDetail } from '../Catalog/components/ProductDetail';
@@ -31,15 +31,6 @@ const SORT_LABELS: Record<SortOption, string> = {
 };
 
 const EASE = [0.23, 1, 0.32, 1] as const;
-
-/* ─── Helpers ─── */
-function favoritesCountLabel(n: number): string {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod10 === 1 && mod100 !== 11) return 'вещь';
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'вещи';
-  return 'вещей';
-}
 
 /* ═══ Main component ═══ */
 export function Favorites() {
@@ -165,7 +156,7 @@ export function Favorites() {
               <p className={styles.subtitle}>
                 {isEmpty
                   ? 'Здесь будут ваши сохранённые вещи'
-                  : `${favoriteIds.size} ${favoritesCountLabel(favoriteIds.size)} сохранено`}
+                  : `${favoriteIds.size} ${pluralize(favoriteIds.size, 'вещь', 'вещи', 'вещей')} сохранено`}
               </p>
             </div>
           </div>

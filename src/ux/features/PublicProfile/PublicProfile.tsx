@@ -31,7 +31,7 @@ import { CatalogCard } from '../Catalog/components/CatalogCard';
 import type { CatalogUiItem } from '../Catalog/types';
 import { MOCK_PUBLIC_USER, MOCK_PUBLIC_LISTINGS, MOCK_PUBLIC_REVIEWS } from './mockPublicProfileData';
 import type { TrustLevel, PublicListing, PublicUser } from './types';
-import { pluralize, ROUTES } from '@/ux/utils';
+import { pluralize, formatDate, ROUTES } from '@/ux/utils';
 import styles from './PublicProfile.module.scss';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
@@ -61,9 +61,6 @@ function publicListingToCatalogItem(listing: PublicListing, user: PublicUser): C
   } as CatalogUiItem;
 }
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
-}
 
 function formatMemberSince(iso: string) {
   return new Date(iso).toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });

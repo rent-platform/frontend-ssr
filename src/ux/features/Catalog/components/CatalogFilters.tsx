@@ -18,7 +18,7 @@ import {
   Zap,
   type LucideIcon,
 } from 'lucide-react';
-import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { CatalogFilterState } from '../types';
 import {
   CATEGORY_OPTIONS,
@@ -26,7 +26,8 @@ import {
   QUICK_FILTER_OPTIONS,
   getAnnouncementsLabel,
 } from '../utils';
-import { RUSSIAN_CITY_OPTIONS } from '../russianCities';
+import { pluralize } from '@/ux/utils';
+import type { RussianCityOption } from '../russianCities';
 import { GlassSelect, type GlassSelectOption } from './GlassSelect';
 import styles from './CatalogFilters.module.scss';
 
@@ -60,18 +61,10 @@ const QUICK_FILTER_META: Record<
 
 const categoryOptions: GlassSelectOption[] = CATEGORY_OPTIONS.map((o) => ({ value: o, label: o }));
 
-const cityOptions: GlassSelectOption[] = [
-  { value: 'Все города', label: 'Все города России', description: 'Без ограничения по городу', searchText: 'все города России' },
-  ...RUSSIAN_CITY_OPTIONS.map((c) => ({ value: c.value, label: c.value, description: c.region, searchText: c.searchText })),
-];
+const ALL_CITIES_OPTION: GlassSelectOption = { value: 'Все города', label: 'Все города России', description: 'Без ограничения по городу', searchText: 'все города России' };
 
 function normalizePriceValue(v: string) { return v.replace(/[^\d]/g, '').slice(0, 10); }
 function formatPriceDisplay(v: string): string { return v ? new Intl.NumberFormat('ru-RU').format(Number(v)) : ''; }
-function getFiltersLabel(count: number) {
-  if (count % 10 === 1 && count % 100 !== 11) return 'фильтр';
-  if ([2, 3, 4].includes(count % 10) && ![12, 13, 14].includes(count % 100)) return 'фильтра';
-  return 'фильтров';
-}
 
 function SectionLabel({ icon: Icon, children }: { icon: LucideIcon; children: React.ReactNode }) {
   return (
@@ -108,6 +101,19 @@ function ToggleSwitch({ checked, onChange: onToggle, label, hint }: { checked: b
 export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClose, onConfirm }: CatalogFiltersProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+
+  const [cities, setCities] = useState<RussianCityOption[]>([]);
+  useEffect(() => {
+    import('../russianCities').then((m) => setCities(m.RUSSIAN_CITY_OPTIONS));
+  }, []);
+
+  const cityOptions = useMemo<GlassSelectOption[]>(
+    () => [
+      ALL_CITIES_OPTION,
+      ...cities.map((c) => ({ value: c.value, label: c.value, description: c.region, searchText: c.searchText })),
+    ],
+    [cities],
+  );
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -182,7 +188,7 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
               <h3 id={titleId} className={styles.headerTitle}>Фильтры</h3>
               <p className={styles.headerMeta}>
                 {activeCount > 0
-                  ? `${activeCount} ${getFiltersLabel(activeCount)} активно`
+                  ? `${activeCount} ${pluralize(activeCount, 'фильтр', 'фильтра', 'фильтров')} активно`
                   : 'Уточните выдачу'}
               </p>
             </div>

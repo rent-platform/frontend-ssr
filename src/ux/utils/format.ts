@@ -48,6 +48,17 @@ export function formatDateRange(start: string, end: string): string {
 }
 
 /**
+ * Formats a date as '5 янв 2025' (short month) or '5 января 2025' (long month).
+ */
+export function formatDate(iso: string, monthFormat: 'short' | 'long' = 'short'): string {
+  return new Date(iso).toLocaleDateString('ru-RU', {
+    day: 'numeric',
+    month: monthFormat,
+    year: 'numeric',
+  });
+}
+
+/**
  * Extracts initials from a full name: 'Иван Петров' → 'ИП'
  */
 export function getInitials(name: string): string {

@@ -29,7 +29,7 @@ import { CatalogHeader } from '../Catalog/components/CatalogHeader';
 import { CatalogFooter } from '../Catalog/components/CatalogFooter';
 import { CatalogCard } from '../Catalog/components/CatalogCard';
 import type { CatalogUiItem } from '../Catalog/types';
-import { pluralize, ROUTES } from '@/ux/utils';
+import { pluralize, formatDate, ROUTES } from '@/ux/utils';
 import type { ItemStatus, DealStatus } from '@/business/types/entity';
 import type { ProfileTab, ProfileListing, ProfileBooking, BookingSide } from './types';
 import { MOCK_USER, MOCK_STATS, MOCK_LISTINGS, MOCK_BOOKINGS } from './mockProfileData';
@@ -91,9 +91,6 @@ function profileListingToCatalogItem(listing: ProfileListing): CatalogUiItem {
   } as CatalogUiItem;
 }
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
-}
 
 function formatShortDate(iso: string) {
   return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
