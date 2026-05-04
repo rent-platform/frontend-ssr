@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { requireRole } from "@/business/utils/auth";
-import { ROUTE_PATHS } from "@/business/utils";
+﻿import Link from "next/link";
+import { requireRole } from "@/business/auth";
+import { ROUTE_PATHS } from "@/business/shared";
 
 export default async function AdminPage() {
   const session = await requireRole("admin");
@@ -14,3 +14,4 @@ export default async function AdminPage() {
     </main>
   );
 }
+

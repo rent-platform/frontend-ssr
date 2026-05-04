@@ -1,13 +1,13 @@
-import Credentials from "next-auth/providers/credentials";
-import { loginSchema } from "@/business/utils";
+﻿import Credentials from "next-auth/providers/credentials";
+import { loginSchema } from "@/business/auth";
 import {
   findMockUserByPhone,
   generateMockAccessToken,
   validateMockPassword,
-} from "@/business/mocks/auth/mockUsers";
+} from "@/business/auth";
 import NextAuth from "next-auth";
 import type { User } from "next-auth";
-import { fetchApi } from "@/business/api/auth/nextAuthApi";
+import { fetchApi } from "@/business/auth";
 import { decodeJwt } from "jose";
 
 const SESSION_MAX_AGE = 30 * 24 * 60 * 60;

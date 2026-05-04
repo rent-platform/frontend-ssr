@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { SessionProvider } from "next-auth/react";
-import StoreProvider from "@/business/store/StoreProvider";
+import { StoreProvider } from "@/business/shared";
 
 // ── MSW ───────────────────────────────────────────────────────────────────────
 // Включается переменной окружения NEXT_PUBLIC_API_MOCKING=enabled
@@ -11,7 +11,7 @@ const isMockingEnabled = process.env.NEXT_PUBLIC_API_MOCKING === "enabled";
 
 async function enableMocking(): Promise<void> {
   if (!isMockingEnabled) return;
-  const { worker } = await import("@/business/mocks/msw/browser");
+  const { worker } = await import("@/business/shared/mocks");
   await worker.start({
     onUnhandledRequest: "bypass",
     serviceWorker: {

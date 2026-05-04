@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
-import { useSession } from "@/business/hooks";
-import { adsApi } from "@/business/api";
-import { store } from "@/business/store";
+import { useSession } from "@/business/auth";
+import { adsApi } from "@/business/ads";
+import { store } from "@/business/shared";
 import { useEffect } from "react";
 
 export default function HomePage() {

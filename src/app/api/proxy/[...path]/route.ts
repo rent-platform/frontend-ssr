@@ -20,7 +20,7 @@ const AUTH_SECRET = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
 // Адрес внешнего Java backend задается через server env.
 // NEXT_PUBLIC_API_URL оставлен как fallback для текущей конфигурации проекта.
 const BACKEND_API_URL =
-  process.env.JAVA_BACKEND_URL ?? process.env.NEXT_PUBLIC_API_URL;
+  process.env.BACKEND_API_URL ?? process.env.NEXT_PUBLIC_API_URL;
 
 // Ответ Java backend при обновлении accessToken.
 type RefreshResponse = {

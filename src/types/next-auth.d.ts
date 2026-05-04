@@ -1,4 +1,4 @@
-import type { UserRole } from "@/business/types/entity/user.types";
+﻿import type { UserRole } from "@/business/auth";
 import type { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
@@ -39,3 +39,4 @@ declare module "@auth/core/jwt" {
     refreshToken: string;
   }
 }
+

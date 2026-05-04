@@ -1,14 +1,14 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { registerApiSchema } from "@/business/utils";
+﻿import { type NextRequest, NextResponse } from "next/server";
+import { registerApiSchema } from "@/business/auth";
 import {
   findMockUserByPhone,
   addMockUser,
   type MockUser,
-} from "@/business/mocks/auth/mockUsers";
+} from "@/business/auth";
 
 export const runtime = "nodejs";
 
-// Имитация задержки сети
+// РРјРёС‚Р°С†РёСЏ Р·Р°РґРµСЂР¶РєРё СЃРµС‚Рё
 const MOCK_LATENCY_MS = 400;
 
 export async function POST(request: NextRequest) {
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { success: false, error: "Неверный формат запроса" },
+      { success: false, error: "РќРµРІРµСЂРЅС‹Р№ С„РѕСЂРјР°С‚ Р·Р°РїСЂРѕСЃР°" },
       { status: 400 },
     );
   }
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
   const parsed = registerApiSchema.safeParse(body);
   if (!parsed.success) {
     const message =
-      parsed.error.issues[0]?.message ?? "Неверные данные запроса";
+      parsed.error.issues[0]?.message ?? "РќРµРІРµСЂРЅС‹Рµ РґР°РЅРЅС‹Рµ Р·Р°РїСЂРѕСЃР°";
     return NextResponse.json(
       { success: false, error: message },
       { status: 400 },
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Пользователь с таким номером телефона уже существует.",
+        error: "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ С‚Р°РєРёРј РЅРѕРјРµСЂРѕРј С‚РµР»РµС„РѕРЅР° СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚.",
       },
       { status: 409 },
     );
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     const message =
       error instanceof Error
         ? error.message
-        : "Не удалось создать пользователя. Попробуйте позже.";
+        : "РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ. РџРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ.";
 
     return NextResponse.json(
       { success: false, error: message },
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // мок токены
+  // РјРѕРє С‚РѕРєРµРЅС‹
   const accessToken = `mock-access.${newUser.id}.${Date.now()}`;
   const refreshToken = `mock-refresh.${newUser.id}.${Date.now()}`;
 
@@ -86,8 +86,8 @@ export async function POST(request: NextRequest) {
       full_name: newUser.full_name,
       role: newUser.role,
     },
-    accessToken, // Будет храниться в памяти / RTK Query cache
-    expiresIn: 900, // 15 мин
+    accessToken, // Р‘СѓРґРµС‚ С…СЂР°РЅРёС‚СЊСЃСЏ РІ РїР°РјСЏС‚Рё / RTK Query cache
+    expiresIn: 900, // 15 РјРёРЅ
   };
 
   const response = NextResponse.json(responseBody, { status: 201 });
@@ -101,3 +101,5 @@ export async function POST(request: NextRequest) {
   });
   return response;
 }
+
+

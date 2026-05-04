@@ -1,9 +1,6 @@
-import { auth } from "@/config/auth";
-import {
-  getDefaultRouteForRole,
-  hasRequiredRole,
-} from "@/business/utils/auth/roles";
-import ROUTE_PATHS from "@/business/utils/routes/routes";
+﻿import { auth } from "@/config/auth";
+import { getDefaultRouteForRole, hasRequiredRole } from "@/business/auth";
+import { ROUTE_PATHS } from "@/business/shared";
 
 const PUBLIC_ROUTES = [
   ROUTE_PATHS.HOME, // Главная страница
