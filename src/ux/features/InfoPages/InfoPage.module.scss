@@ -507,63 +507,6 @@
   color: $color-text-secondary;
 }
 
-// ═══════ Blog Grid ═══════
-.blogGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: $space-6;
-}
-
-.blogCard {
-  border: 1px solid $color-border;
-  border-radius: $radius-xl;
-  overflow: hidden;
-  background: $color-surface;
-  transition: all 0.25s ease;
-  text-decoration: none;
-  color: inherit;
-
-  &:hover {
-    border-color: rgba($color-primary, 0.3);
-    box-shadow: $shadow-md;
-    transform: translateY(-2px);
-  }
-}
-
-.blogThumb {
-  height: 180px;
-  background: linear-gradient(135deg, $color-green-50, $color-surface-muted);
-  display: grid;
-  place-items: center;
-  color: $color-primary;
-  opacity: 0.6;
-}
-
-.blogBody {
-  padding: $space-5;
-}
-
-.blogDate {
-  font-size: $font-size-xs;
-  color: $color-text-secondary;
-  margin-bottom: $space-2;
-}
-
-.blogTitle {
-  font-family: $font-family-display;
-  font-size: $font-size-lg;
-  font-weight: 700;
-  color: $color-text;
-  margin: 0 0 $space-2;
-}
-
-.blogExcerpt {
-  font-size: $font-size-sm;
-  color: $color-text-secondary;
-  line-height: 1.6;
-  margin: 0;
-}
-
 // ═══════ Stats Row ═══════
 .statsRow {
   display: grid;
@@ -714,10 +657,6 @@
 
   .steps::before {
     display: none;
-  }
-
-  .blogGrid {
-    grid-template-columns: 1fr;
   }
 
   .statsRow {

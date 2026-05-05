@@ -290,7 +290,7 @@ export function GuestExperience() {
       </main>
 
       {/* ═══════ Footer ═══════ */}
-      <CatalogFooter />
+      <CatalogFooter catalogHref="#guest-catalog" />
 
       {/* ═══════ Mobile Floating CTA ═══════ */}
       <div className={`${styles.floatingBar} ${selectedItem ? styles.floatingBarHidden : ''}`}>

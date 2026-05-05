@@ -3,37 +3,43 @@ import { Mail, MapPin, Phone } from 'lucide-react';
 import { ROUTES } from '@/ux/utils';
 import styles from '../Catalog.module.scss';
 
-const FOOTER_NAV = {
-  platform: {
-    title: 'Платформа',
-    links: [
-      { label: 'Каталог', href: ROUTES.catalog },
-      { label: 'Как это работает', href: ROUTES.howItWorks },
-      { label: 'Цены и тарифы', href: ROUTES.pricing },
-      { label: 'Для бизнеса', href: ROUTES.business },
-    ],
-  },
-  support: {
-    title: 'Поддержка',
-    links: [
-      { label: 'Центр помощи', href: ROUTES.help },
-      { label: 'Безопасность', href: ROUTES.safety },
-      { label: 'Условия сервиса', href: ROUTES.terms },
-      { label: 'Политика конфиденциальности', href: ROUTES.privacy },
-    ],
-  },
-  company: {
-    title: 'Компания',
-    links: [
-      { label: 'О нас', href: ROUTES.about },
-      { label: 'Блог', href: ROUTES.blog },
-      { label: 'Карьера', href: ROUTES.careers },
-      { label: 'Контакты', href: ROUTES.contacts },
-    ],
-  },
-};
+interface CatalogFooterProps {
+  catalogHref?: string;
+}
 
-export function CatalogFooter() {
+function getFooterNav(catalogHref: string) {
+  return {
+    platform: {
+      title: 'Платформа',
+      links: [
+        { label: 'Каталог', href: catalogHref },
+        { label: 'Как это работает', href: ROUTES.howItWorks },
+        { label: 'Цены и тарифы', href: ROUTES.pricing },
+        { label: 'Для бизнеса', href: ROUTES.business },
+      ],
+    },
+    support: {
+      title: 'Поддержка',
+      links: [
+        { label: 'Центр помощи', href: ROUTES.help },
+        { label: 'Безопасность', href: ROUTES.safety },
+        { label: 'Условия сервиса', href: ROUTES.terms },
+        { label: 'Политика конфиденциальности', href: ROUTES.privacy },
+      ],
+    },
+    company: {
+      title: 'Компания',
+      links: [
+        { label: 'О нас', href: ROUTES.about },
+        { label: 'Карьера', href: ROUTES.careers },
+        { label: 'Контакты', href: ROUTES.contacts },
+      ],
+    },
+  };
+}
+
+export function CatalogFooter({ catalogHref = ROUTES.catalog }: CatalogFooterProps = {}) {
+  const FOOTER_NAV = getFooterNav(catalogHref);
   return (
     <footer className={styles.footer}>
       <div className={styles.footerInner}>

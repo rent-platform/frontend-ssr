@@ -29,7 +29,6 @@ export const ROUTES = {
   terms: '/terms',
   privacy: '/privacy',
   about: '/about',
-  blog: '/blog',
   careers: '/careers',
   contacts: '/contacts',
   cookies: '/cookies',
