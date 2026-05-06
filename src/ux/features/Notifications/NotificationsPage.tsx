@@ -107,6 +107,14 @@ const DEAL_STATUS_CLS: Record<string, string> = {
   REJECTED: styles.statusRejected,
 };
 
+const DEAL_STATUS_LABEL: Record<string, string> = {
+  PENDING: 'Новая',
+  CONFIRMED: 'Подтверждена',
+  ACTIVE: 'Активна',
+  COMPLETED: 'Завершена',
+  REJECTED: 'Отклонена',
+};
+
 /* ═══════════════════════════════════════════════════════════════════════════════
    NotificationsPage
    ═══════════════════════════════════════════════════════════════════════════════ */
@@ -373,7 +381,7 @@ function NotificationCard({
       <div className={styles.cardRight}>
         {ntf.meta?.dealStatus && (
           <span className={`${styles.statusBadge} ${DEAL_STATUS_CLS[ntf.meta.dealStatus] ?? ''}`}>
-            {ntf.meta.dealStatusLabel ?? ntf.meta.dealStatus}
+            {DEAL_STATUS_LABEL[ntf.meta.dealStatus] ?? ntf.meta.dealStatus}
           </span>
         )}
         {ntf.actionLabel && (

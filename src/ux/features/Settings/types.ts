@@ -1,4 +1,4 @@
-import type { NotificationType } from '@/business/notifications';
+import type { NotificationType } from '@/business/notifications/types';
 
 /* ═══ Settings Tabs ═══ */
 

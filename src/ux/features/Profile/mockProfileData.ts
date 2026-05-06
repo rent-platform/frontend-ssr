@@ -128,7 +128,6 @@ export const MOCK_BOOKINGS: ProfileBooking[] = [
     totalPrice: '14000',
     depositAmount: '5000',
     status: 'ACTIVE',
-    statusLabel: 'Активна',
     createdAt: '2025-04-16',
   },
   {
@@ -143,7 +142,6 @@ export const MOCK_BOOKINGS: ProfileBooking[] = [
     totalPrice: '6000',
     depositAmount: '3000',
     status: 'CONFIRMED',
-    statusLabel: 'Подтверждена',
     createdAt: '2025-04-19',
   },
   {
@@ -158,7 +156,6 @@ export const MOCK_BOOKINGS: ProfileBooking[] = [
     totalPrice: '4800',
     depositAmount: '10000',
     status: 'COMPLETED',
-    statusLabel: 'Завершена',
     createdAt: '2025-04-14',
   },
   {
@@ -173,7 +170,6 @@ export const MOCK_BOOKINGS: ProfileBooking[] = [
     totalPrice: '8000',
     depositAmount: '15000',
     status: 'COMPLETED',
-    statusLabel: 'Завершена',
     createdAt: '2025-04-09',
   },
   {
@@ -188,7 +184,6 @@ export const MOCK_BOOKINGS: ProfileBooking[] = [
     totalPrice: '3000',
     depositAmount: '8000',
     status: 'COMPLETED',
-    statusLabel: 'Завершена',
     createdAt: '2025-04-04',
   },
   {
@@ -203,7 +198,6 @@ export const MOCK_BOOKINGS: ProfileBooking[] = [
     totalPrice: '4000',
     depositAmount: '2000',
     status: 'COMPLETED',
-    statusLabel: 'Завершена',
     createdAt: '2025-03-27',
   },
   {
@@ -218,7 +212,6 @@ export const MOCK_BOOKINGS: ProfileBooking[] = [
     totalPrice: '7000',
     depositAmount: '5000',
     status: 'REJECTED',
-    statusLabel: 'Отклонена',
     createdAt: '2025-03-19',
   },
   {
@@ -233,7 +226,6 @@ export const MOCK_BOOKINGS: ProfileBooking[] = [
     totalPrice: '1800',
     depositAmount: '3000',
     status: 'ACTIVE',
-    statusLabel: 'Активна',
     createdAt: '2025-04-19',
   },
   {
@@ -248,7 +240,6 @@ export const MOCK_BOOKINGS: ProfileBooking[] = [
     totalPrice: '2400',
     depositAmount: '5000',
     status: 'COMPLETED',
-    statusLabel: 'Завершена',
     createdAt: '2025-04-11',
   },
   {
@@ -263,7 +254,6 @@ export const MOCK_BOOKINGS: ProfileBooking[] = [
     totalPrice: '5000',
     depositAmount: '8000',
     status: 'COMPLETED',
-    statusLabel: 'Завершена',
     createdAt: '2025-02-28',
   },
   {
@@ -278,7 +268,6 @@ export const MOCK_BOOKINGS: ProfileBooking[] = [
     totalPrice: '1200',
     depositAmount: '5000',
     status: 'CONFIRMED',
-    statusLabel: 'Подтверждена',
     createdAt: '2025-04-07',
   },
 ];

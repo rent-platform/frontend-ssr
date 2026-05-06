@@ -1,4 +1,5 @@
-import type { DealStatus } from '@/business/deals';
+import type { Chat, ChatMessage as BaseMessage } from '@/business/chat/types';
+import type { DealStatus } from '@/business/deals/types';
 
 /* ═══ Current user (stub) ═══ */
 
@@ -10,11 +11,7 @@ export type ChatListTab = 'all' | 'renting_out' | 'renting_in' | 'inquiries';
 
 /* ═══ Chat Preview (list sidebar) ═══ */
 
-export type ChatPreview = {
-  id: string;
-  itemId: string | null;
-  dealId: string | null;
-  createdAt: string;
+export type ChatPreview = Pick<Chat, 'id' | 'itemId' | 'dealId' | 'createdAt'> & {
   counterpartyId: string;
   counterpartyName: string;
   counterpartyAvatar: string | null;
@@ -31,7 +28,6 @@ export type ChatPreview = {
   itemImage: string | null;
   /** Deal context */
   dealStatus: DealStatus | null;
-  dealStatusLabel: string | null;
   dealPrice: string | null;
   dealDates: { start: string; end: string } | null;
   dealDeposit: string | null;
@@ -44,12 +40,7 @@ export type ChatPreview = {
 
 /* ═══ Chat Message (enriched for UI) ═══ */
 
-export type ChatMessage = {
-  id: string;
-  chatId: string;
-  senderId: string;
-  text: string;
-  createdAt: string;
+export type ChatMessage = Pick<BaseMessage, 'id' | 'chatId' | 'senderId' | 'text' | 'createdAt'> & {
   isOwn: boolean;
   readAt: string | null;
   /** Optional image attachment */

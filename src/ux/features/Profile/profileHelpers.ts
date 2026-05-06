@@ -1,5 +1,5 @@
-import type { ItemStatus } from '@/business/ads';
-import type { DealStatus } from '@/business/deals';
+import type { ItemStatus } from '@/business/ads/types';
+import type { DealStatus } from '@/business/deals/types';
 import type { CatalogUiItem } from '../Catalog';
 import type { ProfileListing } from './types';
 import { MOCK_USER } from './mockProfileData';
@@ -10,13 +10,13 @@ export const EASE = [0.23, 1, 0.32, 1] as const;
 export type ListingFilter = 'all' | ItemStatus;
 export type BookingFilter = 'all' | DealStatus;
 
-export const DEAL_STATUS_CLS: Record<DealStatus, string> = {
-  PENDING: styles.statusNew,
-  CONFIRMED: styles.statusConfirmed,
-  ACTIVE: styles.statusActive,
-  COMPLETED: styles.statusCompleted,
-  REJECTED: styles.statusRejected,
-  CANCELLED: styles.statusArchived,
+export const DEAL_STATUS_MAP: Record<DealStatus, { label: string; cls: string }> = {
+  PENDING:   { label: 'Ожидает',     cls: styles.statusNew },
+  CONFIRMED: { label: 'Подтверждена', cls: styles.statusConfirmed },
+  ACTIVE:    { label: 'Активна',     cls: styles.statusActive },
+  COMPLETED: { label: 'Завершена',   cls: styles.statusCompleted },
+  REJECTED:  { label: 'Отклонена',   cls: styles.statusRejected },
+  CANCELLED: { label: 'Отменена',    cls: styles.statusArchived },
 };
 
 export const LISTING_FILTERS: { value: ListingFilter; label: string; tip: string }[] = [
@@ -38,8 +38,6 @@ export const BOOKING_FILTERS: { value: BookingFilter; label: string; tip: string
 export function profileListingToCatalogItem(listing: ProfileListing): CatalogUiItem {
   return {
     id: listing.id,
-    ownerId: null,
-    categoryId: null,
     title: listing.title,
     coverImageUrl: listing.image ?? '',
     images: listing.image ? [listing.image] : [],
@@ -56,9 +54,6 @@ export function profileListingToCatalogItem(listing: ProfileListing): CatalogUiI
     ownerName: MOCK_USER.fullName,
     ownerAvatar: MOCK_USER.avatarUrl,
     ownerRating: MOCK_USER.rating,
-    ownerReviewCount: MOCK_USER.reviewCount,
-    itemRating: null,
-    itemReviewCount: null,
     quickFilters: [],
     featured: listing.bookingsCount > 10,
   } as CatalogUiItem;

@@ -1,5 +1,5 @@
-import type { ItemStatus } from '@/business/ads';
-import type { DealStatus } from '@/business/deals';
+import type { ItemStatus } from '@/business/ads/types';
+import type { DealStatus } from '@/business/deals/types';
 
 /* ═══ Profile overview ═══ */
 
@@ -57,7 +57,6 @@ export type ProfileBooking = {
   totalPrice: string;
   depositAmount: string;
   status: DealStatus;
-  statusLabel: string;
   createdAt: string;
 };
 
