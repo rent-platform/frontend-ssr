@@ -6,7 +6,11 @@ import type {
   AdsListResponseDto,
   FetchAdsArgs,
 } from "@/business/ads/types";
-import type { FavoriteMutationArgs, FavoriteResponseDto } from "../types";
+import type {
+  FavoriteMutationArgs,
+  FavoriteResponseDto,
+  FavoriteStatusResponseDto,
+} from "../types";
 
 const FAVORITES_LIST_TAG_ID = "LIST";
 
@@ -45,6 +49,29 @@ const patchAdsListFavoriteStatus = (
 
 export const favoritesApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
+    fetchFavoriteStatus: build.query<FavoriteStatusResponseDto, string>({
+      query: (itemId) => ({
+        url: `api/catalog/favorites/${itemId}/status`,
+      }),
+      providesTags: (_result, _error, itemId) => [
+        { type: "Favorites", id: itemId },
+      ],
+    }),
+
+    fetchMyFavorites: build.query<AdsListResponseDto, FetchAdsArgs | void>({
+      query: (args) => ({
+        url: "api/catalog/favorites/my",
+        params: args ?? undefined,
+      }),
+      providesTags: (result) => [
+        { type: "Favorites", id: FAVORITES_LIST_TAG_ID },
+        ...(result?.content.map((item) => ({
+          type: "Favorites" as const,
+          id: item.id,
+        })) ?? []),
+      ],
+    }),
+
     addFavorite: build.mutation<FavoriteResponseDto, FavoriteMutationArgs>({
       query: ({ itemId }) => ({
         url: `api/catalog/favorites/${itemId}`,
@@ -131,5 +158,9 @@ export const favoritesApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useAddFavoriteMutation, useRemoveFavoriteMutation } =
-  favoritesApi;
+export const {
+  useFetchFavoriteStatusQuery,
+  useFetchMyFavoritesQuery,
+  useAddFavoriteMutation,
+  useRemoveFavoriteMutation,
+} = favoritesApi;

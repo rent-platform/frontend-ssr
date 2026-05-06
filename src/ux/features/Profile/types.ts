@@ -1,12 +1,13 @@
-import type { ItemStatus, DealStatus } from '@/business/types/entity';
+import type { ItemStatus } from '@/business/ads';
+import type { DealStatus } from '@/business/deals';
 
 /* ═══ Profile overview ═══ */
 
 export type ProfileUser = {
   id: string;
-  full_name: string;
+  fullName: string;
   nickname: string | null;
-  avatar_url: string | null;
+  avatarUrl: string | null;
   bio: string | null;
   phone: string;
   email: string | null;
@@ -33,11 +34,11 @@ export type ProfileListing = {
   title: string;
   image: string | null;
   category: string;
-  price_per_day: string | null;
+  pricePerDay: string | null;
   status: ItemStatus;
-  views_count: number;
+  viewsCount: number;
   bookingsCount: number;
-  created_at: string;
+  createdAt: string;
 };
 
 /* ═══ Booking History ═══ */
@@ -51,12 +52,13 @@ export type ProfileBooking = {
   counterpartyName: string;
   counterpartyAvatar: string | null;
   side: BookingSide;
-  start_date: string;
-  end_date: string;
-  total_price: string;
-  deposit_amount: string;
+  startDate: string;
+  endDate: string;
+  totalPrice: string;
+  depositAmount: string;
   status: DealStatus;
-  created_at: string;
+  statusLabel: string;
+  createdAt: string;
 };
 
 /* ═══ Tabs ═══ */

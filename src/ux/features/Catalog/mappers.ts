@@ -1,12 +1,8 @@
-import type { CatalogItemCardVM } from '@/business/types';
+import type { CatalogItemCardVM } from '@/business/ads';
 import type { CatalogUiItem } from './types';
 
 /**
- * Maps backend CatalogItemCardVM to frontend CatalogUiItem.
- *
- * Fields not available in the VM (owner info, images array, category name)
- * are filled with safe defaults. When the backend extends the VM,
- * update this mapper accordingly.
+ * Adds optional UI-only fields on top of the business CatalogItemCardVM.
  */
 export function mapCardVMtoUiItem(
   vm: CatalogItemCardVM,
@@ -14,11 +10,11 @@ export function mapCardVMtoUiItem(
 ): CatalogUiItem {
   return {
     ...vm,
-    category: extra?.category ?? '',
-    ownerName: extra?.ownerName ?? '',
-    ownerAvatar: extra?.ownerAvatar ?? null,
-    ownerRating: extra?.ownerRating,
-    ownerReviewCount: extra?.ownerReviewCount,
+    category: extra?.category ?? vm.category,
+    ownerName: extra?.ownerName ?? vm.ownerName,
+    ownerAvatar: extra?.ownerAvatar ?? vm.ownerAvatar,
+    ownerRating: extra?.ownerRating ?? vm.ownerRating,
+    ownerReviewCount: extra?.ownerReviewCount ?? vm.ownerReviewCount,
     images: extra?.images ?? (vm.coverImageUrl ? [vm.coverImageUrl] : []),
   };
 }

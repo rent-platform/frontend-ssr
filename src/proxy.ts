@@ -9,6 +9,7 @@ const PUBLIC_ROUTES = [
   // Страницы входа и регистрации не требуют активной сессии.
   ROUTE_PATHS.LOGIN,
   ROUTE_PATHS.REGISTER,
+  ROUTE_PATHS.devUi,
 ];
 // Проверяет совпадение текущего URL с публичным маршрутом.
 // Для главной страницы разрешается только точное совпадение "/".
@@ -25,6 +26,7 @@ function isRouteMatch(pathname: string, route: string): boolean {
 export const proxy = auth((req) => {
   const { nextUrl } = req;
   const pathname = nextUrl.pathname;
+
   // req.auth заполняется Auth.js из зашифрованной JWT session cookie.
   const isLoggedIn = !!req.auth;
   // Роль хранится в session.user и используется для admin/moderator страниц.
@@ -60,6 +62,8 @@ export const proxy = auth((req) => {
     }
     return;
   }
+  const isDevRoute = pathname.startsWith(ROUTE_PATHS.devUi);
+  if (isDevRoute) return;
 
   // Все маршруты, которые не входят в PUBLIC_ROUTES, требуют авторизации.
   // Если сессии нет, пользователь перенаправляется на страницу входа.

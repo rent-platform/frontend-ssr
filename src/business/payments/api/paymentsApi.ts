@@ -1,18 +1,12 @@
 ﻿import { baseApi } from "@/business/shared";
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import type {
   CapturePaymentRequest,
   CreatePaymentRequest,
-  Deal as DealDto,
   Payment,
+  PaymentConfirmationResponse,
 } from "../types";
 
 const PAYMENTS_LIST_TAG_ID = "LIST";
-
-const createCustomError = (message: string): FetchBaseQueryError => ({
-  status: "CUSTOM_ERROR" as const,
-  error: message,
-});
 
 const getPaymentTags = (payment?: Payment) =>
   payment ? [{ type: "Payment" as const, id: payment.paymentId }] : [];
@@ -25,65 +19,14 @@ const getPaymentInvalidationTags = (paymentId?: string, dealId?: string) => [
 
 export const paymentsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    createPayment: build.mutation<Payment, CreatePaymentRequest>({
-      async queryFn({ dealId }, _api, _extraOptions, baseQuery) {
-        const dealResult = await baseQuery({
-          url: `api/deals/${dealId}`,
-        });
-
-        if ("error" in dealResult && dealResult.error) {
-          return { error: dealResult.error };
-        }
-
-        const deal = dealResult.data as DealDto;
-
-        if (deal.status !== "CONFIRMED") {
-          return {
-            error: createCustomError(
-              "Нельзя оплатить сделку, пока она не подтверждена",
-            ),
-          };
-        }
-
-        const existingPaymentResult = await baseQuery({
-          url: "payments",
-          params: { dealId },
-        });
-
-        if ("data" in existingPaymentResult && existingPaymentResult.data) {
-          const existingPayment = existingPaymentResult.data as Payment;
-
-          if (
-            existingPayment.status === "PENDING" ||
-            existingPayment.status === "AUTHORIZED" ||
-            existingPayment.status === "CAPTURED"
-          ) {
-            return {
-              error: createCustomError("Нельзя оплатить сделку дважды"),
-            };
-          }
-        }
-
-        if (
-          "error" in existingPaymentResult &&
-          existingPaymentResult.error &&
-          existingPaymentResult.error.status !== 404
-        ) {
-          return { error: existingPaymentResult.error };
-        }
-
-        const createPaymentResult = await baseQuery({
-          url: "payments",
-          method: "POST",
-          body: { dealId },
-        });
-
-        if ("error" in createPaymentResult && createPaymentResult.error) {
-          return { error: createPaymentResult.error };
-        }
-
-        return { data: createPaymentResult.data as Payment };
-      },
+    createPayment: build.mutation<
+      PaymentConfirmationResponse,
+      CreatePaymentRequest
+    >({
+      query: ({ dealId }) => ({
+        url: `api/deals/${dealId}/payment`,
+        method: "POST",
+      }),
       invalidatesTags: (result, _error, { dealId }) =>
         getPaymentInvalidationTags(result?.paymentId, dealId),
     }),

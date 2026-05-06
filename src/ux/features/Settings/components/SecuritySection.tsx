@@ -36,13 +36,13 @@ function SessionCard({ session }: { session: ActiveSession }) {
       </div>
       <div className={styles.sessionInfo}>
         <div className={styles.sessionNameRow}>
-          <span className={styles.sessionName}>{session.device_name}</span>
+          <span className={styles.sessionName}>{session.deviceName}</span>
           {session.isCurrent && <span className={styles.sessionCurrentBadge}>Текущая</span>}
         </div>
-        <span className={styles.sessionDevice}>{session.device_info}</span>
+        <span className={styles.sessionDevice}>{session.deviceInfo}</span>
       </div>
       <div className={styles.sessionRight}>
-        <span className={styles.sessionTime}>{relativeTime(session.last_active)}</span>
+        <span className={styles.sessionTime}>{relativeTime(session.lastActive)}</span>
         {!session.isCurrent && (
           <button type="button" className={`${styles.btnDanger} ${styles.btnSmall}`}>
             <LogOut size={12} />

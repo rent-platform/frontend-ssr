@@ -99,7 +99,7 @@ export function ProfileDashboard({
     return () => clearTimeout(t);
   }, [externalUser]);
 
-  const initials = user.full_name.split(' ').map((w) => w[0]).join('').slice(0, 2);
+  const initials = user.fullName.split(' ').map((w) => w[0]).join('').slice(0, 2);
   const profileCompletion = getProfileCompletion(user);
   const profileUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/dev-ui/user/${user.id}`
@@ -130,8 +130,8 @@ export function ProfileDashboard({
           <div className={styles.profileHeader}>
             <div className={styles.avatarWrap}>
               <div className={styles.avatarRing}>
-                {user.avatar_url ? (
-                  <img src={user.avatar_url} alt={user.full_name} className={styles.avatar} />
+                {user.avatarUrl ? (
+                  <img src={user.avatarUrl} alt={user.fullName} className={styles.avatar} />
                 ) : (
                   <div className={styles.avatarFallback}>{initials}</div>
                 )}
@@ -143,7 +143,7 @@ export function ProfileDashboard({
 
             <div className={styles.nameBlock}>
               <div className={styles.nameRow}>
-                <h1>{user.full_name}</h1>
+                <h1>{user.fullName}</h1>
                 <BadgeCheck size={18} className={styles.verifiedBadge} />
               </div>
               {user.nickname && <span className={styles.nickname}>@{user.nickname}</span>}

@@ -5,16 +5,16 @@ import { formatDateRange } from '@/ux/utils';
 import type { ChatPreview } from '../types';
 import styles from '../ChatPage.module.scss';
 
-const DEAL_STATUS_LABELS: Record<string, { label: string; cls: string }> = {
-  new: { label: 'Новая заявка', cls: styles.dealBadgeNew },
-  confirmed: { label: 'Подтверждена', cls: styles.dealBadgeConfirmed },
-  active: { label: 'Активна', cls: styles.dealBadgeActive },
-  completed: { label: 'Завершена', cls: styles.dealBadgeCompleted },
-  rejected: { label: 'Отклонена', cls: styles.dealBadgeRejected },
+const DEAL_STATUS_CLS: Record<string, string> = {
+  PENDING: styles.dealBadgeNew,
+  CONFIRMED: styles.dealBadgeConfirmed,
+  ACTIVE: styles.dealBadgeActive,
+  COMPLETED: styles.dealBadgeCompleted,
+  REJECTED: styles.dealBadgeRejected,
 };
 
 export function DealContextBar({ chat }: { chat: ChatPreview }) {
-  const badge = chat.dealStatus ? DEAL_STATUS_LABELS[chat.dealStatus] : null;
+  const badgeClass = chat.dealStatus ? DEAL_STATUS_CLS[chat.dealStatus] : null;
 
   return (
     <div className={styles.dealBar}>
@@ -36,8 +36,10 @@ export function DealContextBar({ chat }: { chat: ChatPreview }) {
           {chat.dealDeposit && <span>Залог {chat.dealDeposit} ₽</span>}
         </div>
       </div>
-      {badge && (
-        <span className={`${styles.dealBadge} ${badge.cls}`}>{badge.label}</span>
+      {chat.dealStatus && chat.dealStatusLabel && (
+        <span className={`${styles.dealBadge} ${badgeClass ?? ''}`}>
+          {chat.dealStatusLabel}
+        </span>
       )}
     </div>
   );

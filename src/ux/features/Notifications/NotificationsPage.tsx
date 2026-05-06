@@ -100,19 +100,11 @@ function getIconProps(type: NotificationType): { Icon: typeof Bell; cls: string 
 }
 
 const DEAL_STATUS_CLS: Record<string, string> = {
-  new: styles.statusNew,
-  confirmed: styles.statusConfirmed,
-  active: styles.statusActive,
-  completed: styles.statusCompleted,
-  rejected: styles.statusRejected,
-};
-
-const DEAL_STATUS_LABEL: Record<string, string> = {
-  new: 'Новая',
-  confirmed: 'Подтверждена',
-  active: 'Активна',
-  completed: 'Завершена',
-  rejected: 'Отклонена',
+  PENDING: styles.statusNew,
+  CONFIRMED: styles.statusConfirmed,
+  ACTIVE: styles.statusActive,
+  COMPLETED: styles.statusCompleted,
+  REJECTED: styles.statusRejected,
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -381,7 +373,7 @@ function NotificationCard({
       <div className={styles.cardRight}>
         {ntf.meta?.dealStatus && (
           <span className={`${styles.statusBadge} ${DEAL_STATUS_CLS[ntf.meta.dealStatus] ?? ''}`}>
-            {DEAL_STATUS_LABEL[ntf.meta.dealStatus] ?? ntf.meta.dealStatus}
+            {ntf.meta.dealStatusLabel ?? ntf.meta.dealStatus}
           </span>
         )}
         {ntf.actionLabel && (

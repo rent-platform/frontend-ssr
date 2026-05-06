@@ -1,4 +1,4 @@
-import type { NotificationType } from '@/business/types/entity';
+import type { NotificationType } from '@/business/notifications';
 
 /* ═══ Settings Tabs ═══ */
 
@@ -7,12 +7,12 @@ export type SettingsTab = 'profile' | 'security' | 'notifications' | 'payment' |
 /* ═══ Profile form ═══ */
 
 export type ProfileFormData = {
-  full_name: string;
+  fullName: string;
   nickname: string;
   email: string;
   phone: string;
   bio: string;
-  avatar_url: string | null;
+  avatarUrl: string | null;
 };
 
 /* ═══ Password form ═══ */
@@ -31,12 +31,12 @@ export type NotificationToggles = Record<NotificationType, boolean>;
 
 export type ActiveSession = {
   id: string;
-  device_info: string;
-  device_name: string;
+  deviceInfo: string;
+  deviceName: string;
   platform: 'desktop' | 'mobile' | 'tablet';
   isCurrent: boolean;
-  last_active: string;
-  created_at: string;
+  lastActive: string;
+  createdAt: string;
 };
 
 /* ═══ Payment method (view-only card) ═══ */
@@ -46,7 +46,7 @@ export type PaymentMethod = {
   type: 'card';
   last4: string;
   brand: string;
-  exp_month: number;
-  exp_year: number;
+  expMonth: number;
+  expYear: number;
   isDefault: boolean;
 };

@@ -6,12 +6,12 @@ import type {
 } from './types';
 
 export const MOCK_PROFILE: ProfileFormData = {
-  full_name: 'Владислав Петров',
+  fullName: 'Владислав Петров',
   nickname: 'vlad_rent',
   email: 'vlad@example.com',
   phone: '+7 (999) 123-45-67',
   bio: 'Сдаю фототехнику и электронику в Новосибирске. Быстрая выдача, всё проверено.',
-  avatar_url: null,
+  avatarUrl: null,
 };
 
 export const MOCK_NOTIFICATIONS: NotificationToggles = {
@@ -25,30 +25,30 @@ export const MOCK_NOTIFICATIONS: NotificationToggles = {
 export const MOCK_SESSIONS: ActiveSession[] = [
   {
     id: 's-001',
-    device_info: 'Chrome 124 · Windows 11',
-    device_name: 'Основной ПК',
+    deviceInfo: 'Chrome 124 · Windows 11',
+    deviceName: 'Основной ПК',
     platform: 'desktop',
     isCurrent: true,
-    last_active: '2025-04-22T12:00:00Z',
-    created_at: '2025-04-10T09:15:00Z',
+    lastActive: '2025-04-22T12:00:00Z',
+    createdAt: '2025-04-10T09:15:00Z',
   },
   {
     id: 's-002',
-    device_info: 'Safari · iPhone 15 Pro',
-    device_name: 'iPhone Влада',
+    deviceInfo: 'Safari · iPhone 15 Pro',
+    deviceName: 'iPhone Влада',
     platform: 'mobile',
     isCurrent: false,
-    last_active: '2025-04-21T18:30:00Z',
-    created_at: '2025-04-05T14:00:00Z',
+    lastActive: '2025-04-21T18:30:00Z',
+    createdAt: '2025-04-05T14:00:00Z',
   },
   {
     id: 's-003',
-    device_info: 'Firefox 125 · macOS Sonoma',
-    device_name: 'MacBook работа',
+    deviceInfo: 'Firefox 125 · macOS Sonoma',
+    deviceName: 'MacBook работа',
     platform: 'desktop',
     isCurrent: false,
-    last_active: '2025-04-19T10:00:00Z',
-    created_at: '2025-03-28T11:20:00Z',
+    lastActive: '2025-04-19T10:00:00Z',
+    createdAt: '2025-03-28T11:20:00Z',
   },
 ];
 
@@ -58,8 +58,8 @@ export const MOCK_PAYMENTS: PaymentMethod[] = [
     type: 'card',
     last4: '4242',
     brand: 'Visa',
-    exp_month: 12,
-    exp_year: 2026,
+    expMonth: 12,
+    expYear: 2026,
     isDefault: true,
   },
   {
@@ -67,8 +67,8 @@ export const MOCK_PAYMENTS: PaymentMethod[] = [
     type: 'card',
     last4: '8901',
     brand: 'Mastercard',
-    exp_month: 3,
-    exp_year: 2027,
+    expMonth: 3,
+    expYear: 2027,
     isDefault: false,
   },
 ];

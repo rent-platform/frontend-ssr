@@ -172,7 +172,7 @@ export const dealsApi = baseApi.injectEndpoints({
 
     startDeal: build.mutation<Deal, string>({
       query: (dealId) => ({
-        url: `${DEALS_URL}/${dealId}/start`,
+        url: `${DEALS_URL}/${dealId}/confirm-start`,
         method: "POST",
       }),
       invalidatesTags: (_result, _error, id) =>
@@ -181,7 +181,7 @@ export const dealsApi = baseApi.injectEndpoints({
 
     completeDeal: build.mutation<Deal, string>({
       query: (id) => ({
-        url: `${DEALS_URL}/${id}/complete`,
+        url: `${DEALS_URL}/${id}/confirm-complete`,
         method: "POST",
       }),
       invalidatesTags: (_result, _error, id) =>

@@ -28,3 +28,17 @@ export interface ReviewsPageResponseDto {
   numberOfElements: number;
   empty: boolean;
 }
+
+export interface UserRatingSummaryDTO {
+  overallRating: number;
+  totalReviews: number;
+  ownerRating: number;
+  ownerReviews: number;
+  renterRating: number;
+  renterReviews: number;
+}
+
+export interface ItemRatingSummaryDTO {
+  averageRating: number;
+  totalReviews: number;
+}

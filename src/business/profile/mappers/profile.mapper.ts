@@ -3,11 +3,11 @@
 export function mapProfileToVM(dto: ProfileResponseDto): ProfileVM {
   return {
     id: dto.id,
-    fullName: dto.full_name,
+    fullName: dto.fullName,
     phone: dto.phone,
     email: dto.email,
     nickname: dto.nickname,
-    avatarUrl: dto.avatar_url,
+    avatarUrl: dto.avatarUrl,
     bio: dto.bio,
     role: dto.role,
   };
@@ -17,22 +17,19 @@ export function mapSessionUserToProfileVM(user: {
   id: string;
   phone: string;
   role: string;
-  full_name?: string | null;
+  fullName?: string | null;
   nickname?: string | null;
-  avatar_url?: string | null;
+  avatarUrl?: string | null;
   email?: string | null;
 }): ProfileVM {
   return {
     id: user.id,
-    fullName: user.full_name ?? "",
+    fullName: user.fullName ?? "",
     phone: user.phone,
     email: user.email ?? null,
     nickname: user.nickname ?? null,
-    avatarUrl: user.avatar_url ?? null,
+    avatarUrl: user.avatarUrl ?? null,
     bio: null,
     role: user.role as ProfileVM["role"], // пока так
   };
 }
-
-
-

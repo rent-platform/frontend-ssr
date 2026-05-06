@@ -2,9 +2,9 @@ export type TrustLevel = 'new' | 'verified' | 'experienced' | 'super';
 
 export type PublicUser = {
   id: string;
-  full_name: string;
+  fullName: string;
   nickname: string | null;
-  avatar_url: string | null;
+  avatarUrl: string | null;
   bio: string | null;
   rating: number;
   reviewCount: number;

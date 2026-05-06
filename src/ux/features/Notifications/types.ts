@@ -1,4 +1,4 @@
-import type { DealStatus } from '@/business/types/entity';
+import type { DealStatus } from '@/business/deals';
 
 /* ─── Notification categories ─── */
 
@@ -49,6 +49,7 @@ export interface NotificationItem {
     counterpartyName?: string;
     counterpartyAvatar?: string;
     dealStatus?: DealStatus;
+    dealStatusLabel?: string;
     amount?: number;
     currency?: string;
     rating?: number;

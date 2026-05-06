@@ -1,13 +1,8 @@
-﻿import "server-only";
-
-import { cache } from "react";
+﻿import { cache } from "react";
 import { redirect } from "next/navigation";
 import type { Session } from "next-auth";
 import type { UserRole } from "../types";
-import {
-  getDefaultRouteForRole,
-  hasRequiredRole,
-} from "./roles";
+import { getDefaultRouteForRole, hasRequiredRole } from "./roles";
 import { ROUTE_PATHS } from "@/business/shared";
 import { auth } from "@/config/auth";
 
@@ -33,7 +28,3 @@ export async function requireRole(requiredRole: UserRole): Promise<Session> {
 
   return session;
 }
-
-
-
-

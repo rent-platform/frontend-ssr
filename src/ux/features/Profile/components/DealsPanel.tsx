@@ -6,7 +6,7 @@ import { Calendar, Camera, Shield, ShoppingBag, Upload, User } from 'lucide-reac
 import { pluralize } from '@/ux/utils';
 import type { ProfileBooking, BookingSide } from '../types';
 import { MOCK_BOOKINGS } from '../mockProfileData';
-import { BOOKING_FILTERS, DEAL_STATUS_MAP, EASE, formatShortDate } from '../profileHelpers';
+import { BOOKING_FILTERS, DEAL_STATUS_CLS, EASE, formatShortDate } from '../profileHelpers';
 import type { BookingFilter } from '../profileHelpers';
 import styles from '../ProfileDashboard.module.scss';
 
@@ -21,13 +21,13 @@ function EmptyState({ icon, title, text }: { icon: React.ReactNode; title: strin
 }
 
 function BookingRow({ booking, counterLabel }: { booking: ProfileBooking; counterLabel: string }) {
-  const st = DEAL_STATUS_MAP[booking.status];
+  const statusClass = DEAL_STATUS_CLS[booking.status];
 
   return (
     <div className={styles.bookingCard}>
       <div className={styles.bookingImageArea}>
         <div className={styles.bookingBadgeRow}>
-          <span className={`${styles.statusBadge} ${st.cls}`}>{st.label}</span>
+          <span className={`${styles.statusBadge} ${statusClass}`}>{booking.statusLabel}</span>
         </div>
         {booking.itemImage ? (
           <img src={booking.itemImage} alt={booking.itemTitle} className={styles.bookingImg} />
@@ -43,20 +43,20 @@ function BookingRow({ booking, counterLabel }: { booking: ProfileBooking; counte
             <User size={14} /> {counterLabel}: {booking.counterpartyName}
           </span>
           <span className={styles.bookingMeta}>
-            <Calendar size={14} /> {formatShortDate(booking.start_date)} — {formatShortDate(booking.end_date)}
+            <Calendar size={14} /> {formatShortDate(booking.startDate)} — {formatShortDate(booking.endDate)}
           </span>
         </div>
 
         <div className={styles.bookingChips}>
           <span className={styles.bookingChip}>
             <Shield size={12} />
-            Залог {Number(booking.deposit_amount).toLocaleString('ru-RU')} ₽
+            Залог {Number(booking.depositAmount).toLocaleString('ru-RU')} ₽
           </span>
         </div>
 
         <div className={styles.bookingFooter}>
           <div className={styles.bookingPriceBlock}>
-            <strong>{Number(booking.total_price).toLocaleString('ru-RU')} ₽</strong>
+            <strong>{Number(booking.totalPrice).toLocaleString('ru-RU')} ₽</strong>
             <span>за период</span>
           </div>
         </div>

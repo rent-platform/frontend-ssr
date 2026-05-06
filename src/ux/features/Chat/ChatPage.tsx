@@ -68,8 +68,8 @@ export function ChatPage() {
 
     return list.sort((a, b) => {
       if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
-      const ta = a.lastMessage?.created_at ?? a.created_at;
-      const tb = b.lastMessage?.created_at ?? b.created_at;
+      const ta = a.lastMessage?.createdAt ?? a.createdAt;
+      const tb = b.lastMessage?.createdAt ?? b.createdAt;
       return new Date(tb).getTime() - new Date(ta).getTime();
     });
   }, [search, tab]);

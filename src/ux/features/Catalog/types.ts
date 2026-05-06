@@ -1,15 +1,6 @@
-import type { CatalogItemCardVM } from '@/business/types';
+import type { CatalogItemCardVM } from '@/business/ads';
 
 export type CatalogUiItem = CatalogItemCardVM & {
-  /* ── Derivable via JOINs (category_id → categories, owner_id → users, item_id → photos) ── */
-  category: string;
-  ownerName: string;
-  ownerAvatar: string | null;
-  images: string[];
-
-  /* ── Computed (AVG reviews.rating, COUNT reviews) ── */
-  ownerRating?: number;
-  ownerReviewCount?: number;
 
   /* ── No DB backing yet — kept optional for forward-compat ── */
   itemDescription?: string;

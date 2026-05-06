@@ -1,4 +1,4 @@
-import type { Review } from '@/business/types/entity';
+import type { ReviewDTO } from '@/business/reviews';
 
 /* ═══ Tabs ═══ */
 
@@ -26,7 +26,10 @@ export type RatingBreakdown = {
 
 /* ═══ Profile review (enriched for UI) ═══ */
 
-export type ProfileReview = Review & {
+export type ProfileReview = Pick<
+  ReviewDTO,
+  'id' | 'dealId' | 'reviewerId' | 'reviewedUserId' | 'rating' | 'text' | 'createdAt' | 'updatedAt'
+> & {
   authorName: string;
   authorAvatar: string | null;
   itemTitle: string;
@@ -36,6 +39,6 @@ export type ProfileReview = Review & {
   /** Optional owner reply */
   reply: {
     text: string;
-    created_at: string;
+    createdAt: string;
   } | null;
 };

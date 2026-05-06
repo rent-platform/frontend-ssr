@@ -1,4 +1,5 @@
-﻿import { useCallback, useEffect, useRef } from "react"; // React hooks для ref, эффекта и мемоизации callback.
+﻿"use client";
+import { useCallback, useEffect, useRef } from "react"; // React hooks для ref, эффекта и мемоизации callback.
 
 type Props = {
   // Параметры hook бесконечной прокрутки.
@@ -53,5 +54,3 @@ export const useInfiniteScroll = ({
   }, [loadMoreHandler, rootMargin, threshold]); // Пересоздаёт observer при изменении обработчика или настроек.
   return { observerRef }; // ref для элемента-наблюдателя.
 };
-
-

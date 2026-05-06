@@ -83,10 +83,61 @@ export type AvailabilityResponseDto = {
   isAvailable: boolean;
 };
 
+export type CreateCategoryRequestDto = {
+  categoryName: string;
+  slug: string;
+  parentId?: number | null;
+  sortOrder: number;
+  isActive: boolean;
+};
+
+export type UpdateCategoryRequestDto = Partial<CreateCategoryRequestDto>;
+
+export type AvailabilitySlotDto = {
+  date: string;
+  isAvailable: boolean;
+};
+
+export type AvailabilityUpdateRequestDto = {
+  slots: AvailabilitySlotDto[];
+};
+
+export type AvailabilityDeleteRequestDto = {
+  startDate: string;
+  endDate: string;
+};
+
 export type FetchAvailabilityArgs = {
   itemId: string;
   startDate: string;
   endDate: string;
+};
+
+export type ItemStatsResponseDto = {
+  itemId: string;
+  title: string;
+  viewsCount: number;
+  status: ItemStatus;
+};
+
+export type ItemDealInfoResponseDto = {
+  id: string;
+  ownerId: string;
+  status: ItemStatus;
+  pricePerDay?: number | null;
+  pricePerHour?: number | null;
+  depositAmount?: number | null;
+};
+
+export type UpdatePhotoOrderRequestDto = {
+  photos: Array<{
+    photoId: string;
+    sortOrder: number;
+  }>;
+};
+
+export type RejectItemRequestDto = {
+  moderationComment: string;
 };
 
 export interface AdsFilterParams {

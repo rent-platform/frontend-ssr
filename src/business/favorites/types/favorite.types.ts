@@ -12,3 +12,8 @@ export type FavoriteResponseDto = {
   isFavorite?: boolean;
   ad?: AdsItemResponseDto;
 };
+
+export type FavoriteStatusResponseDto = {
+  itemId?: FavoriteItemId;
+  isFavorite: boolean;
+};

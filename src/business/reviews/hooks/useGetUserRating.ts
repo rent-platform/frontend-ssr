@@ -1,12 +1,12 @@
 ﻿"use client";
 
-import { useFetchUserRatingQuery } from "../api";
+import { useFetchUserReviewSummaryQuery } from "../api";
 import { getApiError } from "@/business/shared";
 import { type ApiUiError } from "@/business/shared";
-import type { UserRating } from "../types";
+import type { UserRatingSummaryDTO } from "../types";
 
 export interface UseGetUserRatingResult {
-  rating: UserRating | null;
+  rating: UserRatingSummaryDTO | null;
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;
@@ -16,7 +16,7 @@ export interface UseGetUserRatingResult {
 
 export function useGetUserRating(userId: string): UseGetUserRatingResult {
   const { data, isLoading, isFetching, isError, error, refetch } =
-    useFetchUserRatingQuery(userId);
+    useFetchUserReviewSummaryQuery(userId);
 
   return {
     rating: data ?? null,

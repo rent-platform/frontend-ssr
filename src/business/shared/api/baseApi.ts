@@ -22,6 +22,7 @@ export const baseApi = createApi({
     "Payment",
     "Chats",
     "ChatMessages",
+    "Complaints",
   ],
   refetchOnReconnect: true, // Повторная загрузка данных при восстановлении соединения.
   endpoints: () => ({}),

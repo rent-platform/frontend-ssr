@@ -17,7 +17,7 @@ function PaymentCard({ method }: { method: PaymentMethod }) {
           {method.isDefault && <span className={styles.paymentDefaultBadge}>Основная</span>}
         </div>
         <span className={styles.paymentExpiry}>
-          Действует до {String(method.exp_month).padStart(2, '0')}/{method.exp_year}
+          Действует до {String(method.expMonth).padStart(2, '0')}/{method.expYear}
         </span>
       </div>
       <div className={styles.paymentRight}>

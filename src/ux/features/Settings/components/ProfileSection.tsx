@@ -12,7 +12,7 @@ export function ProfileSection() {
   const set = <K extends keyof ProfileFormData>(key: K, value: ProfileFormData[K]) =>
     setForm((p) => ({ ...p, [key]: value }));
 
-  const initials = form.full_name
+  const initials = form.fullName
     .split(' ')
     .map((w) => w[0])
     .join('')
@@ -25,8 +25,8 @@ export function ProfileSection() {
 
       {/* Avatar */}
       <div className={styles.avatarUpload}>
-        {form.avatar_url ? (
-          <img src={form.avatar_url} alt="" className={styles.avatarPreviewImg} />
+        {form.avatarUrl ? (
+          <img src={form.avatarUrl} alt="" className={styles.avatarPreviewImg} />
         ) : (
           <div className={styles.avatarPreview}>{initials}</div>
         )}
@@ -38,7 +38,7 @@ export function ProfileSection() {
               <Camera size={14} />
               <span>Загрузить</span>
             </button>
-            {form.avatar_url && (
+            {form.avatarUrl && (
               <button type="button" className={`${styles.btnDanger} ${styles.btnSmall}`}>
                 <Trash2 size={14} />
                 <span>Удалить</span>
@@ -54,8 +54,8 @@ export function ProfileSection() {
           <label className={styles.formLabel}>Имя и фамилия</label>
           <input
             className={styles.formInput}
-            value={form.full_name}
-            onChange={(e) => set('full_name', e.target.value)}
+            value={form.fullName}
+            onChange={(e) => set('fullName', e.target.value)}
             placeholder="Ваше имя"
           />
         </div>

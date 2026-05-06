@@ -2,7 +2,10 @@
 
 export type CatalogItemBaseVM = {
   id: string;
+  ownerId: string | null;
   title: string;
+  category: string;
+  categoryId: number | null;
   pricePerDay: string | null;
   pricePerHour: string | null;
   depositAmount: string;
@@ -16,11 +19,24 @@ export type CatalogItemBaseVM = {
 
 export type CatalogItemCardVM = CatalogItemBaseVM & {
   coverImageUrl: string | null;
+  images: string[];
+  ownerName: string;
+  ownerAvatar: string | null;
+  ownerRating: number | null;
+  ownerReviewCount: number | null;
+  itemRating: number | null;
+  itemReviewCount: number | null;
 };
 
 export type CatalogItemDetailsVM = CatalogItemBaseVM & {
   description: string | null;
   photos: string[];
+  ownerName: string;
+  ownerAvatar: string | null;
+  ownerRating: number | null;
+  ownerReviewCount: number | null;
+  itemRating: number | null;
+  itemReviewCount: number | null;
 };
 
 export type CatalogListVM = {

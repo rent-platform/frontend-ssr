@@ -2,9 +2,8 @@
 
 import { useSession } from "@/business/auth";
 import {
-  useGetProfileQuery,
+  useGetCurrentProfileQuery,
   useUpdateUserInfoMutation,
-  useUploadAvatarMutation,
 } from "../api";
 import { mapProfileToVM, mapSessionUserToProfileVM } from "../mappers";
 import { getApiError } from "@/business/shared";
@@ -17,11 +16,8 @@ export interface UseProfileResult {
   isError: boolean;
   error: ApiUiError | null;
   isUpdating: boolean;
-  isUploadingAvatar: boolean;
   updateError: ApiUiError | null;
-  uploadError: ApiUiError | null;
   updateProfile: (data: ProfileUpdateDto) => void;
-  uploadAvatar: (file: File) => void;
 }
 
 export function useProfile(): UseProfileResult {
@@ -29,16 +25,12 @@ export function useProfile(): UseProfileResult {
   const userId = user?.id;
 
   // TODO: убрать skip когда бекенд будет готов
-  const { data, isLoading, isError, error } = useGetProfileQuery(userId!, {
+  const { data, isLoading, isError, error } = useGetCurrentProfileQuery(undefined, {
     skip: !userId, // запрос падает
   });
 
   const [updateUserInfo, { isLoading: isUpdating, error: updateProfileError }] =
     useUpdateUserInfoMutation();
-  const [
-    uploadAvatarMutation,
-    { isLoading: isUploadingAvatar, error: uploadAvatarError },
-  ] = useUploadAvatarMutation();
 
   // пока бекенда нет data undefined, берём из сессии
   const profile: ProfileVM | null = data
@@ -53,14 +45,9 @@ export function useProfile(): UseProfileResult {
     isError,
     error: getApiError(error),
     isUpdating,
-    isUploadingAvatar,
     updateError: getApiError(updateProfileError),
-    uploadError: getApiError(uploadAvatarError),
     updateProfile: (data: ProfileUpdateDto) => {
       if (userId) updateUserInfo({ userId, data });
-    },
-    uploadAvatar: (file: File) => {
-      if (userId) uploadAvatarMutation({ userId, file });
     },
   };
 }

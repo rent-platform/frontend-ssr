@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import AppInput from "@/ux/components/AppInput";
-import { useRegisterForm } from "@/business/hooks";
+import { useRegisterForm } from "@/business/auth";
 import { ROUTES } from "@/ux/utils";
 import styles from "@/ux/layouts/AuthLayout/AuthForm.module.scss";
 

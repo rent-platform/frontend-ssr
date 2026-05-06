@@ -3,11 +3,11 @@
 import { useCreatePaymentMutation } from "../api";
 import { getApiError } from "@/business/shared";
 import { type ApiUiError } from "@/business/shared";
-import type { CreatePaymentRequest, Payment } from "../types";
+import type { CreatePaymentRequest, PaymentConfirmationResponse } from "../types";
 
 export interface UseCreatePaymentResult {
   createPayment: (payload: CreatePaymentRequest) => Promise<unknown>;
-  payment: Payment | null;
+  payment: PaymentConfirmationResponse | null;
   isCreating: boolean;
   isError: boolean;
   createError: ApiUiError | null;
