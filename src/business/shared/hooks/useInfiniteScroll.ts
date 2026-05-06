@@ -1,4 +1,6 @@
-﻿import { useCallback, useEffect, useRef } from "react"; // React hooks для ref, эффекта и мемоизации callback.
+﻿"use client";
+
+import { useCallback, useEffect, useRef } from "react"; // React hooks для ref, эффекта и мемоизации callback.
 
 type Props = {
   // Параметры hook бесконечной прокрутки.

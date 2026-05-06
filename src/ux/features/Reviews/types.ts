@@ -1,5 +1,3 @@
-import type { Review } from '@/business/types/entity';
-
 /* ═══ Tabs ═══ */
 
 export type ReviewsTab = 'received' | 'given';
@@ -26,7 +24,15 @@ export type RatingBreakdown = {
 
 /* ═══ Profile review (enriched for UI) ═══ */
 
-export type ProfileReview = Review & {
+export type ProfileReview = {
+  id: string;
+  dealId: string;
+  fromUserId: string;
+  toUserId: string;
+  rating: 1 | 2 | 3 | 4 | 5;
+  text: string | null;
+  createdAt: string;
+  updatedAt: string;
   authorName: string;
   authorAvatar: string | null;
   itemTitle: string;
@@ -36,6 +42,6 @@ export type ProfileReview = Review & {
   /** Optional owner reply */
   reply: {
     text: string;
-    created_at: string;
+    createdAt: string;
   } | null;
 };

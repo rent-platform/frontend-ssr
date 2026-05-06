@@ -1,4 +1,4 @@
-import { getApiErrorMessage } from "@/business/shared";
+import { getApiErrorMessage } from "@/business/shared/utils";
 import type { AuthResponseDTO, RegisterRequestDTO, UserResponseDTO } from "../types";
 
 type FetchApiParams = {

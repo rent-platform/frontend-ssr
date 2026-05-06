@@ -43,20 +43,20 @@ function BookingRow({ booking, counterLabel }: { booking: ProfileBooking; counte
             <User size={14} /> {counterLabel}: {booking.counterpartyName}
           </span>
           <span className={styles.bookingMeta}>
-            <Calendar size={14} /> {formatShortDate(booking.start_date)} — {formatShortDate(booking.end_date)}
+            <Calendar size={14} /> {formatShortDate(booking.startDate)} — {formatShortDate(booking.endDate)}
           </span>
         </div>
 
         <div className={styles.bookingChips}>
           <span className={styles.bookingChip}>
             <Shield size={12} />
-            Залог {Number(booking.deposit_amount).toLocaleString('ru-RU')} ₽
+            Залог {Number(booking.depositAmount).toLocaleString('ru-RU')} ₽
           </span>
         </div>
 
         <div className={styles.bookingFooter}>
           <div className={styles.bookingPriceBlock}>
-            <strong>{Number(booking.total_price).toLocaleString('ru-RU')} ₽</strong>
+            <strong>{Number(booking.totalPrice).toLocaleString('ru-RU')} ₽</strong>
             <span>за период</span>
           </div>
         </div>

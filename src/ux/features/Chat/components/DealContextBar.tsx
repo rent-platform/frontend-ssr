@@ -6,11 +6,11 @@ import type { ChatPreview } from '../types';
 import styles from '../ChatPage.module.scss';
 
 const DEAL_STATUS_LABELS: Record<string, { label: string; cls: string }> = {
-  new: { label: 'Новая заявка', cls: styles.dealBadgeNew },
-  confirmed: { label: 'Подтверждена', cls: styles.dealBadgeConfirmed },
-  active: { label: 'Активна', cls: styles.dealBadgeActive },
-  completed: { label: 'Завершена', cls: styles.dealBadgeCompleted },
-  rejected: { label: 'Отклонена', cls: styles.dealBadgeRejected },
+  PENDING: { label: 'Новая заявка', cls: styles.dealBadgeNew },
+  CONFIRMED: { label: 'Подтверждена', cls: styles.dealBadgeConfirmed },
+  ACTIVE: { label: 'Активна', cls: styles.dealBadgeActive },
+  COMPLETED: { label: 'Завершена', cls: styles.dealBadgeCompleted },
+  REJECTED: { label: 'Отклонена', cls: styles.dealBadgeRejected },
 };
 
 export function DealContextBar({ chat }: { chat: ChatPreview }) {

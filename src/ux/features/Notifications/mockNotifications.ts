@@ -16,7 +16,7 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
     meta: {
       itemTitle: 'Canon EOS R5',
       counterpartyName: 'Мария Иванова',
-      dealStatus: 'new',
+      dealStatus: 'PENDING',
       amount: 4500,
       currency: '₽',
     },
@@ -35,7 +35,7 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
     meta: {
       itemTitle: 'DJI Mavic 3 Pro',
       counterpartyName: 'Алексей Петров',
-      dealStatus: 'confirmed',
+      dealStatus: 'CONFIRMED',
       amount: 3500,
       currency: '₽',
     },
@@ -53,7 +53,7 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
     meta: {
       itemTitle: 'PlayStation 5 + VR2',
       counterpartyName: 'Дмитрий Козлов',
-      dealStatus: 'active',
+      dealStatus: 'ACTIVE',
     },
   },
   {
@@ -70,7 +70,7 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
     meta: {
       itemTitle: 'Шуруповёрт Makita DDF484',
       counterpartyName: 'Ольга Смирнова',
-      dealStatus: 'active',
+      dealStatus: 'ACTIVE',
     },
   },
   {
@@ -87,7 +87,7 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
     meta: {
       itemTitle: 'Велосипед Trek Marlin 7',
       counterpartyName: 'Сергей Волков',
-      dealStatus: 'completed',
+      dealStatus: 'COMPLETED',
     },
   },
   {
@@ -103,7 +103,7 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
     meta: {
       itemTitle: 'Палатка MSR Hubba Hubba',
       counterpartyName: 'Елена Морозова',
-      dealStatus: 'rejected',
+      dealStatus: 'REJECTED',
     },
   },
   {
@@ -119,7 +119,7 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
     meta: {
       itemTitle: 'Проектор Epson EH-TW7100',
       counterpartyName: 'Николай Фёдоров',
-      dealStatus: 'rejected',
+      dealStatus: 'REJECTED',
     },
   },
 

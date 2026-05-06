@@ -46,13 +46,13 @@ function publicListingToCatalogItem(listing: PublicListing, user: PublicUser): C
     pricePerHour: null,
     depositAmount: '',
     pickupLocation: user.city,
-    status: 'active' as const,
+    status: 'ACTIVE' as const,
     isAvailable: listing.isAvailable,
     viewsCount: 0,
     createdAt: user.memberSince,
     nearestAvailableDate: null,
-    ownerName: user.full_name,
-    ownerAvatar: user.avatar_url,
+    ownerName: user.fullName,
+    ownerAvatar: user.avatarUrl,
     ownerRating: listing.rating,
     quickFilters: [],
   } as CatalogUiItem;
@@ -224,7 +224,7 @@ export function PublicProfile() {
     [reviews, showAllReviews],
   );
 
-  const initials = user.full_name
+  const initials = user.fullName
     .split(' ')
     .map((w) => w[0])
     .join('')
@@ -258,7 +258,7 @@ export function PublicProfile() {
           <span className={styles.breadcrumbSep}>/</span>
           <span className={styles.breadcrumbCurrent}>Профиль</span>
           <span className={styles.breadcrumbSep}>/</span>
-          <span className={styles.breadcrumbCurrent}>{user.full_name}</span>
+          <span className={styles.breadcrumbCurrent}>{user.fullName}</span>
         </div>
       </div>
 
@@ -274,8 +274,8 @@ export function PublicProfile() {
           >
             <div className={styles.avatarWrap}>
               <div className={styles.avatarRing}>
-                {user.avatar_url ? (
-                  <img src={user.avatar_url} alt={user.full_name} className={styles.avatarImg} />
+                {user.avatarUrl ? (
+                  <img src={user.avatarUrl} alt={user.fullName} className={styles.avatarImg} />
                 ) : (
                   <div className={styles.avatarFallback}>{initials}</div>
                 )}
@@ -284,7 +284,7 @@ export function PublicProfile() {
             </div>
 
             <div className={styles.userName}>
-              <h1>{user.full_name}</h1>
+              <h1>{user.fullName}</h1>
               {user.isVerified && <BadgeCheck size={18} className={styles.verifiedIcon} />}
             </div>
             {user.nickname && <span className={styles.userNickname}>@{user.nickname}</span>}

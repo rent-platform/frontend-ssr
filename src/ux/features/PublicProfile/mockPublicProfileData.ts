@@ -2,9 +2,9 @@ import type { PublicUser, PublicListing, PublicReview } from './types';
 
 export const MOCK_PUBLIC_USER: PublicUser = {
   id: 'u-042',
-  full_name: 'Алексей Иванов',
+  fullName: 'Алексей Иванов',
   nickname: 'alex_rent',
-  avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
+  avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
   bio: 'Сдаю технику, инструменты и спортивное оборудование в аренду по Новосибирску. Всё проверено перед каждой выдачей, поддерживаю идеальное состояние. Выдача и возврат — в день обращения. Есть доставка по городу.',
   rating: 4.9,
   reviewCount: 87,

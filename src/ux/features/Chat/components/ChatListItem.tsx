@@ -20,14 +20,14 @@ type ChatListItemProps = {
 
 export function ChatListItem({ chat, isActive, onClick }: ChatListItemProps) {
   const initials = getInitials(chat.counterpartyName);
-  const lastTime = chat.lastMessage ? timeAgo(chat.lastMessage.created_at) : '';
+  const lastTime = chat.lastMessage ? timeAgo(chat.lastMessage.createdAt) : '';
   const role = ROLE_LABELS[chat.myRole];
 
   let lastText: string;
   if (chat.isTyping) {
     lastText = 'печатает…';
   } else if (chat.lastMessage) {
-    lastText = (chat.lastMessage.sender_id === CURRENT_USER_ID ? 'Вы: ' : '') + chat.lastMessage.text;
+    lastText = (chat.lastMessage.senderId === CURRENT_USER_ID ? 'Вы: ' : '') + chat.lastMessage.text;
   } else {
     lastText = 'Нет сообщений';
   }

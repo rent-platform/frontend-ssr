@@ -1,4 +1,6 @@
-﻿import { useState, useEffect } from "react";
+﻿"use client";
+
+import { useState, useEffect } from "react";
 
 export function useDebouncedValue<T>(value: T, delay: number): T {
   // Состояние для хранения отложенного значения

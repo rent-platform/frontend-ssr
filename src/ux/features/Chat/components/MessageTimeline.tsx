@@ -71,7 +71,7 @@ export function TimelineItem({ entry }: { entry: TimelineEntry }) {
 
 function MessageBubble({ message }: { message: ChatMessage }) {
   const isOwn = message.isOwn;
-  const time = formatTime(message.created_at);
+  const time = formatTime(message.createdAt);
 
   return (
     <div className={`${styles.bubbleRow} ${isOwn ? styles.own : ''}`}>

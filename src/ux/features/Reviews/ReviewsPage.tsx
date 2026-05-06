@@ -89,10 +89,10 @@ export function ReviewsPage({
     const sorted = [...filtered];
     switch (sort) {
       case 'newest':
-        sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         break;
       case 'oldest':
-        sorted.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+        sorted.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
         break;
       case 'highest':
         sorted.sort((a, b) => b.rating - a.rating);
@@ -287,7 +287,7 @@ function ReviewCard({ review, isGiven }: { review: ProfileReview; isGiven: boole
                 />
               ))}
             </div>
-            <span className={styles.reviewDate}>{formatDate(review.created_at, 'long')}</span>
+            <span className={styles.reviewDate}>{formatDate(review.createdAt, 'long')}</span>
           </div>
         </div>
       </div>
@@ -311,7 +311,7 @@ function ReviewCard({ review, isGiven }: { review: ProfileReview; isGiven: boole
           <div className={styles.replyHeader}>
             <Pencil size={12} />
             <span className={styles.replyLabel}>Ваш ответ</span>
-            <span className={styles.replyDate}>{formatDate(review.reply.created_at, 'long')}</span>
+            <span className={styles.replyDate}>{formatDate(review.reply.createdAt, 'long')}</span>
           </div>
           <p className={styles.replyText}>{review.reply.text}</p>
         </div>

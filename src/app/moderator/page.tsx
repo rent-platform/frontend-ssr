@@ -1,6 +1,6 @@
 ﻿import Link from "next/link";
-import { requireRole } from "@/business/auth";
-import { ROUTE_PATHS } from "@/business/shared";
+import { requireRole } from "@/business/auth/utils/serverAuth";
+import { ROUTE_PATHS } from "@/business/shared/utils";
 
 export default async function ModeratorPage() {
   const session = await requireRole("moderator");
