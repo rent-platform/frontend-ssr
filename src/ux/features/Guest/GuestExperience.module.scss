@@ -974,139 +974,159 @@
   align-items: center;
   justify-content: center;
   padding: $space-4;
-  background: rgba(15, 23, 42, 0.65);
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
 }
 
 .modalContent {
   position: relative;
-  width: min(100%, 520px);
-  padding: $space-8;
-  border-radius: $radius-2xl;
+  width: min(100%, 400px);
+  padding: $space-10 $space-7 $space-7;
+  border-radius: 20px;
   background: #fff;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: $shadow-xl;
+  border: none;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.03);
   text-align: center;
-
-  h3 {
-    margin: $space-5 0 $space-3;
-    color: $color-text;
-    font-family: $font-family-display;
-    font-size: 22px;
-    font-weight: $font-weight-bold;
-    letter-spacing: -0.02em;
-  }
-
-  p {
-    margin: 0 0 $space-6;
-    color: $color-text-secondary;
-    font-size: $font-size-sm;
-    line-height: 1.7;
-  }
 }
 
 .modalClose {
   position: absolute;
-  top: $space-4;
-  right: $space-4;
-  width: 36px;
-  height: 36px;
+  top: 14px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
   display: grid;
   place-items: center;
-  border: 1px solid $color-border;
+  border: none;
   border-radius: $radius-full;
-  background: #fff;
+  background: transparent;
   color: $color-text-secondary;
   cursor: pointer;
-  transition: $transition-smooth;
+  transition: all 0.15s ease;
+  opacity: 0.5;
 
   &:hover {
-    color: $color-text;
+    opacity: 1;
     background: $color-surface-muted;
   }
 }
 
+.modalHeader {
+  margin-bottom: $space-7;
+
+  h3 {
+    margin: 0 0 $space-2;
+    color: $color-text;
+    font-family: $font-family-display;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+}
+
 .modalIcon {
-  width: 58px;
-  height: 58px;
+  width: 56px;
+  height: 56px;
   display: grid;
   place-items: center;
-  border-radius: $radius-2xl;
+  border-radius: 16px;
   background: rgba(34, 197, 94, 0.08);
   color: $color-primary;
-  margin: 0 auto;
+  margin: 0 auto $space-4;
 }
 
-.modalLimits {
-  display: grid;
-  gap: $space-2;
-  margin: $space-5 0 $space-6;
-
-  span {
-    display: flex;
-    align-items: center;
-    gap: $space-2;
-    color: $color-text;
-    font-size: $font-size-sm;
-    font-weight: $font-weight-600;
-  }
-
-  svg {
-    color: $color-primary;
-    flex-shrink: 0;
-  }
-}
-
-.modalButtons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: $space-3;
-  margin-bottom: 0;
-}
-
-.modalPrimary,
-.modalSecondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: $space-2;
-  min-height: 46px;
-  padding: 0 $space-4;
-  border-radius: $radius-full;
-  font-size: 14px;
-  font-weight: $font-weight-bold;
-  text-decoration: none;
-  transition: $transition-smooth;
+.modalSubtitle {
+  margin: 0;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  line-height: 1.5;
 }
 
 .modalPrimary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  width: 100%;
+  height: 48px;
+  border-radius: $radius-full;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
   color: #fff;
   background: $gradient-green;
-  box-shadow: $shadow-green-sm;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
+  transition: all 0.2s ease;
 
   &:hover {
-    box-shadow: $shadow-green-md;
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
     transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 4px rgba(34, 197, 94, 0.2);
+  }
+}
+
+.modalDivider {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  margin: $space-4 0;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: $color-border;
+  }
+
+  span {
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+    font-weight: 500;
   }
 }
 
 .modalSecondary {
-  color: $color-text;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+  border-radius: $radius-full;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  color: $color-text-secondary;
+  background: transparent;
   border: 1px solid $color-border;
-  background: #fff;
+  transition: all 0.15s ease;
 
   &:hover {
-    border-color: rgba(34, 197, 94, 0.3);
-    color: $color-primary;
-    background: rgba(34, 197, 94, 0.04);
+    color: $color-text;
+    border-color: $color-text-secondary;
+    background: $color-surface-muted;
   }
 }
 
-.modalFootnote {
-  margin: $space-5 0 0;
-  text-align: center;
+.modalTrust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: $space-5;
   color: $color-text-secondary;
-  font-size: $font-size-xs;
-  font-weight: $font-weight-medium;
+  font-size: 12px;
+
+  svg {
+    color: $color-primary;
+  }
 }
 
 // ═══════ How It Works ═══════
@@ -1852,8 +1872,7 @@
     border-radius: $radius-2xl;
   }
 
-  .promptButtons,
-  .modalButtons {
+  .promptButtons {
     grid-template-columns: 1fr;
     flex-direction: column;
   }
@@ -1864,13 +1883,11 @@
   }
 
   .promptPrimary,
-  .promptSecondary,
-  .modalPrimary,
-  .modalSecondary {
+  .promptSecondary {
     width: 100%;
   }
 
   .modalContent {
-    padding: $space-7 $space-5 $space-5;
+    padding: $space-8 $space-5 $space-5;
   }
 }

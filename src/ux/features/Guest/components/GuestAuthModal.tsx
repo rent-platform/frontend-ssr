@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Lock, LogIn, UserPlus, X } from 'lucide-react';
+import { ArrowRight, Shield, X, Zap } from 'lucide-react';
 import { ROUTES, useFocusTrap } from '@/ux/utils';
 import styles from '../GuestExperience.module.scss';
 
@@ -27,10 +27,10 @@ export function GuestAuthModal({ onClose }: GuestAuthModalProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="guest-auth-title"
-        initial={{ opacity: 0, y: 18, scale: 0.96 }}
+        initial={{ opacity: 0, y: 24, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 8, scale: 0.98 }}
-        transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+        exit={{ opacity: 0, y: 12, scale: 0.97 }}
+        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
         onClick={(event) => event.stopPropagation()}
       >
         <button
@@ -39,33 +39,36 @@ export function GuestAuthModal({ onClose }: GuestAuthModalProps) {
           onClick={onClose}
           aria-label="Закрыть окно"
         >
-          <X size={18} />
+          <X size={16} />
         </button>
 
-        <div className={styles.modalIcon}>
-          <Lock size={26} />
+        <div className={styles.modalHeader}>
+          <div className={styles.modalIcon}>
+            <Shield size={24} />
+          </div>
+          <h3 id="guest-auth-title">Создайте аккаунт</h3>
+          <p className={styles.modalSubtitle}>
+            Чтобы бронировать, писать владельцам и сохранять избранное
+          </p>
         </div>
 
-        <h3 id="guest-auth-title">Войдите, чтобы продолжить</h3>
-        <p>
-          Каталог доступен без регистрации. Для бронирования, контактов
-          владельца и чата нужен аккаунт — это бесплатно.
-        </p>
+        <Link href={ROUTES.register} className={styles.modalPrimary}>
+          Создать аккаунт
+          <ArrowRight size={18} />
+        </Link>
 
-        <div className={styles.modalButtons}>
-          <Link href={ROUTES.register} className={styles.modalPrimary}>
-            <UserPlus size={18} />
-            Создать аккаунт
-          </Link>
-          <Link href={ROUTES.login} className={styles.modalSecondary}>
-            <LogIn size={18} />
-            Войти
-          </Link>
+        <div className={styles.modalDivider}>
+          <span>или</span>
         </div>
 
-        <p className={styles.modalFootnote}>
-          Регистрация займёт меньше минуты
-        </p>
+        <Link href={ROUTES.login} className={styles.modalSecondary}>
+          У меня уже есть аккаунт
+        </Link>
+
+        <div className={styles.modalTrust}>
+          <Zap size={13} />
+          <span>Быстрая регистрация — меньше минуты</span>
+        </div>
       </motion.div>
     </motion.div>
   );
