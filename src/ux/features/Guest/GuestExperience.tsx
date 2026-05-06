@@ -237,7 +237,7 @@ export function GuestExperience() {
                   <div className={styles.resultsGrid}>
                     {filteredItems.map((item, index) => (
                       <div key={item.id} className={styles.cardWrapper}>
-                        <CatalogCard item={item} onOpen={openItem} index={index} />
+                        <CatalogCard item={item} onOpen={openItem} index={index} isGuest onFavoriteChange={() => openAuthModal()} />
                       </div>
                     ))}
                   </div>

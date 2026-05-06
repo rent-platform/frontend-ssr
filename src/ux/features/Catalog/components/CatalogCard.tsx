@@ -31,6 +31,7 @@ type CatalogCardProps = {
   index?: number;
   initialFavorite?: boolean;
   onFavoriteChange?: (id: string, value: boolean) => void;
+  isGuest?: boolean;
 };
 
 const highlightVisuals = {
@@ -136,6 +137,7 @@ export function CatalogCard({
   index = 0,
   initialFavorite = false,
   onFavoriteChange,
+  isGuest = false,
 }: CatalogCardProps) {
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
   const locationLabel = formatCatalogCardLocation(item);
@@ -160,7 +162,7 @@ export function CatalogCard({
           type="button"
           className={`${styles.cardFavorite} ${isFavorite ? styles.cardFavoriteActive : ''}`}
           aria-label={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
-          onClick={(e) => { e.stopPropagation(); const next = !isFavorite; setIsFavorite(next); onFavoriteChange?.(item.id, next); }}
+          onClick={(e) => { e.stopPropagation(); if (isGuest) { onFavoriteChange?.(item.id, true); return; } const next = !isFavorite; setIsFavorite(next); onFavoriteChange?.(item.id, next); }}
         >
           <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
         </button>

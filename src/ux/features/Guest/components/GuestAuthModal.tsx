@@ -2,9 +2,8 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Lock, LogIn, UserPlus, X } from 'lucide-react';
+import { Lock, LogIn, UserPlus, X } from 'lucide-react';
 import { ROUTES, useFocusTrap } from '@/ux/utils';
-import { GUEST_LIMITS } from '../guestConstants';
 import styles from '../GuestExperience.module.scss';
 
 type GuestAuthModalProps = {
@@ -52,15 +51,6 @@ export function GuestAuthModal({ onClose }: GuestAuthModalProps) {
           Каталог доступен без регистрации. Для бронирования, контактов
           владельца и чата нужен аккаунт — это бесплатно.
         </p>
-
-        <div className={styles.modalLimits}>
-          {GUEST_LIMITS.map((item) => (
-            <span key={item}>
-              <CheckCircle2 size={15} />
-              {item}
-            </span>
-          ))}
-        </div>
 
         <div className={styles.modalButtons}>
           <Link href={ROUTES.register} className={styles.modalPrimary}>

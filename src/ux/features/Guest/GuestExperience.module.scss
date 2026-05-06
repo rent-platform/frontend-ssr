@@ -985,10 +985,10 @@
   background: #fff;
   border: 1px solid rgba(226, 232, 240, 0.8);
   box-shadow: $shadow-xl;
-  text-align: left;
+  text-align: center;
 
   h3 {
-    margin: $space-4 0 $space-3;
+    margin: $space-5 0 $space-3;
     color: $color-text;
     font-family: $font-family-display;
     font-size: 22px;
@@ -997,7 +997,7 @@
   }
 
   p {
-    margin: 0;
+    margin: 0 0 $space-6;
     color: $color-text-secondary;
     font-size: $font-size-sm;
     line-height: 1.7;
@@ -1033,6 +1033,7 @@
   border-radius: $radius-2xl;
   background: rgba(34, 197, 94, 0.08);
   color: $color-primary;
+  margin: 0 auto;
 }
 
 .modalLimits {
@@ -1101,7 +1102,7 @@
 }
 
 .modalFootnote {
-  margin: $space-4 0 0;
+  margin: $space-5 0 0;
   text-align: center;
   color: $color-text-secondary;
   font-size: $font-size-xs;
