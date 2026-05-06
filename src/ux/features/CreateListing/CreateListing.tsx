@@ -12,8 +12,10 @@ import {
   Sparkles,
   Tag,
 } from 'lucide-react';
+import Link from 'next/link';
 import type { CreateListingFormData, ImagePreview } from './types';
 import { StepPhotos, StepInfo, StepPricing, StepReview } from './components';
+import { ROUTES } from '@/ux/utils';
 import styles from './CreateListing.module.scss';
 
 /* ─── Constants ─── */
@@ -191,6 +193,10 @@ export function CreateListing({
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>
+          <Link href={ROUTES.catalog} className={styles.backLink}>
+            <ChevronLeft size={18} />
+            Вернуться в каталог
+          </Link>
           <h1 className={styles.headerTitle}>Сдать в аренду</h1>
           <p className={styles.headerSubtitle}>
             Заполните информацию о вашей вещи — это займёт пару минут
