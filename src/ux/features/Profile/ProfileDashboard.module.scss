@@ -1,5 +1,6 @@
 @use 'sass:color';
 @use '../../styles/vars' as *;
+@use '../../styles/helpers/mixins' as *;
 /* ═══════════════════════════════════════════════════════════════════════════════
    Profile Dashboard — Sharing Service · Senior-level redesign
    ═══════════════════════════════════════════════════════════════════════════════ */
@@ -993,116 +994,9 @@
   font-weight: $font-weight-medium;
 }
 
-/* ═══ Share modal ═══ */
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(4px);
-  display: grid;
-  place-items: center;
-  padding: $space-4;
-}
-
-.modalContent {
-  background: #fff;
-  border-radius: $radius-2xl;
-  padding: $space-6;
-  width: 100%;
-  max-width: 440px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
-}
-
-.modalHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: $space-2;
-
-  h3 {
-    font-size: 17px;
-    font-weight: $font-weight-bold;
-    color: $color-text;
-    margin: 0;
-  }
-}
-
-.modalClose {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  background: transparent;
-  border: none;
-  border-radius: $radius-full;
-  cursor: pointer;
-  color: $color-text-secondary;
-  transition: $transition-base;
-
-  &:hover { background: $color-surface-muted; color: $color-text; }
-}
-
-.modalDesc {
-  font-size: 13px;
-  color: $color-text-secondary;
-  margin: 0 0 $space-4;
-}
-
-.modalCopyRow {
-  display: flex;
-  gap: $space-2;
-}
-
-.modalInput {
-  flex: 1;
-  min-width: 0;
-  padding: 10px 12px;
-  background: $color-surface-muted;
-  border: 1px solid $color-border;
-  border-radius: $radius-lg;
-  font-size: 13px;
-  font-family: $font-family-base;
-  color: $color-text;
-  outline: none;
-
-  &:focus { border-color: $color-primary; }
-}
-
-.modalCopyBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: $space-1;
-  padding: 10px 16px;
-  background: $color-primary;
-  color: #fff;
-  border: none;
-  border-radius: $radius-lg;
-  font-size: 13px;
-  font-weight: $font-weight-600;
-  font-family: $font-family-base;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: $transition-smooth;
-
-  svg { width: 14px; height: 14px; }
-
-  &:hover {
-    background: color.adjust($color-primary, $lightness: -6%);
-    transform: translateY(-1px);
-  }
-}
-
 /* ═══ Skeleton ═══ */
-@keyframes shimmerAnim {
-  0% { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-}
-
 .shimmer {
-  background: linear-gradient(90deg, $color-surface-muted 25%, #e5e7eb 37%, $color-surface-muted 63%);
-  background-size: 800px 100%;
-  animation: shimmerAnim 1.6s infinite linear;
+  @include skeleton-shimmer;
 }
 
 .skeletonBar {
@@ -1125,6 +1019,42 @@
   border: 1px solid $color-border;
   border-radius: $radius-xl;
   overflow: hidden;
+}
+
+.skeletonUserRow {
+  display: flex;
+  gap: $space-4;
+  padding: $space-6 $space-6 $space-4;
+}
+
+.skeletonUserInfo {
+  flex: 1;
+}
+
+.skeletonStatsRow {
+  display: flex;
+  border-top: 1px solid $color-border;
+}
+
+.skeletonStatCell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-1;
+  padding: $space-3;
+}
+
+.skeletonCardPadded {
+  composes: skeletonCard;
+  padding: $space-6;
+}
+
+.skeletonListingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-3;
+  margin-top: $space-5;
 }
 
 /* ═══ Tooltip ═══ */

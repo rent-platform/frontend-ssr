@@ -1,20 +1,21 @@
 'use client';
 
+import clsx from 'clsx';
 import { getInitials } from '@/ux/utils';
-import type { ChatPreview } from '../types';
+import type { ConversationHeaderProps } from '../types';
 import styles from '../ChatPage.module.scss';
 
-export function ConversationHeader({ chat }: { chat: ChatPreview }) {
+export function ConversationHeader({ chat }: ConversationHeaderProps) {
   const initials = getInitials(chat.counterpartyName);
 
   let statusText: string;
   let statusCls: string;
   if (chat.isTyping) {
     statusText = 'печатает…';
-    statusCls = `${styles.convStatus} ${styles.convStatusTyping}`;
+    statusCls = clsx(styles.convStatus, styles.convStatusTyping);
   } else if (chat.isOnline) {
     statusText = 'В сети';
-    statusCls = `${styles.convStatus} ${styles.convStatusOnline}`;
+    statusCls = clsx(styles.convStatus, styles.convStatusOnline);
   } else {
     statusText = 'Не в сети';
     statusCls = styles.convStatus;

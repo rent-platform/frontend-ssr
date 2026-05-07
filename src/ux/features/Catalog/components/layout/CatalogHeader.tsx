@@ -15,8 +15,9 @@ import {
   LogOut,
   Settings,
 } from 'lucide-react';
+import clsx from 'clsx';
 import { ROUTES } from '@/ux/utils';
-import styles from '../Catalog.module.scss';
+import styles from '../../Catalog.module.scss';
 
 type CatalogHeaderProps = {
   cityLabel: string;
@@ -31,7 +32,7 @@ export function BrandIcon() {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      <span style={{ fontSize: '20px', fontWeight: '800', lineHeight: 1 }}>А</span>
+      <span className={styles.brandLetter}>А</span>
     </motion.div>
   );
 }
@@ -53,7 +54,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
   };
 
   return (
-    <header className={`${styles.header} ${isHidden ? styles.headerHidden : ''}`}>
+    <header className={clsx(styles.header, isHidden && styles.headerHidden)}>
         <div className={styles.topbarInner}>
           <div className={styles.headerLeft}>
             <Link href={ROUTES.home} className={styles.brandBlock} aria-label="Перейти на главную Арендай" onClick={handleBrandClick}>
@@ -80,7 +81,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
 
           <div className={styles.topbarActions}>
             <div className={styles.actionButtons}>
-              <Link href={ROUTES.createListing} style={{ textDecoration: 'none' }}>
+              <Link href={ROUTES.createListing} className="unstyledLink">
                 <motion.button 
                   type="button" 
                   className={styles.btnSecondary}
@@ -119,7 +120,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
                   </motion.button>
                 );
                 return href ? (
-                  <Link key={label} href={href} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Link key={label} href={href} className="unstyledLink">
                     {btn}
                   </Link>
                 ) : (
@@ -131,14 +132,14 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
             <div className={styles.accountMeta}>
               <motion.div 
                 className={styles.locationChip}
-                whileHover={{ backgroundColor: '#fff', borderColor: 'var(--color-border)' }}
+                whileHover={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)' }}
               >
                 <MapPin size={14} />
                 <span>{cityLabel}</span>
               </motion.div>
               
               <div className={styles.profileDropdown}>
-                <Link href={ROUTES.profile} style={{ textDecoration: 'none' }}>
+                <Link href={ROUTES.profile} className="unstyledLink">
                   <motion.button 
                     type="button" 
                     className={styles.profileTrigger}
@@ -170,7 +171,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
                     <span>Настройки</span>
                   </Link>
                   <div className={styles.profileMenuDivider} />
-                  <button type="button" className={`${styles.profileMenuItem} ${styles.profileMenuLogout}`}>
+                  <button type="button" className={clsx(styles.profileMenuItem, styles.profileMenuLogout)}>
                     <LogOut size={16} />
                     <span>Выйти</span>
                   </button>

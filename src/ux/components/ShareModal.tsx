@@ -3,11 +3,22 @@
 import { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Copy, X } from 'lucide-react';
-import { useFocusTrap } from '@/ux/utils';
-import { EASE } from '../profileHelpers';
-import styles from '../ProfileDashboard.module.scss';
+import { useFocusTrap, EASE } from '@/ux/utils';
+import styles from './ShareModal.module.scss';
 
-export function ShareModal({ url, onClose }: { url: string; onClose: () => void }) {
+type ShareModalProps = {
+  url: string;
+  title?: string;
+  description?: string;
+  onClose: () => void;
+};
+
+export function ShareModal({
+  url,
+  title = 'Поделиться профилем',
+  description = 'Скопируйте ссылку и поделитесь с друзьями',
+  onClose,
+}: ShareModalProps) {
   const trapRef = useFocusTrap<HTMLDivElement>(true);
   const [copied, setCopied] = useState(false);
 
@@ -46,10 +57,10 @@ export function ShareModal({ url, onClose }: { url: string; onClose: () => void 
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.modalHeader}>
-          <h3 id="share-modal-title">Поделиться профилем</h3>
+          <h3 id="share-modal-title">{title}</h3>
           <button type="button" className={styles.modalClose} onClick={onClose}><X size={18} /></button>
         </div>
-        <p className={styles.modalDesc}>Скопируйте ссылку и поделитесь с друзьями</p>
+        <p className={styles.modalDesc}>{description}</p>
         <div className={styles.modalCopyRow}>
           <input type="text" readOnly value={url} className={styles.modalInput} />
           <button type="button" className={styles.modalCopyBtn} onClick={handleCopy}>

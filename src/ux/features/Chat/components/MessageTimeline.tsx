@@ -1,13 +1,14 @@
 'use client';
 
 import { Check, CheckCheck, Shield } from 'lucide-react';
+import clsx from 'clsx';
 import { formatTime } from '@/ux/utils';
-import type { ChatMessage, TimelineEntry, QuickAction } from '../types';
+import type { QuickActionsBarProps, TimelineItemProps, MessageBubbleProps } from '../types';
 import styles from '../ChatPage.module.scss';
 
 /* ═══ Quick Actions Bar ═══ */
 
-export function QuickActionsBar({ actions }: { actions: QuickAction[] }) {
+export function QuickActionsBar({ actions }: QuickActionsBarProps) {
   const variantCls: Record<string, string> = {
     primary: styles.qaBtnPrimary,
     secondary: styles.qaBtnSecondary,
@@ -20,7 +21,7 @@ export function QuickActionsBar({ actions }: { actions: QuickAction[] }) {
         <button
           key={a.id}
           type="button"
-          className={`${styles.qaBtn} ${variantCls[a.variant] ?? ''}`}
+          className={clsx(styles.qaBtn, variantCls[a.variant])}
         >
           {a.label}
         </button>
@@ -45,7 +46,7 @@ export function TypingIndicator() {
 
 /* ═══ Timeline Item ═══ */
 
-export function TimelineItem({ entry }: { entry: TimelineEntry }) {
+export function TimelineItem({ entry }: TimelineItemProps) {
   switch (entry.kind) {
     case 'date':
       return (
@@ -69,13 +70,13 @@ export function TimelineItem({ entry }: { entry: TimelineEntry }) {
 
 /* ═══ Message Bubble ═══ */
 
-function MessageBubble({ message }: { message: ChatMessage }) {
+function MessageBubble({ message }: MessageBubbleProps) {
   const isOwn = message.isOwn;
   const time = formatTime(message.createdAt);
 
   return (
-    <div className={`${styles.bubbleRow} ${isOwn ? styles.own : ''}`}>
-      <div className={`${styles.bubble} ${isOwn ? styles.bubbleOwn : styles.bubbleOther}`}>
+    <div className={clsx(styles.bubbleRow, isOwn && styles.own)}>
+      <div className={clsx(styles.bubble, isOwn ? styles.bubbleOwn : styles.bubbleOther)}>
         {message.image && (
           <img src={message.image} alt="" className={styles.bubbleImage} />
         )}
@@ -83,7 +84,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
         <div className={styles.bubbleMeta}>
           <span className={styles.bubbleTime}>{time}</span>
           {isOwn && (
-            <span className={`${styles.bubbleCheck} ${message.readAt ? styles.bubbleCheckRead : ''}`}>
+            <span className={clsx(styles.bubbleCheck, message.readAt && styles.bubbleCheckRead)}>
               {message.readAt ? <CheckCheck /> : <Check />}
             </span>
           )}

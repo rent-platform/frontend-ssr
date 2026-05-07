@@ -1,6 +1,7 @@
 'use client';
 
 import { Package, Pin } from 'lucide-react';
+import clsx from 'clsx';
 import { getInitials, timeAgo } from '@/ux/utils';
 import type { ChatPreview } from '../types';
 import { CURRENT_USER_ID } from '../types';
@@ -35,7 +36,7 @@ export function ChatListItem({ chat, isActive, onClick }: ChatListItemProps) {
   return (
     <button
       type="button"
-      className={`${styles.chatItem} ${isActive ? styles.chatItemActive : ''}`}
+      className={clsx(styles.chatItem, isActive && styles.chatItemActive)}
       onClick={onClick}
       aria-current={isActive ? 'true' : undefined}
       aria-label={`Чат с ${chat.counterpartyName} — ${chat.itemTitle}`}
@@ -59,7 +60,7 @@ export function ChatListItem({ chat, isActive, onClick }: ChatListItemProps) {
           <span className={styles.chatTime}>{lastTime}</span>
         </div>
         <div className={styles.chatBottomRow}>
-          <span className={`${styles.chatLastMsg} ${chat.isTyping ? styles.typingText : ''}`}>
+          <span className={clsx(styles.chatLastMsg, chat.isTyping && styles.typingText)}>
             {lastText}
           </span>
           {chat.unreadCount > 0 && (
@@ -70,7 +71,7 @@ export function ChatListItem({ chat, isActive, onClick }: ChatListItemProps) {
           <Package size={11} />
           <span className={styles.chatItemLineText}>{chat.itemTitle}</span>
           {role && (
-            <span className={`${styles.chatRoleBadge} ${role.cls}`}>{role.label}</span>
+            <span className={clsx(styles.chatRoleBadge, role.cls)}>{role.label}</span>
           )}
         </div>
       </div>

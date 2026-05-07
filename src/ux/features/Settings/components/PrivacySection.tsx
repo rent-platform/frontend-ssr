@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
+import clsx from 'clsx';
 import styles from '../SettingsPage.module.scss';
 
 export function PrivacySection() {
@@ -21,7 +22,7 @@ export function PrivacySection() {
         </div>
         <button
           type="button"
-          className={`${styles.toggle} ${showPhone ? styles.toggleOn : ''}`}
+          className={clsx(styles.toggle, showPhone && styles.toggleOn)}
           onClick={() => setShowPhone((v) => !v)}
         />
       </div>
@@ -33,7 +34,7 @@ export function PrivacySection() {
         </div>
         <button
           type="button"
-          className={`${styles.toggle} ${showEmail ? styles.toggleOn : ''}`}
+          className={clsx(styles.toggle, showEmail && styles.toggleOn)}
           onClick={() => setShowEmail((v) => !v)}
         />
       </div>
@@ -45,7 +46,7 @@ export function PrivacySection() {
         </div>
         <button
           type="button"
-          className={`${styles.toggle} ${showOnline ? styles.toggleOn : ''}`}
+          className={clsx(styles.toggle, showOnline && styles.toggleOn)}
           onClick={() => setShowOnline((v) => !v)}
         />
       </div>

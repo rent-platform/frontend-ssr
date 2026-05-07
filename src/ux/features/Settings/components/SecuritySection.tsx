@@ -11,27 +11,18 @@ import {
   Monitor,
   Smartphone,
 } from 'lucide-react';
+import clsx from 'clsx';
+import { timeAgo } from '@/ux/utils';
 import type { PasswordFormData, ActiveSession } from '../types';
 import { MOCK_PROFILE, MOCK_SESSIONS } from '../mockSettingsData';
 import styles from '../SettingsPage.module.scss';
-
-function relativeTime(iso: string) {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60_000);
-  if (mins < 1) return 'только что';
-  if (mins < 60) return `${mins} мин. назад`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours} ч. назад`;
-  const days = Math.floor(hours / 24);
-  return `${days} дн. назад`;
-}
 
 function SessionCard({ session }: { session: ActiveSession }) {
   const PlatformIcon = session.platform === 'mobile' ? Smartphone : Monitor;
 
   return (
-    <div className={`${styles.sessionCard} ${session.isCurrent ? styles.sessionCardCurrent : ''}`}>
-      <div className={`${styles.sessionIcon} ${session.isCurrent ? styles.sessionIconCurrent : ''}`}>
+    <div className={clsx(styles.sessionCard, session.isCurrent && styles.sessionCardCurrent)}>
+      <div className={clsx(styles.sessionIcon, session.isCurrent && styles.sessionIconCurrent)}>
         <PlatformIcon size={20} />
       </div>
       <div className={styles.sessionInfo}>
@@ -42,9 +33,9 @@ function SessionCard({ session }: { session: ActiveSession }) {
         <span className={styles.sessionDevice}>{session.deviceInfo}</span>
       </div>
       <div className={styles.sessionRight}>
-        <span className={styles.sessionTime}>{relativeTime(session.lastActive)}</span>
+        <span className={styles.sessionTime}>{timeAgo(session.lastActive)}</span>
         {!session.isCurrent && (
-          <button type="button" className={`${styles.btnDanger} ${styles.btnSmall}`}>
+          <button type="button" className={clsx(styles.btnDanger, styles.btnSmall)}>
             <LogOut size={12} />
             <span>Завершить</span>
           </button>
@@ -71,7 +62,7 @@ export function SecuritySection() {
       <p className={styles.sectionSubtitle}>Смена пароля для входа в аккаунт</p>
 
       <div className={styles.formGrid}>
-        <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+        <div className={clsx(styles.formGroup, styles.formGroupFull)}>
           <label className={styles.formLabel}>Текущий пароль</label>
           <div className={styles.formInputWithIcon}>
             <KeyRound size={16} />
@@ -136,7 +127,7 @@ export function SecuritySection() {
       <p className={styles.sectionSubtitle}>Ваш текущий email: <strong>{MOCK_PROFILE.email}</strong></p>
 
       <div className={styles.formGrid}>
-        <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+        <div className={clsx(styles.formGroup, styles.formGroupFull)}>
           <label className={styles.formLabel}>Новый адрес электронной почты</label>
           <div className={styles.formInputWithIcon}>
             <Mail size={16} />

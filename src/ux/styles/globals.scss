@@ -49,3 +49,15 @@ hr {
   height: 1px;
   background: $color-border;
 }
+
+/* ═══ Utility classes ═══ */
+.unstyledLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.inlineIcon {
+  display: inline;
+  vertical-align: -2px;
+  margin-right: 4px;
+}

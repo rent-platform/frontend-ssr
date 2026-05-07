@@ -1,8 +1,9 @@
 'use client';
 
 import { Calendar, Package } from 'lucide-react';
+import clsx from 'clsx';
 import { formatDateRange } from '@/ux/utils';
-import type { ChatPreview } from '../types';
+import type { DealContextBarProps } from '../types';
 import styles from '../ChatPage.module.scss';
 
 const DEAL_STATUS_LABELS: Record<string, { label: string; cls: string }> = {
@@ -13,7 +14,7 @@ const DEAL_STATUS_LABELS: Record<string, { label: string; cls: string }> = {
   REJECTED: { label: 'Отклонена', cls: styles.dealBadgeRejected },
 };
 
-export function DealContextBar({ chat }: { chat: ChatPreview }) {
+export function DealContextBar({ chat }: DealContextBarProps) {
   const badge = chat.dealStatus ? DEAL_STATUS_LABELS[chat.dealStatus] : null;
 
   return (
@@ -29,7 +30,7 @@ export function DealContextBar({ chat }: { chat: ChatPreview }) {
           {chat.dealPrice && <span>{chat.dealPrice} ₽/сутки</span>}
           {chat.dealDates && (
             <span>
-              <Calendar size={10} style={{ display: 'inline', verticalAlign: '-1px', marginRight: 2 }} />
+              <Calendar size={10} className="inlineIcon" />
               {formatDateRange(chat.dealDates.start, chat.dealDates.end)}
             </span>
           )}
@@ -37,7 +38,7 @@ export function DealContextBar({ chat }: { chat: ChatPreview }) {
         </div>
       </div>
       {badge && (
-        <span className={`${styles.dealBadge} ${badge.cls}`}>{badge.label}</span>
+        <span className={clsx(styles.dealBadge, badge.cls)}>{badge.label}</span>
       )}
     </div>
   );

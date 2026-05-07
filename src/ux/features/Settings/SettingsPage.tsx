@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Bell, CreditCard, Lock, Shield, User } from 'lucide-react';
 import type { SettingsTab } from './types';
+import clsx from 'clsx';
 import { ROUTES } from '@/ux/utils';
 import { ProfileSection } from './components/ProfileSection';
 import { SecuritySection } from './components/SecuritySection';
@@ -46,7 +47,7 @@ export function SettingsPage() {
               <button
                 key={item.tab}
                 type="button"
-                className={`${styles.sidebarItem} ${tab === item.tab ? styles.sidebarItemActive : ''}`}
+                className={clsx(styles.sidebarItem, tab === item.tab && styles.sidebarItemActive)}
                 onClick={() => setTab(item.tab)}
               >
                 {item.icon}

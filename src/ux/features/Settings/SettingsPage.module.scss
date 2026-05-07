@@ -288,6 +288,12 @@
   color: $color-text-secondary;
 }
 
+.avatarBtnRow {
+  display: flex;
+  gap: $space-2;
+  margin-top: $space-1;
+}
+
 /* ─── Buttons ─── */
 .btnRow {
   display: flex;

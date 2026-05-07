@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useRef, useState } from "react";
+import { AnimatePresence, motion } from 'framer-motion';
+import { useCallback, useRef, useState } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
@@ -14,17 +14,17 @@ import {
   Star,
   Truck,
   Zap,
-} from "lucide-react";
-import { useGetItemRating } from "@/business/reviews";
-import type { CatalogUiItem } from "../types";
+} from 'lucide-react';
+import clsx from 'clsx';
+import type { CatalogUiItem } from '../../types';
 import {
   formatCatalogCardHourSecondary,
   formatCatalogCardLocation,
   formatCatalogCardPrimaryPrice,
   formatDepositAmount,
   formatRelativeDate,
-} from "../utils";
-import styles from "./CatalogCard.module.scss";
+} from '../../utils';
+import styles from './CatalogCard.module.scss';
 
 type CatalogCardProps = {
   item: CatalogUiItem;
@@ -36,10 +36,10 @@ type CatalogCardProps = {
 };
 
 const highlightVisuals = {
-  "С доставкой": Truck,
-  "Рядом сегодня": Zap,
-  "Без залога": ShieldCheck,
-  "Топ-рейтинг": Star,
+  'С доставкой': Truck,
+  'Рядом сегодня': Zap,
+  'Без залога': ShieldCheck,
+  'Топ-рейтинг': Star,
   Новинки: Sparkles,
 } as const;
 
@@ -99,22 +99,16 @@ function ImageCarousel({
         <>
           <button
             type="button"
-            className={`${styles.carouselArrow} ${styles.carouselArrowLeft}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              goTo(current - 1);
-            }}
+            className={clsx(styles.carouselArrow, styles.carouselArrowLeft)}
+            onClick={(e) => { e.stopPropagation(); goTo(current - 1); }}
             aria-label="Предыдущее фото"
           >
             <ChevronLeft size={16} />
           </button>
           <button
             type="button"
-            className={`${styles.carouselArrow} ${styles.carouselArrowRight}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              goTo(current + 1);
-            }}
+            className={clsx(styles.carouselArrow, styles.carouselArrowRight)}
+            onClick={(e) => { e.stopPropagation(); goTo(current + 1); }}
             aria-label="Следующее фото"
           >
             <ChevronRight size={16} />
@@ -126,18 +120,11 @@ function ImageCarousel({
                 key={i}
                 type="button"
                 aria-label={`Фото ${i + 1}`}
-                className={
-                  i === current ? styles.carouselDotActive : styles.carouselDot
-                }
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goTo(i);
-                }}
+                className={i === current ? styles.carouselDotActive : styles.carouselDot}
+                onClick={(e) => { e.stopPropagation(); goTo(i); }}
               />
             ))}
-            {count > 5 ? (
-              <span className={styles.carouselDotMore}>+{count - 5}</span>
-            ) : null}
+            {count > 5 ? <span className={styles.carouselDotMore}>+{count - 5}</span> : null}
           </div>
         </>
       ) : null}
@@ -154,7 +141,6 @@ export function CatalogCard({
   isGuest = false,
 }: CatalogCardProps) {
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
-  const { rating } = useGetItemRating(item.id);
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.createdAt);
   const hourPrice = formatCatalogCardHourSecondary(item);
@@ -162,57 +148,34 @@ export function CatalogCard({
     ? `Залог ${formatDepositAmount(item.depositAmount)}`
     : null;
   const highlightItems = (item.quickFilters ?? []).slice(0, 2);
-  const allImages =
-    item.images?.length > 0
-      ? item.images
-      : item.coverImageUrl
-        ? [item.coverImageUrl]
-        : [];
-  const itemRating = rating?.averageRating ?? item.itemRating;
+  const allImages = item.images?.length > 0 ? item.images : (item.coverImageUrl ? [item.coverImageUrl] : []);
 
   return (
     <motion.article
       className={styles.card}
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.35,
-        delay: index * 0.04,
-        ease: [0.23, 1, 0.32, 1],
-      }}
+      transition={{ duration: 0.35, delay: index * 0.04, ease: [0.23, 1, 0.32, 1] }}
     >
       {/* ── Image area ── */}
       <div className={styles.cardImageArea}>
         <button
           type="button"
-          className={`${styles.cardFavorite} ${isFavorite ? styles.cardFavoriteActive : ""}`}
-          aria-label={
-            isFavorite ? "Удалить из избранного" : "Добавить в избранное"
-          }
-          onClick={(e) => {
-            e.stopPropagation();
-            if (isGuest) {
-              onFavoriteChange?.(item.id, true);
-              return;
-            }
-            const next = !isFavorite;
-            setIsFavorite(next);
-            onFavoriteChange?.(item.id, next);
-          }}
+          className={clsx(styles.cardFavorite, isFavorite && styles.cardFavoriteActive)}
+          aria-label={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
+          onClick={(e) => { e.stopPropagation(); if (isGuest) { onFavoriteChange?.(item.id, true); return; } const next = !isFavorite; setIsFavorite(next); onFavoriteChange?.(item.id, next); }}
         >
-          <Heart size={18} fill={isFavorite ? "currentColor" : "none"} />
+          <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
         </button>
 
         <div className={styles.cardBadgeRow}>
           {item.featured && <span className={styles.cardFeatured}>Топ</span>}
           <span
-            className={`${styles.cardStatus} ${
-              item.isAvailable
-                ? styles.cardStatusAvailable
-                : styles.cardStatusSoon
-            }`}
+            className={clsx(styles.cardStatus,
+              item.isAvailable ? styles.cardStatusAvailable : styles.cardStatusSoon,
+            )}
           >
-            {item.isAvailable ? "Доступно" : "Скоро"}
+            {item.isAvailable ? 'Доступно' : 'Скоро'}
           </span>
         </div>
 
@@ -224,12 +187,7 @@ export function CatalogCard({
               onImageClick={() => onOpen(item)}
             />
           ) : (
-            <button
-              type="button"
-              className={styles.cardImagePlaceholder}
-              onClick={() => onOpen(item)}
-              aria-label={`Открыть ${item.title}`}
-            >
+            <button type="button" className={styles.cardImagePlaceholder} onClick={() => onOpen(item)} aria-label={`Открыть ${item.title}`}>
               <Eye size={32} />
             </button>
           )}
@@ -243,15 +201,11 @@ export function CatalogCard({
             <span className={styles.cardCategory}>{item.category}</span>
             <div className={styles.cardRating}>
               <Star size={12} className={styles.starIcon} />
-              <span>{(itemRating ?? 0).toFixed(1)}</span>
+              <span>{(item.ownerRating ?? 0).toFixed(1)}</span>
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => onOpen(item)}
-            className={styles.cardTitle}
-          >
+          <button type="button" onClick={() => onOpen(item)} className={styles.cardTitle}>
             {item.title}
           </button>
 
@@ -263,10 +217,8 @@ export function CatalogCard({
 
         {/* ── Highlights ── */}
         <div className={styles.cardChips}>
-          {highlightItems.map((hl) => {
-            const Icon =
-              highlightVisuals[hl as keyof typeof highlightVisuals] ??
-              ShieldCheck;
+          {highlightItems.map((hl: string) => {
+            const Icon = highlightVisuals[hl as keyof typeof highlightVisuals] ?? ShieldCheck;
             return (
               <span key={hl} className={styles.cardChip}>
                 <Icon size={12} />
@@ -287,18 +239,15 @@ export function CatalogCard({
           <div className={styles.cardPricing}>
             <div className={styles.cardPrice}>
               <strong>{formatCatalogCardPrimaryPrice(item)}</strong>
-              {hourPrice ? (
-                <span className={styles.cardPriceSub}>{hourPrice}</span>
-              ) : null}
+              {hourPrice ? <span className={styles.cardPriceSub}>{hourPrice}</span> : null}
             </div>
+
           </div>
         </div>
 
         {/* ── Subtle meta ── */}
         <div className={styles.cardMeta}>
-          <span>
-            <Clock3 size={12} /> {publishedLabel}
-          </span>
+          <span><Clock3 size={12} /> {publishedLabel}</span>
         </div>
       </div>
     </motion.article>

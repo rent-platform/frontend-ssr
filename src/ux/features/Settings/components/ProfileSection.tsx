@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Camera, Mail, Phone, Trash2 } from 'lucide-react';
+import clsx from 'clsx';
 import type { ProfileFormData } from '../types';
 import { MOCK_PROFILE } from '../mockSettingsData';
 import styles from '../SettingsPage.module.scss';
@@ -33,13 +34,13 @@ export function ProfileSection() {
         <div className={styles.avatarActions}>
           <span className={styles.avatarActionsTitle}>Фото профиля</span>
           <span className={styles.avatarActionsHint}>JPG, PNG или WebP. Макс. 5 МБ</span>
-          <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
-            <button type="button" className={`${styles.btnSecondary} ${styles.btnSmall}`}>
+          <div className={styles.avatarBtnRow}>
+            <button type="button" className={clsx(styles.btnSecondary, styles.btnSmall)}>
               <Camera size={14} />
               <span>Загрузить</span>
             </button>
             {form.avatarUrl && (
-              <button type="button" className={`${styles.btnDanger} ${styles.btnSmall}`}>
+              <button type="button" className={clsx(styles.btnDanger, styles.btnSmall)}>
                 <Trash2 size={14} />
                 <span>Удалить</span>
               </button>
@@ -99,7 +100,7 @@ export function ProfileSection() {
           </div>
         </div>
 
-        <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+        <div className={clsx(styles.formGroup, styles.formGroupFull)}>
           <label className={styles.formLabel}>О себе</label>
           <textarea
             className={styles.formTextarea}

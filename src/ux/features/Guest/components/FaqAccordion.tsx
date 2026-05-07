@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import clsx from 'clsx';
 import styles from '../GuestExperience.module.scss';
 
 type FaqItem = { q: string; a: string };
@@ -15,7 +16,7 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
       {items.map((item, i) => {
         const isOpen = openIndex === i;
         return (
-          <div key={i} className={`${styles.faqItem} ${isOpen ? styles.faqItemOpen : ''}`}>
+          <div key={i} className={clsx(styles.faqItem, isOpen && styles.faqItemOpen)}>
             <button
               type="button"
               className={styles.faqQuestion}

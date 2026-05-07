@@ -4,8 +4,8 @@ import { useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import type { CatalogUiItem } from '../types';
-import styles from '../Catalog.module.scss';
+import type { CatalogUiItem } from '../../types';
+import styles from '../../Catalog.module.scss';
 
 type ProductGalleryProps = {
   item: CatalogUiItem;
@@ -81,7 +81,7 @@ export function ProductGallery({ item }: ProductGalleryProps) {
 
       {item.images.length > 1 && (
         <div className={styles.detailThumbs}>
-          {item.images.map((img, idx) => (
+          {item.images.map((img: string, idx: number) => (
             <button
               key={idx}
               type="button"

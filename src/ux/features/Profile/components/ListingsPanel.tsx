@@ -3,21 +3,13 @@
 import { useMemo } from 'react';
 import { Package } from 'lucide-react';
 import { CatalogCard } from '../../Catalog';
+import clsx from 'clsx';
 import { pluralize } from '@/ux/utils';
 import { MOCK_LISTINGS } from '../mockProfileData';
 import { LISTING_FILTERS, profileListingToCatalogItem } from '../profileHelpers';
 import type { ListingFilter } from '../profileHelpers';
+import { EmptyState } from './EmptyState';
 import styles from '../ProfileDashboard.module.scss';
-
-function EmptyState({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
-  return (
-    <div className={styles.emptyState}>
-      <div className={styles.emptyIcon}>{icon}</div>
-      <h3 className={styles.emptyTitle}>{title}</h3>
-      <p className={styles.emptyText}>{text}</p>
-    </div>
-  );
-}
 
 export function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilter; onFilterChange: (f: ListingFilter) => void }) {
   const filtered = useMemo(() => (filter === 'all' ? MOCK_LISTINGS : MOCK_LISTINGS.filter((l) => l.status === filter)), [filter]);
@@ -31,7 +23,7 @@ export function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilte
         </div>
         <div className={styles.filterPills}>
           {LISTING_FILTERS.map((f) => (
-            <button key={f.value} type="button" className={`${styles.filterPill} ${filter === f.value ? styles.filterPillActive : ''} ${styles.tooltipWrap}`} onClick={() => onFilterChange(f.value)}>
+            <button key={f.value} type="button" className={clsx(styles.filterPill, filter === f.value && styles.filterPillActive, styles.tooltipWrap)} onClick={() => onFilterChange(f.value)}>
               {f.label}
               <span className={styles.tooltipBubble}>{f.tip}</span>
             </button>

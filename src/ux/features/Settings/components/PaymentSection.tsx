@@ -1,13 +1,14 @@
 'use client';
 
 import { Plus, Trash2 } from 'lucide-react';
+import clsx from 'clsx';
 import type { PaymentMethod } from '../types';
 import { MOCK_PAYMENTS } from '../mockSettingsData';
 import styles from '../SettingsPage.module.scss';
 
 function PaymentCard({ method }: { method: PaymentMethod }) {
   return (
-    <div className={`${styles.paymentCard} ${method.isDefault ? styles.paymentCardDefault : ''}`}>
+    <div className={clsx(styles.paymentCard, method.isDefault && styles.paymentCardDefault)}>
       <div className={styles.paymentIcon}>{method.brand.slice(0, 4)}</div>
       <div className={styles.paymentInfo}>
         <div className={styles.paymentNameRow}>
@@ -22,11 +23,11 @@ function PaymentCard({ method }: { method: PaymentMethod }) {
       </div>
       <div className={styles.paymentRight}>
         {!method.isDefault && (
-          <button type="button" className={`${styles.btnSecondary} ${styles.btnSmall}`}>
+          <button type="button" className={clsx(styles.btnSecondary, styles.btnSmall)}>
             Сделать основной
           </button>
         )}
-        <button type="button" className={`${styles.btnDanger} ${styles.btnSmall}`}>
+        <button type="button" className={clsx(styles.btnDanger, styles.btnSmall)}>
           <Trash2 size={12} />
         </button>
       </div>

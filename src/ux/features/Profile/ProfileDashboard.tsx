@@ -19,51 +19,19 @@ import {
   Zap,
 } from 'lucide-react';
 import { CatalogHeader, CatalogFooter } from '../Catalog';
-import { pluralize, formatDate, ROUTES } from '@/ux/utils';
+import clsx from 'clsx';
+import { pluralize, formatDate, getInitials, ROUTES, EASE } from '@/ux/utils';
 import type { ProfileTab, BookingSide } from './types';
 import { MOCK_USER, MOCK_STATS, MOCK_BOOKINGS } from './mockProfileData';
-import { EASE, getProfileCompletion } from './profileHelpers';
+import { getProfileCompletion } from './profileHelpers';
 import type { ListingFilter, BookingFilter } from './profileHelpers';
 import { ListingsPanel } from './components/ListingsPanel';
 import { DealsPanel } from './components/DealsPanel';
-import { ShareModal } from './components/ShareModal';
+import { DashboardSkeleton } from './components/DashboardSkeleton';
+import { VerifyChip } from './components/VerifyChip';
+import { TabBtn } from './components/TabBtn';
+import { ShareModal } from '@/ux/components/ShareModal';
 import styles from './ProfileDashboard.module.scss';
-
-/* ── Skeleton placeholder ── */
-function DashboardSkeleton() {
-  return (
-    <div className={styles.page}>
-      <div className={styles.skeletonBar}><div className={styles.shimmer} style={{ width: 140, height: 24, borderRadius: 6 }} /></div>
-      <div className={styles.skeletonWrap}>
-        <div className={styles.skeletonCard}>
-          <div style={{ display: 'flex', gap: 16, padding: '24px 24px 16px' }}>
-            <div className={styles.shimmer} style={{ width: 64, height: 64, borderRadius: '50%', flexShrink: 0 }} />
-            <div style={{ flex: 1 }}>
-              <div className={styles.shimmer} style={{ width: 180, height: 20, borderRadius: 6 }} />
-              <div className={styles.shimmer} style={{ width: 260, height: 13, borderRadius: 4, marginTop: 10 }} />
-              <div className={styles.shimmer} style={{ width: 200, height: 13, borderRadius: 4, marginTop: 8 }} />
-            </div>
-          </div>
-          <div style={{ display: 'flex', borderTop: '1px solid #e5e7eb' }}>
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: 14 }}>
-                <div className={styles.shimmer} style={{ width: 32, height: 20, borderRadius: 4 }} />
-                <div className={styles.shimmer} style={{ width: 48, height: 10, borderRadius: 3 }} />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className={styles.shimmer} style={{ width: '100%', height: 44, borderRadius: 0 }} />
-        <div className={styles.skeletonCard} style={{ padding: 24 }}>
-          <div className={styles.shimmer} style={{ width: 140, height: 18, borderRadius: 5 }} />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginTop: 20 }}>
-            {[1, 2, 3].map((i) => <div key={i} className={styles.shimmer} style={{ height: 72, borderRadius: 12 }} />)}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    ProfileDashboard
@@ -99,7 +67,7 @@ export function ProfileDashboard({
     return () => clearTimeout(t);
   }, [externalUser]);
 
-  const initials = user.fullName.split(' ').map((w) => w[0]).join('').slice(0, 2);
+  const initials = getInitials(user.fullName);
   const profileCompletion = getProfileCompletion(user);
   const profileUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/dev-ui/user/${user.id}`
@@ -196,23 +164,23 @@ export function ProfileDashboard({
           )}
 
           <div className={styles.statsGrid}>
-            <div className={`${styles.statCard} ${styles.tooltipWrap}`}>
+            <div className={clsx(styles.statCard, styles.tooltipWrap)}>
               <span className={styles.statNum}>{stats.activeListings}</span>
               <span className={styles.statLbl}>Объявлений</span>
               <span className={styles.tooltipBubble}>Активных объявлений на платформе</span>
             </div>
-            <div className={`${styles.statCard} ${styles.tooltipWrap}`}>
+            <div className={clsx(styles.statCard, styles.tooltipWrap)}>
               <span className={styles.statNum}>{stats.completedBookings}</span>
               <span className={styles.statLbl}>Сдано</span>
               <span className={styles.tooltipBubble}>Успешных сдач в аренду</span>
             </div>
-            <div className={`${styles.statCard} ${styles.tooltipWrap}`}>
+            <div className={clsx(styles.statCard, styles.tooltipWrap)}>
               <span className={styles.statNum}>{stats.rentedCount}</span>
               <span className={styles.statLbl}>Арендовано</span>
               <span className={styles.tooltipBubble}>Вещей взято в аренду</span>
             </div>
-            <div className={`${styles.statCard} ${styles.tooltipWrap}`}>
-              <span className={`${styles.statNum} ${styles.statNumAccent}`}>{user.rating.toFixed(1)}</span>
+            <div className={clsx(styles.statCard, styles.tooltipWrap)}>
+              <span className={clsx(styles.statNum, styles.statNumAccent)}>{user.rating.toFixed(1)}</span>
               <span className={styles.statLbl}>Рейтинг</span>
               <span className={styles.tooltipBubble}>Средняя оценка от пользователей</span>
             </div>
@@ -251,27 +219,6 @@ export function ProfileDashboard({
         {showShareModal && <ShareModal url={profileUrl} onClose={() => setShowShareModal(false)} />}
       </AnimatePresence>
     </div>
-  );
-}
-
-/* ── Verify chip (inline) ── */
-function VerifyChip({ icon, label, done, tooltip }: { icon: React.ReactNode; label: string; done: boolean; tooltip: string }) {
-  return (
-    <span className={`${styles.verifyChip} ${done ? styles.verifyDone : styles.verifyPending} ${styles.tooltipWrap}`}>
-      {icon} {label}
-      <span className={styles.tooltipBubble}>{tooltip}</span>
-    </span>
-  );
-}
-
-/* ── Tab button (underline style) ── */
-function TabBtn({ active, label, count, onClick, tooltip }: { active: boolean; label: string; count?: number; onClick: () => void; tooltip?: string }) {
-  return (
-    <button type="button" className={`${styles.tab} ${active ? styles.tabActive : ''} ${tooltip ? styles.tooltipWrap : ''}`} onClick={onClick}>
-      {label}
-      {count !== undefined && <span className={styles.tabCount}>{count}</span>}
-      {tooltip && <span className={styles.tooltipBubble}>{tooltip}</span>}
-    </button>
   );
 }
 
