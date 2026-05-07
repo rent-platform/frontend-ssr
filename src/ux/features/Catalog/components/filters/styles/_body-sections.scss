@@ -1,0 +1,59 @@
+@use '../../../../../styles/vars' as *;
+@use '../../../../../styles/helpers/mixins' as *;
+
+.body {
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 20px 24px 22px;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.4) transparent;
+  @include scrollbar(6px, rgba(34, 197, 94, 0.4), transparent);
+}
+
+.section {
+  margin-bottom: 19px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.sectionTopline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-3;
+
+  .sectionLabel {
+    margin-bottom: 10px;
+  }
+}
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  color: $color-primary;
+
+  span {
+    font-size: 11px;
+    font-weight: 700;
+    color: $color-text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: rgba(226, 232, 240, 0.95);
+  margin: 3px 0 18px;
+}

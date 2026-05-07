@@ -1,0 +1,130 @@
+@use '../../../../../styles/vars' as *;
+@use '../../../../../styles/helpers/mixins' as *;
+
+/* ═══ Footer ═══ */
+.cardFooter {
+  display: grid;
+  gap: $space-3;
+  margin-top: auto;
+  padding-top: $space-3;
+  border-top: 1px solid rgba(226, 232, 240, 0.85);
+}
+
+.cardOwner {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.cardAvatar {
+  @include square(32px);
+  @include flex-center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: $gradient-green;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px -2px rgba(34, 197, 94, 0.3);
+}
+
+.cardAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardOwnerText {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+
+  strong {
+    font-size: 13px;
+    font-weight: 700;
+    color: $color-text;
+    @include text-truncate;
+  }
+
+  span {
+    font-size: 11px;
+    font-weight: 500;
+    color: $color-text-secondary;
+    @include text-truncate;
+  }
+}
+
+.cardPricing {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $space-3;
+}
+
+.cardPrice {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: 15px;
+    font-weight: 700;
+    color: $color-text;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+}
+
+.cardPriceSub {
+  font-size: 12px;
+  color: $color-text-secondary;
+  font-weight: 600;
+}
+
+.cardCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 0 11px;
+  border-radius: $radius-full;
+  border: 1px solid $color-border;
+  background: #fff;
+  color: $color-text;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: $transition-smooth;
+  flex-shrink: 0;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    background: $color-green-50;
+  }
+}
+
+/* ═══ Subtle meta ═══ */
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding-top: 4px;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(100, 116, 139, 0.72);
+
+    svg {
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+  }
+}

@@ -1,0 +1,114 @@
+@use '../../../../../styles/vars' as *;
+@use '../../../../../styles/helpers/mixins' as *;
+
+/* ═══ Image area ═══ */
+.cardImageArea {
+  position: relative;
+  flex-shrink: 0;
+  padding: 8px 8px 0;
+}
+
+.cardFavorite {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 10;
+  @include square(30px);
+  @include flex-center;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border: 0;
+  border-radius: 50%;
+  color: $color-text-secondary;
+  box-shadow: $shadow-sm;
+  cursor: pointer;
+  transition: $transition-spring;
+
+  &:hover {
+    transform: scale(1.12);
+    background: #fff;
+    color: $color-secondary;
+    box-shadow: $shadow-md;
+  }
+}
+
+.cardFavoriteActive {
+  composes: cardFavorite;
+  color: $color-secondary;
+  background: #fff;
+
+  svg { fill: currentColor; }
+}
+
+.cardBadgeRow {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cardFeatured {
+  display: inline-flex;
+  align-items: center;
+  background: $gradient-green;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: $radius-full;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: $shadow-green-sm;
+}
+
+.cardStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: $radius-full;
+  font-size: 11px;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.cardStatusAvailable {
+  background: rgba(34, 197, 94, 0.88);
+  color: #fff;
+}
+
+.cardStatusSoon {
+  background: rgba(255, 255, 255, 0.92);
+  color: $color-text;
+}
+
+.cardImageWrap {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  border-radius: 16px;
+  overflow: hidden;
+  background: $color-surface-muted;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(15, 23, 42, 0.02) 0%, transparent 30%),
+      linear-gradient(180deg, transparent 65%, rgba(15, 23, 42, 0.06) 100%);
+    pointer-events: none;
+  }
+}
+
+.cardImagePlaceholder {
+  @include flex-center;
+  width: 100%;
+  height: 100%;
+  color: $color-text-secondary;
+  cursor: pointer;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 1) 0%, rgba(241, 245, 249, 1) 100%);
+}

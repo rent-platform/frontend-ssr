@@ -1,0 +1,67 @@
+@use '../../styles/vars' as *;
+@use '../../styles/helpers/mixins' as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.rootSm { padding: $space-12 $space-6; }
+.rootMd { padding: $space-16 $space-6; }
+.rootLg { padding: $space-20 $space-6; }
+
+/* ─── Icon ─── */
+.icon {
+  @include flex-center;
+  border-radius: $radius-full;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+  color: $color-primary;
+  margin: 0 auto $space-4;
+}
+
+.iconSm {
+  width: 48px;
+  height: 48px;
+  svg { width: 20px; height: 20px; }
+}
+
+.iconMd {
+  width: 56px;
+  height: 56px;
+  svg { width: 24px; height: 24px; }
+}
+
+.iconLg {
+  width: 72px;
+  height: 72px;
+  svg { width: 32px; height: 32px; }
+}
+
+/* ─── Title ─── */
+.title {
+  font-family: $font-family-display;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  margin: 0 0 $space-2;
+}
+
+.titleSm { font-size: $font-size-sm; }
+.titleMd { font-size: $font-size-base; }
+.titleLg { font-size: $font-size-lg; }
+
+/* ─── Text ─── */
+.text {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  max-width: 320px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ─── Action ─── */
+.action {
+  margin-top: $space-5;
+}
