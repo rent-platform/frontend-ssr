@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { ROUTES } from '@/ux/utils';
-import styles from '../Catalog.module.scss';
+import styles from '../../Catalog.module.scss';
 
 interface CatalogFooterProps {
   catalogHref?: string;

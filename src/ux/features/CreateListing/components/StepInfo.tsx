@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import type { ListingCondition, CreateListingFormData } from '../types';
 import styles from '../CreateListing.module.scss';
 
@@ -66,9 +67,9 @@ export function StepInfo({ form, onPatch }: StepInfoProps) {
             {CONDITIONS.map((c) => (
               <div
                 key={c.value}
-                className={`${styles.conditionCard} ${
-                  form.condition === c.value ? styles.conditionCardActive : ''
-                }`}
+                className={clsx(styles.conditionCard,
+                  form.condition === c.value && styles.conditionCardActive,
+                )}
                 onClick={() => onPatch({ condition: c.value })}
               >
                 <span className={styles.conditionLabel}>{c.label}</span>

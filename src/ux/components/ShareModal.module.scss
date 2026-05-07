@@ -1,0 +1,80 @@
+@use '../styles/vars' as *;
+@use '../styles/helpers/mixins' as *;
+@use 'sass:color';
+
+/* ═══ Share modal ═══ */
+.modalOverlay {
+  @include modal-overlay(1000);
+}
+
+.modalContent {
+  @include modal-panel;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-2;
+
+  h3 {
+    font-size: 17px;
+    font-weight: $font-weight-bold;
+    color: $color-text;
+    margin: 0;
+  }
+}
+
+.modalClose {
+  @include modal-close-btn;
+}
+
+.modalDesc {
+  font-size: 13px;
+  color: $color-text-secondary;
+  margin: 0 0 $space-4;
+}
+
+.modalCopyRow {
+  display: flex;
+  gap: $space-2;
+}
+
+.modalInput {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  background: $color-surface-muted;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  font-size: 13px;
+  font-family: $font-family-base;
+  color: $color-text;
+  outline: none;
+
+  &:focus { border-color: $color-primary; }
+}
+
+.modalCopyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  padding: 10px 16px;
+  background: $color-primary;
+  color: #fff;
+  border: none;
+  border-radius: $radius-lg;
+  font-size: 13px;
+  font-weight: $font-weight-600;
+  font-family: $font-family-base;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: $transition-smooth;
+
+  svg { width: 14px; height: 14px; }
+
+  &:hover {
+    background: color.adjust($color-primary, $lightness: -6%);
+    transform: translateY(-1px);
+  }
+}

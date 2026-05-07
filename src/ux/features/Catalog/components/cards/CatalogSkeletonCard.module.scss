@@ -1,0 +1,23 @@
+.skeletonCard {
+  composes: skeletonCard from '../../Catalog.module.scss';
+}
+
+.skeletonImage {
+  composes: skeletonImage from '../../Catalog.module.scss';
+}
+
+.skeletonLineLg {
+  composes: skeletonLineLg from '../../Catalog.module.scss';
+}
+
+.skeletonLineMd {
+  composes: skeletonLineMd from '../../Catalog.module.scss';
+}
+
+.skeletonLineSm {
+  composes: skeletonLineSm from '../../Catalog.module.scss';
+}
+
+.skeletonTagRow {
+  composes: skeletonTagRow from '../../Catalog.module.scss';
+}

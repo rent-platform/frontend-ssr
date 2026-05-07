@@ -71,3 +71,11 @@ export type TimelineEntry =
   | { kind: 'message'; data: ChatMessage }
   | { kind: 'system'; data: SystemEvent }
   | { kind: 'date'; label: string };
+
+/* ═══ Component Props ═══ */
+
+export type ConversationHeaderProps = { chat: ChatPreview };
+export type DealContextBarProps = { chat: ChatPreview };
+export type QuickActionsBarProps = { actions: QuickAction[] };
+export type TimelineItemProps = { entry: TimelineEntry };
+export type MessageBubbleProps = { message: ChatMessage };

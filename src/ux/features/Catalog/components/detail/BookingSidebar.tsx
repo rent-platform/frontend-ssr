@@ -14,16 +14,16 @@ import {
   Star,
   Zap,
 } from 'lucide-react';
-import type { CatalogUiItem } from '../types';
+import type { CatalogUiItem } from '../../types';
 import { pluralize } from '@/ux/utils';
 import {
   formatCatalogCardHourSecondary,
   formatCatalogCardPrimaryPrice,
   formatDepositAmount,
   formatPrice,
-} from '../utils';
+} from '../../utils';
 import { RentalCalendar } from './RentalCalendar';
-import styles from '../Catalog.module.scss';
+import styles from '../../Catalog.module.scss';
 
 type BookingSidebarProps = {
   item: CatalogUiItem;
@@ -203,7 +203,7 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
           <span className={styles.sidebarEyebrow}>Владелец</span>
           <span className={styles.ownerName}>{item.ownerName}</span>
           <div className={styles.ownerMeta}>
-            <Star size={14} fill="#f59e0b" color="#f59e0b" />
+            <Star size={14} fill="var(--color-warning)" color="var(--color-warning)" />
             {(item.ownerRating ?? 0).toFixed(1)} · {item.ownerReviewCount ?? 0} {pluralize(item.ownerReviewCount ?? 0, 'отзыв', 'отзыва', 'отзывов')}
           </div>
         </div>

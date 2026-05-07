@@ -1,9 +1,9 @@
 'use client';
 
-import type { CatalogFilterState } from '../types';
+import type { CatalogFilterState } from '../../types';
 import { pluralize } from '@/ux/utils';
 import { GlassSelect, type GlassSelectOption } from './GlassSelect';
-import styles from '../Catalog.module.scss';
+import styles from '../../Catalog.module.scss';
 
 type CatalogToolbarProps = {
   filters: CatalogFilterState;

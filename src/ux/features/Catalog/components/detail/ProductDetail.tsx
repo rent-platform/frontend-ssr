@@ -15,15 +15,15 @@ import {
   Star,
   Truck,
 } from 'lucide-react';
-import type { CatalogUiItem } from '../types';
+import type { CatalogUiItem } from '../../types';
 import {
   formatCatalogCardLocation,
   formatRelativeDate,
-} from '../utils';
-import { CatalogCard } from './CatalogCard';
+} from '../../utils';
+import { CatalogCard } from '../cards/CatalogCard';
 import { ProductGallery } from './ProductGallery';
 import { BookingSidebar } from './BookingSidebar';
-import styles from '../Catalog.module.scss';
+import styles from '../../Catalog.module.scss';
 
 type ProductDetailProps = {
   item: CatalogUiItem;
@@ -111,7 +111,7 @@ export function ProductDetail({
 
           {(item.tags ?? []).length > 0 && (
             <div className={styles.detailTags}>
-              {(item.tags ?? []).map((tag) => (
+              {(item.tags ?? []).map((tag: string) => (
                 <span key={tag} className={styles.detailTag}>{tag}</span>
               ))}
             </div>
@@ -148,7 +148,7 @@ export function ProductDetail({
               <h2>Характеристики</h2>
             </div>
             <div className={styles.detailSpecsGrid}>
-              {(item.specs ?? []).map((spec, i) => (
+              {(item.specs ?? []).map((spec: { label: string; value: string }, i: number) => (
                 <div key={i} className={styles.detailSpecItem}>
                   <div className={styles.specIcon}>
                     <Package size={18} />

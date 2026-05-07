@@ -15,14 +15,15 @@ import {
   Truck,
   Zap,
 } from 'lucide-react';
-import type { CatalogUiItem } from '../types';
+import clsx from 'clsx';
+import type { CatalogUiItem } from '../../types';
 import {
   formatCatalogCardHourSecondary,
   formatCatalogCardLocation,
   formatCatalogCardPrimaryPrice,
   formatDepositAmount,
   formatRelativeDate,
-} from '../utils';
+} from '../../utils';
 import styles from './CatalogCard.module.scss';
 
 type CatalogCardProps = {
@@ -98,7 +99,7 @@ function ImageCarousel({
         <>
           <button
             type="button"
-            className={`${styles.carouselArrow} ${styles.carouselArrowLeft}`}
+            className={clsx(styles.carouselArrow, styles.carouselArrowLeft)}
             onClick={(e) => { e.stopPropagation(); goTo(current - 1); }}
             aria-label="Предыдущее фото"
           >
@@ -106,7 +107,7 @@ function ImageCarousel({
           </button>
           <button
             type="button"
-            className={`${styles.carouselArrow} ${styles.carouselArrowRight}`}
+            className={clsx(styles.carouselArrow, styles.carouselArrowRight)}
             onClick={(e) => { e.stopPropagation(); goTo(current + 1); }}
             aria-label="Следующее фото"
           >
@@ -160,7 +161,7 @@ export function CatalogCard({
       <div className={styles.cardImageArea}>
         <button
           type="button"
-          className={`${styles.cardFavorite} ${isFavorite ? styles.cardFavoriteActive : ''}`}
+          className={clsx(styles.cardFavorite, isFavorite && styles.cardFavoriteActive)}
           aria-label={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
           onClick={(e) => { e.stopPropagation(); if (isGuest) { onFavoriteChange?.(item.id, true); return; } const next = !isFavorite; setIsFavorite(next); onFavoriteChange?.(item.id, next); }}
         >
@@ -170,9 +171,9 @@ export function CatalogCard({
         <div className={styles.cardBadgeRow}>
           {item.featured && <span className={styles.cardFeatured}>Топ</span>}
           <span
-            className={`${styles.cardStatus} ${
-              item.isAvailable ? styles.cardStatusAvailable : styles.cardStatusSoon
-            }`}
+            className={clsx(styles.cardStatus,
+              item.isAvailable ? styles.cardStatusAvailable : styles.cardStatusSoon,
+            )}
           >
             {item.isAvailable ? 'Доступно' : 'Скоро'}
           </span>
@@ -216,7 +217,7 @@ export function CatalogCard({
 
         {/* ── Highlights ── */}
         <div className={styles.cardChips}>
-          {highlightItems.map((hl) => {
+          {highlightItems.map((hl: string) => {
             const Icon = highlightVisuals[hl as keyof typeof highlightVisuals] ?? ShieldCheck;
             return (
               <span key={hl} className={styles.cardChip}>

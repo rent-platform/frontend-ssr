@@ -4,26 +4,14 @@ import { useEffect, useMemo, useState, useCallback } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
-  Bell,
   BellOff,
-  Bookmark,
-  Calendar,
-  Check,
   CheckCheck,
   ChevronDown,
-  CreditCard,
-  Gift,
-  Lock,
-  MessageSquare,
-  Package,
   Settings,
-  Shield,
-  Star,
-  Wallet,
 } from 'lucide-react';
+import clsx from 'clsx';
 import type {
   NotificationItem,
-  NotificationType,
   NotificationTab,
 } from './types';
 import {
@@ -31,89 +19,10 @@ import {
   TAB_TYPE_MAP,
 } from './types';
 import { MOCK_NOTIFICATIONS } from './mockNotifications';
-import { timeAgo, ROUTES } from '@/ux/utils';
+import { ROUTES } from '@/ux/utils';
+import { groupByDate } from './components/notificationHelpers';
+import { NotificationCard } from './components/NotificationCard';
 import styles from './NotificationsPage.module.scss';
-
-/* ─── Helpers ─── */
-
-function groupByDate(items: NotificationItem[]): { label: string; items: NotificationItem[] }[] {
-  const groups = new Map<string, NotificationItem[]>();
-
-  for (const item of items) {
-    const date = new Date(item.createdAt);
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today.getTime() - 86400000);
-    const itemDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-    let label: string;
-    if (itemDay.getTime() === today.getTime()) {
-      label = 'Сегодня';
-    } else if (itemDay.getTime() === yesterday.getTime()) {
-      label = 'Вчера';
-    } else {
-      label = date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
-    }
-
-    const arr = groups.get(label) ?? [];
-    arr.push(item);
-    groups.set(label, arr);
-  }
-
-  return Array.from(groups, ([label, items]) => ({ label, items }));
-}
-
-/** Map notification type → icon component & style */
-function getIconProps(type: NotificationType): { Icon: typeof Bell; cls: string } {
-  switch (type) {
-    case 'deal_request':
-    case 'deal_confirmed':
-    case 'deal_started':
-    case 'deal_ending':
-    case 'deal_completed':
-    case 'deal_cancelled':
-    case 'deal_rejected':
-      return { Icon: Calendar, cls: styles.iconDeal };
-    case 'payment_received':
-    case 'deposit_returned':
-      return { Icon: Wallet, cls: styles.iconPayment };
-    case 'payment_sent':
-    case 'deposit_held':
-      return { Icon: CreditCard, cls: styles.iconPayment };
-    case 'review_received':
-      return { Icon: Star, cls: styles.iconReview };
-    case 'review_reminder':
-      return { Icon: Bookmark, cls: styles.iconReview };
-    case 'message_new':
-    case 'message_mention':
-      return { Icon: MessageSquare, cls: styles.iconMessage };
-    case 'verification':
-      return { Icon: Shield, cls: styles.iconSystem };
-    case 'security':
-      return { Icon: Lock, cls: styles.iconSecurity };
-    case 'promo':
-      return { Icon: Gift, cls: styles.iconPromo };
-    case 'system':
-    default:
-      return { Icon: Bell, cls: styles.iconSystem };
-  }
-}
-
-const DEAL_STATUS_CLS: Record<string, string> = {
-  PENDING: styles.statusNew,
-  CONFIRMED: styles.statusConfirmed,
-  ACTIVE: styles.statusActive,
-  COMPLETED: styles.statusCompleted,
-  REJECTED: styles.statusRejected,
-};
-
-const DEAL_STATUS_LABEL: Record<string, string> = {
-  PENDING: 'Новая',
-  CONFIRMED: 'Подтверждена',
-  ACTIVE: 'Активна',
-  COMPLETED: 'Завершена',
-  REJECTED: 'Отклонена',
-};
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    NotificationsPage
@@ -181,13 +90,15 @@ export function NotificationsPage({
 
   const handleMarkAllRead = useCallback(() => {
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-  }, []);
+    onMarkAllRead?.();
+  }, [onMarkAllRead]);
 
   const handleMarkRead = useCallback((id: string) => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)),
     );
-  }, []);
+    onMarkRead?.(id);
+  }, [onMarkRead]);
 
   return (
     <div className={styles.page}>
@@ -212,7 +123,7 @@ export function NotificationsPage({
               onClick={handleMarkAllRead}
               disabled={totalUnread === 0}
             >
-              <CheckCheck size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: 4 }} />
+              <CheckCheck size={14} className="inlineIcon" />
               Прочитать все
             </button>
             <Link href={ROUTES.settings} className={styles.settingsBtn} aria-label="Настройки уведомлений">
@@ -225,12 +136,12 @@ export function NotificationsPage({
         <div className={styles.tabs}>
           <button
             type="button"
-            className={`${styles.tab} ${tab === 'all' ? styles.tabActive : ''}`}
+            className={clsx(styles.tab, tab === 'all' && styles.tabActive)}
             onClick={() => setTab('all')}
           >
             Все
             {tabCounts.all > 0 && (
-              <span className={`${styles.tabBadge} ${tab === 'all' ? styles.tabBadgeActive : ''}`}>
+              <span className={clsx(styles.tabBadge, tab === 'all' && styles.tabBadgeActive)}>
                 {tabCounts.all}
               </span>
             )}
@@ -239,11 +150,11 @@ export function NotificationsPage({
           <div className={styles.dropdownWrap}>
             <button
               type="button"
-              className={`${styles.tab} ${tab !== 'all' ? styles.tabActive : ''}`}
+              className={clsx(styles.tab, tab !== 'all' && styles.tabActive)}
             >
               {tab !== 'all' ? NOTIFICATION_TAB_LABELS[tab] : 'Категория'}
               {tab !== 'all' && tabCounts[tab] > 0 && (
-                <span className={`${styles.tabBadge} ${styles.tabBadgeActive}`}>
+                <span className={clsx(styles.tabBadge, styles.tabBadgeActive)}>
                   {tabCounts[tab]}
                 </span>
               )}
@@ -256,7 +167,7 @@ export function NotificationsPage({
                   <button
                     key={t}
                     type="button"
-                    className={`${styles.dropdownItem} ${tab === t ? styles.dropdownItemActive : ''}`}
+                    className={clsx(styles.dropdownItem, tab === t && styles.dropdownItemActive)}
                     onClick={() => setTab(t)}
                   >
                     <span>{NOTIFICATION_TAB_LABELS[t]}</span>
@@ -297,113 +208,4 @@ export function NotificationsPage({
       </div>
     </div>
   );
-}
-
-/* ═══ NotificationCard ═══ */
-
-function NotificationCard({
-  notification: ntf,
-  onRead,
-}: {
-  notification: NotificationItem;
-  onRead: (id: string) => void;
-}) {
-  const { Icon, cls: iconCls } = getIconProps(ntf.type);
-
-  const priorityCls =
-    ntf.priority === 'urgent'
-      ? styles.cardUrgent
-      : ntf.priority === 'high'
-        ? styles.cardHigh
-        : '';
-
-  const handleClick = () => {
-    if (!ntf.isRead) onRead(ntf.id);
-  };
-
-  const card = (
-    <div
-      className={`${styles.card} ${!ntf.isRead ? styles.cardUnread : ''} ${priorityCls}`}
-      role="button"
-      tabIndex={0}
-      onClick={handleClick}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } }}
-    >
-      <div className={`${styles.iconCircle} ${iconCls}`}>
-        <Icon />
-      </div>
-
-      <div className={styles.cardBody}>
-        <div className={styles.cardTitleRow}>
-          <h4 className={`${styles.cardTitle} ${!ntf.isRead ? styles.cardTitleUnread : ''}`}>
-            {ntf.title}
-          </h4>
-          {!ntf.isRead && <span className={styles.unreadDot} />}
-        </div>
-
-        <p className={styles.cardText}>{ntf.body}</p>
-
-        <div className={styles.cardMeta}>
-          <span className={styles.cardTime}>{timeAgo(ntf.createdAt)}</span>
-
-          {ntf.meta?.itemTitle && (
-            <span className={styles.cardItemTag}>
-              <Package size={10} />
-              {ntf.meta.itemTitle}
-            </span>
-          )}
-
-          {ntf.meta?.amount && (
-            <span
-              className={`${styles.cardAmount} ${
-                ntf.type === 'payment_received' || ntf.type === 'deposit_returned'
-                  ? styles.cardAmountPositive
-                  : ntf.type === 'payment_sent' || ntf.type === 'deposit_held'
-                    ? styles.cardAmountNegative
-                    : ''
-              }`}
-            >
-              {ntf.type === 'payment_received' || ntf.type === 'deposit_returned' ? '+' : ''}
-              {ntf.type === 'payment_sent' || ntf.type === 'deposit_held' ? '−' : ''}
-              {ntf.meta.amount.toLocaleString('ru-RU')} {ntf.meta.currency ?? '₽'}
-            </span>
-          )}
-
-          {ntf.meta?.rating && (
-            <span className={styles.cardRating}>
-              <Star size={11} />
-              {ntf.meta.rating}
-            </span>
-          )}
-        </div>
-      </div>
-
-      <div className={styles.cardRight}>
-        {ntf.meta?.dealStatus && (
-          <span className={`${styles.statusBadge} ${DEAL_STATUS_CLS[ntf.meta.dealStatus] ?? ''}`}>
-            {DEAL_STATUS_LABEL[ntf.meta.dealStatus] ?? ntf.meta.dealStatus}
-          </span>
-        )}
-        {ntf.actionLabel && (
-          <button
-            type="button"
-            className={styles.cardAction}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {ntf.actionLabel}
-          </button>
-        )}
-      </div>
-    </div>
-  );
-
-  if (ntf.actionUrl) {
-    return (
-      <Link href={ntf.actionUrl} style={{ textDecoration: 'none', color: 'inherit' }}>
-        {card}
-      </Link>
-    );
-  }
-
-  return card;
 }

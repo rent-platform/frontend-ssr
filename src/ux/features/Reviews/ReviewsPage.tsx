@@ -2,13 +2,11 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import clsx from 'clsx';
 import {
   ArrowLeft,
-  Camera,
   Inbox,
   MessageSquare,
-  Package,
-  Pencil,
   Send,
   Star,
 } from 'lucide-react';
@@ -25,7 +23,9 @@ import {
   MOCK_REVIEWS_GIVEN,
   MOCK_RATING_BREAKDOWN,
 } from './mockReviewsData';
-import { pluralize, getInitials, formatDate, ROUTES } from '@/ux/utils';
+import { pluralize, ROUTES } from '@/ux/utils';
+import { RatingSummary } from './components/RatingSummary';
+import { ReviewCard } from './components/ReviewCard';
 import styles from './ReviewsPage.module.scss';
 
 
@@ -103,7 +103,7 @@ export function ReviewsPage({
     }
 
     return sorted;
-  }, [tab, receivedFilter, starFilter, sort]);
+  }, [tab, receivedReviews, givenReviews, receivedFilter, starFilter, sort]);
 
   return (
     <div className={styles.page}>
@@ -125,23 +125,23 @@ export function ReviewsPage({
         <div className={styles.tabs}>
           <button
             type="button"
-            className={`${styles.tab} ${tab === 'received' ? styles.tabActive : ''}`}
+            className={clsx(styles.tab, tab === 'received' && styles.tabActive)}
             onClick={() => { setTab('received'); setStarFilter(0); }}
           >
             <Inbox size={16} />
             <span>Полученные</span>
-            <span className={`${styles.tabBadge} ${tab !== 'received' ? styles.tabBadgeInactive : ''}`}>
+            <span className={clsx(styles.tabBadge, tab !== 'received' && styles.tabBadgeInactive)}>
               {MOCK_REVIEWS_RECEIVED.length}
             </span>
           </button>
           <button
             type="button"
-            className={`${styles.tab} ${tab === 'given' ? styles.tabActive : ''}`}
+            className={clsx(styles.tab, tab === 'given' && styles.tabActive)}
             onClick={() => { setTab('given'); setReceivedFilter('all'); setStarFilter(0); }}
           >
             <Send size={16} />
             <span>Оставленные</span>
-            <span className={`${styles.tabBadge} ${tab !== 'given' ? styles.tabBadgeInactive : ''}`}>
+            <span className={clsx(styles.tabBadge, tab !== 'given' && styles.tabBadgeInactive)}>
               {MOCK_REVIEWS_GIVEN.length}
             </span>
           </button>
@@ -154,7 +154,7 @@ export function ReviewsPage({
               <button
                 key={`star-${s}`}
                 type="button"
-                className={`${styles.filterPill} ${starFilter === s ? styles.filterPillActive : ''}`}
+                className={clsx(styles.filterPill, starFilter === s && styles.filterPillActive)}
                 onClick={() => setStarFilter(s)}
               >
                 {s === 0 ? 'Все оценки' : `${'★'.repeat(s)} ${s}`}
@@ -191,131 +191,6 @@ export function ReviewsPage({
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-/* ═══ Rating Summary ═══ */
-function RatingSummary({
-  breakdown,
-  starFilter,
-  onStarFilter,
-}: {
-  breakdown: RatingBreakdown;
-  starFilter: StarFilter;
-  onStarFilter: (s: StarFilter) => void;
-}) {
-  const maxCount = Math.max(...Object.values(breakdown.distribution), 1);
-
-  return (
-    <div className={styles.summaryCard}>
-      <div className={styles.summaryLeft}>
-        <span className={styles.summaryAverage}>{breakdown.average.toFixed(1)}</span>
-        <div className={styles.summaryStars}>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <Star
-              key={i}
-              size={18}
-              fill={i <= Math.round(breakdown.average) ? '#f59e0b' : 'none'}
-              className={i <= Math.round(breakdown.average) ? styles.starFilled : styles.starEmpty}
-            />
-          ))}
-        </div>
-        <span className={styles.summaryTotal}>
-          {breakdown.total} {pluralize(breakdown.total, 'отзыв', 'отзыва', 'отзывов')}
-        </span>
-      </div>
-
-      <div className={styles.summaryRight}>
-        {([5, 4, 3, 2, 1] as const).map((star) => {
-          const count = breakdown.distribution[star];
-          const pct = breakdown.total > 0 ? (count / maxCount) * 100 : 0;
-          const isActive = starFilter === star;
-
-          return (
-            <button
-              key={star}
-              type="button"
-              className={styles.barRow}
-              style={{ background: 'none', border: 0, cursor: 'pointer', padding: 0, opacity: starFilter > 0 && !isActive ? 0.4 : 1 }}
-              onClick={() => onStarFilter(isActive ? 0 : star)}
-            >
-              <span className={styles.barLabel}>{star}</span>
-              <div className={styles.barTrack}>
-                <div className={styles.barFill} style={{ width: `${pct}%` }} />
-              </div>
-              <span className={styles.barCount}>{count}</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-/* ═══ Review Card ═══ */
-function ReviewCard({ review, isGiven }: { review: ProfileReview; isGiven: boolean }) {
-  const roleLabel = review.myRole === 'owner' ? 'Арендодатель' : 'Арендатор';
-  const roleCls = review.myRole === 'owner' ? styles.roleBadgeOwner : styles.roleBadgeRenter;
-
-  return (
-    <div className={styles.reviewCard}>
-      {/* Header */}
-      <div className={styles.reviewHeader}>
-        {review.authorAvatar ? (
-          <img src={review.authorAvatar} alt={review.authorName} className={styles.reviewAvatarImg} />
-        ) : (
-          <div className={styles.reviewAvatar}>{getInitials(review.authorName)}</div>
-        )}
-        <div className={styles.reviewMeta}>
-          <div className={styles.reviewAuthorRow}>
-            <span className={styles.reviewAuthor}>{review.authorName}</span>
-            {!isGiven && (
-              <span className={`${styles.reviewRoleBadge} ${roleCls}`}>
-                вы — {roleLabel.toLowerCase()}
-              </span>
-            )}
-          </div>
-          <div className={styles.reviewStarsRow}>
-            <div className={styles.reviewStars}>
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Star
-                  key={i}
-                  size={14}
-                  fill={i <= review.rating ? '#f59e0b' : 'none'}
-                  className={i <= review.rating ? styles.starFilled : styles.starEmpty}
-                />
-              ))}
-            </div>
-            <span className={styles.reviewDate}>{formatDate(review.createdAt, 'long')}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Text */}
-      {review.text && <p className={styles.reviewText}>{review.text}</p>}
-
-      {/* Item reference */}
-      <div className={styles.reviewItem}>
-        {review.itemImage ? (
-          <img src={review.itemImage} alt={review.itemTitle} className={styles.reviewItemImage} />
-        ) : (
-          <div className={styles.reviewItemPlaceholder}><Package size={18} /></div>
-        )}
-        <span className={styles.reviewItemTitle}>{review.itemTitle}</span>
-      </div>
-
-      {/* Reply */}
-      {review.reply && (
-        <div className={styles.reviewReply}>
-          <div className={styles.replyHeader}>
-            <Pencil size={12} />
-            <span className={styles.replyLabel}>Ваш ответ</span>
-            <span className={styles.replyDate}>{formatDate(review.reply.createdAt, 'long')}</span>
-          </div>
-          <p className={styles.replyText}>{review.reply.text}</p>
-        </div>
-      )}
     </div>
   );
 }

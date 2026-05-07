@@ -1,6 +1,7 @@
 'use client';
 
 import { Camera, GripVertical, Plus, X } from 'lucide-react';
+import clsx from 'clsx';
 import type { ImagePreview } from '../types';
 import styles from '../CreateListing.module.scss';
 
@@ -54,7 +55,7 @@ export function StepPhotos({
 
       {images.length === 0 ? (
         <div
-          className={`${styles.uploadZone} ${dragging ? styles.uploadZoneDragging : ''}`}
+          className={clsx(styles.uploadZone, dragging && styles.uploadZoneDragging)}
           onClick={() => fileInputRef.current?.click()}
           onDragOver={(e) => {
             e.preventDefault();
@@ -74,7 +75,7 @@ export function StepPhotos({
           {images.map((img, i) => (
             <div
               key={img.id}
-              className={`${styles.imageThumb} ${dragOverId === img.id ? styles.imageThumbDragOver : ''}`}
+              className={clsx(styles.imageThumb, dragOverId === img.id && styles.imageThumbDragOver)}
               draggable
               onDragStart={() => { dragSourceId.current = img.id; }}
               onDragOver={(e) => { e.preventDefault(); onSetDragOverId(img.id); }}

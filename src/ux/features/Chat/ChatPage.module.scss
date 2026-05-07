@@ -261,10 +261,17 @@
   display: flex;
   align-items: flex-start;
   gap: $space-3;
+  width: 100%;
   padding: $space-3 $space-5;
+  margin: 0;
+  border: none;
+  border-left: 3px solid transparent;
+  background: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
   cursor: pointer;
   transition: background 0.15s ease;
-  border-left: 3px solid transparent;
   position: relative;
 
   &:hover { background: #f8fafc; }
@@ -392,6 +399,8 @@
 }
 
 .chatItemLineText {
+  flex: 1;
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -3,22 +3,14 @@
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Camera, Shield, ShoppingBag, Upload, User } from 'lucide-react';
-import { pluralize } from '@/ux/utils';
+import clsx from 'clsx';
+import { pluralize, formatDate, EASE } from '@/ux/utils';
 import type { ProfileBooking, BookingSide } from '../types';
 import { MOCK_BOOKINGS } from '../mockProfileData';
-import { BOOKING_FILTERS, DEAL_STATUS_MAP, EASE, formatShortDate } from '../profileHelpers';
+import { BOOKING_FILTERS, DEAL_STATUS_MAP } from '../profileHelpers';
 import type { BookingFilter } from '../profileHelpers';
+import { EmptyState } from './EmptyState';
 import styles from '../ProfileDashboard.module.scss';
-
-function EmptyState({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
-  return (
-    <div className={styles.emptyState}>
-      <div className={styles.emptyIcon}>{icon}</div>
-      <h3 className={styles.emptyTitle}>{title}</h3>
-      <p className={styles.emptyText}>{text}</p>
-    </div>
-  );
-}
 
 function BookingRow({ booking, counterLabel }: { booking: ProfileBooking; counterLabel: string }) {
   const st = DEAL_STATUS_MAP[booking.status];
@@ -27,7 +19,7 @@ function BookingRow({ booking, counterLabel }: { booking: ProfileBooking; counte
     <div className={styles.bookingCard}>
       <div className={styles.bookingImageArea}>
         <div className={styles.bookingBadgeRow}>
-          <span className={`${styles.statusBadge} ${st.cls}`}>{st.label}</span>
+          <span className={clsx(styles.statusBadge, st.cls)}>{st.label}</span>
         </div>
         {booking.itemImage ? (
           <img src={booking.itemImage} alt={booking.itemTitle} className={styles.bookingImg} />
@@ -43,7 +35,7 @@ function BookingRow({ booking, counterLabel }: { booking: ProfileBooking; counte
             <User size={14} /> {counterLabel}: {booking.counterpartyName}
           </span>
           <span className={styles.bookingMeta}>
-            <Calendar size={14} /> {formatShortDate(booking.startDate)} — {formatShortDate(booking.endDate)}
+            <Calendar size={14} /> {formatDate(booking.startDate)} — {formatDate(booking.endDate)}
           </span>
         </div>
 
@@ -89,14 +81,14 @@ export function DealsPanel({ side, onSideChange, filter, onFilterChange }: { sid
       <div className={styles.sideToggle}>
         <button
           type="button"
-          className={`${styles.sideToggleBtn} ${side === 'owner' ? styles.sideToggleBtnActive : ''}`}
+          className={clsx(styles.sideToggleBtn, side === 'owner' && styles.sideToggleBtnActive)}
           onClick={() => { onSideChange('owner'); onFilterChange('all'); }}
         >
           <Upload size={14} /> Сдаю
         </button>
         <button
           type="button"
-          className={`${styles.sideToggleBtn} ${side === 'renter' ? styles.sideToggleBtnActive : ''}`}
+          className={clsx(styles.sideToggleBtn, side === 'renter' && styles.sideToggleBtnActive)}
           onClick={() => { onSideChange('renter'); onFilterChange('all'); }}
         >
           <ShoppingBag size={14} /> Арендую
@@ -106,7 +98,7 @@ export function DealsPanel({ side, onSideChange, filter, onFilterChange }: { sid
       {/* Status filters */}
       <div className={styles.filterPills}>
         {BOOKING_FILTERS.map((f) => (
-          <button key={f.value} type="button" className={`${styles.filterPill} ${filter === f.value ? styles.filterPillActive : ''} ${styles.tooltipWrap}`} onClick={() => onFilterChange(f.value)}>
+          <button key={f.value} type="button" className={clsx(styles.filterPill, filter === f.value && styles.filterPillActive, styles.tooltipWrap)} onClick={() => onFilterChange(f.value)}>
             {f.label}
             <span className={styles.tooltipBubble}>{f.tip}</span>
           </button>

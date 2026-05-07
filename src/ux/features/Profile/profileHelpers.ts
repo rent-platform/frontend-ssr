@@ -5,8 +5,6 @@ import type { ProfileListing } from './types';
 import { MOCK_USER } from './mockProfileData';
 import styles from './ProfileDashboard.module.scss';
 
-export const EASE = [0.23, 1, 0.32, 1] as const;
-
 export type ListingFilter = 'all' | ItemStatus;
 export type BookingFilter = 'all' | DealStatus;
 
@@ -57,10 +55,6 @@ export function profileListingToCatalogItem(listing: ProfileListing): CatalogUiI
     quickFilters: [],
     featured: listing.bookingsCount > 10,
   } as CatalogUiItem;
-}
-
-export function formatShortDate(iso: string) {
-  return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 }
 
 export function getProfileCompletion(user: typeof MOCK_USER): number {

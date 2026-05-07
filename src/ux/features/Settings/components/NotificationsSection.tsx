@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import clsx from 'clsx';
 import type { NotificationToggles } from '../types';
 import { MOCK_NOTIFICATIONS } from '../mockSettingsData';
 import styles from '../SettingsPage.module.scss';
@@ -35,7 +36,7 @@ export function NotificationsSection() {
             </div>
             <button
               type="button"
-              className={`${styles.toggle} ${on ? styles.toggleOn : ''}`}
+              className={clsx(styles.toggle, on && styles.toggleOn)}
               onClick={() => flip(key as keyof NotificationToggles)}
               aria-label={`${meta.label} ${on ? 'выкл' : 'вкл'}`}
             />

@@ -13,7 +13,7 @@ import {
   Wrench,
   type LucideIcon,
 } from 'lucide-react';
-import styles from '../Catalog.module.scss';
+import styles from '../../Catalog.module.scss';
 
 type CategoryRailProps = {
   categories: readonly string[];

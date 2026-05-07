@@ -3,8 +3,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useRef } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
-import type { CatalogFilterState } from '../types';
-import { INITIAL_FILTERS } from '../utils';
+import type { CatalogFilterState } from '../../types';
+import { INITIAL_FILTERS } from '../../utils';
 import { CatalogFilters } from './CatalogFilters';
 import styles from './CatalogSearchBar.module.scss';
 

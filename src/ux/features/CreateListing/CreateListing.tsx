@@ -15,6 +15,7 @@ import {
 import Link from 'next/link';
 import type { CreateListingFormData, ImagePreview } from './types';
 import { StepPhotos, StepInfo, StepPricing, StepReview } from './components';
+import clsx from 'clsx';
 import { ROUTES } from '@/ux/utils';
 import styles from './CreateListing.module.scss';
 
@@ -209,17 +210,17 @@ export function CreateListing({
             <Fragment key={s.id}>
               {i > 0 && (
                 <div
-                  className={`${styles.stepConnector} ${i <= step ? styles.stepConnectorDone : ''}`}
+                  className={clsx(styles.stepConnector, i <= step && styles.stepConnectorDone)}
                 />
               )}
               <div
-                className={`${styles.stepItem} ${
+                className={clsx(styles.stepItem,
                   i === step
                     ? styles.stepItemActive
                     : i < step
                       ? styles.stepItemCompleted
-                      : ''
-                }`}
+                      : undefined,
+                )}
                 onClick={() => {
                   if (i < step) setStep(i);
                 }}
@@ -268,7 +269,7 @@ export function CreateListing({
           {step < STEPS.length - 1 ? (
             <button
               type="button"
-              className={`${styles.navNext} ${!canAdvance ? styles.navDisabled : ''}`}
+              className={clsx(styles.navNext, !canAdvance && styles.navDisabled)}
               onClick={goNext}
               disabled={!canAdvance}
             >
@@ -278,7 +279,7 @@ export function CreateListing({
           ) : (
             <button
               type="button"
-              className={`${styles.navNext} ${styles.publishBtn}`}
+              className={clsx(styles.navNext, styles.publishBtn)}
               onClick={handlePublish}
               disabled={isSubmitting}
             >

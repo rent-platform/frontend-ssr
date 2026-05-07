@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import styles from '../Catalog.module.scss';
+import clsx from 'clsx';
+import styles from '../../Catalog.module.scss';
 
 export type GlassSelectOption = {
   value: string;
@@ -214,7 +215,7 @@ export function GlassSelect({
       {open ? (
         <div
           ref={dropdownRef}
-          className={`${styles.glassSelectDropdown}${dropdownClassName ? ` ${dropdownClassName}` : ''}`}
+          className={clsx(styles.glassSelectDropdown, dropdownClassName)}
           onKeyDown={handleListKeyDown}
         >
           {searchable ? (

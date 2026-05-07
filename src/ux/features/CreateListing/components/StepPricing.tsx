@@ -1,6 +1,7 @@
 'use client';
 
 import { Shield } from 'lucide-react';
+import clsx from 'clsx';
 import type { CreateListingFormData } from '../types';
 import styles from '../CreateListing.module.scss';
 
@@ -24,7 +25,7 @@ export function StepPricing({ form, onPatch }: StepPricingProps) {
             <div className={styles.inputWithPrefix}>
               <span className={styles.inputPrefix}>₽</span>
               <input
-                className={`${styles.input} ${styles.inputPrefixed}`}
+                className={clsx(styles.input, styles.inputPrefixed)}
                 type="number"
                 placeholder="500"
                 value={form.pricePerDay}
@@ -37,7 +38,7 @@ export function StepPricing({ form, onPatch }: StepPricingProps) {
             <div className={styles.inputWithPrefix}>
               <span className={styles.inputPrefix}>₽</span>
               <input
-                className={`${styles.input} ${styles.inputPrefixed}`}
+                className={clsx(styles.input, styles.inputPrefixed)}
                 type="number"
                 placeholder="100"
                 value={form.pricePerHour}
@@ -49,7 +50,7 @@ export function StepPricing({ form, onPatch }: StepPricingProps) {
         </div>
 
         <div
-          className={`${styles.toggleRow} ${form.noDeposit ? styles.toggleRowActive : ''}`}
+          className={clsx(styles.toggleRow, form.noDeposit && styles.toggleRowActive)}
           onClick={() => onPatch({ noDeposit: !form.noDeposit, depositAmount: '' })}
         >
           <div className={styles.toggleInfo}>
@@ -61,7 +62,7 @@ export function StepPricing({ form, onPatch }: StepPricingProps) {
           </div>
           <button
             type="button"
-            className={`${styles.toggle} ${form.noDeposit ? styles.toggleOn : ''}`}
+            className={clsx(styles.toggle, form.noDeposit && styles.toggleOn)}
             onClick={(e) => { e.stopPropagation(); onPatch({ noDeposit: !form.noDeposit, depositAmount: '' }); }}
           />
         </div>
@@ -72,7 +73,7 @@ export function StepPricing({ form, onPatch }: StepPricingProps) {
             <div className={styles.inputWithPrefix}>
               <span className={styles.inputPrefix}>₽</span>
               <input
-                className={`${styles.input} ${styles.inputPrefixed}`}
+                className={clsx(styles.input, styles.inputPrefixed)}
                 type="number"
                 placeholder="2000"
                 value={form.depositAmount}

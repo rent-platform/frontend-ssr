@@ -165,3 +165,74 @@
     box-shadow: $shadow-card-hover;
   }
 }
+
+// ─── Empty State Pattern ─────────────────────────────────────────────────────
+
+@mixin empty-state-layout($padding: $space-12 $space-5) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: $padding;
+}
+
+@mixin empty-state-icon($size: 72px, $bg: rgba(100, 116, 139, 0.06), $color: $color-text-secondary) {
+  @include flex-center;
+  @include square($size);
+  border-radius: $radius-full;
+  background: $bg;
+  color: $color;
+  margin-bottom: $space-5;
+}
+
+@mixin empty-state-title($size: $font-size-lg) {
+  font-family: $font-family-display;
+  font-size: $size;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  margin: 0 0 $space-2;
+}
+
+@mixin empty-state-text($max-width: 320px) {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  max-width: $max-width;
+  margin: 0 0 $space-6;
+  line-height: 1.6;
+}
+
+// ─── Modal Overlay Pattern ───────────────────────────────────────────────────
+
+@mixin modal-overlay($z: $z-modal) {
+  position: fixed;
+  inset: 0;
+  z-index: $z;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  padding: $space-4;
+}
+
+@mixin modal-panel($max-width: 440px) {
+  background: #fff;
+  border-radius: $radius-2xl;
+  padding: $space-6;
+  width: 100%;
+  max-width: $max-width;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+}
+
+@mixin modal-close-btn {
+  display: grid;
+  place-items: center;
+  @include square(32px);
+  background: transparent;
+  border: none;
+  border-radius: $radius-full;
+  cursor: pointer;
+  color: $color-text-secondary;
+  transition: $transition-base;
+  &:hover { background: $color-surface-muted; color: $color-text; }
+}

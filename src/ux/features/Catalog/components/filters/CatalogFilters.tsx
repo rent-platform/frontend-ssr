@@ -19,15 +19,15 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import type { CatalogFilterState } from '../types';
+import type { CatalogFilterState } from '../../types';
 import {
   CATEGORY_OPTIONS,
   INITIAL_FILTERS,
   QUICK_FILTER_OPTIONS,
   getAnnouncementsLabel,
-} from '../utils';
+} from '../../utils';
 import { pluralize } from '@/ux/utils';
-import type { RussianCityOption } from '../russianCities';
+import type { RussianCityOption } from '../../russianCities';
 import { GlassSelect, type GlassSelectOption } from './GlassSelect';
 import styles from './CatalogFilters.module.scss';
 
@@ -104,7 +104,7 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
 
   const [cities, setCities] = useState<RussianCityOption[]>([]);
   useEffect(() => {
-    import('../russianCities').then((m) => setCities(m.RUSSIAN_CITY_OPTIONS));
+    import('../../russianCities').then((m) => setCities(m.RUSSIAN_CITY_OPTIONS));
   }, []);
 
   const cityOptions = useMemo<GlassSelectOption[]>(

@@ -144,8 +144,8 @@ export const applyCatalogFilters = (
       const matchesQuery =
         !query ||
         item.title.toLowerCase().includes(query) ||
-        (item.description ?? []).some((d) => d.toLowerCase().includes(query)) ||
-        (item.tags ?? []).some((tag) => tag.toLowerCase().includes(query));
+        (item.description ?? []).some((d: string) => d.toLowerCase().includes(query)) ||
+        (item.tags ?? []).some((tag: string) => tag.toLowerCase().includes(query));
 
       const matchesCategory =
         filters.category === 'Все категории' || item.category === filters.category;
