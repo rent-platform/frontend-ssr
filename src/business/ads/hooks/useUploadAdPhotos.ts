@@ -1,13 +1,16 @@
 ﻿"use client";
 
-import { useUploadAdPhotosMutation } from "../api";
+import { useAddAdPhotoMutation } from "../api";
 import { getApiError } from "@/business/shared";
 import { type ApiUiError } from "@/business/shared";
-import type { Photo } from "../types";
+import type { AddPhotoRequestDto, PhotoResponseDto } from "../types";
 
 interface UseUploadAdPhotosResult {
-  uploadPhotos: (adId: string, files: File[]) => void;
-  uploadedPhotos: Photo[];
+  uploadPhotos: (
+    adId: string,
+    photos: AddPhotoRequestDto[],
+  ) => Promise<unknown[]>;
+  uploadedPhotos: PhotoResponseDto[];
   isUploading: boolean;
   isError: boolean;
   uploadError: ApiUiError | null;
@@ -16,15 +19,13 @@ interface UseUploadAdPhotosResult {
 }
 
 export function useUploadAdPhotos(): UseUploadAdPhotosResult {
-  const [
-    uploadMutation,
-    { data, isLoading, isError, isSuccess, error, reset },
-  ] = useUploadAdPhotosMutation();
+  const [addPhoto, { data, isLoading, isError, isSuccess, error, reset }] =
+    useAddAdPhotoMutation();
 
   return {
-    uploadPhotos: (adId: string, files: File[]) =>
-      uploadMutation({ adId, files }),
-    uploadedPhotos: data?.photos ?? [],
+    uploadPhotos: (adId: string, photos: AddPhotoRequestDto[]) =>
+      Promise.all(photos.map((photo) => addPhoto({ adId, photo }).unwrap())),
+    uploadedPhotos: data ? [data] : [],
     isUploading: isLoading,
     isError,
     uploadError: getApiError(error),
@@ -32,7 +33,3 @@ export function useUploadAdPhotos(): UseUploadAdPhotosResult {
     reset,
   };
 }
-
-
-
-

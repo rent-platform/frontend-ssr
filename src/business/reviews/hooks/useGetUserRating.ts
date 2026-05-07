@@ -14,9 +14,12 @@ export interface UseGetUserRatingResult {
   refetch: () => void;
 }
 
-export function useGetUserRating(userId: string): UseGetUserRatingResult {
+export function useGetUserRating(
+  userId: string,
+  options: { skip?: boolean } = {},
+): UseGetUserRatingResult {
   const { data, isLoading, isFetching, isError, error, refetch } =
-    useFetchUserReviewSummaryQuery(userId);
+    useFetchUserReviewSummaryQuery(userId, { skip: options.skip || !userId });
 
   return {
     rating: data ?? null,
@@ -27,6 +30,3 @@ export function useGetUserRating(userId: string): UseGetUserRatingResult {
     refetch,
   };
 }
-
-
-

@@ -39,6 +39,30 @@ type ProxyRouteContext = {
   }>;
 };
 
+function isPublicBackendRequest(request: NextRequest, path: string[]): boolean {
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return false;
+  }
+
+  if (path[0] !== "api") {
+    return false;
+  }
+
+  if (path[1] === "catalog") {
+    return path[2] === "items" || path[2] === "categories";
+  }
+
+  if (path[1] === "reviews") {
+    return path[2] === "items" || path[2] === "users";
+  }
+
+  if (path[1] === "users") {
+    return path[3] === "public";
+  }
+
+  return false;
+}
+
 // Формирует Set-Cookie для обновленной Auth.js JWT session cookie.
 // Cookie остается HttpOnly, поэтому клиентский JavaScript ее не читает.
 function createSessionCookie(value: string): string {
@@ -168,7 +192,14 @@ async function proxyToBackend(
   }
 
   // Без AUTH_SECRET нельзя безопасно прочитать или обновить Auth.js JWT.
-  if (!AUTH_SECRET) {
+  const { path = [] } = await context.params;
+  const isPublicRequest = isPublicBackendRequest(request, path);
+  const backendBaseUrl = BACKEND_API_URL.replace(/\/+$/, "");
+  const backendPath = path.map(encodeURIComponent).join("/");
+  const targetUrl = new URL(`${backendBaseUrl}/${backendPath}`);
+  targetUrl.search = request.nextUrl.search;
+
+  if (!AUTH_SECRET && !isPublicRequest) {
     return Response.json(
       { error: "Auth secret is not configured" },
       { status: 500 },
@@ -177,28 +208,31 @@ async function proxyToBackend(
 
   // accessToken хранится внутри Auth.js JWT cookie.
   // getToken() читает cookie на сервере и не раскрывает токен клиентскому JS.
-  let token = await getToken({
-    req: request,
-    secret: AUTH_SECRET,
-    cookieName: AUTH_COOKIE_NAME,
-  });
+  let token: JWT | null = null;
+
+  if (AUTH_SECRET) {
+    token = await getToken({
+      req: request,
+      secret: AUTH_SECRET,
+      cookieName: AUTH_COOKIE_NAME,
+    });
+  }
 
   // Если пользователь не авторизован или cookie не содержит accessToken,
   // proxy не отправляет запрос во внешний backend.
-  if (!token || typeof token.accessToken !== "string" || !token.accessToken) {
+  if (
+    !isPublicRequest &&
+    (!token || typeof token.accessToken !== "string" || !token.accessToken)
+  ) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const accessToken = token.accessToken;
+  const accessToken =
+    token && typeof token.accessToken === "string" ? token.accessToken : null;
 
-  const { path = [] } = await context.params;
-  const backendBaseUrl = BACKEND_API_URL.replace(/\/+$/, "");
   // Каждый сегмент пути кодируется отдельно, чтобы сохранить структуру URL.
-  const backendPath = path.map(encodeURIComponent).join("/");
   // Catch-all path /api/proxy/ads/123 превращается в {backend}/ads/123.
-  const targetUrl = new URL(`${backendBaseUrl}/${backendPath}`);
   // Query params клиента передаются в backend без изменения.
-  targetUrl.search = request.nextUrl.search;
 
   const headers = new Headers(request.headers);
   // Клиентские служебные заголовки удаляются.
@@ -211,6 +245,15 @@ async function proxyToBackend(
   // чтобы обеспечить возможность повторного выполнения запроса
   const hasRequestBody = request.method !== "GET" && request.method !== "HEAD";
   const requestBody = hasRequestBody ? await request.arrayBuffer() : undefined;
+
+  if (!accessToken || !token) {
+    return fetch(targetUrl, {
+      method: request.method,
+      headers,
+      body: requestBody,
+      redirect: "manual",
+    });
+  }
   // Authorization header добавляется к backend-запросу.
   const fetchBackend = (bearerToken: string) => {
     const backendHeaders = new Headers(headers);

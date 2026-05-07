@@ -3,6 +3,7 @@ import {
   AdsListResponseDto,
   AdsItemResponseDto,
   AdsCreateAd,
+  AddPhotoRequestDto,
   UpdatePlaylistArgs,
   FetchAdsArgs,
   FetchAvailabilityArgs,
@@ -13,7 +14,7 @@ import {
   CreateCategoryRequestDto,
   ItemDealInfoResponseDto,
   ItemStatsResponseDto,
-  PhotosList,
+  PhotoResponseDto,
   RejectItemRequestDto,
   UpdateCategoryRequestDto,
   UpdatePhotoOrderRequestDto,
@@ -28,7 +29,7 @@ const CATALOG_URL = "api/catalog";
 
 type QueryParamValue = string | number | undefined;
 
-const getAdsItemTags = (items?: AdsItemResponseDto[]) =>
+const getAdsItemTags = (items?: Array<{ id: string }>) =>
   items?.map((item) => ({ type: "AdsItem" as const, id: item.id })) ?? [];
 
 function buildQueryParams(
@@ -41,6 +42,9 @@ function buildQueryParams(
     query: args.search,
     minPricePerDay: args.priceFrom,
     maxPricePerDay: args.priceTo,
+    minPricePerHour: args.minPricePerHour,
+    maxPricePerHour: args.maxPricePerHour,
+    status: args.status,
     page: page ?? args.pageNumber ?? 0,
     size: args.pageSize ?? 20,
     sortBy: args.sortBy ?? "createdAt",
@@ -57,7 +61,7 @@ function buildQueryParams(
 
 function mapPhotoRequest(photo: NonNullable<AdsCreateAd["photos"]>[number]) {
   return {
-    photoUrl: photo.photoUrl ?? "",
+    photoUrl: photo.photoUrl,
     sortOrder: photo.sortOrder,
   };
 }
@@ -123,11 +127,11 @@ export const adsApi = baseApi.injectEndpoints({
       ],
     }),
 
-    fetchSimilarAds: build.query<AdsItemResponseDto[], string>({
+    fetchSimilarAds: build.query<AdsListResponseDto, string>({
       query: (itemId) => ({ url: `${CATALOG_ITEMS_URL}/${itemId}/similar` }),
       providesTags: (result, _error, itemId) => [
         { type: "AdsItem", id: `SIMILAR-${itemId}` },
-        ...getAdsItemTags(result),
+        ...getAdsItemTags(result?.content),
       ],
     }),
 
@@ -151,13 +155,18 @@ export const adsApi = baseApi.injectEndpoints({
     }),
 
     fetchCategoryById: build.query<CategoryResponseDto, number>({
-      query: (categoryId) => ({ url: `${CATALOG_URL}/categories/${categoryId}` }),
+      query: (categoryId) => ({
+        url: `${CATALOG_URL}/categories/${categoryId}`,
+      }),
       providesTags: (_result, _error, categoryId) => [
         { type: "Ads", id: `CATEGORY-${categoryId}` },
       ],
     }),
 
-    createCategory: build.mutation<CategoryResponseDto, CreateCategoryRequestDto>({
+    createCategory: build.mutation<
+      CategoryResponseDto,
+      CreateCategoryRequestDto
+    >({
       query: (body) => ({
         url: `${CATALOG_URL}/admin/categories`,
         method: "POST",
@@ -300,26 +309,25 @@ export const adsApi = baseApi.injectEndpoints({
       ],
     }),
 
-    uploadAdPhotos: build.mutation<PhotosList, { adId: string; files: File[] }>(
-      {
-        query: ({ adId, files }) => {
-          const formData = new FormData();
-          files.forEach((file) => formData.append("photos", file));
-
-          return {
-            url: `${CATALOG_ITEMS_URL}/${adId}/photos`,
-            method: "POST",
-            body: formData,
-          };
+    addAdPhoto: build.mutation<
+      PhotoResponseDto,
+      { adId: string; photo: AddPhotoRequestDto }
+    >({
+      query: ({ adId, photo }) => ({
+        url: `${CATALOG_ITEMS_URL}/${adId}/photos`,
+        method: "POST",
+        body: {
+          photoUrl: photo.photoUrl,
+          sortOrder: photo.sortOrder,
         },
-        invalidatesTags: (_result, _error, { adId }) => [
-          { type: "AdsItem", id: adId },
-          { type: "Ads", id: ADS_LIST_TAG_ID },
-        ],
-      },
-    ),
+      }),
+      invalidatesTags: (_result, _error, { adId }) => [
+        { type: "AdsItem", id: adId },
+        { type: "Ads", id: ADS_LIST_TAG_ID },
+      ],
+    }),
 
-    fetchAdPhotos: build.query<PhotosList, string>({
+    fetchAdPhotos: build.query<PhotoResponseDto[], string>({
       query: (adId) => ({ url: `${CATALOG_ITEMS_URL}/${adId}/photos` }),
       providesTags: (_result, _error, adId) => [
         { type: "AdsItem", id: `PHOTOS-${adId}` },
@@ -338,7 +346,7 @@ export const adsApi = baseApi.injectEndpoints({
     }),
 
     updateAdPhotoOrder: build.mutation<
-      PhotosList,
+      PhotoResponseDto[],
       { adId: string; body: UpdatePhotoOrderRequestDto }
     >({
       query: ({ adId, body }) => ({
@@ -420,7 +428,7 @@ export const {
   useRestoreAdMutation,
   useApproveAdMutation,
   useRejectAdMutation,
-  useUploadAdPhotosMutation,
+  useAddAdPhotoMutation,
   useFetchAdPhotosQuery,
   useDeleteAdPhotoMutation,
   useUpdateAdPhotoOrderMutation,

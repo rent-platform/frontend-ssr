@@ -1,15 +1,17 @@
-'use client';
+"use client";
 
-import type { ListingCondition, CreateListingFormData } from '../types';
-import styles from '../CreateListing.module.scss';
+import type { ListingCondition, CreateListingFormData } from "../types";
+import type { CategoryResponseDto } from "@/business/ads";
+import styles from "../CreateListing.module.scss";
 
 const CONDITIONS: { value: ListingCondition; label: string; desc: string }[] = [
-  { value: 'new', label: 'Новый', desc: 'В оригинальной упаковке' },
-  { value: 'like_new', label: 'Как новый', desc: 'Без следов износа' },
-  { value: 'good', label: 'Хорошее', desc: 'Незначительные следы' },
-  { value: 'used', label: 'Б/у', desc: 'Видимые следы использования' },
+  { value: "new", label: "Новый", desc: "В оригинальной упаковке" },
+  { value: "like_new", label: "Как новый", desc: "Без следов износа" },
+  { value: "good", label: "Хорошее", desc: "Незначительные следы" },
+  { value: "used", label: "Б/у", desc: "Видимые следы использования" },
 ];
 
+/*
 const CATEGORIES = [
   'Электроника',
   'Фото и видео',
@@ -19,13 +21,18 @@ const CATEGORIES = [
   'Детские товары',
   'Мероприятия',
 ];
+*/
 
 type StepInfoProps = {
-  form: Pick<CreateListingFormData, 'title' | 'category' | 'condition' | 'description'>;
+  form: Pick<
+    CreateListingFormData,
+    "title" | "category" | "categoryId" | "condition" | "description"
+  >;
+  categories: CategoryResponseDto[];
   onPatch: (updates: Partial<CreateListingFormData>) => void;
 };
 
-export function StepInfo({ form, onPatch }: StepInfoProps) {
+export function StepInfo({ form, categories, onPatch }: StepInfoProps) {
   return (
     <>
       <h2 className={styles.sectionTitle}>Описание вещи</h2>
@@ -48,13 +55,23 @@ export function StepInfo({ form, onPatch }: StepInfoProps) {
           <label className={styles.fieldLabel}>Категория</label>
           <select
             className={styles.select}
-            value={form.category}
-            onChange={(e) => onPatch({ category: e.target.value })}
+            value={form.categoryId}
+            onChange={(e) => {
+              const categoryId = e.target.value;
+              const category = categories.find(
+                (item) => String(item.id) === categoryId,
+              );
+
+              onPatch({
+                categoryId,
+                category: category?.categoryName ?? "",
+              });
+            }}
           >
             <option value="">Выберите категорию</option>
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.categoryName ?? `Категория ${c.id}`}
               </option>
             ))}
           </select>
@@ -67,7 +84,7 @@ export function StepInfo({ form, onPatch }: StepInfoProps) {
               <div
                 key={c.value}
                 className={`${styles.conditionCard} ${
-                  form.condition === c.value ? styles.conditionCardActive : ''
+                  form.condition === c.value ? styles.conditionCardActive : ""
                 }`}
                 onClick={() => onPatch({ condition: c.value })}
               >

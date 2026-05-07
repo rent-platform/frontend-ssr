@@ -9,7 +9,7 @@ const PUBLIC_ROUTES = [
   // Страницы входа и регистрации не требуют активной сессии.
   ROUTE_PATHS.LOGIN,
   ROUTE_PATHS.REGISTER,
-  ROUTE_PATHS.devUi,
+  ROUTE_PATHS.DEV_UI,
 ];
 // Проверяет совпадение текущего URL с публичным маршрутом.
 // Для главной страницы разрешается только точное совпадение "/".
@@ -33,6 +33,8 @@ export const proxy = auth((req) => {
   const role = req.auth?.user?.role;
   // Служебные Auth.js API routes не должны проходить frontend-защиту.
   const isApiAuthRoute = pathname.startsWith(ROUTE_PATHS.authorization);
+  // Dev UI — публичный каталог разработки Next.js: его должны видеть все.
+  const isDevUiRoute = isRouteMatch(pathname, ROUTE_PATHS.DEV_UI);
   const isPublicRoute = PUBLIC_ROUTES.some((route) =>
     isRouteMatch(pathname, route),
   );
@@ -54,6 +56,9 @@ export const proxy = auth((req) => {
   // чтобы Auth.js мог выполнить sign in/out.
   if (isApiAuthRoute) return;
 
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!DEV
+  if (isDevUiRoute) return;
+
   // Страницы входа и регистрации не показываются пользователю,
   // если он уже вошел в систему.
   if (isAuthRoute) {
@@ -62,9 +67,6 @@ export const proxy = auth((req) => {
     }
     return;
   }
-  const isDevRoute = pathname.startsWith(ROUTE_PATHS.devUi);
-  if (isDevRoute) return;
-
   // Все маршруты, которые не входят в PUBLIC_ROUTES, требуют авторизации.
   // Если сессии нет, пользователь перенаправляется на страницу входа.
   if (!isLoggedIn && !isPublicRoute) {

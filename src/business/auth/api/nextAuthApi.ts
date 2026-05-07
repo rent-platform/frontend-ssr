@@ -1,5 +1,10 @@
 import { getApiErrorMessage } from "@/business/shared";
-import type { AuthResponseDTO, RegisterRequestDTO, UserResponseDTO } from "../types";
+import type {
+  AuthResponseDTO,
+  LogoutRequestDTO,
+  RegisterRequestDTO,
+  UserResponseDTO,
+} from "../types";
 
 type FetchApiParams = {
   endpoint: string;
@@ -83,6 +88,16 @@ export function getMeApi(accessToken: string) {
 export function registerApi(payload: RegisterRequestDTO) {
   return fetchApi<UserResponseDTO>({
     endpoint: "/api/auth/register",
+    options: {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  });
+}
+
+export function logoutApi(payload: LogoutRequestDTO) {
+  return fetchApi<{ message?: string }>({
+    endpoint: "/api/auth/logout",
     options: {
       method: "POST",
       body: JSON.stringify(payload),

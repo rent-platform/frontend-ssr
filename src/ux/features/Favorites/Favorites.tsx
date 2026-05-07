@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useMemo, useState } from 'react';
-import Link from 'next/link';
+import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   ArrowDownUp,
   ArrowLeft,
@@ -11,43 +11,73 @@ import {
   Search,
   Trash2,
   X,
-} from 'lucide-react';
-import { getNumericPrice, pluralize, ROUTES } from '@/ux/utils';
+} from "lucide-react";
+import { getNumericPrice, pluralize, ROUTES } from "@/ux/utils";
+import { mapCatalogShortItemToCardVM, useGetAdById } from "@/business/ads";
+import {
+  useAddFavoriteMutation,
+  useFetchMyFavoritesQuery,
+  useRemoveFavoriteMutation,
+} from "@/business/favorites";
 import {
   CatalogCard,
   CatalogHeader,
   ProductDetail,
-  mockCatalogItems,
   type CatalogUiItem,
-} from '../Catalog';
-import styles from './Favorites.module.scss';
+} from "../Catalog";
+import { CatalogSkeletonCard } from "../Catalog/components/CatalogSkeletonCard";
+import { mapCardVMtoUiItem, mapDetailsVMToUiItem } from "../Catalog/mappers";
+import styles from "./Favorites.module.scss";
 
 /* ─── Types ─── */
-type SortOption = 'recent' | 'priceAsc' | 'priceDesc' | 'name';
+type SortOption = "recent" | "priceAsc" | "priceDesc" | "name";
 
 const SORT_LABELS: Record<SortOption, string> = {
-  recent: 'Недавние',
-  priceAsc: 'Сначала дешёвые',
-  priceDesc: 'Сначала дорогие',
-  name: 'По названию',
+  recent: "Недавние",
+  priceAsc: "Сначала дешёвые",
+  priceDesc: "Сначала дорогие",
+  name: "По названию",
 };
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 
 /* ═══ Main component ═══ */
 export function Favorites() {
+  const { data, isLoading } = useFetchMyFavoritesQuery({
+    pageSize: 100,
+    sortBy: "createdAt",
+    sortDirection: "desc",
+  });
+  const [addFavorite] = useAddFavoriteMutation();
+  const [removeFavorite] = useRemoveFavoriteMutation();
+  /*
   // Mock: first 5 catalog items as "favorites", in real app — from API/store
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(
     () => new Set(mockCatalogItems.slice(0, 5).map((i) => i.id)),
   );
-  const [search, setSearch] = useState('');
-  const [sort, setSort] = useState<SortOption>('recent');
+  */
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<SortOption>("recent");
   const [sortOpen, setSortOpen] = useState(false);
   const [removingId, setRemovingId] = useState<string | null>(null);
-  const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+
+  const { product: selectedProduct, isLoading: isDetailLoading } = useGetAdById(
+    selectedItemId ?? "",
+    { skip: !selectedItemId },
+  );
+  const selectedItem = selectedProduct
+    ? mapDetailsVMToUiItem(selectedProduct)
+    : null;
 
   const favorites = useMemo(() => {
+    /*
     let items = mockCatalogItems.filter((i) => favoriteIds.has(i.id));
+    */
+    let items =
+      data?.content
+        .map(mapCatalogShortItemToCardVM)
+        .map((item) => mapCardVMtoUiItem(item)) ?? [];
 
     // search
     if (search.trim()) {
@@ -56,65 +86,83 @@ export function Favorites() {
         (i) =>
           i.title.toLowerCase().includes(q) ||
           i.category.toLowerCase().includes(q) ||
-          (i.city ?? '').toLowerCase().includes(q),
+          (i.city ?? "").toLowerCase().includes(q),
       );
     }
 
     // sort
     switch (sort) {
-      case 'priceAsc':
-        items.sort((a, b) => getNumericPrice(a.pricePerDay ?? null) - getNumericPrice(b.pricePerDay ?? null));
+      case "priceAsc":
+        items.sort(
+          (a, b) =>
+            getNumericPrice(a.pricePerDay ?? null) -
+            getNumericPrice(b.pricePerDay ?? null),
+        );
         break;
-      case 'priceDesc':
-        items.sort((a, b) => getNumericPrice(b.pricePerDay ?? null) - getNumericPrice(a.pricePerDay ?? null));
+      case "priceDesc":
+        items.sort(
+          (a, b) =>
+            getNumericPrice(b.pricePerDay ?? null) -
+            getNumericPrice(a.pricePerDay ?? null),
+        );
         break;
-      case 'name':
-        items.sort((a, b) => a.title.localeCompare(b.title, 'ru'));
+      case "name":
+        items.sort((a, b) => a.title.localeCompare(b.title, "ru"));
         break;
       default:
         break;
     }
 
     return items;
-  }, [favoriteIds, search, sort]);
+  }, [data?.content, search, sort]);
 
-  const handleRemove = useCallback((id: string) => {
-    setRemovingId(id);
-    // animate out, then remove
+  const handleRemove = useCallback(
+    (id: string) => {
+      setRemovingId(id);
+      window.setTimeout(() => {
+        removeFavorite({ itemId: id }).finally(() => {
+          setRemovingId(null);
+        });
+      }, 280);
+      /*
     setTimeout(() => {
-      setFavoriteIds((prev) => {
-        const next = new Set(prev);
-        next.delete(id);
-        return next;
-      });
       setRemovingId(null);
     }, 280);
-  }, []);
+    */
+    },
+    [removeFavorite],
+  );
 
   const handleClearAll = useCallback(() => {
+    Promise.all(favorites.map((item) => removeFavorite({ itemId: item.id })));
+    setSearch("");
+    /*
     setFavoriteIds(new Set());
-    setSearch('');
-  }, []);
+    */
+  }, [favorites, removeFavorite]);
 
   const handleOpen = useCallback((item: CatalogUiItem) => {
-    setSelectedItem(item);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setSelectedItemId(item.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   const handleBack = useCallback(() => {
-    setSelectedItem(null);
+    setSelectedItemId(null);
   }, []);
 
+  /*
   const similarItems = useMemo(() => {
     if (!selectedItem) return [];
     return mockCatalogItems
       .filter((i) => i.id !== selectedItem.id && i.category === selectedItem.category)
       .slice(0, 4);
   }, [selectedItem]);
+  */
+  const similarItems: CatalogUiItem[] = [];
 
-  const isEmpty = favoriteIds.size === 0;
+  const isEmpty = !isLoading && favorites.length === 0;
 
-  if (selectedItem) {
+  if (selectedItemId) {
     return (
       <div className={styles.detailPage}>
         <CatalogHeader cityLabel="Новосибирск" onBrandClick={handleBack} />
@@ -124,12 +172,16 @@ export function Favorites() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, ease: EASE }}
           >
-            <ProductDetail
-              item={selectedItem}
-              similarItems={similarItems}
-              onBack={handleBack}
-              onOpenSimilar={handleOpen}
-            />
+            {selectedItem && !isDetailLoading ? (
+              <ProductDetail
+                item={selectedItem}
+                similarItems={similarItems}
+                onBack={handleBack}
+                onOpenSimilar={handleOpen}
+              />
+            ) : (
+              <CatalogSkeletonCard />
+            )}
           </motion.div>
         </main>
       </div>
@@ -157,8 +209,8 @@ export function Favorites() {
               <h1 className={styles.title}>Избранное</h1>
               <p className={styles.subtitle}>
                 {isEmpty
-                  ? 'Здесь будут ваши сохранённые вещи'
-                  : `${favoriteIds.size} ${pluralize(favoriteIds.size, 'вещь', 'вещи', 'вещей')} сохранено`}
+                  ? "Здесь будут ваши сохранённые вещи"
+                  : `${favorites.length} ${pluralize(favorites.length, "вещь", "вещи", "вещей")} сохранено`}
               </p>
             </div>
           </div>
@@ -198,7 +250,7 @@ export function Favorites() {
                 <button
                   type="button"
                   className={styles.searchClear}
-                  onClick={() => setSearch('')}
+                  onClick={() => setSearch("")}
                   aria-label="Очистить поиск"
                 >
                   <X size={14} />
@@ -237,8 +289,15 @@ export function Favorites() {
                         <button
                           key={key}
                           type="button"
-                          className={sort === key ? styles.sortOptionActive : styles.sortOption}
-                          onClick={() => { setSort(key); setSortOpen(false); }}
+                          className={
+                            sort === key
+                              ? styles.sortOptionActive
+                              : styles.sortOption
+                          }
+                          onClick={() => {
+                            setSort(key);
+                            setSortOpen(false);
+                          }}
                         >
                           {SORT_LABELS[key]}
                         </button>
@@ -265,7 +324,8 @@ export function Favorites() {
             <h2 className={styles.emptyTitle}>Пока пусто</h2>
             <p className={styles.emptyText}>
               Нажмите <Heart size={14} className={styles.emptyHeartInline} /> на
-              карточке вещи, чтобы добавить её в избранное и быстро вернуться к ней позже.
+              карточке вещи, чтобы добавить её в избранное и быстро вернуться к
+              ней позже.
             </p>
             <Link href={ROUTES.search} className={styles.emptyBtn}>
               <PackageSearch size={16} />
@@ -289,7 +349,7 @@ export function Favorites() {
             <button
               type="button"
               className={styles.emptyBtn}
-              onClick={() => setSearch('')}
+              onClick={() => setSearch("")}
             >
               Сбросить поиск
             </button>
@@ -320,7 +380,13 @@ export function Favorites() {
                     onOpen={handleOpen}
                     index={idx}
                     initialFavorite={true}
-                    onFavoriteChange={(id, val) => { if (!val) handleRemove(id); }}
+                    onFavoriteChange={(id, val) => {
+                      if (val) {
+                        addFavorite({ itemId: id });
+                      } else {
+                        handleRemove(id);
+                      }
+                    }}
                   />
                   <button
                     type="button"

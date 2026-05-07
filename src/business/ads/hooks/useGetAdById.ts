@@ -15,9 +15,12 @@ export interface UseGetAdByIdResult {
   refetch: () => void;
 }
 
-export function useGetAdById(id: string): UseGetAdByIdResult {
+export function useGetAdById(
+  id: string,
+  options: { skip?: boolean } = {},
+): UseGetAdByIdResult {
   const { data, isLoading, isFetching, isError, error, refetch } =
-    useFetchAdByIdQuery(id);
+    useFetchAdByIdQuery(id, { skip: options.skip || !id });
 
   return {
     product: data ? mapCatalogItemToDetailsVM(data) : null,
@@ -28,7 +31,3 @@ export function useGetAdById(id: string): UseGetAdByIdResult {
     refetch,
   };
 }
-
-
-
-

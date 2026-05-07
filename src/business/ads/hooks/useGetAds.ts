@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useFetchAdsInfiniteQuery } from "../api";
-import { mapCatalogItemToCardVM } from "../mappers";
+import { mapCatalogShortItemToCardVM } from "../mappers";
 import { getApiError } from "@/business/shared";
 import { type ApiUiError } from "@/business/shared";
 import type { CatalogItemCardVM, FetchAdsArgs } from "../types";
@@ -20,7 +20,10 @@ export interface UseAdsResult {
   refetch: () => void; // Повторяет текущий запрос вручную.
 }
 
-export function useGetAds(params: FetchAdsArgs = {}): UseAdsResult {
+export function useGetAds(
+  params: FetchAdsArgs = {},
+  options: { skip?: boolean } = {},
+): UseAdsResult {
   // Вызов RTK Query hook для загрузки списка объявлений.
   const {
     data,
@@ -32,12 +35,12 @@ export function useGetAds(params: FetchAdsArgs = {}): UseAdsResult {
     hasNextPage,
     fetchNextPage,
     refetch,
-  } = useFetchAdsInfiniteQuery(params);
+  } = useFetchAdsInfiniteQuery(params, { skip: options.skip });
 
   return {
     products: (data?.pages.flatMap((page) => page.content) ?? []).map(
-      mapCatalogItemToCardVM,
-    ), // Преобразование DTO из всех страниц в карточки каталога.
+      mapCatalogShortItemToCardVM,
+    ), // Преобразование short DTO из всех страниц в карточки каталога.
     total: data?.pages[0]?.totalElements ?? 0, // Берём total из первой страницы ответа.
     isLoading, // Первичная загрузка списка объявлений.
     isFetching, // Любой активный запрос по этому query.
@@ -49,8 +52,3 @@ export function useGetAds(params: FetchAdsArgs = {}): UseAdsResult {
     refetch, // Метод ручного обновления текущего query.
   };
 }
-
-
-
-
-

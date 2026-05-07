@@ -46,6 +46,14 @@ export const profileApi = baseApi.injectEndpoints({
       ],
     }),
 
+    deleteCurrentProfile: build.mutation<{ message?: string }, void>({
+      query: () => ({
+        url: `${USERS_URL}/me`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Users", id: "ME" }],
+    }),
+
     updatePassword: build.mutation<void, UpdatePasswordRequestDto>({
       query: (body) => ({
         url: `${USERS_URL}/me/password`,
@@ -78,6 +86,7 @@ export const {
   useGetCurrentProfileQuery,
   useGetPublicProfileQuery,
   useUpdateUserInfoMutation,
+  useDeleteCurrentProfileMutation,
   useUpdatePasswordMutation,
   useGetBillingProfileQuery,
   useUpdateBillingProfileMutation,

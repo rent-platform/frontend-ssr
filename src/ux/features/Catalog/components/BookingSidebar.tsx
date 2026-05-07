@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useCallback, useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import clsx from 'clsx';
+import { useCallback, useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import clsx from "clsx";
 import {
   Calendar,
   CheckCircle2,
@@ -13,17 +13,18 @@ import {
   ShieldCheck,
   Star,
   Zap,
-} from 'lucide-react';
-import type { CatalogUiItem } from '../types';
-import { pluralize } from '@/ux/utils';
+} from "lucide-react";
+import { useGetUserRating } from "@/business/reviews";
+import type { CatalogUiItem } from "../types";
+import { pluralize } from "@/ux/utils";
 import {
   formatCatalogCardHourSecondary,
   formatCatalogCardPrimaryPrice,
   formatDepositAmount,
   formatPrice,
-} from '../utils';
-import { RentalCalendar } from './RentalCalendar';
-import styles from '../Catalog.module.scss';
+} from "../utils";
+import { RentalCalendar } from "./RentalCalendar";
+import styles from "../Catalog.module.scss";
 
 type BookingSidebarProps = {
   item: CatalogUiItem;
@@ -31,30 +32,51 @@ type BookingSidebarProps = {
   onAuthRequired?: () => void;
 };
 
-export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebarProps) {
+export function BookingSidebar({
+  item,
+  isGuest,
+  onAuthRequired,
+}: BookingSidebarProps) {
+  const { rating: ownerRating } = useGetUserRating(item.ownerId ?? "", {
+    skip: !item.ownerId,
+  });
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   const primaryPrice = formatCatalogCardPrimaryPrice(item);
   const hourPrice = formatCatalogCardHourSecondary(item);
-  const depositAmount = Number(String(item.depositAmount ?? '0').replace(/\s/g, ''));
-  const depositLabel = depositAmount > 0 ? formatDepositAmount(item.depositAmount) : null;
+  const depositAmount = Number(
+    String(item.depositAmount ?? "0").replace(/\s/g, ""),
+  );
+  const depositLabel =
+    depositAmount > 0 ? formatDepositAmount(item.depositAmount) : null;
 
-  const dailyPrice = Number(String(item.pricePerDay ?? '0').replace(/\s/g, ''));
+  const dailyPrice = Number(String(item.pricePerDay ?? "0").replace(/\s/g, ""));
   const rentalDays = useMemo(() => {
     if (!startDate || !endDate) return 0;
-    return Math.max(1, Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+    return Math.max(
+      1,
+      Math.round(
+        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+      ),
+    );
   }, [startDate, endDate]);
   const subtotal = dailyPrice * (rentalDays || 1);
+  const ownerRatingValue = ownerRating?.overallRating ?? item.ownerRating;
+  const ownerReviewCount =
+    ownerRating?.totalReviews ?? item.ownerReviewCount ?? 0;
 
   const formatDateShort = (d: Date) =>
-    d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+    d.toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
 
-  const handleDateSelect = useCallback((start: Date | null, end: Date | null) => {
-    setStartDate(start);
-    setEndDate(end);
-  }, []);
+  const handleDateSelect = useCallback(
+    (start: Date | null, end: Date | null) => {
+      setStartDate(start);
+      setEndDate(end);
+    },
+    [],
+  );
 
   const handleCalendarConfirm = useCallback(() => {
     setCalendarOpen(false);
@@ -79,32 +101,44 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
         {/* Price */}
         <div className={styles.bookingPriceRow}>
           <strong>{primaryPrice}</strong>
-          {hourPrice && <span className={styles.bookingHourPrice}>· {hourPrice}</span>}
+          {hourPrice && (
+            <span className={styles.bookingHourPrice}>· {hourPrice}</span>
+          )}
         </div>
 
         {/* Availability */}
         <div
           className={clsx(
             styles.bookingAvailability,
-            item.isAvailable ? styles.bookingAvailabilityAvailable : styles.bookingAvailabilitySoon,
+            item.isAvailable
+              ? styles.bookingAvailabilityAvailable
+              : styles.bookingAvailabilitySoon,
           )}
         >
           {item.isAvailable ? <Zap size={16} /> : <Clock3 size={16} />}
-          {item.isAvailable ? 'Доступно для аренды' : `Доступно с ${item.nearestAvailableDate ?? '—'}`}
+          {item.isAvailable
+            ? "Доступно для аренды"
+            : `Доступно с ${item.nearestAvailableDate ?? "—"}`}
         </div>
 
         {/* Date Selector */}
         <div className={styles.bookingDates}>
           <div className={styles.bookingDateBtn}>
             <span className={styles.dateLabel}>Начало</span>
-            <span className={startDate ? styles.dateValueActive : styles.dateValue}>
-              <Calendar size={14} /> {startDate ? formatDateShort(startDate) : 'Не выбрано'}
+            <span
+              className={startDate ? styles.dateValueActive : styles.dateValue}
+            >
+              <Calendar size={14} />{" "}
+              {startDate ? formatDateShort(startDate) : "Не выбрано"}
             </span>
           </div>
           <div className={styles.bookingDateBtn}>
             <span className={styles.dateLabel}>Конец</span>
-            <span className={endDate ? styles.dateValueActive : styles.dateValue}>
-              <Calendar size={14} /> {endDate ? formatDateShort(endDate) : 'Не выбрано'}
+            <span
+              className={endDate ? styles.dateValueActive : styles.dateValue}
+            >
+              <Calendar size={14} />{" "}
+              {endDate ? formatDateShort(endDate) : "Не выбрано"}
             </span>
           </div>
         </div>
@@ -112,19 +146,24 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
         {/* Pricing Breakdown */}
         <div className={styles.bookingTotal}>
           <div className={styles.totalRow}>
-            <span>{formatPrice(String(dailyPrice), '')} × {rentalDays || 1} {pluralize(rentalDays || 1, 'день', 'дня', 'дней')}</span>
-            <span>{formatPrice(String(subtotal), '')}</span>
+            <span>
+              {formatPrice(String(dailyPrice), "")} × {rentalDays || 1}{" "}
+              {pluralize(rentalDays || 1, "день", "дня", "дней")}
+            </span>
+            <span>{formatPrice(String(subtotal), "")}</span>
           </div>
           <div className={clsx(styles.totalRow, styles.grandTotal)}>
             <span>Итого</span>
-            <span>{formatPrice(String(subtotal), '')}</span>
+            <span>{formatPrice(String(subtotal), "")}</span>
           </div>
         </div>
 
         {/* Deposit */}
         {depositLabel && (
           <div className={styles.depositRow}>
-            <span><Info size={15} /> Залог (возвратный)</span>
+            <span>
+              <Info size={15} /> Залог (возвратный)
+            </span>
             <span>{depositLabel}</span>
           </div>
         )}
@@ -140,7 +179,11 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.22 }}
             >
-              <button type="button" className={styles.primaryAction} onClick={isGuest ? onAuthRequired : undefined}>
+              <button
+                type="button"
+                className={styles.primaryAction}
+                onClick={isGuest ? onAuthRequired : undefined}
+              >
                 <CreditCard size={18} />
                 Перейти к оплате
               </button>
@@ -183,7 +226,11 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
         </AnimatePresence>
 
         <div className={styles.bookingActions}>
-          <button type="button" className={styles.secondaryAction} onClick={isGuest ? onAuthRequired : undefined}>
+          <button
+            type="button"
+            className={styles.secondaryAction}
+            onClick={isGuest ? onAuthRequired : undefined}
+          >
             <MessageCircle size={17} /> Написать
           </button>
         </div>
@@ -204,7 +251,8 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
           <span className={styles.ownerName}>{item.ownerName}</span>
           <div className={styles.ownerMeta}>
             <Star size={14} fill="#f59e0b" color="#f59e0b" />
-            {(item.ownerRating ?? 0).toFixed(1)} · {item.ownerReviewCount ?? 0} {pluralize(item.ownerReviewCount ?? 0, 'отзыв', 'отзыва', 'отзывов')}
+            {(ownerRatingValue ?? 0).toFixed(1)} · {ownerReviewCount}{" "}
+            {pluralize(ownerReviewCount, "отзыв", "отзыва", "отзывов")}
           </div>
         </div>
       </div>
@@ -214,7 +262,10 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
         <ShieldCheck size={20} />
         <div className={styles.guaranteeCardText}>
           <strong>Безопасная сделка</strong>
-          <span>Оплата через платформу. Деньги списываются только после получения товара.</span>
+          <span>
+            Оплата через платформу. Деньги списываются только после получения
+            товара.
+          </span>
         </div>
       </div>
     </aside>

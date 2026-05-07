@@ -5,6 +5,7 @@ import type {
   AdsItemResponseDto,
   AdsListResponseDto,
   FetchAdsArgs,
+  ItemShortResponseDto,
 } from "@/business/ads/types";
 import type {
   FavoriteMutationArgs,
@@ -13,14 +14,33 @@ import type {
 } from "../types";
 
 const FAVORITES_LIST_TAG_ID = "LIST";
+type QueryParamValue = string | number | undefined;
 
 type AdsInfiniteData = InfiniteData<AdsListResponseDto, number>;
 type OptimisticPatch = {
   undo: () => void;
 };
 
+function buildFavoritesParams(args?: FetchAdsArgs): Record<string, string> {
+  if (!args) return {};
+
+  const rawParams: Record<string, QueryParamValue> = {
+    page: args.pageNumber ?? 0,
+    size: args.pageSize ?? 20,
+    sortBy: args.sortBy,
+    sortDirection: args.sortDirection,
+  };
+
+  return Object.fromEntries(
+    Object.entries(rawParams).flatMap(([key, value]) => {
+      if (value === undefined || value === "") return [];
+      return [[key, String(value)]];
+    }),
+  );
+}
+
 const patchAdFavoriteStatus = (
-  ad: AdsItemResponseDto,
+  ad: AdsItemResponseDto | ItemShortResponseDto,
   adId: string,
   isFavorite: boolean,
 ) => {
@@ -53,6 +73,10 @@ export const favoritesApi = baseApi.injectEndpoints({
       query: (itemId) => ({
         url: `api/catalog/favorites/${itemId}/status`,
       }),
+      transformResponse: (isFavorite: boolean, _meta, itemId) => ({
+        itemId,
+        isFavorite,
+      }),
       providesTags: (_result, _error, itemId) => [
         { type: "Favorites", id: itemId },
       ],
@@ -61,7 +85,7 @@ export const favoritesApi = baseApi.injectEndpoints({
     fetchMyFavorites: build.query<AdsListResponseDto, FetchAdsArgs | void>({
       query: (args) => ({
         url: "api/catalog/favorites/my",
-        params: args ?? undefined,
+        params: buildFavoritesParams(args || undefined),
       }),
       providesTags: (result) => [
         { type: "Favorites", id: FAVORITES_LIST_TAG_ID },
@@ -107,6 +131,15 @@ export const favoritesApi = baseApi.injectEndpoints({
           patches.forEach((patch) => patch.undo());
         }
       },
+      transformResponse: (
+        response: { message?: string },
+        _meta,
+        { itemId },
+      ) => ({
+        ...response,
+        itemId,
+        isFavorite: true,
+      }),
       invalidatesTags: (_result, _error, { itemId }) => [
         { type: "Favorites", id: FAVORITES_LIST_TAG_ID },
         { type: "Favorites", id: itemId },
@@ -118,6 +151,15 @@ export const favoritesApi = baseApi.injectEndpoints({
       query: ({ itemId }) => ({
         url: `api/catalog/favorites/${itemId}`,
         method: "DELETE",
+      }),
+      transformResponse: (
+        response: { message?: string },
+        _meta,
+        { itemId },
+      ) => ({
+        ...response,
+        itemId,
+        isFavorite: false,
       }),
       async onQueryStarted({ itemId }, { dispatch, getState, queryFulfilled }) {
         const patches: OptimisticPatch[] = [

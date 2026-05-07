@@ -1,6 +1,6 @@
 /* ─── Condition ─── */
 
-export type ListingCondition = 'new' | 'like_new' | 'good' | 'used';
+export type ListingCondition = "new" | "like_new" | "good" | "used";
 
 /* ─── Image preview (local blob) ─── */
 
@@ -14,6 +14,7 @@ export type ImagePreview = {
 export type CreateListingFormData = {
   title: string;
   category: string;
+  categoryId: string;
   condition: ListingCondition;
   description: string;
   images: ImagePreview[];

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Fragment, useCallback, useRef, useState } from 'react';
+import { Fragment, useCallback, useRef, useState } from "react";
 import {
   Camera,
   Check,
@@ -11,32 +11,38 @@ import {
   Plus,
   Sparkles,
   Tag,
-} from 'lucide-react';
-import Link from 'next/link';
-import type { CreateListingFormData, ImagePreview } from './types';
-import { StepPhotos, StepInfo, StepPricing, StepReview } from './components';
-import { ROUTES } from '@/ux/utils';
-import styles from './CreateListing.module.scss';
+} from "lucide-react";
+import Link from "next/link";
+import {
+  useCreateAd,
+  useFetchCategoriesQuery,
+  useUploadAdPhotos,
+} from "@/business/ads";
+import type { CreateListingFormData, ImagePreview } from "./types";
+import { StepPhotos, StepInfo, StepPricing, StepReview } from "./components";
+import { ROUTES } from "@/ux/utils";
+import styles from "./CreateListing.module.scss";
 
 /* ─── Constants ─── */
 const STEPS = [
-  { id: 'photos', label: 'Фотографии', Icon: Camera },
-  { id: 'info', label: 'Описание', Icon: FileText },
-  { id: 'pricing', label: 'Стоимость', Icon: Tag },
-  { id: 'review', label: 'Публикация', Icon: Eye },
+  { id: "photos", label: "Фотографии", Icon: Camera },
+  { id: "info", label: "Описание", Icon: FileText },
+  { id: "pricing", label: "Стоимость", Icon: Tag },
+  { id: "review", label: "Публикация", Icon: Eye },
 ] as const;
 
 const INITIAL: CreateListingFormData = {
-  title: '',
-  category: '',
-  condition: 'good',
-  description: '',
+  title: "",
+  category: "",
+  categoryId: "",
+  condition: "good",
+  description: "",
   images: [],
-  pricePerDay: '',
-  pricePerHour: '',
-  depositAmount: '',
+  pricePerDay: "",
+  pricePerHour: "",
+  depositAmount: "",
   noDeposit: false,
-  pickupLocation: '',
+  pickupLocation: "",
 };
 
 const MAX_IMAGES = 10;
@@ -56,6 +62,9 @@ export function CreateListing({
   onSubmit,
   isSubmitting = false,
 }: CreateListingProps = {}) {
+  const { data: categories = [] } = useFetchCategoriesQuery();
+  const { createAd, isCreating } = useCreateAd();
+  const { uploadPhotos, isUploading } = useUploadAdPhotos();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<CreateListingFormData>(INITIAL);
   const [published, setPublished] = useState(false);
@@ -66,7 +75,8 @@ export function CreateListing({
 
   /* ─── Helpers ─── */
   const patch = useCallback(
-    (updates: Partial<CreateListingFormData>) => setForm((prev) => ({ ...prev, ...updates })),
+    (updates: Partial<CreateListingFormData>) =>
+      setForm((prev) => ({ ...prev, ...updates })),
     [],
   );
 
@@ -74,7 +84,7 @@ export function CreateListing({
     (files: FileList | null) => {
       if (!files) return;
       const newImages: ImagePreview[] = Array.from(files)
-        .filter((f) => f.type.startsWith('image/'))
+        .filter((f) => f.type.startsWith("image/"))
         .slice(0, MAX_IMAGES - form.images.length)
         .map((f) => ({ id: crypto.randomUUID(), url: URL.createObjectURL(f) }));
       if (newImages.length) patch({ images: [...form.images, ...newImages] });
@@ -91,21 +101,18 @@ export function CreateListing({
     [form.images, patch],
   );
 
-  const reorderImages = useCallback(
-    (fromId: string, toId: string) => {
-      if (fromId === toId) return;
-      setForm((prev) => {
-        const from = prev.images.findIndex((img) => img.id === fromId);
-        const to = prev.images.findIndex((img) => img.id === toId);
-        if (from === -1 || to === -1) return prev;
-        const next = [...prev.images];
-        const [moved] = next.splice(from, 1);
-        next.splice(to, 0, moved);
-        return { ...prev, images: next };
-      });
-    },
-    [],
-  );
+  const reorderImages = useCallback((fromId: string, toId: string) => {
+    if (fromId === toId) return;
+    setForm((prev) => {
+      const from = prev.images.findIndex((img) => img.id === fromId);
+      const to = prev.images.findIndex((img) => img.id === toId);
+      if (from === -1 || to === -1) return prev;
+      const next = [...prev.images];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      return { ...prev, images: next };
+    });
+  }, []);
 
   const isStepValid = useCallback(
     (s: number): boolean => {
@@ -114,15 +121,15 @@ export function CreateListing({
           return form.images.length > 0;
         case 1:
           return (
-            form.title.trim() !== '' &&
-            form.category !== '' &&
-            form.description.trim() !== ''
+            form.title.trim() !== "" &&
+            form.categoryId !== "" &&
+            form.description.trim() !== ""
           );
         case 2:
           return (
-            form.pricePerDay.trim() !== '' &&
-            (form.noDeposit || form.depositAmount.trim() !== '') &&
-            form.pickupLocation.trim() !== ''
+            form.pricePerDay.trim() !== "" &&
+            (form.noDeposit || form.depositAmount.trim() !== "") &&
+            form.pickupLocation.trim() !== ""
           );
         default:
           return true;
@@ -149,7 +156,29 @@ export function CreateListing({
   );
 
   const handlePublish = async () => {
-    if (onSubmit) await onSubmit(form);
+    if (onSubmit) {
+      await onSubmit(form);
+    } else {
+      const created = await createAd({
+        categoryId: Number(form.categoryId),
+        title: form.title.trim(),
+        itemDescription: form.description.trim(),
+        pricePerDay: Number(form.pricePerDay),
+        pricePerHour: form.pricePerHour ? Number(form.pricePerHour) : null,
+        depositAmount: form.noDeposit ? 0 : Number(form.depositAmount),
+        pickupLocation: form.pickupLocation.trim(),
+      }).unwrap();
+
+      if (form.images.length > 0) {
+        await uploadPhotos(
+          created.id,
+          form.images.map((image, index) => ({
+            photoUrl: image.url,
+            sortOrder: index,
+          })),
+        );
+      }
+    }
     setPublished(true);
   };
 
@@ -209,7 +238,7 @@ export function CreateListing({
             <Fragment key={s.id}>
               {i > 0 && (
                 <div
-                  className={`${styles.stepConnector} ${i <= step ? styles.stepConnectorDone : ''}`}
+                  className={`${styles.stepConnector} ${i <= step ? styles.stepConnectorDone : ""}`}
                 />
               )}
               <div
@@ -218,7 +247,7 @@ export function CreateListing({
                     ? styles.stepItemActive
                     : i < step
                       ? styles.stepItemCompleted
-                      : ''
+                      : ""
                 }`}
                 onClick={() => {
                   if (i < step) setStep(i);
@@ -249,7 +278,9 @@ export function CreateListing({
               onDrop={handleDrop}
             />
           )}
-          {step === 1 && <StepInfo form={form} onPatch={patch} />}
+          {step === 1 && (
+            <StepInfo form={form} categories={categories} onPatch={patch} />
+          )}
           {step === 2 && <StepPricing form={form} onPatch={patch} />}
           {step === 3 && <StepReview form={form} />}
         </div>
@@ -268,7 +299,7 @@ export function CreateListing({
           {step < STEPS.length - 1 ? (
             <button
               type="button"
-              className={`${styles.navNext} ${!canAdvance ? styles.navDisabled : ''}`}
+              className={`${styles.navNext} ${!canAdvance ? styles.navDisabled : ""}`}
               onClick={goNext}
               disabled={!canAdvance}
             >
@@ -280,10 +311,12 @@ export function CreateListing({
               type="button"
               className={`${styles.navNext} ${styles.publishBtn}`}
               onClick={handlePublish}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isCreating || isUploading}
             >
               <Sparkles size={16} />
-              {isSubmitting ? 'Публикация…' : 'Опубликовать'}
+              {isSubmitting || isCreating || isUploading
+                ? "Публикация…"
+                : "Опубликовать"}
             </button>
           )}
         </div>

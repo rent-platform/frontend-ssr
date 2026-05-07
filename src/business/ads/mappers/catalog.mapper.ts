@@ -3,6 +3,7 @@ import type {
   CatalogItemBaseVM,
   CatalogItemCardVM,
   CatalogItemDetailsVM,
+  ItemShortResponseDto,
 } from "../types";
 
 function getSortedPhotoUrls(dto: AdsItemResponseDto): string[] {
@@ -38,20 +39,29 @@ function mapCatalogItemToBaseVM(dto: AdsItemResponseDto): CatalogItemBaseVM {
   };
 }
 
+function mapCatalogShortItemToBaseVM(
+  dto: ItemShortResponseDto,
+): CatalogItemBaseVM {
+  return {
+    id: dto.id,
+    ownerId: null,
+    title: dto.title,
+    category: "",
+    categoryId: null,
+    pricePerDay: toNullableString(dto.pricePerDay),
+    pricePerHour: toNullableString(dto.pricePerHour),
+    depositAmount: "0",
+    pickupLocation: dto.city ?? null,
+    status: dto.status,
+    viewsCount: 0,
+    createdAt: "",
+    isAvailable: dto.status === "ACTIVE",
+    nearestAvailableDate: null,
+  };
+}
+
 function mapOwnerName(dto: AdsItemResponseDto): string {
   return dto.owner?.nickname ?? "";
-}
-
-function mapOwnerReviewCount(_dto: AdsItemResponseDto): number | null {
-  return null;
-}
-
-function mapItemRating(_dto: AdsItemResponseDto): number | null {
-  return null;
-}
-
-function mapItemReviewCount(_dto: AdsItemResponseDto): number | null {
-  return null;
 }
 
 export function mapCatalogItemToCardVM(
@@ -66,9 +76,27 @@ export function mapCatalogItemToCardVM(
     ownerName: mapOwnerName(dto),
     ownerAvatar: dto.owner?.avatarUrl ?? null,
     ownerRating: dto.owner?.rating ?? null,
-    ownerReviewCount: mapOwnerReviewCount(dto),
-    itemRating: mapItemRating(dto),
-    itemReviewCount: mapItemReviewCount(dto),
+    ownerReviewCount: null,
+    itemRating: null,
+    itemReviewCount: null,
+  };
+}
+
+export function mapCatalogShortItemToCardVM(
+  dto: ItemShortResponseDto,
+): CatalogItemCardVM {
+  const images = dto.mainPhotoUrl ? [dto.mainPhotoUrl] : [];
+
+  return {
+    ...mapCatalogShortItemToBaseVM(dto),
+    coverImageUrl: dto.mainPhotoUrl ?? null,
+    images,
+    ownerName: "",
+    ownerAvatar: null,
+    ownerRating: null,
+    ownerReviewCount: null,
+    itemRating: null,
+    itemReviewCount: null,
   };
 }
 
@@ -82,8 +110,8 @@ export function mapCatalogItemToDetailsVM(
     ownerName: mapOwnerName(dto),
     ownerAvatar: dto.owner?.avatarUrl ?? null,
     ownerRating: dto.owner?.rating ?? null,
-    ownerReviewCount: mapOwnerReviewCount(dto),
-    itemRating: mapItemRating(dto),
-    itemReviewCount: mapItemReviewCount(dto),
+    ownerReviewCount: null,
+    itemRating: null,
+    itemReviewCount: null,
   };
 }

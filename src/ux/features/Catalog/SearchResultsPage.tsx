@@ -1,27 +1,31 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowLeft, ArrowUp, PackageSearch } from 'lucide-react';
-import Link from 'next/link';
-import { CatalogHeader } from './components/CatalogHeader';
-import { CatalogSearchBar } from './components/CatalogSearchBar';
-import { CatalogToolbar } from './components/CatalogToolbar';
-import { CatalogCard } from './components/CatalogCard';
-import { ProductDetail } from './components/ProductDetail';
-import { CatalogSkeletonCard } from './components/CatalogSkeletonCard';
-import { CatalogFooter } from './components/CatalogFooter';
-import { mockCatalogItems } from './mockCatalogItems';
-import type { CatalogUiItem } from './types';
+import { motion, AnimatePresence } from "framer-motion";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowLeft, ArrowUp, PackageSearch } from "lucide-react";
+import Link from "next/link";
+import { useCatalogPage, useGetAdById } from "@/business/ads";
+import { CatalogHeader } from "./components/CatalogHeader";
+import { CatalogSearchBar } from "./components/CatalogSearchBar";
+import { CatalogToolbar } from "./components/CatalogToolbar";
+import { CatalogCard } from "./components/CatalogCard";
+import { ProductDetail } from "./components/ProductDetail";
+import { CatalogSkeletonCard } from "./components/CatalogSkeletonCard";
+import { CatalogFooter } from "./components/CatalogFooter";
+/*
+import { mockCatalogItems } from "./mockCatalogItems";
+*/
+import type { CatalogUiItem } from "./types";
+import { mapDetailsVMToUiItem } from "./mappers";
 import {
   INITIAL_FILTERS,
   applyCatalogFilters,
   searchParamsToFilters,
   filtersToSearchParams,
-} from './utils';
-import { ROUTES, pluralize } from '@/ux/utils';
-import styles from './Catalog.module.scss';
+} from "./utils";
+import { ROUTES, pluralize } from "@/ux/utils";
+import styles from "./Catalog.module.scss";
 
 const BATCH_SIZE = 8;
 
@@ -29,45 +33,67 @@ export function SearchResultsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [filters, setFilters] = useState(() => searchParamsToFilters(searchParams));
-  const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
-  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const [filters, setFilters] = useState(() =>
+    searchParamsToFilters(searchParams),
+  );
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const businessCatalog = useCatalogPage({
+    search: filters.search || undefined,
+    city: filters.city || undefined,
+    priceFrom: filters.minPrice ? Number(filters.minPrice) : undefined,
+    priceTo: filters.maxPrice ? Number(filters.maxPrice) : undefined,
+    pageSize: BATCH_SIZE,
+  });
 
   useEffect(() => {
     setFilters(searchParamsToFilters(searchParams));
-    setVisibleCount(BATCH_SIZE);
   }, [searchParams]);
 
   const filteredItems = useMemo(
-    () => applyCatalogFilters(mockCatalogItems, filters),
-    [filters],
+    () =>
+      applyCatalogFilters(businessCatalog.products as CatalogUiItem[], filters),
+    [businessCatalog.products, filters],
   );
 
-  const visibleItems = filteredItems.slice(0, visibleCount);
+  const visibleItems = filteredItems;
 
+  const { product: selectedProduct, isLoading: isDetailLoading } = useGetAdById(
+    selectedItemId ?? "",
+    { skip: !selectedItemId },
+  );
+  const selectedItem = selectedProduct
+    ? mapDetailsVMToUiItem(selectedProduct)
+    : null;
+
+  /*
   const similarItems = selectedItem
     ? mockCatalogItems
-        .filter((item) => item.id !== selectedItem.id && item.category === selectedItem.category)
+        .filter(
+          (item) =>
+            item.id !== selectedItem.id &&
+            item.category === selectedItem.category,
+        )
         .slice(0, 4)
     : [];
+  */
+  const similarItems: CatalogUiItem[] = [];
 
-  const hasMore = visibleCount < filteredItems.length;
+  const hasMore = businessCatalog.hasNextPage;
 
   const onCloseFilters = () => setIsFiltersOpen(false);
   const onToggleFilters = () => setIsFiltersOpen(!isFiltersOpen);
 
   const updateFilters = (patch: Partial<typeof filters>) => {
     setFilters((prev) => ({ ...prev, ...patch }));
-    setVisibleCount(BATCH_SIZE);
   };
 
   const navigateWithFilters = useCallback(
     (currentFilters: typeof filters) => {
       const qs = filtersToSearchParams(currentFilters);
-      router.push(`${ROUTES.search}${qs ? `?${qs}` : ''}`);
+      router.push(`${ROUTES.search}${qs ? `?${qs}` : ""}`);
     },
     [router],
   );
@@ -83,36 +109,36 @@ export function SearchResultsPage() {
   }, [filters, navigateWithFilters]);
 
   useEffect(() => {
-    if (!hasMore || !sentinelRef.current || selectedItem) return undefined;
+    if (!hasMore || !sentinelRef.current || selectedItemId) return undefined;
     const node = sentinelRef.current;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
-          setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length));
+          businessCatalog.fetchNextPage();
         }
       },
-      { rootMargin: '360px 0px' },
+      { rootMargin: "360px 0px" },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [filteredItems.length, hasMore, selectedItem]);
+  }, [businessCatalog, hasMore, selectedItemId]);
 
   const handleOpenItem = (item: CatalogUiItem) => {
     setIsFiltersOpen(false);
-    setSelectedItem(item);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setSelectedItemId(item.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleBackToCatalog = () => setSelectedItem(null);
+  const handleBackToCatalog = () => setSelectedItemId(null);
 
   useEffect(() => {
     const onScroll = () => setShowScrollTop(window.scrollY > 600);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   return (
@@ -132,25 +158,33 @@ export function SearchResultsPage() {
           onFiltersConfirm={handleFiltersConfirm}
         />
 
-        {!selectedItem && (
+        {!selectedItemId && (
           <div className={styles.searchResultsHeader}>
             <Link href={ROUTES.home} className={styles.backLink}>
               <ArrowLeft size={16} />
               <span>На главную</span>
             </Link>
             <h2 className={styles.searchResultsTitle}>
-              {filters.search.trim()
-                ? <>Результаты по запросу «{filters.search.trim()}»</>
-                : 'Результаты поиска'}
+              {filters.search.trim() ? (
+                <>Результаты по запросу «{filters.search.trim()}»</>
+              ) : (
+                "Результаты поиска"
+              )}
             </h2>
             <span className={styles.searchResultsCount}>
-              {filteredItems.length} {pluralize(filteredItems.length, 'объявление', 'объявления', 'объявлений')}
+              {filteredItems.length}{" "}
+              {pluralize(
+                filteredItems.length,
+                "объявление",
+                "объявления",
+                "объявлений",
+              )}
             </span>
           </div>
         )}
 
         <AnimatePresence mode="wait">
-          {selectedItem ? (
+          {selectedItemId ? (
             <motion.div
               key="product-detail"
               initial={{ opacity: 0, y: 10 }}
@@ -158,12 +192,18 @@ export function SearchResultsPage() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
             >
-              <ProductDetail
-                item={selectedItem}
-                similarItems={similarItems}
-                onBack={handleBackToCatalog}
-                onOpenSimilar={handleOpenItem}
-              />
+              {selectedItem && !isDetailLoading ? (
+                <ProductDetail
+                  item={selectedItem}
+                  similarItems={similarItems}
+                  onBack={handleBackToCatalog}
+                  onOpenSimilar={handleOpenItem}
+                />
+              ) : (
+                <div className={styles.loadingShell}>
+                  <CatalogSkeletonCard />
+                </div>
+              )}
             </motion.div>
           ) : (
             <motion.div
@@ -173,7 +213,10 @@ export function SearchResultsPage() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <section id="catalog-results" className={styles.catalogLayoutClosed}>
+              <section
+                id="catalog-results"
+                className={styles.catalogLayoutClosed}
+              >
                 <div className={styles.content}>
                   <CatalogToolbar
                     filters={filters}
@@ -185,12 +228,21 @@ export function SearchResultsPage() {
                   {visibleItems.length > 0 ? (
                     <div className={styles.resultsGrid}>
                       {visibleItems.map((item) => (
-                        <CatalogCard key={item.id} item={item} onOpen={handleOpenItem} />
+                        <CatalogCard
+                          key={item.id}
+                          item={item}
+                          onOpen={handleOpenItem}
+                        />
                       ))}
                       {hasMore ? (
-                        <div ref={sentinelRef} className={styles.infiniteSentinel} />
+                        <div
+                          ref={sentinelRef}
+                          className={styles.infiniteSentinel}
+                        />
                       ) : visibleItems.length > BATCH_SIZE ? (
-                        <div className={styles.endCap}>Вы просмотрели все объявления</div>
+                        <div className={styles.endCap}>
+                          Вы просмотрели все объявления
+                        </div>
                       ) : null}
                     </div>
                   ) : (

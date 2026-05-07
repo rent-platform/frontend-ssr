@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useCallback, useState } from 'react';
-import { motion } from 'framer-motion';
-import clsx from 'clsx';
+import { useCallback, useState } from "react";
+import { motion } from "framer-motion";
+import clsx from "clsx";
 import {
   ArrowLeft,
   ChevronRight,
@@ -14,16 +14,14 @@ import {
   ShieldCheck,
   Star,
   Truck,
-} from 'lucide-react';
-import type { CatalogUiItem } from '../types';
-import {
-  formatCatalogCardLocation,
-  formatRelativeDate,
-} from '../utils';
-import { CatalogCard } from './CatalogCard';
-import { ProductGallery } from './ProductGallery';
-import { BookingSidebar } from './BookingSidebar';
-import styles from '../Catalog.module.scss';
+} from "lucide-react";
+import { useGetItemRating } from "@/business/reviews";
+import type { CatalogUiItem } from "../types";
+import { formatCatalogCardLocation, formatRelativeDate } from "../utils";
+import { CatalogCard } from "./CatalogCard";
+import { ProductGallery } from "./ProductGallery";
+import { BookingSidebar } from "./BookingSidebar";
+import styles from "../Catalog.module.scss";
 
 type ProductDetailProps = {
   item: CatalogUiItem;
@@ -43,9 +41,11 @@ export function ProductDetail({
   onAuthRequired,
 }: ProductDetailProps) {
   const [isFav, setIsFav] = useState(false);
+  const { rating } = useGetItemRating(item.id);
 
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.createdAt);
+  const itemRating = rating?.averageRating ?? item.itemRating;
 
   const handleFavoriteToggle = useCallback(() => {
     if (isGuest) {
@@ -63,7 +63,6 @@ export function ProductDetail({
       transition={{ duration: 0.45 }}
     >
       <div className={styles.detailContentMain}>
-
         {/* ─── Back Bar ─── */}
         <nav className={styles.backBar}>
           <button type="button" onClick={onBack} className={styles.backButton}>
@@ -76,11 +75,14 @@ export function ProductDetail({
             </button>
             <button
               type="button"
-              className={clsx(styles.detailActionBtn, styles.detailActionBtnDanger)}
+              className={clsx(
+                styles.detailActionBtn,
+                styles.detailActionBtnDanger,
+              )}
               onClick={handleFavoriteToggle}
             >
-              <Heart size={16} fill={isFav ? 'currentColor' : 'none'} />
-              {isFav ? 'В избранном' : 'Сохранить'}
+              <Heart size={16} fill={isFav ? "currentColor" : "none"} />
+              {isFav ? "В избранном" : "Сохранить"}
             </button>
           </div>
         </nav>
@@ -98,7 +100,7 @@ export function ProductDetail({
           <div className={styles.detailMetaTop}>
             <div className={styles.detailRating}>
               <Star size={16} />
-              {(item.ownerRating ?? 0).toFixed(1)}
+              {(itemRating ?? 0).toFixed(1)}
             </div>
             <span className={styles.detailMetaDot} />
             <div className={styles.detailLocation}>
@@ -112,7 +114,9 @@ export function ProductDetail({
           {(item.tags ?? []).length > 0 && (
             <div className={styles.detailTags}>
               {(item.tags ?? []).map((tag) => (
-                <span key={tag} className={styles.detailTag}>{tag}</span>
+                <span key={tag} className={styles.detailTag}>
+                  {tag}
+                </span>
               ))}
             </div>
           )}
@@ -205,7 +209,12 @@ export function ProductDetail({
             </div>
             <div className={styles.similarGrid}>
               {similarItems.slice(0, 3).map((sim, i) => (
-                <CatalogCard key={sim.id} item={sim} index={i} onOpen={onOpenSimilar} />
+                <CatalogCard
+                  key={sim.id}
+                  item={sim}
+                  index={i}
+                  onOpen={onOpenSimilar}
+                />
               ))}
             </div>
           </section>
@@ -213,7 +222,11 @@ export function ProductDetail({
       </div>
 
       {/* ═══════ Sidebar ═══════ */}
-      <BookingSidebar item={item} isGuest={isGuest} onAuthRequired={onAuthRequired} />
+      <BookingSidebar
+        item={item}
+        isGuest={isGuest}
+        onAuthRequired={onAuthRequired}
+      />
     </motion.div>
   );
 }

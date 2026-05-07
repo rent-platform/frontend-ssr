@@ -33,6 +33,7 @@ export type PublicProfileResponseDto = {
 export type UpdatePasswordRequestDto = {
   currentPassword: string;
   newPassword: string;
+  confirmNewPassword: string;
 };
 
 export type BillingProfileResponseDto = {

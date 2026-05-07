@@ -24,6 +24,9 @@ export type UserResponseDTO = {
   bio: string | null;
   role: UserRole | string;
   isActive: boolean;
+  blockedAt?: string | null;
+  blockedBy?: string | null;
+  blockedReason?: string | null;
 };
 
 export type UserUpdateDto = DeepPartial<{
@@ -38,6 +41,9 @@ export type UserUpdateDto = DeepPartial<{
   role: UserRole;
   is_active: boolean;
   last_login_at: string | null;
+  blocked_at: string | null;
+  blocked_by: string | null;
+  blocked_reason: string | null;
 }>;
 
 export type AuthResponseDTO = {
@@ -45,4 +51,8 @@ export type AuthResponseDTO = {
   refreshToken?: string;
   tokenType?: string;
   expiresIn?: number;
+};
+
+export type LogoutRequestDTO = {
+  refreshToken: string;
 };

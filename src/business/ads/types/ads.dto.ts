@@ -1,6 +1,7 @@
 import type { ItemStatus } from "./catalog.types";
 import type { DeepPartial } from "@/business/shared";
 
+/*
 export type Photo = {
   id?: string;
   itemId?: string;
@@ -8,11 +9,10 @@ export type Photo = {
   sortOrder: number;
   createdAt?: string;
 };
-
 export type PhotosList = {
   photos: Photo[];
 };
-
+*/
 export type OwnerShortResponseDto = {
   id: string;
   nickname?: string | null;
@@ -33,6 +33,11 @@ export type PhotoResponseDto = {
   id?: string;
   photoUrl: string;
   sortOrder: number;
+};
+
+export type AddPhotoRequestDto = {
+  photoUrl: string;
+  sortOrder?: number;
 };
 
 export type AdsItemResponseDto = {
@@ -59,6 +64,17 @@ export type AdsItemResponseDto = {
   nearestAvailableDate?: string | null;
 };
 
+export type ItemShortResponseDto = {
+  id: string;
+  title: string;
+  city?: string | null;
+  pricePerDay?: number | null;
+  pricePerHour?: number | null;
+  status: ItemStatus;
+  isFavorite?: boolean;
+  mainPhotoUrl?: string | null;
+};
+
 export type SortObjectDto = {
   empty?: boolean;
   sorted?: boolean;
@@ -71,7 +87,7 @@ export type AdsListResponseDto = {
   first: boolean;
   last: boolean;
   size: number;
-  content: AdsItemResponseDto[];
+  content: ItemShortResponseDto[];
   number: number;
   sort?: SortObjectDto;
   numberOfElements?: number;
@@ -161,22 +177,22 @@ export interface FetchAdsArgs extends AdsFilterParams {
   pageNumber?: number;
   sortBy?: string;
   sortDirection?: "asc" | "desc";
+  minPricePerHour?: number;
+  maxPricePerHour?: number;
+  status?: ItemStatus;
 }
 
 export type UpdatePlaylistArgs = DeepPartial<AdsCreateAd>;
 
 export type AdsCreateAd = {
-  categoryId?: number;
+  categoryId: number;
   title: string;
   itemDescription?: string | null;
   pricePerDay?: number | null;
   pricePerHour?: number | null;
-  depositAmount?: number | null;
+  depositAmount: number;
   city?: string;
   pickupLocation?: string | null;
-  photos?: Array<{
-    photoUrl?: string;
-    sortOrder?: number;
-  }>;
+  photos?: AddPhotoRequestDto[];
   nearestAvailableDate?: string | null;
 };

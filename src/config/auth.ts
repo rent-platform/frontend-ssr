@@ -3,7 +3,7 @@ import { loginSchema } from "@/business/auth";
 import NextAuth from "next-auth";
 import type { User } from "next-auth";
 import { decodeJwt } from "jose";
-import { getMeApi, loginApi, refreshApi } from "@/business/auth";
+import { getMeApi, loginApi, logoutApi, refreshApi } from "@/business/auth";
 import type { UserRole } from "@/business/auth";
 
 const SESSION_MAX_AGE = 30 * 24 * 60 * 60;
@@ -145,6 +145,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.nickname = token.nickname;
       session.user.avatar_url = token.avatar_url;
       return session;
+    },
+  },
+
+  events: {
+    async signOut(message) {
+      const token = "token" in message ? message.token : null;
+      const refreshToken =
+        token && typeof token.refreshToken === "string"
+          ? token.refreshToken
+          : null;
+
+      if (!refreshToken) return;
+
+      try {
+        await logoutApi({ refreshToken });
+      } catch (error) {
+        console.error("Не удалось выполнить backend logout:", error);
+      }
     },
   },
 

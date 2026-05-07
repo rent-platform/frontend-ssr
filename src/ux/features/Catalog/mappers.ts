@@ -1,12 +1,22 @@
-import type { CatalogItemCardVM } from '@/business/ads';
-import type { CatalogUiItem } from './types';
+import type { CatalogItemCardVM, CatalogItemDetailsVM } from "@/business/ads";
+import type { CatalogUiItem } from "./types";
 
 /**
  * Adds optional UI-only fields on top of the business CatalogItemCardVM.
  */
 export function mapCardVMtoUiItem(
   vm: CatalogItemCardVM,
-  extra?: Partial<Pick<CatalogUiItem, 'category' | 'ownerName' | 'ownerAvatar' | 'ownerRating' | 'ownerReviewCount' | 'images'>>,
+  extra?: Partial<
+    Pick<
+      CatalogUiItem,
+      | "category"
+      | "ownerName"
+      | "ownerAvatar"
+      | "ownerRating"
+      | "ownerReviewCount"
+      | "images"
+    >
+  >,
 ): CatalogUiItem {
   return {
     ...vm,
@@ -24,7 +34,28 @@ export function mapCardVMtoUiItem(
  */
 export function mapCardVMsToUiItems(
   vms: CatalogItemCardVM[],
-  extraByIndex?: (index: number) => Partial<Pick<CatalogUiItem, 'category' | 'ownerName' | 'ownerAvatar' | 'ownerRating' | 'ownerReviewCount' | 'images'>>,
+  extraByIndex?: (
+    index: number,
+  ) => Partial<
+    Pick<
+      CatalogUiItem,
+      | "category"
+      | "ownerName"
+      | "ownerAvatar"
+      | "ownerRating"
+      | "ownerReviewCount"
+      | "images"
+    >
+  >,
 ): CatalogUiItem[] {
   return vms.map((vm, i) => mapCardVMtoUiItem(vm, extraByIndex?.(i)));
+}
+
+export function mapDetailsVMToUiItem(vm: CatalogItemDetailsVM): CatalogUiItem {
+  return {
+    ...vm,
+    coverImageUrl: vm.photos[0] ?? null,
+    images: vm.photos,
+    description: vm.description ? [vm.description] : [],
+  };
 }

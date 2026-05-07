@@ -1,5 +1,105 @@
-infinite query
-merge branches
-add to favorites
+Картинки на моках тк s3 нет.
 
-search MSW
+Маршруты
+
+Публичные
+Эти endpoints должны работать без логина, потому что нужны для просмотра маркетплейса:
+
+Auth:
+
+login
+register
+refresh
+logout условно публичный, если refresh/cookie обрабатывается сервером
+Catalog:
+
+fetchAds -> GET /api/catalog/items
+fetchAdById -> GET /api/catalog/items/{itemId}
+В swagger он сейчас помечен bearerAuth, но по продуктовой логике карточка/деталка объявления должна быть публичной.
+fetchSimilarAds
+fetchCategories
+fetchCategoryById
+fetchItemAvailability
+В swagger тоже private, но по идее календарь доступности нужен до сделки.
+fetchAdPhotos
+Тоже сейчас private в swagger, но фото объявления должны быть публичными.
+Reviews / rating:
+
+fetchReviewsByUser
+fetchReviewsByAd
+fetchUserReviewSummary
+fetchItemReviewSummary
+Profile:
+
+getPublicProfile
+Приватные user endpoints
+Только авторизованный пользователь:
+
+Profile:
+
+getCurrentProfile
+updateUserInfo
+deleteCurrentProfile
+updatePassword
+getBillingProfile
+updateBillingProfile
+getProfile -> GET /api/users/{id} лучше считать private/admin, а для публичного UI использовать только getPublicProfile
+Catalog user:
+
+fetchMyAds
+createAd
+updateAd
+deleteAd
+sendAdToModeration
+returnAdToDraft
+archiveAd
+restoreAd
+addAdPhoto
+deleteAdPhoto
+updateAdPhotoOrder
+updateItemAvailability
+deleteItemAvailability
+fetchItemStats
+Favorites:
+
+fetchFavoriteStatus
+fetchMyFavorites
+addFavorite
+removeFavorite
+Deals:
+
+все deals endpoints: create/get/confirm/reject/cancel/start/complete/my incoming/my outgoing/history
+Payments:
+
+все frontend payments endpoints приватные
+Chat:
+
+все chat endpoints/socket events приватные
+Reviews:
+
+createReview
+fetchReviewsByDeal приватный, потому что привязан к сделке
+Complaints:
+
+createComplaint приватный: жалоба должна иметь автора
+спорный момент: можно разрешить anonymous complaints, но тогда backend должен явно поддерживать anonymous author. Сейчас по модели authorId лучше private.
+Admin private
+Только admin/moderator/super_admin по RBAC:
+
+Admin users:
+
+blockUser
+unblockUser
+updateUserRole
+Catalog admin:
+
+fetchModerationAds
+approveAd
+rejectAd
+createCategory
+updateCategory
+deleteCategory
+Complaints admin/moderation:
+
+fetchComplaints
+handleComplaint

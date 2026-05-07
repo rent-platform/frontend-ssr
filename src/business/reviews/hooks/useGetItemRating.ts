@@ -13,9 +13,12 @@ export interface UseGetItemRatingResult {
   refetch: () => void;
 }
 
-export function useGetItemRating(itemId: string): UseGetItemRatingResult {
+export function useGetItemRating(
+  itemId: string,
+  options: { skip?: boolean } = {},
+): UseGetItemRatingResult {
   const { data, isLoading, isFetching, isError, error, refetch } =
-    useFetchItemReviewSummaryQuery(itemId);
+    useFetchItemReviewSummaryQuery(itemId, { skip: options.skip || !itemId });
 
   return {
     rating: data ?? null,
