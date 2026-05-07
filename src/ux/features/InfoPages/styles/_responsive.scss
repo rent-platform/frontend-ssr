@@ -1,0 +1,28 @@
+@use '../../../styles/vars' as *;
+
+// ═══════ Responsive ═══════
+@media (max-width: $bp-md) {
+  .hero {
+    padding: $space-8 $space-5 $space-6;
+  }
+
+  .content {
+    padding: 0 $space-5 $space-12;
+  }
+
+  .cardsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pricingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .steps::before {
+    display: none;
+  }
+
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

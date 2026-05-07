@@ -1,0 +1,39 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+
+/* ─── Responsive ─── */
+@media (max-width: $bp-md) {
+  .page { padding: $space-6 $space-3 $space-12; }
+
+  .layout {
+    grid-template-columns: 1fr;
+    gap: $space-4;
+  }
+
+  .sidebar {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+    border-radius: $radius-lg;
+    padding: $space-1;
+  }
+
+  .sidebarItem {
+    white-space: nowrap;
+    padding: $space-2 $space-3;
+    font-size: $font-size-xs;
+  }
+
+  .formGrid { grid-template-columns: 1fr; }
+
+  .section { padding: $space-5 $space-4; }
+
+  .avatarUpload { flex-direction: column; text-align: center; }
+}
+
+@media (max-width: $bp-sm) {
+  .toggleRow { flex-direction: column; align-items: flex-start; gap: $space-3; }
+  .sessionCard { flex-wrap: wrap; }
+  .paymentCard { flex-wrap: wrap; }
+  .btnRow { flex-direction: column; }
+}

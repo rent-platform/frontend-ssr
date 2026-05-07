@@ -1,0 +1,22 @@
+@use '../../../styles/vars' as *;
+
+/* ═══ Responsive ═══ */
+
+@media (max-width: $bp-lg) {
+  .sidebar { width: 320px; min-width: 320px; }
+}
+
+@media (max-width: $bp-md) {
+  .page { flex-direction: column; }
+  .sidebar { width: 100%; min-width: 0; max-height: 50vh; }
+  .sidebarHeader { padding: $space-3 $space-4; }
+  .sidebarTabs { padding: 0 $space-4; }
+  .searchBox { padding: $space-2 $space-4; }
+  .chatItem { padding: $space-3 $space-4; }
+  .convHeader { padding: $space-3 $space-4; }
+  .dealBar { padding: $space-2 $space-4; }
+  .quickActions { padding: $space-2 $space-4; }
+  .messagesArea { padding: $space-3 $space-4; }
+  .inputArea { padding: $space-3 $space-4; }
+  .bubble { max-width: 80%; }
+}

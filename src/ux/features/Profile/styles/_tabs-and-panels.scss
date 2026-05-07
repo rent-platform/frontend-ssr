@@ -1,0 +1,242 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ═══ Tabs (underline) ═══ */
+.tabBar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid $color-border;
+  margin-bottom: $space-5;
+}
+
+.tab {
+  padding: 12px 20px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: $color-text-secondary;
+  font-size: 14px;
+  font-weight: $font-weight-medium;
+  font-family: $font-family-base;
+  cursor: pointer;
+  transition: $transition-base;
+  white-space: nowrap;
+
+  &:hover {
+    color: $color-text;
+  }
+}
+
+.tabActive {
+  color: $color-primary;
+  border-bottom-color: $color-primary;
+  font-weight: $font-weight-600;
+
+  &:hover { color: $color-primary; }
+
+  .tabCount {
+    background: rgba(34, 197, 94, 0.1);
+    color: $color-primary;
+  }
+}
+
+.tabCount {
+  display: inline-block;
+  font-size: 11px;
+  background: rgba(100, 116, 139, 0.08);
+  color: $color-text-secondary;
+  padding: 1px 7px;
+  border-radius: $radius-full;
+  font-weight: $font-weight-600;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ═══ Panel ═══ */
+.panel {
+  background: #fff;
+  border-radius: $radius-2xl;
+  border: 1px solid $color-border;
+  box-shadow: $shadow-card;
+  padding: $space-6;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $space-4;
+  margin-bottom: $space-6;
+}
+
+.panelTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-lg;
+  font-weight: 750;
+  color: $color-text;
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.panelSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 4px 0 0;
+}
+
+.panelTitleSection {
+  margin-top: $space-6;
+  padding-top: $space-6;
+  border-top: 1px solid $color-border;
+}
+
+/* ─── Side Toggle ─── */
+.sideToggle {
+  display: inline-flex;
+  gap: 2px;
+  background: $color-surface-muted;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: 3px;
+  margin-bottom: $space-4;
+}
+
+.sideToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  padding: 7px $space-4;
+  border: none;
+  border-radius: $radius-md;
+  background: transparent;
+  color: $color-text-secondary;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  font-family: $font-family-base;
+  cursor: pointer;
+  transition: $transition-smooth;
+  white-space: nowrap;
+
+  svg { width: 14px; height: 14px; }
+
+  &:hover {
+    color: $color-text;
+    background: rgba(0, 0, 0, 0.03);
+  }
+}
+
+.sideToggleBtnActive {
+  background: #fff;
+  color: $color-primary;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  &:hover {
+    background: #fff;
+    color: $color-primary;
+  }
+}
+
+/* ─── Filter Pills ─── */
+.filterPills {
+  display: flex;
+  gap: $space-2;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: $space-5;
+}
+
+.filterPill {
+  padding: 7px 14px;
+  border-radius: $radius-full;
+  border: 1px solid $color-border;
+  background: transparent;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  font-family: $font-family-base;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    background: rgba(34, 197, 94, 0.04);
+  }
+}
+
+.filterPillActive {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: $color-primary;
+  font-weight: $font-weight-600;
+}
+
+/* ═══ Quick Actions ═══ */
+.quickActions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-3;
+  margin-top: $space-6;
+  padding-top: $space-6;
+  border-top: 1px solid $color-border;
+}
+
+.quickAction {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4 $space-4;
+  border-radius: $radius-xl;
+  border: 1px solid $color-border;
+  background: #fff;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+
+  &:hover {
+    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.02);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.1);
+    transform: translateY(-2px);
+
+    .quickActionIcon {
+      background: $gradient-green;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+    }
+  }
+}
+
+.quickActionIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-lg;
+  background: rgba(34, 197, 94, 0.08);
+  color: $color-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.quickActionText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.quickActionLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+  line-height: 1.2;
+}
+
+.quickActionHint {
+  font-size: 11px;
+  color: $color-text-secondary;
+  line-height: 1.2;
+}

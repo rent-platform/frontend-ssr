@@ -1,0 +1,101 @@
+@use '../../../styles/vars' as *;
+
+// ═══════ Legal Prose ═══════
+.prose {
+  max-width: 760px;
+
+  h2 {
+    font-family: $font-family-display;
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-text;
+    margin: $space-10 0 $space-4;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h3 {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $color-text;
+    margin: $space-8 0 $space-3;
+  }
+
+  p {
+    font-size: $font-size-base;
+    color: $color-text-secondary;
+    line-height: 1.75;
+    margin: 0 0 $space-4;
+  }
+
+  ul {
+    padding-left: $space-5;
+    margin: 0 0 $space-4;
+
+    li {
+      font-size: $font-size-base;
+      color: $color-text-secondary;
+      line-height: 1.75;
+      margin-bottom: $space-2;
+    }
+  }
+}
+
+// ═══════ Vacancy ═══════
+.vacancyList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.vacancy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-5 $space-6;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  background: $color-surface;
+  transition: all 0.2s ease;
+  gap: $space-4;
+  flex-wrap: wrap;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.3);
+    box-shadow: $shadow-sm;
+  }
+}
+
+.vacancyInfo {
+  h3 {
+    font-family: $font-family-display;
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $color-text;
+    margin: 0 0 $space-1;
+  }
+
+  span {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+}
+
+.vacancyBtn {
+  padding: $space-2 $space-5;
+  border: 1.5px solid $color-primary;
+  border-radius: $radius-lg;
+  background: transparent;
+  color: $color-primary;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: $color-green-50;
+  }
+}

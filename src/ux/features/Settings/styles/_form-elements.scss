@@ -1,0 +1,132 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+
+/* ─── Form Elements ─── */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+}
+
+.formGroupFull {
+  grid-column: 1 / -1;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.formLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+}
+
+.formHint {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin-top: -$space-1;
+}
+
+.formInput {
+  padding: $space-3 $space-4;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  font-size: $font-size-sm;
+  font-family: $font-family-base;
+  color: $color-text;
+  background: #fff;
+  transition: $transition-smooth;
+  outline: none;
+
+  &::placeholder { color: $color-text-secondary; opacity: 0.6; }
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+  }
+}
+
+.formTextarea {
+  @extend .formInput;
+  min-height: 100px;
+  resize: vertical;
+  line-height: $line-height-normal;
+}
+
+.formInputWithIcon {
+  position: relative;
+
+  svg {
+    position: absolute;
+    left: $space-3;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: $color-text-secondary;
+    opacity: 0.5;
+  }
+
+  .formInput { padding-left: 38px; }
+}
+
+/* ─── Avatar Upload ─── */
+.avatarUpload {
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+  margin-bottom: $space-6;
+}
+
+.avatarPreview {
+  width: 80px;
+  height: 80px;
+  border-radius: $radius-full;
+  background: $gradient-green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-800;
+  font-family: $font-family-display;
+  flex-shrink: 0;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.2);
+}
+
+.avatarPreviewImg {
+  width: 80px;
+  height: 80px;
+  border-radius: $radius-full;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.avatarActions {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.avatarActionsTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+}
+
+.avatarActionsHint {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.avatarBtnRow {
+  display: flex;
+  gap: $space-2;
+  margin-top: $space-1;
+}

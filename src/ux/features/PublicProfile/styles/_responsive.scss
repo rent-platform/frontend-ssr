@@ -1,0 +1,63 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ═══ Responsive ═══ */
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: $space-6;
+  }
+
+  .sidebar {
+    position: static;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-4;
+
+    .userCard { grid-column: 1 / -1; }
+  }
+
+  .statsStrip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .statsStrip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .listingsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ratingBreakdown {
+    flex-direction: column;
+    gap: $space-4;
+  }
+
+  .ratingBig {
+    flex-direction: row;
+    gap: $space-3;
+    align-items: center;
+  }
+
+  .ratingBigValue {
+    font-size: 28px;
+  }
+
+  .tabBar {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .listingsGrid {
+    grid-template-columns: 1fr;
+  }
+}

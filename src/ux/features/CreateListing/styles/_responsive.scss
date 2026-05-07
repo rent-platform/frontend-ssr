@@ -1,0 +1,27 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ═══ Responsive ═══ */
+@include respond-below('md') {
+  .page { padding: $space-5 $space-3 $space-12; }
+
+  .card {
+    padding: $space-5;
+    border-radius: $radius-xl;
+  }
+
+  .stepper { flex-wrap: wrap; gap: $space-1; }
+  .stepItem { padding: $space-1 $space-3; font-size: 11px; }
+  .stepConnector { width: 16px; }
+
+  .fieldRow { grid-template-columns: 1fr; }
+  .conditionGrid { grid-template-columns: 1fr; }
+  .imageGrid { grid-template-columns: repeat(3, 1fr); }
+
+  .headerTitle { font-size: $font-size-2xl; }
+
+  .nav { flex-wrap: wrap; }
+  .navNext { width: 100%; justify-content: center; }
+  .navBack { width: 100%; justify-content: center; order: 1; }
+}

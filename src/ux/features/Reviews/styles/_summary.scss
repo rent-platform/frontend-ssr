@@ -1,0 +1,101 @@
+@use '../../../styles/vars' as *;
+
+/* ═══ Rating Summary Card ═══ */
+.summaryCard {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  border-radius: $radius-2xl;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: $space-6;
+  margin-bottom: $space-6;
+  display: flex;
+  gap: $space-8;
+  align-items: center;
+}
+
+.summaryLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-2;
+  min-width: 120px;
+}
+
+.summaryAverage {
+  font-family: $font-family-display;
+  font-size: 48px;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.summaryStars {
+  display: flex;
+  gap: 2px;
+}
+
+.starFilled {
+  color: #f59e0b;
+}
+
+.starEmpty {
+  color: rgba(100, 116, 139, 0.2);
+}
+
+.summaryTotal {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.summaryRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.barRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity $transition-fast;
+}
+
+.barRowDimmed {
+  opacity: 0.4;
+}
+
+.barLabel {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: $color-text-secondary;
+  min-width: 14px;
+  text-align: right;
+}
+
+.barTrack {
+  flex: 1;
+  height: 8px;
+  border-radius: $radius-full;
+  background: rgba(100, 116, 139, 0.08);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: $radius-full;
+  background: #f59e0b;
+  transition: width 0.4s ease;
+}
+
+.barCount {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  min-width: 20px;
+}

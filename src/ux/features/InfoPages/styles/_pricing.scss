@@ -1,0 +1,128 @@
+@use '../../../styles/vars' as *;
+
+// ═══════ Pricing Table ═══════
+.pricingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $space-6;
+}
+
+.pricingCard {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  padding: $space-8;
+  text-align: center;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.3);
+    box-shadow: $shadow-md;
+  }
+}
+
+.pricingCardFeatured {
+  border-color: $color-primary;
+  box-shadow: 0 0 0 1px $color-primary, $shadow-lg;
+  position: relative;
+}
+
+.pricingBadge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $gradient-green;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: $space-1 $space-4;
+  border-radius: $radius-full;
+}
+
+.pricingName {
+  font-family: $font-family-display;
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0 0 $space-2;
+}
+
+.pricingPrice {
+  font-family: $font-family-display;
+  font-size: 36px;
+  font-weight: 800;
+  color: $color-text;
+  letter-spacing: -0.03em;
+
+  span {
+    font-size: $font-size-sm;
+    font-weight: 500;
+    color: $color-text-secondary;
+  }
+}
+
+.pricingDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: $space-2 0 $space-6;
+}
+
+.pricingFeatures {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 $space-6;
+  text-align: left;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 0;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    border-bottom: 1px solid rgba($color-border, 0.5);
+
+    svg {
+      color: $color-primary;
+      flex-shrink: 0;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.pricingBtn {
+  display: block;
+  width: 100%;
+  padding: $space-3 $space-5;
+  border: none;
+  border-radius: $radius-lg;
+  background: $gradient-green;
+  color: #fff;
+  font-size: $font-size-sm;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $shadow-green-sm;
+  }
+}
+
+.pricingBtnOutline {
+  background: transparent;
+  border: 1.5px solid $color-border;
+  color: $color-text;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    box-shadow: none;
+  }
+}

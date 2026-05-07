@@ -1,0 +1,42 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-5;
+}
+
+.cardWrap {
+  position: relative;
+
+  &:hover .removeBtn {
+    opacity: 1;
+    transform: translate(50%, -50%) scale(1);
+  }
+}
+
+.removeBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 5;
+  @include flex-center;
+  @include square(28px);
+  border: 0;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.7);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transform: translate(50%, -50%) scale(0.8);
+  transition: $transition-smooth;
+  backdrop-filter: blur(4px);
+
+  &:hover {
+    background: $color-secondary;
+    transform: translate(50%, -50%) scale(1.08);
+  }
+}

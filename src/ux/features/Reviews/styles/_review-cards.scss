@@ -1,0 +1,217 @@
+@use '../../../styles/vars' as *;
+
+/* ═══ Review Card ═══ */
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.reviewCard {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  border-radius: $radius-2xl;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: $space-5 $space-6;
+  transition: $transition-smooth;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  margin-bottom: $space-4;
+}
+
+.reviewAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-full;
+  background: $gradient-green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-800;
+  font-family: $font-family-display;
+  flex-shrink: 0;
+}
+
+.reviewAvatarImg {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-full;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.reviewMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.reviewAuthorRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: 2px;
+}
+
+.reviewAuthor {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+}
+
+.reviewRoleBadge {
+  font-size: 10px;
+  font-weight: $font-weight-600;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+}
+
+.roleBadgeOwner {
+  background: rgba(34, 197, 94, 0.08);
+  color: $color-primary;
+}
+
+.roleBadgeRenter {
+  background: rgba(59, 130, 246, 0.08);
+  color: #3b82f6;
+}
+
+.reviewStarsRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.reviewStars {
+  display: flex;
+  gap: 1px;
+}
+
+.reviewDate {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.reviewText {
+  font-size: $font-size-sm;
+  color: $color-text;
+  line-height: $line-height-normal;
+  margin: 0 0 $space-4;
+}
+
+/* ─── Item reference ─── */
+.reviewItem {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3;
+  border-radius: $radius-lg;
+  background: rgba(100, 116, 139, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  margin-bottom: $space-4;
+}
+
+.reviewItemImage {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-md;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.reviewItemPlaceholder {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-md;
+  background: rgba(100, 116, 139, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+
+  svg { width: 18px; height: 18px; }
+}
+
+.reviewItemTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+}
+
+/* ─── Owner reply ─── */
+.reviewReply {
+  margin-top: $space-3;
+  padding: $space-4;
+  border-radius: $radius-xl;
+  background: rgba(34, 197, 94, 0.03);
+  border-left: 3px solid $color-primary;
+}
+
+.replyHeader {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: $space-2;
+}
+
+.replyLabel {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: $color-primary;
+}
+
+.replyDate {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.replyText {
+  font-size: $font-size-sm;
+  color: $color-text;
+  line-height: $line-height-normal;
+  margin: 0;
+}
+
+/* ═══ Empty State ═══ */
+.emptyState {
+  text-align: center;
+  padding: $space-16 $space-6;
+}
+
+.emptyIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: $radius-full;
+  background: rgba(100, 116, 139, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto $space-4;
+  color: $color-text-secondary;
+  svg { width: 24px; height: 24px; }
+}
+
+.emptyTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-base;
+  font-weight: $font-weight-600;
+  color: $color-text;
+  margin: 0 0 $space-1;
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 0;
+}

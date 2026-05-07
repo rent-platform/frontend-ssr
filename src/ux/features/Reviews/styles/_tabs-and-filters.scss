@@ -1,0 +1,119 @@
+@use '../../../styles/vars' as *;
+
+/* ═══ Tabs ═══ */
+.tabs {
+  display: flex;
+  gap: $space-2;
+  margin-bottom: $space-4;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-3 $space-5;
+  border-radius: $radius-full;
+  border: 1px solid $color-border;
+  background: #fff;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  font-family: $font-family-base;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  svg { width: 16px; height: 16px; }
+
+  &:hover {
+    color: $color-text;
+    border-color: rgba(100, 116, 139, 0.3);
+  }
+}
+
+.tabActive {
+  background: $color-text;
+  color: #fff;
+  border-color: $color-text;
+  font-weight: $font-weight-600;
+
+  &:hover {
+    color: #fff;
+    border-color: $color-text;
+  }
+}
+
+.tabBadge {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  padding: 1px 7px;
+  border-radius: $radius-full;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.tabBadgeInactive {
+  background: rgba(100, 116, 139, 0.1);
+  color: $color-text-secondary;
+}
+
+/* ═══ Filters Bar ═══ */
+.filtersBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  margin-bottom: $space-5;
+  flex-wrap: wrap;
+}
+
+.filterPills {
+  display: flex;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+.filterPill {
+  padding: 5px $space-3;
+  border-radius: $radius-full;
+  border: 1px solid $color-border;
+  background: #fff;
+  color: $color-text-secondary;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  font-family: $font-family-base;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    color: $color-text;
+    border-color: rgba(100, 116, 139, 0.3);
+  }
+}
+
+.filterPillActive {
+  background: $color-primary;
+  color: #fff;
+  border-color: $color-primary;
+
+  &:hover {
+    color: #fff;
+    border-color: $color-primary;
+  }
+}
+
+.sortSelect {
+  padding: 5px $space-3;
+  border-radius: $radius-lg;
+  border: 1px solid $color-border;
+  background: #fff;
+  color: $color-text-secondary;
+  font-size: $font-size-xs;
+  font-family: $font-family-base;
+  cursor: pointer;
+  outline: none;
+  transition: $transition-smooth;
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+  }
+}
