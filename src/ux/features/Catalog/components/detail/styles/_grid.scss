@@ -1,0 +1,97 @@
+@use 'sass:color';
+@use '../../../../../styles/vars' as *;
+@use '../../../../../styles/helpers/mixins' as *;
+
+/* ─── Weekday headers ─── */
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0 $space-4 $space-2;
+}
+
+.weekday {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ─── Days grid ─── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  padding: 0 $space-4 $space-4;
+}
+
+.emptyCell {
+  aspect-ratio: 1;
+}
+
+.day {
+  @include flex-center;
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-text;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+
+  &:hover:not(:disabled) {
+    background: $color-green-50;
+    color: $color-primary;
+  }
+}
+
+.dayPast {
+  color: rgba(148, 163, 184, 0.5);
+  cursor: default;
+}
+
+.dayToday {
+  font-weight: 800;
+  color: $color-primary;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: $color-primary;
+  }
+}
+
+.dayStart,
+.dayEnd {
+  background: $gradient-green;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 4px 12px -4px rgba(34, 197, 94, 0.45);
+  border-radius: 12px;
+
+  &:hover:not(:disabled) {
+    background: $gradient-green;
+    color: #fff;
+  }
+}
+
+.dayInRange {
+  background: rgba(34, 197, 94, 0.1);
+  color: color.adjust($color-primary, $lightness: -10%);
+  border-radius: 4px;
+
+  &:hover:not(:disabled) {
+    background: rgba(34, 197, 94, 0.18);
+    color: color.adjust($color-primary, $lightness: -12%);
+  }
+}

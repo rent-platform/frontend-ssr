@@ -1,0 +1,54 @@
+@use '../../../../../styles/helpers/mixins' as *;
+
+@media (width < 560px) {
+  .overlay {
+    align-items: flex-end;
+    padding: 10px;
+  }
+
+  .panel {
+    width: calc(100vw - 20px);
+    max-height: calc(100vh - 20px);
+    border-radius: 24px;
+  }
+
+  .header { padding: 16px; }
+  .body { padding: 16px; }
+  .footer { padding: 12px 16px 14px; }
+  .chipsRow { padding: 11px 16px; }
+
+  .priceRow { flex-direction: column; gap: 8px; }
+  .priceInput,
+  .priceInputError { width: 100%; }
+  .priceDash { display: none; }
+  .quickGrid { gap: 6px; }
+
+  .applyBtn { width: 100%; }
+}
+
+@include respond-below('xs') {
+  .panel {
+    width: calc(100vw - 12px);
+    max-height: calc(100vh - 12px);
+  }
+
+  .headerTitle { font-size: 18px; }
+
+  .headerRight {
+    gap: 6px;
+  }
+
+  .resetBtn span {
+    display: none;
+  }
+
+  .footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .footerCountBlock {
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+  }
+}

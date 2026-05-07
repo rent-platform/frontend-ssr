@@ -1,0 +1,30 @@
+@use '../../../../../styles/vars' as *;
+
+/* ═══════════════════════════════════════════════════
+   RentalCalendar — date-range picker for bookings
+   ═══════════════════════════════════════════════════ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-6;
+  background: rgba(15, 23, 42, 0.38);
+  backdrop-filter: blur(6px);
+}
+
+.calendar {
+  width: 100%;
+  max-width: 380px;
+  background: #fff;
+  border-radius: 22px;
+  border: 1px solid rgba(226, 232, 240, 0.65);
+  box-shadow:
+    0 32px 64px -24px rgba(15, 23, 42, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  user-select: none;
+}

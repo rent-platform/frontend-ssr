@@ -1,0 +1,39 @@
+@use '../../../../../styles/vars' as *;
+@use '../../../../../styles/helpers/mixins' as *;
+
+/* ─── Header ─── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-5 $space-5 $space-3;
+}
+
+.monthLabel {
+  font-family: $font-family-base;
+  font-size: 16px;
+  font-weight: 750;
+  color: $color-text;
+}
+
+.navBtn {
+  @include flex-center;
+  @include square(36px);
+  border: 1px solid $color-border;
+  border-radius: 12px;
+  background: #fff;
+  color: $color-text;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover:not(:disabled) {
+    border-color: $color-border-green;
+    color: $color-primary;
+    background: $color-green-50;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+}
