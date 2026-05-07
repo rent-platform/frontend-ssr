@@ -1,0 +1,13 @@
+@use '../../../styles/vars' as *;
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Chat Page — Modern Split Layout
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.page {
+  height: 100vh;
+  display: flex;
+  font-family: $font-family-base;
+  background: #eef2f7;
+  overflow: hidden;
+}

@@ -1,0 +1,63 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ── Responsive ── */
+@include respond-below('xl') {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@include respond-below('lg') {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .title { font-size: 20px; }
+  .headerIcon { width: 42px; height: 42px; }
+}
+
+@include respond-below('md') {
+  .page { padding: $space-5 0 $space-10; }
+  .container { width: calc(100% - 24px); }
+
+  .header {
+    flex-direction: column;
+    gap: $space-3;
+    margin-bottom: $space-5;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: $space-2;
+  }
+
+  .searchWrap { max-width: 100%; }
+
+  .sortBtn { width: 100%; justify-content: center; }
+
+  .sortDropdown {
+    left: 0;
+    right: 0;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $space-3;
+  }
+
+  .removeBtn {
+    opacity: 1;
+    transform: translate(50%, -50%) scale(1);
+  }
+}
+
+@include respond-below('sm') {
+  .grid { grid-template-columns: 1fr; }
+  .title { font-size: 18px; }
+
+  .headerIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: $radius-lg;
+
+    svg { width: 18px; height: 18px; }
+  }
+}

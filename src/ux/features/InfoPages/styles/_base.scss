@@ -1,0 +1,135 @@
+@use '../../../styles/vars' as *;
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, $color-surface-muted 0%, $color-bg 320px);
+  font-family: $font-family-base;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid $color-border;
+}
+
+.headerInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: $space-3 $space-6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  text-decoration: none;
+  color: $color-text;
+
+  strong {
+    font-family: $font-family-display;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+}
+
+.brandLogo {
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-md;
+  background: $gradient-green;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: $font-family-display;
+  font-size: 15px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: $color-text-secondary;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+// ═══════ Hero ═══════
+.hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: $space-12 $space-6 $space-8;
+}
+
+.heroEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-xs;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $color-primary;
+  margin-bottom: $space-3;
+}
+
+.heroTitle {
+  font-family: $font-family-display;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: $color-text;
+  margin: 0 0 $space-4;
+  line-height: 1.15;
+}
+
+.heroSubtitle {
+  font-size: $font-size-lg;
+  color: $color-text-secondary;
+  line-height: 1.65;
+  max-width: 640px;
+  margin: 0;
+}
+
+// ═══════ Content ═══════
+.content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 $space-6 $space-16;
+}
+
+// ═══════ Section ═══════
+.section {
+  margin-bottom: $space-12;
+}
+
+.sectionTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-2xl;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: $color-text;
+  margin: 0 0 $space-6;
+}
+
+.sectionText {
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+  line-height: 1.75;
+  margin: 0 0 $space-4;
+  max-width: 760px;
+}

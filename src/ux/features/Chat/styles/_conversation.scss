@@ -1,0 +1,382 @@
+@use '../../../styles/vars' as *;
+
+/* ═══ Conversation Area ═══ */
+
+.conversation {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #eef2f7;
+}
+
+/* ─── Conversation Header ─── */
+
+.convHeader {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-4 $space-6;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.04);
+}
+
+.convAvatarWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.convAvatar {
+  width: 42px;
+  height: 42px;
+  border-radius: $radius-full;
+  background: $gradient-green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-800;
+  font-family: $font-family-display;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
+}
+
+.convAvatarImg {
+  width: 42px;
+  height: 42px;
+  border-radius: $radius-full;
+  object-fit: cover;
+}
+
+.convOnline {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: $color-success;
+  border: 2px solid #fff;
+}
+
+.convInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.convName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  letter-spacing: -0.1px;
+}
+
+.convStatus {
+  font-size: 11px;
+  color: $color-text-secondary;
+}
+
+.convStatusOnline { color: $color-success; }
+
+.convStatusTyping {
+  color: $color-primary;
+  font-style: italic;
+}
+
+.convHeaderActions {
+  display: flex;
+  gap: $space-1;
+}
+
+/* ─── Deal context bar ─── */
+
+.dealBar {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3 $space-6;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.dealBarImg {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-md;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.dealBarPlaceholder {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-md;
+  background: rgba(100, 116, 139, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+  svg { width: 16px; height: 16px; }
+}
+
+.dealBarInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.dealBarTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: $color-text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dealBarMeta {
+  font-size: 10px;
+  color: $color-text-secondary;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+.dealBadge {
+  font-size: 10px;
+  font-weight: $font-weight-600;
+  padding: 2px 8px;
+  border-radius: $radius-full;
+  white-space: nowrap;
+}
+
+.dealBadgeActive { background: rgba(34, 197, 94, 0.08); color: $color-primary; }
+.dealBadgeConfirmed { background: rgba(59, 130, 246, 0.08); color: #3b82f6; }
+.dealBadgeCompleted { background: rgba(100, 116, 139, 0.08); color: $color-text-secondary; }
+.dealBadgeNew { background: rgba(245, 158, 11, 0.08); color: #f59e0b; }
+.dealBadgeRejected { background: rgba(239, 68, 68, 0.08); color: $color-error; }
+
+/* ─── Quick Actions Bar ─── */
+
+.quickActions {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-3 $space-6;
+  background: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+}
+
+.qaBtn {
+  padding: 6px $space-4;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  font-family: $font-family-base;
+  cursor: pointer;
+  transition: $transition-smooth;
+  border: 1px solid transparent;
+}
+
+.qaBtnPrimary {
+  background: $gradient-green;
+  color: #fff;
+  border-color: $color-primary;
+
+  &:hover { box-shadow: $shadow-green-sm; transform: translateY(-1px); }
+}
+
+.qaBtnSecondary {
+  background: #fff;
+  color: $color-text;
+  border-color: $color-border;
+
+  &:hover { border-color: $color-primary; color: $color-primary; }
+}
+
+.qaBtnDanger {
+  background: #fff;
+  color: $color-error;
+  border-color: rgba(239, 68, 68, 0.2);
+
+  &:hover { background: rgba(239, 68, 68, 0.04); border-color: $color-error; }
+}
+
+/* ─── Messages Area ─── */
+
+.messagesArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: $space-5 $space-6 $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.12); border-radius: 2px; }
+}
+
+/* ─── Date separator ─── */
+
+.dateSeparator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-3 0;
+}
+
+.dateLabel {
+  font-size: 11px;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 14px;
+  border-radius: $radius-full;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* ─── System event ─── */
+
+.systemEvent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-2 0;
+}
+
+.systemEventText {
+  font-size: 11px;
+  color: $color-text-secondary;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  padding: 5px 14px;
+  border-radius: $radius-full;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+
+  svg {
+    display: inline;
+    width: 11px;
+    height: 11px;
+    vertical-align: -1px;
+    margin-right: 4px;
+    color: $color-primary;
+  }
+}
+
+/* ─── Message Bubble ─── */
+
+.bubbleRow {
+  display: flex;
+  margin-bottom: 2px;
+
+  &.own { justify-content: flex-end; }
+}
+
+.bubble {
+  max-width: 68%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: $font-size-sm;
+  line-height: 1.5;
+  word-break: break-word;
+  position: relative;
+}
+
+.bubbleOther {
+  background: #fff;
+  color: $color-text;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.bubbleOwn {
+  background: $gradient-green;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.28);
+}
+
+.bubbleText { margin: 0; }
+
+.bubbleImage {
+  max-width: 280px;
+  border-radius: $radius-lg;
+  margin-bottom: $space-2;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover { opacity: 0.92; }
+}
+
+.bubbleMeta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.bubbleTime {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.75);
+
+  .bubbleOther & {
+    color: $color-text-secondary;
+    opacity: 0.75;
+  }
+}
+
+.bubbleCheck {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.65);
+
+  svg { width: 13px; height: 13px; }
+}
+
+.bubbleCheckRead {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* ─── Typing indicator (conversation) ─── */
+
+.typingIndicator {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2 0 $space-1;
+}
+
+.typingDots {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 12px 16px;
+  background: #fff;
+  border-radius: 18px;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.typingDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: $color-text-secondary;
+  opacity: 0.45;
+  animation: typingBounce 1.3s infinite;
+
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.4s; }
+}
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 0.9; }
+}

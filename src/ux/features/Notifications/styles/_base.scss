@@ -1,0 +1,146 @@
+@use '../../../styles/vars' as *;
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Notifications Page — Modern Glass UI
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.page {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(34, 197, 94, 0.03) 0%, transparent 70%),
+    $color-surface-muted;
+  font-family: $font-family-base;
+  padding: $space-8 $space-6 $space-16;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ─── Page Header ─── */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-4;
+  margin-bottom: $space-6;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-lg;
+  border: 1px solid transparent;
+  background: none;
+  color: $color-text-secondary;
+  text-decoration: none;
+  transition: $transition-smooth;
+
+  svg { width: 18px; height: 18px; }
+
+  &:hover {
+    color: $color-primary;
+    background: rgba(34, 197, 94, 0.06);
+    border-color: rgba(34, 197, 94, 0.15);
+  }
+}
+
+.title {
+  font-family: $font-family-display;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.unreadBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: $radius-full;
+  background: $color-primary;
+  color: #fff;
+  font-size: 11px;
+  font-weight: $font-weight-bold;
+  margin-left: $space-2;
+}
+
+.headerActions {
+  display: flex;
+  gap: $space-2;
+}
+
+.markReadBtn {
+  padding: 6px $space-4;
+  border-radius: $radius-full;
+  border: 1px solid $color-border;
+  background: #fff;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  font-family: $font-family-base;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    background: rgba(34, 197, 94, 0.03);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.settingsBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: $radius-full;
+  border: 1px solid $color-border;
+  background: #fff;
+  color: $color-text-secondary;
+  cursor: pointer;
+  text-decoration: none;
+  transition: $transition-smooth;
+
+  svg { width: 16px; height: 16px; }
+
+  &:hover {
+    color: $color-primary;
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+}
+
+/* ─── Date Group ─── */
+
+.dateGroup {
+  margin-bottom: $space-5;
+}
+
+.dateLabel {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: $color-text-secondary;
+  margin: 0 0 $space-3;
+  padding-left: $space-1;
+}

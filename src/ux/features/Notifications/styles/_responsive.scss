@@ -1,0 +1,17 @@
+@use '../../../styles/vars' as *;
+
+/* ═══ Responsive ═══ */
+
+@media (max-width: $bp-md) {
+  .page { padding: $space-5 $space-4 $space-12; }
+  .header { flex-direction: column; align-items: flex-start; gap: $space-3; }
+  .tabs { border-radius: $radius-lg; }
+  .tab { padding: $space-2 $space-2; font-size: 11px; }
+  .card { padding: $space-3 $space-4; gap: $space-3; }
+  .iconCircle { width: 36px; height: 36px; svg { width: 16px; height: 16px; } }
+}
+
+@media (max-width: $bp-sm) {
+  .title { font-size: $font-size-xl; }
+  .headerActions { width: 100%; justify-content: flex-end; }
+}

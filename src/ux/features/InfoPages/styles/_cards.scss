@@ -1,0 +1,109 @@
+@use '../../../styles/vars' as *;
+
+// ═══════ Cards Grid ═══════
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: $space-6;
+}
+
+.card {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  padding: $space-7;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.3);
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+}
+
+.cardIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-lg;
+  background: $color-green-50;
+  display: grid;
+  place-items: center;
+  color: $color-primary;
+  margin-bottom: $space-4;
+}
+
+.cardTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0 0 $space-2;
+}
+
+.cardText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.65;
+  margin: 0;
+}
+
+// ═══════ Steps (How it works) ═══════
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: $space-8;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 48px;
+    bottom: 48px;
+    width: 2px;
+    background: linear-gradient(180deg, $color-primary, rgba($color-primary, 0.1));
+    border-radius: 1px;
+  }
+}
+
+.step {
+  display: flex;
+  gap: $space-5;
+  align-items: flex-start;
+}
+
+.stepNumber {
+  width: 48px;
+  height: 48px;
+  border-radius: $radius-full;
+  background: $gradient-green;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: $font-family-display;
+  font-size: 18px;
+  font-weight: 800;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.stepContent {
+  padding-top: $space-2;
+
+  h3 {
+    font-family: $font-family-display;
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-text;
+    margin: 0 0 $space-2;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: 1.65;
+    margin: 0;
+    max-width: 520px;
+  }
+}

@@ -1,0 +1,123 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   CreateListing — 4-step wizard for item rental publishing
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Page Layout ─── */
+.page {
+  min-height: 100vh;
+  background: $color-surface-muted;
+  padding: $space-10 $space-4 $space-16;
+}
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ─── Header ─── */
+.header {
+  text-align: center;
+  margin-bottom: $space-8;
+}
+
+.headerTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  margin: 0 0 $space-2;
+  letter-spacing: -0.02em;
+}
+
+.headerSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 0;
+}
+
+/* ═══ Stepper ═══ */
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $space-8;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2 $space-4;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: $color-text-secondary;
+  background: transparent;
+  transition: $transition-smooth;
+  cursor: default;
+  white-space: nowrap;
+  user-select: none;
+
+  svg { width: 15px; height: 15px; flex-shrink: 0; }
+}
+
+.stepItemActive {
+  color: $color-primary;
+  background: $color-green-50;
+  border: 1px solid $color-border-green;
+}
+
+.stepItemCompleted {
+  color: $color-primary;
+  cursor: pointer;
+
+  &:hover { background: $color-green-50; }
+}
+
+.stepConnector {
+  width: 28px;
+  height: 2px;
+  background: $color-border;
+  margin: 0 $space-1;
+  border-radius: $radius-full;
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}
+
+.stepConnectorDone {
+  background: $color-primary;
+}
+
+/* ═══ Card ═══ */
+.card {
+  background: $color-surface;
+  border-radius: $radius-2xl;
+  border: 1px solid $color-border;
+  padding: $space-8;
+  box-shadow: $shadow-premium;
+  animation: fadeSlideIn 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sectionTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  margin: 0 0 $space-1;
+}
+
+.sectionSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 0 0 $space-6;
+  line-height: $line-height-normal;
+}

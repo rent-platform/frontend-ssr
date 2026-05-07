@@ -1,0 +1,172 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+.catalogSection {
+  margin-top: 0;
+
+  .sectionHeader {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: $space-2;
+  margin-bottom: $space-6;
+
+  h2 {
+    margin: $space-1 0 $space-2;
+    color: $color-text;
+    font-family: $font-family-display;
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    font-weight: $font-weight-800;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    max-width: 540px;
+    margin: 0;
+    color: $color-text-secondary;
+    font-size: $font-size-sm;
+    line-height: 1.65;
+  }
+}
+
+.sectionKicker {
+  color: $color-primary;
+  font-size: 12px;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.trustBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-3 $space-4;
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  border-radius: $radius-full;
+  background: rgba(34, 197, 94, 0.07);
+  color: $color-primary;
+  font-family: $font-family-base;
+  font-size: 14px;
+  font-weight: $font-weight-600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: rgba(34, 197, 94, 0.12);
+    transform: translateY(-1px);
+  }
+}
+
+.catalogGridWrap {
+  position: relative;
+}
+
+.resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-5 $space-4;
+  padding: $space-2 0;
+  margin-bottom: 0;
+}
+
+.catalogFade {
+  position: relative;
+  height: 80px;
+  margin-top: -80px;
+  background: linear-gradient(to top, rgba(248, 250, 252, 1) 0%, rgba(248, 250, 252, 0) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cardWrapper {
+  position: relative;
+}
+
+.cardGate {
+  position: absolute;
+  right: $space-3;
+  bottom: $space-3;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px $space-4;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: $radius-full;
+  background: rgba(255, 255, 255, 0.95);
+  color: $color-primary;
+  font-family: $font-family-base;
+  font-size: 13px;
+  font-weight: $font-weight-bold;
+  box-shadow: $shadow-green-sm;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: #fff;
+    box-shadow: $shadow-green-md;
+    transform: translateY(-2px);
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  padding: $space-10;
+  border: 1px dashed $color-border;
+  border-radius: $radius-2xl;
+  background: #fff;
+  color: $color-text-secondary;
+  text-align: center;
+
+  svg {
+    color: $color-primary;
+    margin-bottom: $space-4;
+  }
+
+  h3 {
+    margin: 0 0 $space-2;
+    color: $color-text;
+    font-family: $font-family-display;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0;
+    font-size: $font-size-sm;
+  }
+}
+
+.emptyStateBtn {
+  margin-top: $space-4;
+  padding: 10px $space-5;
+  border: 1px solid $color-border;
+  border-radius: $radius-full;
+  background: #fff;
+  color: $color-text;
+  font-family: $font-family-base;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    color: $color-primary;
+    border-color: rgba(34, 197, 94, 0.35);
+    transform: translateY(-1px);
+  }
+}

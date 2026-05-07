@@ -1,0 +1,194 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ═══ Empty state ═══ */
+.emptyState {
+  text-align: center;
+  padding: $space-12 $space-4;
+  color: $color-text-secondary;
+
+  svg { width: 32px; height: 32px; margin-bottom: $space-3; opacity: 0.3; }
+  h3 { font-size: 15px; font-weight: $font-weight-600; color: $color-text; margin: 0 0 $space-2; }
+  p { font-size: 13px; margin: 0; }
+}
+
+/* ═══ Safety banner ═══ */
+.safetyBanner {
+  max-width: 1120px;
+  margin: $space-10 auto $space-8;
+  padding: 0 $space-4;
+}
+
+.safetyInner {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.06), rgba(6, 182, 212, 0.04));
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  border-radius: $radius-xl;
+  padding: $space-5 $space-6;
+
+  > svg {
+    width: 20px;
+    height: 20px;
+    color: $color-primary;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  strong {
+    display: block;
+    font-size: 14px;
+    font-weight: $font-weight-600;
+    color: $color-text;
+    margin-bottom: $space-1;
+  }
+
+  p {
+    font-size: 13px;
+    color: $color-text-secondary;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+/* ═══ Skeleton ═══ */
+.shimmer {
+  @include skeleton-shimmer;
+}
+
+.skeletonHeader {
+  display: flex;
+  align-items: center;
+  padding: $space-4 $space-6;
+  background: #fff;
+  border-bottom: 1px solid $color-border;
+}
+
+.skeletonBreadcrumb {
+  padding: $space-3 $space-6;
+  background: #fff;
+  border-bottom: 1px solid $color-border;
+  margin-bottom: $space-6;
+}
+
+.skeletonLayout {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 $space-4;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: $space-8;
+  align-items: start;
+}
+
+.skeletonSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.skeletonCard {
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  padding: $space-6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.skeletonMain {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+.skeletonStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-3;
+}
+
+.skeletonStatCard {
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: $space-4;
+}
+
+.skeletonListingCard {
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  overflow: hidden;
+}
+
+.skeletonCardPadded {
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  padding: $space-5;
+}
+
+.skeletonListingBody {
+  padding: $space-3;
+}
+
+.skeletonHeaderSpacer {
+  flex: 1;
+}
+
+/* ═══ Tooltip ═══ */
+.tooltipWrap {
+  position: relative;
+
+  &:hover > .tooltipBubble {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.tooltipBubble {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 8px 14px;
+  background: #1e293b;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  border-radius: 10px;
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+  z-index: 50;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1e293b;
+  }
+}

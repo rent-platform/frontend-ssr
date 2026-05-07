@@ -1,0 +1,169 @@
+@use '../../../styles/vars' as *;
+
+// ═══════ FAQ / Accordion ═══════
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  max-width: 760px;
+}
+
+.faqItem {
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: $color-surface;
+}
+
+.faqQuestion {
+  width: 100%;
+  padding: $space-4 $space-5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $color-text;
+  text-align: left;
+  transition: color 0.2s ease;
+
+  svg {
+    flex-shrink: 0;
+    color: $color-text-secondary;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.faqQuestionOpen svg {
+  transform: rotate(180deg);
+}
+
+.faqAnswer {
+  padding: 0 $space-5 $space-4;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.7;
+}
+
+// ═══════ Contact Grid ═══════
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: $space-5;
+}
+
+.contactCard {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-5;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  background: $color-surface;
+  text-decoration: none;
+  color: $color-text;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.3);
+    box-shadow: $shadow-sm;
+  }
+
+  strong {
+    display: block;
+    font-size: $font-size-sm;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  span {
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+  }
+}
+
+.contactIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-lg;
+  background: $color-green-50;
+  display: grid;
+  place-items: center;
+  color: $color-primary;
+  flex-shrink: 0;
+}
+
+// ═══════ Team Grid ═══════
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $space-6;
+}
+
+.teamMember {
+  text-align: center;
+}
+
+.teamAvatar {
+  width: 80px;
+  height: 80px;
+  border-radius: $radius-full;
+  background: $color-green-50;
+  display: grid;
+  place-items: center;
+  color: $color-primary;
+  font-family: $font-family-display;
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 auto $space-3;
+}
+
+.teamName {
+  font-family: $font-family-display;
+  font-size: $font-size-base;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0 0 2px;
+}
+
+.teamRole {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+// ═══════ Stats Row ═══════
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: $space-5;
+  margin-bottom: $space-10;
+}
+
+.statCard {
+  text-align: center;
+  padding: $space-6;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+}
+
+.statValue {
+  font-family: $font-family-display;
+  font-size: 32px;
+  font-weight: 800;
+  color: $color-primary;
+  letter-spacing: -0.03em;
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-top: $space-1;
+}

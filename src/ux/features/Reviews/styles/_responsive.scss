@@ -1,0 +1,25 @@
+@use '../../../styles/vars' as *;
+
+/* ═══ Responsive ═══ */
+@media (max-width: $bp-md) {
+  .page { padding: $space-6 $space-3 $space-12; }
+
+  .summaryCard {
+    flex-direction: column;
+    text-align: center;
+    gap: $space-5;
+  }
+
+  .summaryLeft { min-width: auto; }
+
+  .filtersBar { flex-direction: column; align-items: flex-start; }
+
+  .reviewCard { padding: $space-4; }
+
+  .reviewHeader { gap: $space-3; }
+}
+
+@media (max-width: $bp-sm) {
+  .tabs { overflow-x: auto; }
+  .tab { white-space: nowrap; font-size: $font-size-xs; padding: $space-2 $space-3; }
+}

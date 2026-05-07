@@ -1,0 +1,71 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ═══ Page ═══ */
+.page {
+  min-height: 100vh;
+  background: $color-surface-muted;
+  font-family: $font-family-base;
+}
+
+/* ═══ Top bar / breadcrumb ═══ */
+.topBar {
+  background: #fff;
+  border-bottom: 1px solid $color-border;
+  padding: $space-3 $space-4;
+  margin-bottom: $space-6;
+}
+
+.topBarInner {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: 13px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  color: $color-primary;
+  text-decoration: none;
+  font-weight: $font-weight-medium;
+  transition: $transition-base;
+
+  svg { width: 16px; height: 16px; }
+
+  &:hover { text-decoration: underline; }
+}
+
+.breadcrumbSep {
+  color: $color-border;
+  user-select: none;
+}
+
+.breadcrumbCurrent {
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+/* ═══ Layout ═══ */
+.layout {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 $space-4;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: $space-8;
+  align-items: start;
+}
+
+/* ═══ Sidebar ═══ */
+.sidebar {
+  position: sticky;
+  top: $space-6;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}

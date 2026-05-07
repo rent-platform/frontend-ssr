@@ -1,0 +1,224 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ═══ Bookings Grid ═══ */
+.bookingsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-5 $space-4;
+  padding: $space-2 0;
+
+  @media (max-width: 1180px) { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 860px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 560px) { grid-template-columns: 1fr; }
+}
+
+.bookingCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid $color-border;
+  border-radius: $radius-2xl;
+  background: #fff;
+  font-family: $font-family-base;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+  transition: border-color 0.25s ease, box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+
+  &:hover {
+    border-color: $color-border-green;
+    box-shadow: 0 20px 40px -20px rgba(34, 197, 94, 0.14), $shadow-card-hover;
+    transform: translateY(-4px);
+
+    .bookingTitle {
+      color: $color-primary;
+    }
+
+    .bookingImg {
+      transform: scale(1.04);
+    }
+  }
+}
+
+.bookingImageArea {
+  position: relative;
+  flex-shrink: 0;
+  padding: 8px 8px 0;
+  width: 100%;
+}
+
+.bookingBadgeRow {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bookingImg {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border-radius: 16px;
+  object-fit: cover;
+  display: block;
+  background: $color-surface-muted;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.bookingImgFallback {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-secondary;
+  svg { opacity: 0.25; }
+}
+
+.bookingInfo {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  flex-direction: column;
+  gap: $space-2;
+  padding: $space-3;
+}
+
+.bookingTop {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.bookingTitle {
+  font-family: $font-family-base;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: $color-text;
+  letter-spacing: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
+}
+
+.bookingMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: $font-family-base;
+  font-size: 14px;
+  font-weight: 500;
+  color: $color-text-secondary;
+  min-width: 0;
+
+  svg {
+    color: rgba(100, 116, 139, 0.9);
+    flex-shrink: 0;
+  }
+}
+
+.bookingChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.bookingChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  padding: 4px 9px;
+  border-radius: $radius-full;
+  background: rgba(240, 253, 244, 0.9);
+  border: 1px solid $color-border-green;
+  color: color.adjust($color-primary, $lightness: -6%);
+  font-family: $font-family-base;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+
+  svg {
+    flex-shrink: 0;
+    color: $color-primary;
+  }
+}
+
+.bookingFooter {
+  margin-top: auto;
+  padding-top: $space-3;
+  border-top: 1px solid rgba(226, 232, 240, 0.85);
+}
+
+.bookingPriceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-family: $font-family-base;
+    font-size: 15px;
+    font-weight: 700;
+    color: $color-text;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+
+  span {
+    font-family: $font-family-base;
+    font-size: 12px;
+    color: $color-text-secondary;
+    font-weight: 600;
+  }
+}
+
+/* ═══ Empty State ═══ */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16 $space-4;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 80px;
+  height: 80px;
+  border-radius: $radius-full;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(34, 197, 94, 0.02) 100%);
+  border: 1.5px dashed rgba(34, 197, 94, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $space-5;
+  color: $color-primary;
+  svg { width: 30px; height: 30px; opacity: 0.5; }
+}
+
+.emptyTitle {
+  font-family: $font-family-display;
+  font-size: 16px;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  margin: 0 0 $space-2;
+  letter-spacing: 0;
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 0;
+  max-width: 280px;
+  line-height: 1.5;
+}

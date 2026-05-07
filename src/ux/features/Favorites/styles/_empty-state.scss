@@ -1,0 +1,53 @@
+@use 'sass:color';
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+/* ── Empty State ── */
+.emptyState {
+  @include empty-state-layout($space-16 $space-5);
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.emptyIcon {
+  @include empty-state-icon(80px, rgba(244, 63, 94, 0.06), $color-secondary);
+}
+
+.emptyTitle {
+  @include empty-state-title(20px);
+  letter-spacing: -0.02em;
+}
+
+.emptyText {
+  @include empty-state-text;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.emptyHeartInline {
+  display: inline;
+  vertical-align: -2px;
+  color: $color-secondary;
+}
+
+.emptyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: $radius-lg;
+  background: $gradient-green;
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: $shadow-green-sm;
+  transition: $transition-smooth;
+
+  &:hover {
+    box-shadow: $shadow-green-md;
+  }
+}
