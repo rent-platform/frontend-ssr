@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import {
   Search,
   Check,
@@ -50,7 +50,9 @@ import { useAdminDeals } from './hooks/useAdminDeals';
 import { useAdminFinance } from './hooks/useAdminFinance';
 import { useAdminSettings } from './hooks/useAdminSettings';
 import { useAdminActivityLog } from './hooks/useAdminActivityLog';
-import type { AdminTab, AdminUser, ChartPoint, ActivityActionType } from './types';
+import { usePagination } from './hooks/usePagination';
+import { useSortable } from './hooks/useSortable';
+import type { AdminTab, AdminUser, AdminListing, AdminDeal, AdminPayment, ActivityLogEntry, ChartPoint, ActivityActionType } from './types';
 import type { ItemStatus } from '@/business/ads';
 import type { DealStatus } from '@/business/deals';
 import type { PaymentStatus } from '@/business/payments';
@@ -205,6 +207,137 @@ function TableSkeleton({ rows = 5 }: { rows?: number }) {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+/* ── Pagination component ───────────────────────────────────────────────── */
+
+function Pagination({ pagination }: { pagination: ReturnType<typeof usePagination> }) {
+  const { page, perPage, perPageOptions, totalItems, totalPages, startIndex, endIndex, setPage, setPerPage, goNext, goPrev, getPageNumbers } = pagination;
+  if (totalItems === 0) return null;
+  return (
+    <div className={s.paginationWrapper}>
+      <div className={s.paginationInfo}>
+        {startIndex + 1}–{endIndex} из {totalItems}
+      </div>
+      <div className={s.pagination}>
+        <button className={s.pageBtn} disabled={page <= 1} onClick={goPrev}>
+          <ChevronLeft size={14} />
+        </button>
+        {getPageNumbers().map((p, i) =>
+          p === 'ellipsis' ? (
+            <span key={`e${i}`} className={s.pageBtn} style={{ border: 'none', cursor: 'default', opacity: 0.5 }}>…</span>
+          ) : (
+            <button key={p} className={clsx(s.pageBtn, p === page && s.pageBtnActive)} onClick={() => setPage(p)}>
+              {p}
+            </button>
+          ),
+        )}
+        <button className={s.pageBtn} disabled={page >= totalPages} onClick={goNext}>
+          <ChevronRight size={14} />
+        </button>
+      </div>
+      <div className={s.paginationPerPage}>
+        <span>Строк:</span>
+        <AdminSelect
+          value={String(perPage)}
+          onChange={(v) => setPerPage(Number(v))}
+          options={perPageOptions.map((o) => ({ value: String(o), label: String(o) }))}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ── Sortable header ────────────────────────────────────────────────────── */
+
+function SortableHeader<K extends string>({
+  label,
+  sortKey,
+  currentKey,
+  direction,
+  onToggle,
+}: {
+  label: string;
+  sortKey: K;
+  currentKey: K | null;
+  direction: 'asc' | 'desc';
+  onToggle: (key: K) => void;
+}) {
+  const isActive = currentKey === sortKey;
+  return (
+    <th>
+      <button className={s.sortableHeader} onClick={() => onToggle(sortKey)}>
+        {label}
+        <ArrowUpDown
+          size={12}
+          className={clsx(s.sortIcon, isActive && s.sortIconActive, isActive && direction === 'desc' && s.sortIconDesc)}
+        />
+      </button>
+    </th>
+  );
+}
+
+/* ── Custom select ──────────────────────────────────────────────────────── */
+
+type SelectOption = { value: string; label: string };
+
+function AdminSelect({
+  value,
+  options,
+  onChange,
+}: {
+  value: string;
+  options: SelectOption[];
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const selected = options.find((o) => o.value === value);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const esc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    document.addEventListener('keydown', esc);
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('keydown', esc);
+    };
+  }, [open]);
+
+  return (
+    <div ref={rootRef} className={s.adminSelect}>
+      <button
+        type="button"
+        className={clsx(s.adminSelectTrigger, open && s.adminSelectTriggerOpen)}
+        onClick={() => setOpen((p) => !p)}
+      >
+        {selected?.label ?? '—'}
+      </button>
+      <ChevronDown size={14} className={clsx(s.adminSelectChevron, open && s.adminSelectChevronOpen)} />
+      {open && (
+        <div className={s.adminSelectDropdown}>
+          <div className={s.adminSelectOptions}>
+            {options.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                className={opt.value === value ? s.adminSelectOptionActive : s.adminSelectOption}
+                onClick={() => { onChange(opt.value); setOpen(false); }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -478,8 +611,19 @@ function DashboardTab() {
    USERS TAB
    ═══════════════════════════════════════════════════════════════════════════ */
 
+type UserSortKey = 'name' | 'email' | 'role' | 'listings' | 'deals';
+const USER_SORT_ACCESSORS: Partial<Record<UserSortKey, (u: AdminUser) => string | number | null | undefined>> = {
+  name: (u) => u.fullName ?? '',
+  email: (u) => u.email ?? '',
+  role: (u) => u.role,
+  listings: (u) => u.listingsCount,
+  deals: (u) => u.dealsCount,
+};
+
 function UsersTab({ toast }: { toast: ToastFn }) {
   const u = useAdminUsers();
+  const { sortedItems, sortKey, sortDirection, toggleSort } = useSortable<AdminUser, UserSortKey>(u.items, USER_SORT_ACCESSORS);
+  const pg = usePagination(sortedItems);
   const [roleChangeUser, setRoleChangeUser] = useState<AdminUser | null>(null);
   const [newRole, setNewRole] = useState<UserRole>('user');
   const [banConfirmId, setBanConfirmId] = useState<string | null>(null);
@@ -498,25 +642,25 @@ function UsersTab({ toast }: { toast: ToastFn }) {
               onChange={(e) => u.updateFilter({ search: e.target.value })}
             />
           </div>
-          <select
-            className={s.filterSelect}
+          <AdminSelect
             value={u.filter.role}
-            onChange={(e) => u.updateFilter({ role: e.target.value as any })}
-          >
-            <option value="all">Все роли ({u.countByRole.all})</option>
-            <option value="user">Пользователи ({u.countByRole.user})</option>
-            <option value="moderator">Модераторы ({u.countByRole.moderator})</option>
-            <option value="admin">Админы ({u.countByRole.admin})</option>
-          </select>
-          <select
-            className={s.filterSelect}
+            onChange={(v) => u.updateFilter({ role: v as any })}
+            options={[
+              { value: 'all', label: `Все роли (${u.countByRole.all})` },
+              { value: 'user', label: `Пользователи (${u.countByRole.user})` },
+              { value: 'moderator', label: `Модераторы (${u.countByRole.moderator})` },
+              { value: 'admin', label: `Админы (${u.countByRole.admin})` },
+            ]}
+          />
+          <AdminSelect
             value={u.filter.status}
-            onChange={(e) => u.updateFilter({ status: e.target.value as any })}
-          >
-            <option value="all">Все статусы</option>
-            <option value="active">Активные</option>
-            <option value="banned">Заблокированные</option>
-          </select>
+            onChange={(v) => u.updateFilter({ status: v as any })}
+            options={[
+              { value: 'all', label: 'Все статусы' },
+              { value: 'active', label: 'Активные' },
+              { value: 'banned', label: 'Заблокированные' },
+            ]}
+          />
         </div>
       </div>
 
@@ -602,13 +746,13 @@ function UsersTab({ toast }: { toast: ToastFn }) {
             <table className={s.table}>
               <thead>
                 <tr>
-                  <th>Пользователь</th>
-                  <th>Email</th>
+                  <SortableHeader label="Пользователь" sortKey="name" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Email" sortKey="email" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                   <th>Телефон</th>
-                  <th>Роль</th>
+                  <SortableHeader label="Роль" sortKey="role" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                   <th>Статус</th>
-                  <th>Объявлений</th>
-                  <th>Сделок</th>
+                  <SortableHeader label="Объявлений" sortKey="listings" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Сделок" sortKey="deals" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                   <th>Действия</th>
                 </tr>
               </thead>
@@ -624,7 +768,7 @@ function UsersTab({ toast }: { toast: ToastFn }) {
                     </td>
                   </tr>
                 ) : (
-                  u.items.map((user) => (
+                  pg.paginatedItems.map((user) => (
                     <tr key={user.id}>
                       <td>
                         <div className={s.tableUserCell}>
@@ -675,6 +819,7 @@ function UsersTab({ toast }: { toast: ToastFn }) {
               </tbody>
             </table>
           </div>
+          <Pagination pagination={pg} />
         </div>
       )}
 
@@ -704,16 +849,15 @@ function UsersTab({ toast }: { toast: ToastFn }) {
               <p style={{ fontSize: 14, color: '#64748b', marginBottom: 16 }}>
                 Пользователь: <strong>{roleChangeUser.fullName}</strong>
               </p>
-              <select
-                className={s.filterSelect}
-                style={{ width: '100%' }}
+              <AdminSelect
                 value={newRole}
-                onChange={(e) => setNewRole(e.target.value as UserRole)}
-              >
-                <option value="user">Пользователь</option>
-                <option value="moderator">Модератор</option>
-                <option value="admin">Администратор</option>
-              </select>
+                onChange={(v) => setNewRole(v as UserRole)}
+                options={[
+                  { value: 'user', label: 'Пользователь' },
+                  { value: 'moderator', label: 'Модератор' },
+                  { value: 'admin', label: 'Администратор' },
+                ]}
+              />
               <div className={s.modalFooter}>
                 <button className={clsx(s.btn, s.btnGhost)} onClick={() => setRoleChangeUser(null)}>
                   Отмена
@@ -804,8 +948,20 @@ function UsersTab({ toast }: { toast: ToastFn }) {
    LISTINGS TAB
    ═══════════════════════════════════════════════════════════════════════════ */
 
+type ListingSortKey = 'title' | 'category' | 'city' | 'price' | 'status' | 'owner';
+const LISTING_SORT_ACCESSORS: Partial<Record<ListingSortKey, (i: AdminListing) => string | number | null | undefined>> = {
+  title: (i) => i.title,
+  category: (i) => i.category?.categoryName ?? '',
+  city: (i) => i.city ?? '',
+  price: (i) => i.pricePerDay,
+  status: (i) => i.status,
+  owner: (i) => i.ownerName,
+};
+
 function ListingsTab({ toast }: { toast: ToastFn }) {
   const l = useAdminListings();
+  const { sortedItems, sortKey, sortDirection, toggleSort } = useSortable<AdminListing, ListingSortKey>(l.items, LISTING_SORT_ACCESSORS);
+  const pg = usePagination(sortedItems);
   const [archiveConfirmId, setArchiveConfirmId] = useState<string | null>(null);
 
   if (l.isLoading) return <TableSkeleton />;
@@ -822,29 +978,26 @@ function ListingsTab({ toast }: { toast: ToastFn }) {
               onChange={(e) => l.updateFilter({ search: e.target.value })}
             />
           </div>
-          <select
-            className={s.filterSelect}
+          <AdminSelect
             value={l.filter.status}
-            onChange={(e) => l.updateFilter({ status: e.target.value as any })}
-          >
-            <option value="all">Все статусы ({l.countByStatus.all})</option>
-            <option value="ACTIVE">Активные ({l.countByStatus.ACTIVE ?? 0})</option>
-            <option value="MODERATION">На модерации ({l.countByStatus.MODERATION ?? 0})</option>
-            <option value="REJECTED">Отклонённые ({l.countByStatus.REJECTED ?? 0})</option>
-            <option value="ARCHIVED">Архив ({l.countByStatus.ARCHIVED ?? 0})</option>
-            <option value="DRAFT">Черновики ({l.countByStatus.DRAFT ?? 0})</option>
-          </select>
-          <select
-            className={s.filterSelect}
+            onChange={(v) => l.updateFilter({ status: v as any })}
+            options={[
+              { value: 'all', label: `Все статусы (${l.countByStatus.all})` },
+              { value: 'ACTIVE', label: `Активные (${l.countByStatus.ACTIVE ?? 0})` },
+              { value: 'MODERATION', label: `На модерации (${l.countByStatus.MODERATION ?? 0})` },
+              { value: 'REJECTED', label: `Отклонённые (${l.countByStatus.REJECTED ?? 0})` },
+              { value: 'ARCHIVED', label: `Архив (${l.countByStatus.ARCHIVED ?? 0})` },
+              { value: 'DRAFT', label: `Черновики (${l.countByStatus.DRAFT ?? 0})` },
+            ]}
+          />
+          <AdminSelect
             value={l.filter.category}
-            onChange={(e) => l.updateFilter({ category: e.target.value })}
-          >
-            {l.categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat === 'all' ? 'Все категории' : cat}
-              </option>
-            ))}
-          </select>
+            onChange={(v) => l.updateFilter({ category: v })}
+            options={l.categories.map((cat) => ({
+              value: cat,
+              label: cat === 'all' ? 'Все категории' : cat,
+            }))}
+          />
         </div>
       </div>
 
@@ -930,12 +1083,12 @@ function ListingsTab({ toast }: { toast: ToastFn }) {
             <table className={s.table}>
               <thead>
                 <tr>
-                  <th>Объявление</th>
-                  <th>Категория</th>
-                  <th>Город</th>
-                  <th>Цена/день</th>
-                  <th>Статус</th>
-                  <th>Владелец</th>
+                  <SortableHeader label="Объявление" sortKey="title" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Категория" sortKey="category" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Город" sortKey="city" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Цена/день" sortKey="price" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Статус" sortKey="status" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Владелец" sortKey="owner" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                   <th>Просмотры</th>
                   <th>Действия</th>
                 </tr>
@@ -952,7 +1105,7 @@ function ListingsTab({ toast }: { toast: ToastFn }) {
                     </td>
                   </tr>
                 ) : (
-                  l.items.map((item) => (
+                  pg.paginatedItems.map((item) => (
                     <tr key={item.id}>
                       <td style={{ fontWeight: 500 }}>{item.title}</td>
                       <td>{item.category?.categoryName ?? '—'}</td>
@@ -990,6 +1143,7 @@ function ListingsTab({ toast }: { toast: ToastFn }) {
               </tbody>
             </table>
           </div>
+          <Pagination pagination={pg} />
         </div>
       )}
 
@@ -1054,8 +1208,20 @@ function ListingsTab({ toast }: { toast: ToastFn }) {
    DEALS TAB
    ═══════════════════════════════════════════════════════════════════════════ */
 
+type DealSortKey = 'item' | 'renter' | 'owner' | 'total' | 'status' | 'start';
+const DEAL_SORT_ACCESSORS: Partial<Record<DealSortKey, (d: AdminDeal) => string | number | null | undefined>> = {
+  item: (d) => d.itemTitle,
+  renter: (d) => d.renterName,
+  owner: (d) => d.ownerName,
+  total: (d) => d.totalPrice,
+  status: (d) => d.status,
+  start: (d) => d.startDate,
+};
+
 function DealsTab({ toast }: { toast: ToastFn }) {
   const d = useAdminDeals();
+  const { sortedItems, sortKey, sortDirection, toggleSort } = useSortable<AdminDeal, DealSortKey>(d.items, DEAL_SORT_ACCESSORS);
+  const pg = usePagination(sortedItems);
   const [cancelId, setCancelId] = useState<string | null>(null);
   const [cancelReason, setCancelReason] = useState('');
 
@@ -1073,19 +1239,19 @@ function DealsTab({ toast }: { toast: ToastFn }) {
               onChange={(e) => d.updateFilter({ search: e.target.value })}
             />
           </div>
-          <select
-            className={s.filterSelect}
+          <AdminSelect
             value={d.filter.status}
-            onChange={(e) => d.updateFilter({ status: e.target.value as any })}
-          >
-            <option value="all">Все статусы ({d.countByStatus.all})</option>
-            <option value="PENDING">Ожидание ({d.countByStatus.PENDING ?? 0})</option>
-            <option value="CONFIRMED">Подтверждены ({d.countByStatus.CONFIRMED ?? 0})</option>
-            <option value="ACTIVE">Активные ({d.countByStatus.ACTIVE ?? 0})</option>
-            <option value="COMPLETED">Завершены ({d.countByStatus.COMPLETED ?? 0})</option>
-            <option value="REJECTED">Отклонены ({d.countByStatus.REJECTED ?? 0})</option>
-            <option value="CANCELLED">Отменены ({d.countByStatus.CANCELLED ?? 0})</option>
-          </select>
+            onChange={(v) => d.updateFilter({ status: v as any })}
+            options={[
+              { value: 'all', label: `Все статусы (${d.countByStatus.all})` },
+              { value: 'PENDING', label: `Ожидание (${d.countByStatus.PENDING ?? 0})` },
+              { value: 'CONFIRMED', label: `Подтверждены (${d.countByStatus.CONFIRMED ?? 0})` },
+              { value: 'ACTIVE', label: `Активные (${d.countByStatus.ACTIVE ?? 0})` },
+              { value: 'COMPLETED', label: `Завершены (${d.countByStatus.COMPLETED ?? 0})` },
+              { value: 'REJECTED', label: `Отклонены (${d.countByStatus.REJECTED ?? 0})` },
+              { value: 'CANCELLED', label: `Отменены (${d.countByStatus.CANCELLED ?? 0})` },
+            ]}
+          />
         </div>
       </div>
 
@@ -1183,12 +1349,12 @@ function DealsTab({ toast }: { toast: ToastFn }) {
             <table className={s.table}>
               <thead>
                 <tr>
-                  <th>Товар</th>
-                  <th>Арендатор</th>
-                  <th>Владелец</th>
-                  <th>Период</th>
-                  <th>Сумма</th>
-                  <th>Статус</th>
+                  <SortableHeader label="Товар" sortKey="item" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Арендатор" sortKey="renter" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Владелец" sortKey="owner" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Период" sortKey="start" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Сумма" sortKey="total" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Статус" sortKey="status" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                   <th>Действия</th>
                 </tr>
               </thead>
@@ -1204,7 +1370,7 @@ function DealsTab({ toast }: { toast: ToastFn }) {
                     </td>
                   </tr>
                 ) : (
-                  d.items.map((deal) => (
+                  pg.paginatedItems.map((deal) => (
                     <tr key={deal.id}>
                       <td style={{ fontWeight: 500 }}>{deal.itemTitle}</td>
                       <td>{deal.renterName}</td>
@@ -1232,6 +1398,7 @@ function DealsTab({ toast }: { toast: ToastFn }) {
               </tbody>
             </table>
           </div>
+          <Pagination pagination={pg} />
         </div>
       )}
 
@@ -1294,8 +1461,20 @@ function DealsTab({ toast }: { toast: ToastFn }) {
    FINANCE TAB
    ═══════════════════════════════════════════════════════════════════════════ */
 
+type FinanceSortKey = 'item' | 'renter' | 'owner' | 'total' | 'status' | 'date';
+const FINANCE_SORT_ACCESSORS: Partial<Record<FinanceSortKey, (p: AdminPayment) => string | number | null | undefined>> = {
+  item: (p) => p.itemTitle,
+  renter: (p) => p.renterName,
+  owner: (p) => p.ownerName,
+  total: (p) => p.totalAmount,
+  status: (p) => p.status,
+  date: (p) => p.createdAt,
+};
+
 function FinanceTab({ toast }: { toast: ToastFn }) {
   const f = useAdminFinance();
+  const { sortedItems, sortKey, sortDirection, toggleSort } = useSortable<AdminPayment, FinanceSortKey>(f.items, FINANCE_SORT_ACCESSORS);
+  const pg = usePagination(sortedItems);
 
   if (f.isLoading) return <><StatsSkeleton /><TableSkeleton /></>;
 
@@ -1345,18 +1524,18 @@ function FinanceTab({ toast }: { toast: ToastFn }) {
               onChange={(e) => f.updateFilter({ search: e.target.value })}
             />
           </div>
-          <select
-            className={s.filterSelect}
+          <AdminSelect
             value={f.filter.status}
-            onChange={(e) => f.updateFilter({ status: e.target.value as any })}
-          >
-            <option value="all">Все статусы</option>
-            <option value="PENDING">Ожидание</option>
-            <option value="AUTHORIZED">Авторизован</option>
-            <option value="CAPTURED">Списан</option>
-            <option value="CANCELED">Отменён</option>
-            <option value="REFUNDED">Возврат</option>
-          </select>
+            onChange={(v) => f.updateFilter({ status: v as any })}
+            options={[
+              { value: 'all', label: 'Все статусы' },
+              { value: 'PENDING', label: 'Ожидание' },
+              { value: 'AUTHORIZED', label: 'Авторизован' },
+              { value: 'CAPTURED', label: 'Списан' },
+              { value: 'CANCELED', label: 'Отменён' },
+              { value: 'REFUNDED', label: 'Возврат' },
+            ]}
+          />
         </div>
       </div>
 
@@ -1365,14 +1544,14 @@ function FinanceTab({ toast }: { toast: ToastFn }) {
           <table className={s.table}>
             <thead>
               <tr>
-                <th>Товар</th>
-                <th>Плательщик</th>
-                <th>Получатель</th>
+                <SortableHeader label="Товар" sortKey="item" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                <SortableHeader label="Плательщик" sortKey="renter" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                <SortableHeader label="Получатель" sortKey="owner" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                 <th>Аренда</th>
                 <th>Залог</th>
-                <th>Итого</th>
-                <th>Статус</th>
-                <th>Дата</th>
+                <SortableHeader label="Итого" sortKey="total" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                <SortableHeader label="Статус" sortKey="status" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                <SortableHeader label="Дата" sortKey="date" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                 <th>Действия</th>
               </tr>
             </thead>
@@ -1388,7 +1567,7 @@ function FinanceTab({ toast }: { toast: ToastFn }) {
                   </td>
                 </tr>
               ) : (
-                f.items.map((p) => (
+                pg.paginatedItems.map((p) => (
                   <tr key={p.paymentId}>
                     <td style={{ fontWeight: 500 }}>{p.itemTitle}</td>
                     <td>{p.renterName}</td>
@@ -1419,6 +1598,7 @@ function FinanceTab({ toast }: { toast: ToastFn }) {
             </tbody>
           </table>
         </div>
+        <Pagination pagination={pg} />
       </div>
     </>
   );
@@ -1603,8 +1783,18 @@ const ACTION_OPTIONS: { value: ActivityActionType | 'all'; label: string }[] = [
   { value: 'review_delete', label: 'Удаление отзыва' },
 ];
 
+type ActivitySortKey = 'date' | 'action' | 'target' | 'author';
+const ACTIVITY_SORT_ACCESSORS: Partial<Record<ActivitySortKey, (e: ActivityLogEntry) => string | number | null | undefined>> = {
+  date: (e) => e.performedAt,
+  action: (e) => e.actionLabel,
+  target: (e) => e.targetTitle,
+  author: (e) => e.performedByName,
+};
+
 function ActivityLogTab() {
   const al = useAdminActivityLog();
+  const { sortedItems, sortKey, sortDirection, toggleSort } = useSortable<ActivityLogEntry, ActivitySortKey>(al.items, ACTIVITY_SORT_ACCESSORS, { key: 'date', direction: 'desc' });
+  const pg = usePagination(sortedItems);
 
   if (al.isLoading) return <TableSkeleton rows={6} />;
 
@@ -1620,15 +1810,11 @@ function ActivityLogTab() {
               onChange={(e) => al.updateFilter({ search: e.target.value })}
             />
           </div>
-          <select
-            className={s.filterSelect}
+          <AdminSelect
             value={al.filter.action}
-            onChange={(e) => al.updateFilter({ action: e.target.value as any })}
-          >
-            {ACTION_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
+            onChange={(v) => al.updateFilter({ action: v as any })}
+            options={ACTION_OPTIONS}
+          />
           <input
             type="date"
             className={s.dateInput}
@@ -1664,10 +1850,10 @@ function ActivityLogTab() {
           <table className={clsx(s.table, s.tableZebra)}>
             <thead>
               <tr>
-                <th>Дата</th>
-                <th>Действие</th>
-                <th>Объект</th>
-                <th>Автор</th>
+                <SortableHeader label="Дата" sortKey="date" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                <SortableHeader label="Действие" sortKey="action" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                <SortableHeader label="Объект" sortKey="target" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                <SortableHeader label="Автор" sortKey="author" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                 <th>Детали</th>
               </tr>
             </thead>
@@ -1683,7 +1869,7 @@ function ActivityLogTab() {
                   </td>
                 </tr>
               ) : (
-                al.items.map((entry) => (
+                pg.paginatedItems.map((entry) => (
                   <tr key={entry.id}>
                     <td style={{ whiteSpace: 'nowrap', fontSize: 13 }}>
                       {formatDateTime(entry.performedAt)}
@@ -1704,6 +1890,7 @@ function ActivityLogTab() {
             </tbody>
           </table>
         </div>
+        <Pagination pagination={pg} />
       </div>
     </>
   );
@@ -1713,39 +1900,12 @@ function ActivityLogTab() {
    MAIN EXPORT — AdminPanel
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const TABS: { key: AdminTab; label: string; icon: typeof Search }[] = [
-  { key: 'dashboard', label: 'Дашборд', icon: LayoutDashboard },
-  { key: 'users', label: 'Пользователи', icon: Users },
-  { key: 'listings', label: 'Объявления', icon: ShoppingBag },
-  { key: 'deals', label: 'Сделки', icon: Handshake },
-  { key: 'finance', label: 'Финансы', icon: Banknote },
-  { key: 'activity', label: 'Журнал', icon: Activity },
-  { key: 'settings', label: 'Настройки', icon: Settings },
-];
-
-export function AdminPanel() {
-  const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
+export function AdminPanel({ activeTab = 'dashboard' as AdminTab }: { activeTab?: AdminTab }) {
   const toast = useToast();
 
   return (
     <div>
       <ToastContainer toasts={toast.toasts} dismiss={toast.dismiss} />
-
-      <div className={s.tabsRow}>
-        {TABS.map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.key}
-              className={clsx(s.tab, activeTab === tab.key && s.tabActive)}
-              onClick={() => setActiveTab(tab.key)}
-            >
-              <Icon size={16} />
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
 
       <AnimatePresence mode="wait">
         <motion.div

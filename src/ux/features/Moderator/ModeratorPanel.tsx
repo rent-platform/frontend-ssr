@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import {
   Search,
   Check,
@@ -12,12 +12,15 @@ import {
   Trash2,
   ShieldCheck,
   MessageSquare,
+  ChevronDown,
   ChevronLeft,
+  ChevronRight,
   MapPin,
   Camera,
   Banknote,
   User,
   AlertTriangle,
+  ArrowUpDown,
   Image,
   Timer,
 } from 'lucide-react';
@@ -28,8 +31,13 @@ import { useModerationQueue } from './hooks/useModerationQueue';
 import { useComplaints } from './hooks/useComplaints';
 import { useReviewsModeration } from './hooks/useReviewsModeration';
 import { mockComplaintComments } from './mockModeratorData';
+import { usePagination } from '../Admin/hooks/usePagination';
+import { useSortable } from '../Admin/hooks/useSortable';
 import type {
   ModeratorTab,
+  ModerationQueueItem,
+  Complaint,
+  ModeratedReview,
   ComplaintPriority,
   ComplaintStatus,
   ComplaintTarget,
@@ -174,12 +182,154 @@ function TableSkeleton({ rows = 5 }: { rows?: number }) {
   );
 }
 
+/* ── Pagination component ───────────────────────────────────────────────── */
+
+function Pagination({ pagination }: { pagination: ReturnType<typeof usePagination> }) {
+  const { page, perPage, perPageOptions, totalItems, totalPages, startIndex, endIndex, setPage, setPerPage, goNext, goPrev, getPageNumbers } = pagination;
+  if (totalItems === 0) return null;
+  return (
+    <div className={s.paginationWrapper}>
+      <div className={s.paginationInfo}>
+        {startIndex + 1}–{endIndex} из {totalItems}
+      </div>
+      <div className={s.pagination}>
+        <button className={s.pageBtn} disabled={page <= 1} onClick={goPrev}>
+          <ChevronLeft size={14} />
+        </button>
+        {getPageNumbers().map((p, i) =>
+          p === 'ellipsis' ? (
+            <span key={`e${i}`} className={s.pageBtn} style={{ border: 'none', cursor: 'default', opacity: 0.5 }}>…</span>
+          ) : (
+            <button key={p} className={clsx(s.pageBtn, p === page && s.pageBtnActive)} onClick={() => setPage(p)}>
+              {p}
+            </button>
+          ),
+        )}
+        <button className={s.pageBtn} disabled={page >= totalPages} onClick={goNext}>
+          <ChevronRight size={14} />
+        </button>
+      </div>
+      <div className={s.paginationPerPage}>
+        <span>Строк:</span>
+        <AdminSelect
+          value={String(perPage)}
+          onChange={(v) => setPerPage(Number(v))}
+          options={perPageOptions.map((o) => ({ value: String(o), label: String(o) }))}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ── Sortable header ────────────────────────────────────────────────────── */
+
+function SortableHeader<K extends string>({
+  label,
+  sortKey,
+  currentKey,
+  direction,
+  onToggle,
+}: {
+  label: string;
+  sortKey: K;
+  currentKey: K | null;
+  direction: 'asc' | 'desc';
+  onToggle: (key: K) => void;
+}) {
+  const isActive = currentKey === sortKey;
+  return (
+    <th>
+      <button className={s.sortableHeader} onClick={() => onToggle(sortKey)}>
+        {label}
+        <ArrowUpDown
+          size={12}
+          className={clsx(s.sortIcon, isActive && s.sortIconActive, isActive && direction === 'desc' && s.sortIconDesc)}
+        />
+      </button>
+    </th>
+  );
+}
+
+/* ── Custom select ──────────────────────────────────────────────────────── */
+
+type SelectOption = { value: string; label: string };
+
+function AdminSelect({
+  value,
+  options,
+  onChange,
+}: {
+  value: string;
+  options: SelectOption[];
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const selected = options.find((o) => o.value === value);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const esc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    document.addEventListener('keydown', esc);
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('keydown', esc);
+    };
+  }, [open]);
+
+  return (
+    <div ref={rootRef} className={s.adminSelect}>
+      <button
+        type="button"
+        className={clsx(s.adminSelectTrigger, open && s.adminSelectTriggerOpen)}
+        onClick={() => setOpen((p) => !p)}
+      >
+        {selected?.label ?? '—'}
+      </button>
+      <ChevronDown size={14} className={clsx(s.adminSelectChevron, open && s.adminSelectChevronOpen)} />
+      {open && (
+        <div className={s.adminSelectDropdown}>
+          <div className={s.adminSelectOptions}>
+            {options.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                className={opt.value === value ? s.adminSelectOptionActive : s.adminSelectOption}
+                onClick={() => { onChange(opt.value); setOpen(false); }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    MODERATION QUEUE TAB
    ═══════════════════════════════════════════════════════════════════════════ */
 
+type QueueSortKey = 'title' | 'category' | 'city' | 'price' | 'owner';
+const QUEUE_SORT_ACCESSORS: Partial<Record<QueueSortKey, (i: ModerationQueueItem) => string | number | null | undefined>> = {
+  title: (i) => i.title,
+  category: (i) => i.category?.categoryName ?? '',
+  city: (i) => i.city ?? '',
+  price: (i) => i.pricePerDay,
+  owner: (i) => i.ownerName,
+};
+
 function ModerationQueueTab({ toast }: { toast: ToastFn }) {
   const q = useModerationQueue();
+  const { sortedItems, sortKey, sortDirection, toggleSort } = useSortable<ModerationQueueItem, QueueSortKey>(q.items, QUEUE_SORT_ACCESSORS);
+  const pg = usePagination(sortedItems);
 
   if (q.isLoading) return <TableSkeleton />;
 
@@ -196,14 +346,14 @@ function ModerationQueueTab({ toast }: { toast: ToastFn }) {
               onChange={(e) => q.updateFilter({ search: e.target.value })}
             />
           </div>
-          <select
-            className={s.filterSelect}
+          <AdminSelect
             value={q.filter.sortBy}
-            onChange={(e) => q.updateFilter({ sortBy: e.target.value as 'newest' | 'oldest' })}
-          >
-            <option value="newest">Сначала новые</option>
-            <option value="oldest">Сначала старые</option>
-          </select>
+            onChange={(v) => q.updateFilter({ sortBy: v as 'newest' | 'oldest' })}
+            options={[
+              { value: 'newest', label: 'Сначала новые' },
+              { value: 'oldest', label: 'Сначала старые' },
+            ]}
+          />
         </div>
         <div className={s.toolbarRight}>
           <span style={{ fontSize: 13, color: '#64748b' }}>
@@ -314,11 +464,11 @@ function ModerationQueueTab({ toast }: { toast: ToastFn }) {
             <table className={clsx(s.table, s.tableZebra)}>
               <thead>
                 <tr>
-                  <th>Объявление</th>
-                  <th>Категория</th>
-                  <th>Город</th>
-                  <th>Цена/день</th>
-                  <th>Владелец</th>
+                  <SortableHeader label="Объявление" sortKey="title" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Категория" sortKey="category" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Город" sortKey="city" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Цена/день" sortKey="price" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Владелец" sortKey="owner" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                   <th>Ожидание</th>
                   <th>Действия</th>
                 </tr>
@@ -335,7 +485,7 @@ function ModerationQueueTab({ toast }: { toast: ToastFn }) {
                     </td>
                   </tr>
                 ) : (
-                  q.items.map((item) => (
+                  pg.paginatedItems.map((item) => (
                     <tr key={item.id}>
                       <td>
                         <button
@@ -393,6 +543,7 @@ function ModerationQueueTab({ toast }: { toast: ToastFn }) {
               </tbody>
             </table>
           </div>
+          <Pagination pagination={pg} />
         </div>
       )}
 
@@ -453,8 +604,20 @@ function ModerationQueueTab({ toast }: { toast: ToastFn }) {
    COMPLAINTS TAB
    ═══════════════════════════════════════════════════════════════════════════ */
 
+type ComplaintSortKey = 'target' | 'type' | 'reporter' | 'priority' | 'status' | 'date';
+const COMPLAINT_SORT_ACCESSORS: Partial<Record<ComplaintSortKey, (c: Complaint) => string | number | null | undefined>> = {
+  target: (c) => c.targetTitle,
+  type: (c) => c.target,
+  reporter: (c) => c.reporterName,
+  priority: (c) => { const m: Record<ComplaintPriority, number> = { low: 0, medium: 1, high: 2, critical: 3 }; return m[c.priority]; },
+  status: (c) => c.status,
+  date: (c) => c.createdAt,
+};
+
 function ComplaintsTab({ toast }: { toast: ToastFn }) {
   const c = useComplaints();
+  const { sortedItems, sortKey, sortDirection, toggleSort } = useSortable<Complaint, ComplaintSortKey>(c.items, COMPLAINT_SORT_ACCESSORS);
+  const pg = usePagination(sortedItems);
   const [resolveId, setResolveId] = useState<string | null>(null);
   const [resolveComment, setResolveComment] = useState('');
 
@@ -493,38 +656,38 @@ function ComplaintsTab({ toast }: { toast: ToastFn }) {
               onChange={(e) => c.updateFilter({ search: e.target.value })}
             />
           </div>
-          <select
-            className={s.filterSelect}
+          <AdminSelect
             value={c.filter.status}
-            onChange={(e) => c.updateFilter({ status: e.target.value as any })}
-          >
-            <option value="all">Все статусы ({c.countByStatus.all})</option>
-            <option value="new">Новые ({c.countByStatus.new})</option>
-            <option value="in_review">На рассмотрении ({c.countByStatus.in_review})</option>
-            <option value="resolved">Решённые ({c.countByStatus.resolved})</option>
-            <option value="dismissed">Отклонённые ({c.countByStatus.dismissed})</option>
-          </select>
-          <select
-            className={s.filterSelect}
+            onChange={(v) => c.updateFilter({ status: v as any })}
+            options={[
+              { value: 'all', label: `Все статусы (${c.countByStatus.all})` },
+              { value: 'new', label: `Новые (${c.countByStatus.new})` },
+              { value: 'in_review', label: `На рассмотрении (${c.countByStatus.in_review})` },
+              { value: 'resolved', label: `Решённые (${c.countByStatus.resolved})` },
+              { value: 'dismissed', label: `Отклонённые (${c.countByStatus.dismissed})` },
+            ]}
+          />
+          <AdminSelect
             value={c.filter.priority}
-            onChange={(e) => c.updateFilter({ priority: e.target.value as any })}
-          >
-            <option value="all">Любой приоритет</option>
-            <option value="low">Низкий</option>
-            <option value="medium">Средний</option>
-            <option value="high">Высокий</option>
-            <option value="critical">Критический</option>
-          </select>
-          <select
-            className={s.filterSelect}
+            onChange={(v) => c.updateFilter({ priority: v as any })}
+            options={[
+              { value: 'all', label: 'Любой приоритет' },
+              { value: 'low', label: 'Низкий' },
+              { value: 'medium', label: 'Средний' },
+              { value: 'high', label: 'Высокий' },
+              { value: 'critical', label: 'Критический' },
+            ]}
+          />
+          <AdminSelect
             value={c.filter.target}
-            onChange={(e) => c.updateFilter({ target: e.target.value as any })}
-          >
-            <option value="all">Все типы</option>
-            <option value="item">Объявления</option>
-            <option value="user">Пользователи</option>
-            <option value="review">Отзывы</option>
-          </select>
+            onChange={(v) => c.updateFilter({ target: v as any })}
+            options={[
+              { value: 'all', label: 'Все типы' },
+              { value: 'item', label: 'Объявления' },
+              { value: 'user', label: 'Пользователи' },
+              { value: 'review', label: 'Отзывы' },
+            ]}
+          />
         </div>
       </div>
 
@@ -643,13 +806,13 @@ function ComplaintsTab({ toast }: { toast: ToastFn }) {
             <table className={clsx(s.table, s.tableZebra)}>
               <thead>
                 <tr>
-                  <th>Объект</th>
-                  <th>Тип</th>
-                  <th>Заявитель</th>
+                  <SortableHeader label="Объект" sortKey="target" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Тип" sortKey="type" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Заявитель" sortKey="reporter" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                   <th>Причина</th>
-                  <th>Приоритет</th>
-                  <th>Статус</th>
-                  <th>Дата</th>
+                  <SortableHeader label="Приоритет" sortKey="priority" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Статус" sortKey="status" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Дата" sortKey="date" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                   <th>Действия</th>
                 </tr>
               </thead>
@@ -665,7 +828,7 @@ function ComplaintsTab({ toast }: { toast: ToastFn }) {
                     </td>
                   </tr>
                 ) : (
-                  c.items.map((item) => (
+                  pg.paginatedItems.map((item) => (
                     <tr key={item.id}>
                       <td style={{ fontWeight: 500, maxWidth: 160 }} className={s.textTruncate}>{item.targetTitle}</td>
                       <td>{TARGET_MAP[item.target]}</td>
@@ -697,6 +860,7 @@ function ComplaintsTab({ toast }: { toast: ToastFn }) {
               </tbody>
             </table>
           </div>
+          <Pagination pagination={pg} />
         </div>
       )}
 
@@ -759,8 +923,19 @@ function ComplaintsTab({ toast }: { toast: ToastFn }) {
    REVIEWS MODERATION TAB
    ═══════════════════════════════════════════════════════════════════════════ */
 
+type ReviewSortKey = 'reviewer' | 'item' | 'rating' | 'flagged' | 'date';
+const REVIEW_SORT_ACCESSORS: Partial<Record<ReviewSortKey, (r: ModeratedReview) => string | number | boolean | null | undefined>> = {
+  reviewer: (r) => r.reviewerName,
+  item: (r) => r.itemTitle,
+  rating: (r) => r.rating,
+  flagged: (r) => r.isFlagged,
+  date: (r) => r.createdAt,
+};
+
 function ReviewsModerationTab({ toast }: { toast: ToastFn }) {
   const r = useReviewsModeration();
+  const { sortedItems, sortKey, sortDirection, toggleSort } = useSortable<ModeratedReview, ReviewSortKey>(r.items, REVIEW_SORT_ACCESSORS);
+  const pg = usePagination(sortedItems);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   if (r.isLoading) return <TableSkeleton />;
@@ -778,15 +953,15 @@ function ReviewsModerationTab({ toast }: { toast: ToastFn }) {
               onChange={(e) => r.updateFilter({ search: e.target.value })}
             />
           </div>
-          <select
-            className={s.filterSelect}
+          <AdminSelect
             value={r.filter.flagged}
-            onChange={(e) => r.updateFilter({ flagged: e.target.value as any })}
-          >
-            <option value="all">Все отзывы</option>
-            <option value="flagged">С флагом ({r.flaggedCount})</option>
-            <option value="clean">Без флага</option>
-          </select>
+            onChange={(v) => r.updateFilter({ flagged: v as any })}
+            options={[
+              { value: 'all', label: 'Все отзывы' },
+              { value: 'flagged', label: `С флагом (${r.flaggedCount})` },
+              { value: 'clean', label: 'Без флага' },
+            ]}
+          />
         </div>
         <div className={s.toolbarRight}>
           <span style={{ fontSize: 13, color: '#64748b' }}>
@@ -879,12 +1054,12 @@ function ReviewsModerationTab({ toast }: { toast: ToastFn }) {
             <table className={clsx(s.table, s.tableZebra)}>
               <thead>
                 <tr>
-                  <th>Автор</th>
-                  <th>Объявление</th>
-                  <th>Рейтинг</th>
+                  <SortableHeader label="Автор" sortKey="reviewer" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Объявление" sortKey="item" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Рейтинг" sortKey="rating" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                   <th>Текст</th>
-                  <th>Флаг</th>
-                  <th>Дата</th>
+                  <SortableHeader label="Флаг" sortKey="flagged" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
+                  <SortableHeader label="Дата" sortKey="date" currentKey={sortKey} direction={sortDirection} onToggle={toggleSort} />
                   <th>Действия</th>
                 </tr>
               </thead>
@@ -900,7 +1075,7 @@ function ReviewsModerationTab({ toast }: { toast: ToastFn }) {
                     </td>
                   </tr>
                 ) : (
-                  r.items.map((rev) => (
+                  pg.paginatedItems.map((rev) => (
                     <tr key={rev.id}>
                       <td style={{ fontWeight: 500 }}>{rev.reviewerName}</td>
                       <td style={{ maxWidth: 160 }} className={s.textTruncate}>{rev.itemTitle}</td>
@@ -940,6 +1115,7 @@ function ReviewsModerationTab({ toast }: { toast: ToastFn }) {
               </tbody>
             </table>
           </div>
+          <Pagination pagination={pg} />
         </div>
       )}
 
@@ -998,35 +1174,12 @@ function ReviewsModerationTab({ toast }: { toast: ToastFn }) {
    MAIN EXPORT
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const TABS: { key: ModeratorTab; label: string; icon: typeof Search }[] = [
-  { key: 'queue', label: 'Очередь модерации', icon: ShieldCheck },
-  { key: 'complaints', label: 'Жалобы', icon: Flag },
-  { key: 'reviews', label: 'Отзывы', icon: MessageSquare },
-];
-
-export function ModeratorPanel() {
-  const [activeTab, setActiveTab] = useState<ModeratorTab>('queue');
+export function ModeratorPanel({ activeTab = 'queue' as ModeratorTab }: { activeTab?: ModeratorTab }) {
   const toast = useToast();
 
   return (
     <div>
       <ToastContainer toasts={toast.toasts} dismiss={toast.dismiss} />
-
-      <div className={s.tabsRow}>
-        {TABS.map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.key}
-              className={clsx(s.tab, activeTab === tab.key && s.tabActive)}
-              onClick={() => setActiveTab(tab.key)}
-            >
-              <Icon size={16} />
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
 
       <AnimatePresence mode="wait">
         <motion.div

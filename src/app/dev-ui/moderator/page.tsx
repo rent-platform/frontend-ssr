@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import {
   ShieldCheck,
   Flag,
@@ -8,6 +9,7 @@ import {
 import { AdminLayout } from '@/ux/layouts/AdminLayout';
 import type { NavSection } from '@/ux/layouts/AdminLayout';
 import { ModeratorPanel } from '@/ux/features';
+import type { ModeratorTab } from '@/ux/features/Moderator/types';
 
 const MODERATOR_SECTIONS: NavSection[] = [
   {
@@ -21,15 +23,22 @@ const MODERATOR_SECTIONS: NavSection[] = [
 ];
 
 export default function ModeratorPage() {
+  const [activeTab, setActiveTab] = useState<ModeratorTab>('queue');
+
+  const handleNavClick = useCallback((key: string) => {
+    setActiveTab(key as ModeratorTab);
+  }, []);
+
   return (
     <AdminLayout
       sections={MODERATOR_SECTIONS}
       brandLabel="Панель модератора"
       userName="Дмитрий Козлов"
       userRole="moderator"
-      pageTitle="Панель модератора"
+      activeNavKey={activeTab}
+      onNavClick={handleNavClick}
     >
-      <ModeratorPanel />
+      <ModeratorPanel activeTab={activeTab} />
     </AdminLayout>
   );
 }

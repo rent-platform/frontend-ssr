@@ -36,6 +36,8 @@ export type AdminLayoutProps = {
   userRole: string;
   pageTitle?: string;
   notifications?: { id: string; title: string; message: string; read: boolean; createdAt: string }[];
+  activeNavKey?: string;
+  onNavClick?: (key: string) => void;
 };
 
 export function AdminLayout({
@@ -46,6 +48,8 @@ export function AdminLayout({
   userRole,
   pageTitle,
   notifications = [],
+  activeNavKey,
+  onNavClick,
 }: AdminLayoutProps) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -58,6 +62,7 @@ export function AdminLayout({
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
   const activeKey =
+    activeNavKey ??
     sections
       .flatMap((sec) => sec.items)
       .find((item) => pathname === item.href || pathname.startsWith(item.href + '/'))
@@ -156,6 +161,23 @@ export function AdminLayout({
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const isActive = item.key === activeKey;
+                if (onNavClick) {
+                  return (
+                    <button
+                      key={item.key}
+                      className={clsx(s.navItem, isActive && s.navItemActive)}
+                      onClick={() => { onNavClick(item.key); closeSidebar(); }}
+                    >
+                      <span className={s.navItemIcon}>
+                        <Icon size={18} />
+                      </span>
+                      {item.label}
+                      {item.badge != null && item.badge > 0 && (
+                        <span className={s.navItemBadge}>{item.badge}</span>
+                      )}
+                    </button>
+                  );
+                }
                 return (
                   <Link
                     key={item.key}
@@ -315,6 +337,18 @@ export function AdminLayout({
                 ) : (
                   searchResults.map((item) => {
                     const Icon = item.icon;
+                    if (onNavClick) {
+                      return (
+                        <button
+                          key={item.key}
+                          className={s.searchModalItem}
+                          onClick={() => { onNavClick(item.key); setSearchOpen(false); }}
+                        >
+                          <Icon size={16} />
+                          <span>{item.label}</span>
+                        </button>
+                      );
+                    }
                     return (
                       <Link
                         key={item.key}
