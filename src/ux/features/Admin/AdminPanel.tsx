@@ -41,6 +41,10 @@ import {
   ToggleRight,
   Flag,
   MessageSquare,
+  Shield,
+  ShieldCheck,
+  Crown,
+  User,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -789,9 +793,16 @@ function UsersTab({ toast }: { toast: ToastFn }) {
                       <td style={{ fontSize: 13 }}>{user.email ?? '—'}</td>
                       <td style={{ whiteSpace: 'nowrap' }}>{user.phone}</td>
                       <td>
-                        <span className={clsx(s.badge, ROLE_MAP[user.role as UserRole].cls)}>
+                        <button
+                          className={clsx(s.badge, ROLE_MAP[user.role as UserRole].cls, s.badgeClickable)}
+                          title="Сменить роль"
+                          onClick={() => {
+                            setRoleChangeUser(user);
+                            setNewRole(user.role as UserRole);
+                          }}
+                        >
                           {ROLE_MAP[user.role as UserRole].label}
-                        </span>
+                        </button>
                       </td>
                       <td>
                         <span className={clsx(s.badge, user.isActive ? s.badgeGreen : s.badgeRed)}>
@@ -840,42 +851,108 @@ function UsersTab({ toast }: { toast: ToastFn }) {
           >
             <motion.div
               className={s.modalPanel}
+              style={{ maxWidth: 520 }}
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
             >
               <div className={s.modalHeader}>
-                <h3 className={s.modalTitle}>Смена роли</h3>
+                <h3 className={s.modalTitle}>Управление ролью</h3>
                 <button className={s.modalClose} onClick={() => setRoleChangeUser(null)}>
                   <X size={18} />
                 </button>
               </div>
-              <p style={{ fontSize: 14, color: '#64748b', marginBottom: 16 }}>
-                Пользователь: <strong>{roleChangeUser.fullName}</strong>
-              </p>
-              <AdminSelect
-                value={newRole}
-                onChange={(v) => setNewRole(v as UserRole)}
-                options={[
-                  { value: 'user', label: 'Пользователь' },
-                  { value: 'moderator', label: 'Модератор' },
-                  { value: 'admin', label: 'Администратор' },
-                ]}
-              />
+
+              <div className={s.roleModalUser}>
+                <div className={s.roleModalAvatar}>
+                  {(roleChangeUser.fullName ?? '?').split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <div className={s.roleModalUserName}>{roleChangeUser.fullName ?? '—'}</div>
+                  <div className={s.roleModalUserMeta}>{roleChangeUser.email ?? roleChangeUser.phone}</div>
+                </div>
+                <span className={clsx(s.badge, ROLE_MAP[roleChangeUser.role as UserRole].cls)} style={{ marginLeft: 'auto' }}>
+                  {ROLE_MAP[roleChangeUser.role as UserRole].label}
+                </span>
+              </div>
+
+              <div className={s.roleCardsGrid}>
+                {([
+                  {
+                    role: 'user' as UserRole,
+                    icon: User,
+                    title: 'Пользователь',
+                    desc: 'Стандартный доступ к платформе',
+                    perms: ['Создание объявлений', 'Аренда вещей', 'Оставление отзывов'],
+                    color: '#64748b',
+                    bg: 'rgba(100, 116, 139, 0.08)',
+                  },
+                  {
+                    role: 'moderator' as UserRole,
+                    icon: ShieldCheck,
+                    title: 'Модератор',
+                    desc: 'Модерация контента и жалоб',
+                    perms: ['Проверка объявлений', 'Работа с жалобами', 'Модерация отзывов'],
+                    color: '#3b82f6',
+                    bg: 'rgba(59, 130, 246, 0.08)',
+                  },
+                  {
+                    role: 'admin' as UserRole,
+                    icon: Crown,
+                    title: 'Администратор',
+                    desc: 'Полный доступ к системе',
+                    perms: ['Управление пользователями', 'Финансы и настройки', 'Смена ролей'],
+                    color: '#8b5cf6',
+                    bg: 'rgba(139, 92, 246, 0.08)',
+                  },
+                ]).map((r) => (
+                  <button
+                    key={r.role}
+                    className={clsx(s.roleCard, newRole === r.role && s.roleCardActive)}
+                    style={{ '--role-color': r.color, '--role-bg': r.bg } as React.CSSProperties}
+                    onClick={() => setNewRole(r.role)}
+                  >
+                    <div className={s.roleCardIcon}>
+                      <r.icon size={22} />
+                    </div>
+                    <div className={s.roleCardTitle}>{r.title}</div>
+                    <div className={s.roleCardDesc}>{r.desc}</div>
+                    <ul className={s.roleCardPerms}>
+                      {r.perms.map((p) => (
+                        <li key={p}><Check size={12} /> {p}</li>
+                      ))}
+                    </ul>
+                    {newRole === r.role && (
+                      <div className={s.roleCardCheck}>
+                        <Check size={16} />
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              {newRole === 'admin' && roleChangeUser.role !== 'admin' && (
+                <div className={s.roleWarning}>
+                  <AlertTriangle size={16} />
+                  <span>Администратор получит полный доступ ко всем функциям системы, включая управление другими пользователями.</span>
+                </div>
+              )}
+
               <div className={s.modalFooter}>
                 <button className={clsx(s.btn, s.btnGhost)} onClick={() => setRoleChangeUser(null)}>
                   Отмена
                 </button>
                 <button
                   className={clsx(s.btn, s.btnPrimary)}
+                  disabled={newRole === roleChangeUser.role}
                   onClick={() => {
                     u.changeRole(roleChangeUser.id, newRole);
                     toast(`Роль пользователя ${roleChangeUser.fullName} изменена на «${ROLE_MAP[newRole].label}»`);
                     setRoleChangeUser(null);
                   }}
                 >
-                  <Check size={14} /> Сохранить
+                  <Check size={14} /> {newRole === roleChangeUser.role ? 'Роль не изменена' : 'Сохранить роль'}
                 </button>
               </div>
             </motion.div>
