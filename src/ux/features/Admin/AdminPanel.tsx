@@ -67,6 +67,7 @@ import type { DealStatus } from '@/business/deals';
 import type { PaymentStatus } from '@/business/payments';
 import type { UserRole } from '@/business/auth';
 import { mockAnalyticsData, mockTodayActivity } from './mockAdminData';
+import { AdminUserProfile } from './components/AdminUserProfile';
 
 /* ── Toast system ──────────────────────────────────────────────────────── */
 
@@ -620,6 +621,17 @@ function DashboardTab() {
    USERS TAB
    ═══════════════════════════════════════════════════════════════════════════ */
 
+const BAN_REASONS = [
+  'Нарушение правил платформы',
+  'Мошенничество',
+  'Спам или реклама',
+  'Оскорбительное поведение',
+  'Фейковые объявления',
+  'Подозрительная активность',
+  'Нарушение условий сделки',
+  'Множественные жалобы',
+] as const;
+
 type UserSortKey = 'name' | 'email' | 'role' | 'listings' | 'deals';
 const USER_SORT_ACCESSORS: Partial<Record<UserSortKey, (u: AdminUser) => string | number | null | undefined>> = {
   name: (u) => u.fullName ?? '',
@@ -636,116 +648,57 @@ function UsersTab({ toast }: { toast: ToastFn }) {
   const [roleChangeUser, setRoleChangeUser] = useState<AdminUser | null>(null);
   const [newRole, setNewRole] = useState<UserRole>('user');
   const [banConfirmId, setBanConfirmId] = useState<string | null>(null);
+  const [banReason, setBanReason] = useState<string>('');
 
   if (u.isLoading) return <TableSkeleton />;
 
   return (
     <>
-      <div className={s.toolbar}>
-        <div className={s.toolbarLeft}>
-          <div className={s.searchInput}>
-            <Search size={16} />
-            <input
-              placeholder="Поиск по имени, email, телефону..."
-              value={u.filter.search}
-              onChange={(e) => u.updateFilter({ search: e.target.value })}
+      {!u.selectedUser && (
+        <div className={s.toolbar}>
+          <div className={s.toolbarLeft}>
+            <div className={s.searchInput}>
+              <Search size={16} />
+              <input
+                placeholder="Поиск по имени, email, телефону..."
+                value={u.filter.search}
+                onChange={(e) => u.updateFilter({ search: e.target.value })}
+              />
+            </div>
+            <AdminSelect
+              value={u.filter.role}
+              onChange={(v) => u.updateFilter({ role: v as any })}
+              options={[
+                { value: 'all', label: `Все роли (${u.countByRole.all})` },
+                { value: 'user', label: `Пользователи (${u.countByRole.user})` },
+                { value: 'moderator', label: `Модераторы (${u.countByRole.moderator})` },
+                { value: 'admin', label: `Админы (${u.countByRole.admin})` },
+              ]}
+            />
+            <AdminSelect
+              value={u.filter.status}
+              onChange={(v) => u.updateFilter({ status: v as any })}
+              options={[
+                { value: 'all', label: 'Все статусы' },
+                { value: 'active', label: 'Активные' },
+                { value: 'banned', label: 'Заблокированные' },
+              ]}
             />
           </div>
-          <AdminSelect
-            value={u.filter.role}
-            onChange={(v) => u.updateFilter({ role: v as any })}
-            options={[
-              { value: 'all', label: `Все роли (${u.countByRole.all})` },
-              { value: 'user', label: `Пользователи (${u.countByRole.user})` },
-              { value: 'moderator', label: `Модераторы (${u.countByRole.moderator})` },
-              { value: 'admin', label: `Админы (${u.countByRole.admin})` },
-            ]}
-          />
-          <AdminSelect
-            value={u.filter.status}
-            onChange={(v) => u.updateFilter({ status: v as any })}
-            options={[
-              { value: 'all', label: 'Все статусы' },
-              { value: 'active', label: 'Активные' },
-              { value: 'banned', label: 'Заблокированные' },
-            ]}
-          />
         </div>
-      </div>
+      )}
 
-      {/* Detail panel */}
+      {/* Detail panel — PublicProfile-style view with admin controls */}
       {u.selectedUser && (
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={s.detailPanel}
-          style={{ marginBottom: 20 }}
-        >
-          <div className={s.detailHeader}>
-            <button
-              className={clsx(s.btn, s.btnGhost, s.btnSm)}
-              onClick={() => u.setSelectedUser(null)}
-            >
-              <ChevronLeft size={16} /> Назад
-            </button>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <span className={clsx(s.badge, ROLE_MAP[u.selectedUser.role as UserRole].cls)}>
-                {ROLE_MAP[u.selectedUser.role as UserRole].label}
-              </span>
-              <span className={clsx(s.badge, u.selectedUser.isActive ? s.badgeGreen : s.badgeRed)}>
-                {u.selectedUser.isActive ? 'Активен' : 'Заблокирован'}
-              </span>
-            </div>
-          </div>
-          <div className={s.detailBody}>
-            <h3 style={{ fontWeight: 700, fontSize: 18, marginBottom: 16 }}>
-              {u.selectedUser.fullName ?? 'Без имени'}
-            </h3>
-            <div className={s.detailGrid}>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Email</span>
-                <span className={s.detailValue}>{u.selectedUser.email ?? '—'}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Телефон</span>
-                <span className={s.detailValue}>{u.selectedUser.phone}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Никнейм</span>
-                <span className={s.detailValue}>{u.selectedUser.nickname ?? '—'}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Дата регистрации</span>
-                <span className={s.detailValue}>{formatDate(u.selectedUser.createdAt)}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Объявлений</span>
-                <span className={s.detailValue}>{u.selectedUser.listingsCount}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Сделок</span>
-                <span className={s.detailValue}>{u.selectedUser.dealsCount}</span>
-              </div>
-            </div>
-          </div>
-          <div className={s.detailActions}>
-            <button
-              className={clsx(s.btn, u.selectedUser.isActive ? s.btnDanger : s.btnPrimary)}
-              onClick={() => setBanConfirmId(u.selectedUser!.id)}
-            >
-              {u.selectedUser.isActive ? <><Ban size={14} /> Заблокировать</> : <><Check size={14} /> Разблокировать</>}
-            </button>
-            <button
-              className={clsx(s.btn, s.btnOutline)}
-              onClick={() => {
-                setRoleChangeUser(u.selectedUser);
-                setNewRole(u.selectedUser!.role as UserRole);
-              }}
-            >
-              <UserCog size={14} /> Сменить роль
-            </button>
-          </div>
-        </motion.div>
+        <AdminUserProfile
+          user={u.selectedUser}
+          onBack={() => u.setSelectedUser(null)}
+          onBan={(id) => setBanConfirmId(id)}
+          onChangeRole={(target) => {
+            setRoleChangeUser(target);
+            setNewRole(target.role as UserRole);
+          }}
+        />
       )}
 
       {/* Table */}
@@ -972,7 +925,7 @@ function UsersTab({ toast }: { toast: ToastFn }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setBanConfirmId(null)}
+              onClick={() => { setBanConfirmId(null); setBanReason(''); }}
             >
               <motion.div
                 className={s.modalPanel}
@@ -983,7 +936,7 @@ function UsersTab({ toast }: { toast: ToastFn }) {
               >
                 <div className={s.modalHeader}>
                   <h3 className={s.modalTitle}>{isBanning ? 'Блокировка' : 'Разблокировка'} пользователя</h3>
-                  <button className={s.modalClose} onClick={() => setBanConfirmId(null)}>
+                  <button className={s.modalClose} onClick={() => { setBanConfirmId(null); setBanReason(''); }}>
                     <X size={18} />
                   </button>
                 </div>
@@ -998,12 +951,28 @@ function UsersTab({ toast }: { toast: ToastFn }) {
                     ? `Вы уверены, что хотите заблокировать пользователя «${target.fullName}»?`
                     : `Вы уверены, что хотите разблокировать пользователя «${target.fullName}»?`}
                 </p>
+                {isBanning && (
+                  <div className={s.banReasonBlock}>
+                    <label className={s.banReasonLabel}>Причина блокировки</label>
+                    <select
+                      className={s.banReasonSelect}
+                      value={banReason}
+                      onChange={(e) => setBanReason(e.target.value)}
+                    >
+                      <option value="" disabled>Выберите причину…</option>
+                      {BAN_REASONS.map((reason) => (
+                        <option key={reason} value={reason}>{reason}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 <div className={s.modalFooter}>
-                  <button className={clsx(s.btn, s.btnGhost)} onClick={() => setBanConfirmId(null)}>
+                  <button className={clsx(s.btn, s.btnGhost)} onClick={() => { setBanConfirmId(null); setBanReason(''); }}>
                     Отмена
                   </button>
                   <button
                     className={clsx(s.btn, isBanning ? s.btnDanger : s.btnPrimary)}
+                    disabled={isBanning && !banReason}
                     onClick={() => {
                       u.toggleBan(banConfirmId);
                       toast(
@@ -1012,6 +981,7 @@ function UsersTab({ toast }: { toast: ToastFn }) {
                           : `Пользователь «${target.fullName}» разблокирован`,
                       );
                       setBanConfirmId(null);
+                      setBanReason('');
                     }}
                   >
                     {isBanning ? <><Ban size={14} /> Заблокировать</> : <><Check size={14} /> Разблокировать</>}

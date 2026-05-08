@@ -1202,6 +1202,52 @@
   margin-top: 1px;
 }
 
+/* ── Ban reason selector ───────────────────────────────────────────────── */
+
+.banReasonBlock {
+  margin-bottom: $space-4;
+}
+
+.banReasonLabel {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+  margin-bottom: $space-2;
+}
+
+.banReasonSelect {
+  width: 100%;
+  padding: 10px 36px 10px 14px;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text;
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+
+  &:hover {
+    border-color: rgba(239, 68, 68, 0.4);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-error;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  }
+
+  option[value=""][disabled] {
+    color: $color-text-secondary;
+  }
+}
+
 /* ── Responsive table improvements ──────────────────────────────────────── */
 
 @include respond-below('lg') {
