@@ -2231,33 +2231,77 @@
   gap: $space-1;
 }
 
-/* ── Moderator: complaint stats ────────────────────────────────────────── */
+/* ── Moderator / Admin: complaint stats ────────────────────────────────── */
 
 .complaintStats {
-  display: flex;
-  gap: $space-3;
-  margin-bottom: $space-4;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-4;
+  margin-bottom: $space-5;
+
+  @include respond-below(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-below(sm) {
+    grid-template-columns: 1fr;
+  }
 }
 
-.complaintStat {
+.complaintStatItem {
+  position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: $space-2;
-  padding: $space-2 $space-3;
+  justify-content: center;
+  padding: $space-5 $space-4;
   background: $color-surface;
   border: 1px solid $color-border;
-  border-radius: $radius-md;
-  font-size: $font-size-sm;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-sm;
+  transition: $transition-base;
+  overflow: hidden;
+  text-align: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: $radius-lg $radius-lg 0 0;
+  }
+
+  &:nth-child(1)::before { background: #3b82f6; }
+  &:nth-child(2)::before { background: $color-warning; }
+  &:nth-child(3)::before { background: $color-primary; }
+  &:nth-child(4)::before { background: $color-text-secondary; }
+
+  &:nth-child(1) .complaintStatValue { color: #3b82f6; }
+  &:nth-child(2) .complaintStatValue { color: $color-warning; }
+  &:nth-child(3) .complaintStatValue { color: $color-primary; }
+  &:nth-child(4) .complaintStatValue { color: $color-text-secondary; }
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
 }
 
 .complaintStatValue {
-  font-weight: $font-weight-bold;
-  color: $color-text;
+  font-size: $font-size-3xl;
+  font-weight: 800;
+  font-family: $font-family-display;
+  line-height: 1;
+  margin-bottom: $space-1;
 }
 
 .complaintStatLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
   color: $color-text-secondary;
+  letter-spacing: 0.01em;
 }
 
 /* ── Moderator: priority dot ───────────────────────────────────────────── */

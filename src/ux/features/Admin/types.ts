@@ -192,4 +192,4 @@ export type AdminNotification = {
 
 /* ── Admin tabs ──────────────────────────────────────────────────────────── */
 
-export type AdminTab = 'dashboard' | 'users' | 'listings' | 'deals' | 'finance' | 'settings' | 'activity';
+export type AdminTab = 'dashboard' | 'users' | 'listings' | 'deals' | 'finance' | 'complaints' | 'settings' | 'activity';

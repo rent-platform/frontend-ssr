@@ -9,6 +9,7 @@ import {
   Banknote,
   Settings,
   Activity,
+  Flag,
 } from 'lucide-react';
 import { AdminLayout } from '@/ux/layouts/AdminLayout';
 import type { NavSection } from '@/ux/layouts/AdminLayout';
@@ -29,6 +30,7 @@ const ADMIN_SECTIONS: NavSection[] = [
       { key: 'users', label: 'Пользователи', icon: Users, href: '/dev-ui/admin', badge: 8 },
       { key: 'listings', label: 'Объявления', icon: ShoppingBag, href: '/dev-ui/admin' },
       { key: 'deals', label: 'Сделки', icon: Handshake, href: '/dev-ui/admin' },
+      { key: 'complaints', label: 'Жалобы', icon: Flag, href: '/dev-ui/admin', badge: 3 },
     ],
   },
   {
