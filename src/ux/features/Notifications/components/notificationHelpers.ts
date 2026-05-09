@@ -1,16 +1,23 @@
 import {
+  Ban,
   Bell,
   Bookmark,
   Calendar,
+  CheckCircle,
+  CircleCheckBig,
+  ClipboardList,
+  Clock,
   CreditCard,
   Gift,
   Inbox,
   Lock,
   MessageCircle,
   MessageSquare,
+  Play,
   Shield,
   Star,
   Wallet,
+  XCircle,
 } from 'lucide-react';
 import type { NotificationItem, NotificationTab, NotificationType } from '../types';
 import styles from '../NotificationsPage.module.scss';
@@ -46,13 +53,19 @@ export function groupByDate(items: NotificationItem[]): { label: string; items: 
 export function getIconProps(type: NotificationType): { Icon: typeof Bell; cls: string } {
   switch (type) {
     case 'deal_request':
+      return { Icon: ClipboardList, cls: styles.iconDealRequest };
     case 'deal_confirmed':
+      return { Icon: CheckCircle, cls: styles.iconDealConfirmed };
     case 'deal_started':
+      return { Icon: Play, cls: styles.iconDealActive };
     case 'deal_ending':
+      return { Icon: Clock, cls: styles.iconDealEnding };
     case 'deal_completed':
+      return { Icon: CircleCheckBig, cls: styles.iconDealCompleted };
     case 'deal_cancelled':
+      return { Icon: Ban, cls: styles.iconDealRejected };
     case 'deal_rejected':
-      return { Icon: Calendar, cls: styles.iconDeal };
+      return { Icon: XCircle, cls: styles.iconDealRejected };
     case 'payment_received':
     case 'deposit_returned':
       return { Icon: Wallet, cls: styles.iconPayment };

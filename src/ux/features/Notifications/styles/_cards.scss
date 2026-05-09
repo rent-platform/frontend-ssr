@@ -37,6 +37,11 @@
   background: rgba(245, 158, 11, 0.015);
 }
 
+.cardGreen {
+  border-left: 3px solid $color-primary;
+  background: rgba(34, 197, 94, 0.015);
+}
+
 /* ─── Avatar / Icon area ─── */
 
 .avatarWrap {
@@ -94,21 +99,44 @@
 
 .unreadDot {
   position: absolute;
-  top: 0;
-  left: 0;
+  bottom: $space-3;
+  right: $space-4;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: $color-primary;
-  border: 2px solid #fff;
-  transform: translate(-2px, -2px);
 }
 
 /* ─── Icon color variants ─── */
 
-.iconDeal {
+.iconDealRequest {
   background: rgba(34, 197, 94, 0.07);
   color: $color-primary;
+}
+
+.iconDealConfirmed {
+  background: rgba(59, 130, 246, 0.07);
+  color: #3b82f6;
+}
+
+.iconDealActive {
+  background: rgba(34, 197, 94, 0.07);
+  color: $color-primary;
+}
+
+.iconDealEnding {
+  background: rgba(245, 158, 11, 0.07);
+  color: #f59e0b;
+}
+
+.iconDealCompleted {
+  background: rgba(100, 116, 139, 0.07);
+  color: $color-text-secondary;
+}
+
+.iconDealRejected {
+  background: rgba(239, 68, 68, 0.07);
+  color: $color-error;
 }
 
 .iconPayment {

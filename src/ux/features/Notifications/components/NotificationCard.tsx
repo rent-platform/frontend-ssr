@@ -17,11 +17,13 @@ export function NotificationCard({ notification: ntf, onRead }: NotificationCard
   const { Icon, cls: iconCls } = getIconProps(ntf.type);
 
   const priorityCls =
-    ntf.priority === 'urgent'
-      ? styles.cardUrgent
-      : ntf.priority === 'high'
-        ? styles.cardHigh
-        : '';
+    ntf.type === 'deal_request'
+      ? styles.cardGreen
+      : ntf.priority === 'urgent'
+        ? styles.cardUrgent
+        : ntf.priority === 'high'
+          ? styles.cardHigh
+          : '';
 
   const handleClick = () => {
     if (!ntf.isRead) onRead(ntf.id);
@@ -40,8 +42,9 @@ export function NotificationCard({ notification: ntf, onRead }: NotificationCard
         <div className={clsx(styles.iconCircle, iconCls)}>
           <Icon />
         </div>
-        {!ntf.isRead && <span className={styles.unreadDot} />}
       </div>
+
+      {!ntf.isRead && <span className={styles.unreadDot} />}
 
       {/* Content */}
       <div className={styles.cardBody}>

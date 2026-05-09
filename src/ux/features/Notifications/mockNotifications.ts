@@ -5,7 +5,7 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
   {
     id: 'ntf-001',
     type: 'deal_request',
-    priority: 'high',
+    priority: 'normal',
     title: 'Новая заявка на аренду',
     body: 'Мария Иванова хочет арендовать «Canon EOS R5» на 3 дня (25–28 июля). Подтвердите или отклоните заявку.',
     createdAt: '2025-07-24T14:30:00Z',
@@ -109,7 +109,7 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
   {
     id: 'ntf-020',
     type: 'deal_cancelled',
-    priority: 'high',
+    priority: 'urgent',
     title: 'Аренда отменена',
     body: 'Аренда «Проектор Epson EH-TW7100» была отменена. Средства вернутся в течение 24 часов.',
     createdAt: '2025-07-22T11:00:00Z',
