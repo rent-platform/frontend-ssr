@@ -158,6 +158,10 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
                     <User size={16} />
                     <span>Мой профиль</span>
                   </Link>
+                  <Link href={ROUTES.favorites} className={styles.profileMenuItem}>
+                    <Heart size={16} />
+                    <span>Избранное</span>
+                  </Link>
                   <Link href={ROUTES.notifications} className={styles.profileMenuItem}>
                     <Bell size={16} />
                     <span>Уведомления</span>
