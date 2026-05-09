@@ -32,6 +32,8 @@ type ProductDetailProps = {
   onOpenSimilar: (item: CatalogUiItem) => void;
   isGuest?: boolean;
   onAuthRequired?: () => void;
+  className?: string;
+  hideSidebar?: boolean;
 };
 
 export function ProductDetail({
@@ -41,6 +43,8 @@ export function ProductDetail({
   onOpenSimilar,
   isGuest = false,
   onAuthRequired,
+  className,
+  hideSidebar = false,
 }: ProductDetailProps) {
   const [isFav, setIsFav] = useState(false);
 
@@ -57,7 +61,7 @@ export function ProductDetail({
 
   return (
     <motion.div
-      className={styles.detailPage}
+      className={clsx(styles.detailPage, hideSidebar && styles.detailPageSingle, className)}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.45 }}
@@ -181,18 +185,20 @@ export function ProductDetail({
         </motion.section>
 
         {/* ─── Guarantee Banner ─── */}
-        <section className={styles.guaranteeBanner}>
-          <div className={styles.guaranteeIcon}>
-            <ShieldCheck size={26} />
-          </div>
-          <div className={styles.guaranteeText}>
-            <strong>Защита арендатора</strong>
-            <span>
-              Каждая сделка защищена платформой. Если товар не соответствует
-              описанию — мы вернём деньги в течение 24 часов.
-            </span>
-          </div>
-        </section>
+        {!hideSidebar && (
+          <section className={styles.guaranteeBanner}>
+            <div className={styles.guaranteeIcon}>
+              <ShieldCheck size={26} />
+            </div>
+            <div className={styles.guaranteeText}>
+              <strong>Защита арендатора</strong>
+              <span>
+                Каждая сделка защищена платформой. Если товар не соответствует
+                описанию — мы вернём деньги в течение 24 часов.
+              </span>
+            </div>
+          </section>
+        )}
 
         {/* ─── Similar Items ─── */}
         {similarItems.length > 0 && (
@@ -213,7 +219,7 @@ export function ProductDetail({
       </div>
 
       {/* ═══════ Sidebar ═══════ */}
-      <BookingSidebar item={item} isGuest={isGuest} onAuthRequired={onAuthRequired} />
+      {!hideSidebar && <BookingSidebar item={item} isGuest={isGuest} onAuthRequired={onAuthRequired} />}
     </motion.div>
   );
 }

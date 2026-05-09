@@ -61,6 +61,60 @@ export function useAdminListings() {
     );
   }, []);
 
+  const approveListing = useCallback((id: string) => {
+    setItems((prev) =>
+      prev.map((i) =>
+        i.id === id
+          ? { ...i, status: 'ACTIVE' as ItemStatus, moderationComment: undefined }
+          : i,
+      ),
+    );
+    setSelectedItem((prev) =>
+      prev && prev.id === id
+        ? { ...prev, status: 'ACTIVE' as ItemStatus, moderationComment: undefined }
+        : prev,
+    );
+  }, []);
+
+  const rejectListing = useCallback((id: string, comment: string) => {
+    setItems((prev) =>
+      prev.map((i) =>
+        i.id === id
+          ? { ...i, status: 'REJECTED' as ItemStatus, moderationComment: comment || undefined }
+          : i,
+      ),
+    );
+    setSelectedItem((prev) =>
+      prev && prev.id === id
+        ? { ...prev, status: 'REJECTED' as ItemStatus, moderationComment: comment || undefined }
+        : prev,
+    );
+  }, []);
+
+  const restoreFromArchive = useCallback((id: string) => {
+    setItems((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, status: 'ACTIVE' as ItemStatus } : i)),
+    );
+    setSelectedItem((prev) =>
+      prev && prev.id === id ? { ...prev, status: 'ACTIVE' as ItemStatus } : prev,
+    );
+  }, []);
+
+  const sendToModeration = useCallback((id: string) => {
+    setItems((prev) =>
+      prev.map((i) =>
+        i.id === id
+          ? { ...i, status: 'MODERATION' as ItemStatus, moderationComment: undefined }
+          : i,
+      ),
+    );
+    setSelectedItem((prev) =>
+      prev && prev.id === id
+        ? { ...prev, status: 'MODERATION' as ItemStatus, moderationComment: undefined }
+        : prev,
+    );
+  }, []);
+
   const countByStatus = useMemo(() => {
     const counts: Record<string, number> = { all: items.length };
     items.forEach((i) => { counts[i.status] = (counts[i.status] || 0) + 1; });
@@ -81,5 +135,9 @@ export function useAdminListings() {
     setSelectedItem,
     isLoading,
     forceArchive,
+    approveListing,
+    rejectListing,
+    restoreFromArchive,
+    sendToModeration,
   };
 }

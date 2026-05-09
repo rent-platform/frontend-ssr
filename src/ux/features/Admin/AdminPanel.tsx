@@ -68,6 +68,7 @@ import type { PaymentStatus } from '@/business/payments';
 import type { UserRole } from '@/business/auth';
 import { mockAnalyticsData, mockTodayActivity } from './mockAdminData';
 import { AdminUserProfile } from './components/AdminUserProfile';
+import { AdminListingDetail } from './components/AdminListingDetail';
 
 /* ── Toast system ──────────────────────────────────────────────────────── */
 
@@ -1020,112 +1021,64 @@ function ListingsTab({ toast }: { toast: ToastFn }) {
 
   return (
     <>
-      <div className={s.toolbar}>
-        <div className={s.toolbarLeft}>
-          <div className={s.searchInput}>
-            <Search size={16} />
-            <input
-              placeholder="Поиск по названию, городу, владельцу..."
-              value={l.filter.search}
-              onChange={(e) => l.updateFilter({ search: e.target.value })}
+      {!l.selectedItem && (
+        <div className={s.toolbar}>
+          <div className={s.toolbarLeft}>
+            <div className={s.searchInput}>
+              <Search size={16} />
+              <input
+                placeholder="Поиск по названию, городу, владельцу..."
+                value={l.filter.search}
+                onChange={(e) => l.updateFilter({ search: e.target.value })}
+              />
+            </div>
+            <AdminSelect
+              value={l.filter.status}
+              onChange={(v) => l.updateFilter({ status: v as any })}
+              options={[
+                { value: 'all', label: `Все статусы (${l.countByStatus.all})` },
+                { value: 'ACTIVE', label: `Активные (${l.countByStatus.ACTIVE ?? 0})` },
+                { value: 'MODERATION', label: `На модерации (${l.countByStatus.MODERATION ?? 0})` },
+                { value: 'REJECTED', label: `Отклонённые (${l.countByStatus.REJECTED ?? 0})` },
+                { value: 'ARCHIVED', label: `Архив (${l.countByStatus.ARCHIVED ?? 0})` },
+                { value: 'DRAFT', label: `Черновики (${l.countByStatus.DRAFT ?? 0})` },
+              ]}
+            />
+            <AdminSelect
+              value={l.filter.category}
+              onChange={(v) => l.updateFilter({ category: v })}
+              options={l.categories.map((cat) => ({
+                value: cat,
+                label: cat === 'all' ? 'Все категории' : cat,
+              }))}
             />
           </div>
-          <AdminSelect
-            value={l.filter.status}
-            onChange={(v) => l.updateFilter({ status: v as any })}
-            options={[
-              { value: 'all', label: `Все статусы (${l.countByStatus.all})` },
-              { value: 'ACTIVE', label: `Активные (${l.countByStatus.ACTIVE ?? 0})` },
-              { value: 'MODERATION', label: `На модерации (${l.countByStatus.MODERATION ?? 0})` },
-              { value: 'REJECTED', label: `Отклонённые (${l.countByStatus.REJECTED ?? 0})` },
-              { value: 'ARCHIVED', label: `Архив (${l.countByStatus.ARCHIVED ?? 0})` },
-              { value: 'DRAFT', label: `Черновики (${l.countByStatus.DRAFT ?? 0})` },
-            ]}
-          />
-          <AdminSelect
-            value={l.filter.category}
-            onChange={(v) => l.updateFilter({ category: v })}
-            options={l.categories.map((cat) => ({
-              value: cat,
-              label: cat === 'all' ? 'Все категории' : cat,
-            }))}
-          />
         </div>
-      </div>
+      )}
 
-      {/* Detail */}
+      {/* Detail — catalog-style view with admin controls */}
       {l.selectedItem && (
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={s.detailPanel}
-          style={{ marginBottom: 20 }}
-        >
-          <div className={s.detailHeader}>
-            <button
-              className={clsx(s.btn, s.btnGhost, s.btnSm)}
-              onClick={() => l.setSelectedItem(null)}
-            >
-              <ChevronLeft size={16} /> Назад
-            </button>
-            <span className={clsx(s.badge, ITEM_STATUS_MAP[l.selectedItem.status].cls)}>
-              {ITEM_STATUS_MAP[l.selectedItem.status].label}
-            </span>
-          </div>
-          <div className={s.detailBody}>
-            <h3 style={{ fontWeight: 700, fontSize: 18, marginBottom: 16 }}>{l.selectedItem.title}</h3>
-            <div className={s.detailGrid}>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Категория</span>
-                <span className={s.detailValue}>{l.selectedItem.category?.categoryName ?? '—'}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Город</span>
-                <span className={s.detailValue}>{l.selectedItem.city ?? '—'}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Цена/день</span>
-                <span className={s.detailValue}>{formatPrice(l.selectedItem.pricePerDay)}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Залог</span>
-                <span className={s.detailValue}>{formatPrice(l.selectedItem.depositAmount)}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Владелец</span>
-                <span className={s.detailValue}>{l.selectedItem.ownerName}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Просмотров</span>
-                <span className={s.detailValue}>{l.selectedItem.viewsCount}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Сделок</span>
-                <span className={s.detailValue}>{l.selectedItem.dealsCount}</span>
-              </div>
-              <div className={s.detailField}>
-                <span className={s.detailLabel}>Выручка</span>
-                <span className={s.detailValue}>{formatPrice(l.selectedItem.revenue)}</span>
-              </div>
-            </div>
-            {l.selectedItem.moderationComment && (
-              <div style={{ marginTop: 16, padding: 12, background: 'rgba(239,68,68,0.06)', borderRadius: 10, border: '1px solid rgba(239,68,68,0.15)' }}>
-                <span className={s.detailLabel}>Комментарий модерации</span>
-                <p style={{ fontSize: 14, marginTop: 4, color: '#334155' }}>{l.selectedItem.moderationComment}</p>
-              </div>
-            )}
-          </div>
-          {l.selectedItem.status === 'ACTIVE' && (
-            <div className={s.detailActions}>
-              <button
-                className={clsx(s.btn, s.btnDanger)}
-                onClick={() => setArchiveConfirmId(l.selectedItem!.id)}
-              >
-                <Archive size={14} /> Принудительно снять
-              </button>
-            </div>
-          )}
-        </motion.div>
+        <AdminListingDetail
+          listing={l.selectedItem}
+          onBack={() => l.setSelectedItem(null)}
+          onArchive={(id) => setArchiveConfirmId(id)}
+          onApprove={(id) => {
+            l.approveListing(id);
+            toast('Объявление одобрено и опубликовано');
+          }}
+          onReject={(id, comment) => {
+            l.rejectListing(id, comment);
+            toast('Объявление отклонено', 'error');
+          }}
+          onRestore={(id) => {
+            l.restoreFromArchive(id);
+            toast('Объявление восстановлено');
+          }}
+          onSendToModeration={(id) => {
+            l.sendToModeration(id);
+            toast('Объявление отправлено на модерацию', 'info');
+          }}
+        />
       )}
 
       {/* Table */}

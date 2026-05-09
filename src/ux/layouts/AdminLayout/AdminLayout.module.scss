@@ -278,6 +278,7 @@
 .content {
   flex: 1;
   padding: $space-6;
+  min-width: 0;
 
   @include respond-below('md') {
     padding: $space-4;
