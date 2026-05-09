@@ -5,15 +5,15 @@
 .tabs {
   display: flex;
   gap: $space-2;
-  margin-bottom: $space-5;
+  margin-bottom: $space-6;
   align-items: center;
 }
 
 .tab {
   display: inline-flex;
   align-items: center;
-  gap: $space-1;
-  padding: 7px $space-4;
+  gap: 6px;
+  padding: 8px $space-4;
   font-size: $font-size-xs;
   font-weight: $font-weight-medium;
   font-family: $font-family-base;
@@ -25,7 +25,11 @@
   transition: $transition-smooth;
   white-space: nowrap;
 
-  &:hover { color: $color-text; border-color: $color-border; }
+  &:hover {
+    color: $color-text;
+    border-color: $color-border;
+    background: $color-surface-muted;
+  }
 }
 
 .tabActive {
@@ -33,19 +37,26 @@
   color: $color-primary;
   font-weight: $font-weight-600;
   border-color: rgba(34, 197, 94, 0.2);
+
+  &:hover {
+    background: rgba(34, 197, 94, 0.08);
+    color: $color-primary;
+    border-color: rgba(34, 197, 94, 0.25);
+  }
 }
 
 .tabBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
   border-radius: $radius-full;
   font-size: 10px;
-  font-weight: $font-weight-600;
+  font-weight: $font-weight-bold;
   background: rgba(100, 116, 139, 0.08);
+  color: $color-text-secondary;
 }
 
 .tabBadgeActive {
@@ -53,7 +64,7 @@
   color: $color-primary;
 }
 
-/* ─── Dropdown wrap ─── */
+/* ─── Dropdown ─── */
 
 .dropdownWrap {
   position: relative;
@@ -72,7 +83,7 @@
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  min-width: 180px;
+  min-width: 200px;
   background: #fff;
   border: 1px solid rgba(226, 232, 240, 0.6);
   border-radius: $radius-lg;
@@ -96,7 +107,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 7px $space-3;
+  padding: 8px $space-3;
   font-size: $font-size-xs;
   font-weight: $font-weight-medium;
   font-family: $font-family-base;
@@ -117,6 +128,18 @@
   background: rgba(34, 197, 94, 0.06);
   color: $color-primary;
   font-weight: $font-weight-600;
+}
+
+.dropdownItemLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  svg { width: 15px; height: 15px; opacity: 0.7; }
+}
+
+.dropdownItemActive .dropdownItemLeft svg {
+  opacity: 1;
 }
 
 .dropdownItemBadge {

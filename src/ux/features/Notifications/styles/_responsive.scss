@@ -5,13 +5,22 @@
 @media (max-width: $bp-md) {
   .page { padding: $space-5 $space-4 $space-12; }
   .header { flex-direction: column; align-items: flex-start; gap: $space-3; }
-  .tabs { border-radius: $radius-lg; }
-  .tab { padding: $space-2 $space-2; font-size: 11px; }
+  .tabs {
+    margin-left: -$space-4;
+    margin-right: -$space-4;
+    padding-left: $space-4;
+    padding-right: $space-4;
+  }
   .card { padding: $space-3 $space-4; gap: $space-3; }
-  .iconCircle { width: 36px; height: 36px; svg { width: 16px; height: 16px; } }
+  .avatarWrap { width: 38px; height: 38px; }
+  .avatarInitials { width: 38px; height: 38px; font-size: 11px; }
+  .avatarImage { width: 38px; height: 38px; }
+  .iconCircle { width: 38px; height: 38px; svg { width: 16px; height: 16px; } }
+  .typeBadge { width: 18px; height: 18px; svg { width: 9px; height: 9px; } }
 }
 
 @media (max-width: $bp-sm) {
   .title { font-size: $font-size-xl; }
   .headerActions { width: 100%; justify-content: flex-end; }
+  .tab { padding: 6px $space-3; font-size: 11px; }
 }

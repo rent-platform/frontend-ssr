@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Package, Star } from 'lucide-react';
+import { ChevronRight, Package, Star } from 'lucide-react';
 import clsx from 'clsx';
 import type { NotificationItem } from '../types';
 import { timeAgo } from '@/ux/utils';
@@ -35,23 +35,26 @@ export function NotificationCard({ notification: ntf, onRead }: NotificationCard
       onClick={handleClick}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } }}
     >
-      <div className={clsx(styles.iconCircle, iconCls)}>
-        <Icon />
+      {/* Icon */}
+      <div className={styles.avatarWrap}>
+        <div className={clsx(styles.iconCircle, iconCls)}>
+          <Icon />
+        </div>
+        {!ntf.isRead && <span className={styles.unreadDot} />}
       </div>
 
+      {/* Content */}
       <div className={styles.cardBody}>
         <div className={styles.cardTitleRow}>
           <h4 className={clsx(styles.cardTitle, !ntf.isRead && styles.cardTitleUnread)}>
             {ntf.title}
           </h4>
-          {!ntf.isRead && <span className={styles.unreadDot} />}
+          <span className={styles.cardTime}>{timeAgo(ntf.createdAt)}</span>
         </div>
 
         <p className={styles.cardText}>{ntf.body}</p>
 
         <div className={styles.cardMeta}>
-          <span className={styles.cardTime}>{timeAgo(ntf.createdAt)}</span>
-
           {ntf.meta?.itemTitle && (
             <span className={styles.cardItemTag}>
               <Package size={10} />
@@ -79,22 +82,26 @@ export function NotificationCard({ notification: ntf, onRead }: NotificationCard
             </span>
           )}
         </div>
-      </div>
 
-      <div className={styles.cardRight}>
-        {ntf.meta?.dealStatus && (
-          <span className={clsx(styles.statusBadge, DEAL_STATUS_CLS[ntf.meta.dealStatus])}>
-            {DEAL_STATUS_LABEL[ntf.meta.dealStatus] ?? ntf.meta.dealStatus}
-          </span>
-        )}
-        {ntf.actionLabel && (
-          <button
-            type="button"
-            className={styles.cardAction}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {ntf.actionLabel}
-          </button>
+        {/* Footer: status + action */}
+        {(ntf.meta?.dealStatus || ntf.actionLabel) && (
+          <div className={styles.cardFooter}>
+            {ntf.meta?.dealStatus && (
+              <span className={clsx(styles.statusBadge, DEAL_STATUS_CLS[ntf.meta.dealStatus])}>
+                {DEAL_STATUS_LABEL[ntf.meta.dealStatus] ?? ntf.meta.dealStatus}
+              </span>
+            )}
+            {ntf.actionLabel && (
+              <button
+                type="button"
+                className={styles.cardAction}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {ntf.actionLabel}
+                <ChevronRight size={12} />
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>

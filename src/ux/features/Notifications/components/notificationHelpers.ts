@@ -4,13 +4,15 @@ import {
   Calendar,
   CreditCard,
   Gift,
+  Inbox,
   Lock,
+  MessageCircle,
   MessageSquare,
   Shield,
   Star,
   Wallet,
 } from 'lucide-react';
-import type { NotificationItem, NotificationType } from '../types';
+import type { NotificationItem, NotificationTab, NotificationType } from '../types';
 import styles from '../NotificationsPage.module.scss';
 
 export function groupByDate(items: NotificationItem[]): { label: string; items: NotificationItem[] }[] {
@@ -90,4 +92,59 @@ export const DEAL_STATUS_LABEL: Record<string, string> = {
   ACTIVE: 'Активна',
   COMPLETED: 'Завершена',
   REJECTED: 'Отклонена',
+};
+
+/* ─── Tab configuration for flat pill tabs ─── */
+
+export const TAB_CONFIG: { key: NotificationTab; label: string; Icon: typeof Bell }[] = [
+  { key: 'all', label: 'Все', Icon: Inbox },
+  { key: 'deals', label: 'Сделки', Icon: Calendar },
+  { key: 'payments', label: 'Платежи', Icon: Wallet },
+  { key: 'messages', label: 'Сообщения', Icon: MessageCircle },
+  { key: 'reviews', label: 'Отзывы', Icon: Star },
+  { key: 'system', label: 'Система', Icon: Shield },
+];
+
+/* ─── Avatar color from counterparty name ─── */
+
+const AVATAR_COLORS = [
+  '#22c55e', '#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899',
+  '#06b6d4', '#f97316', '#14b8a6', '#6366f1', '#e11d48',
+];
+
+export function getAvatarColor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+/* ─── Tab-specific empty states ─── */
+
+export const TAB_EMPTY_STATE: Record<NotificationTab, { title: string; text: string }> = {
+  all: {
+    title: 'Нет уведомлений',
+    text: 'У вас пока нет уведомлений. Они появятся, когда начнётся активность.',
+  },
+  deals: {
+    title: 'Нет уведомлений о сделках',
+    text: 'Здесь будут уведомления о заявках на аренду, подтверждениях и завершениях сделок.',
+  },
+  payments: {
+    title: 'Нет уведомлений о платежах',
+    text: 'Здесь будут уведомления об оплатах, залогах и возвратах.',
+  },
+  messages: {
+    title: 'Нет новых сообщений',
+    text: 'Здесь появятся уведомления о входящих сообщениях и упоминаниях.',
+  },
+  reviews: {
+    title: 'Нет уведомлений об отзывах',
+    text: 'Здесь будут уведомления о новых отзывах и напоминания оставить свой.',
+  },
+  system: {
+    title: 'Нет системных уведомлений',
+    text: 'Здесь будут важные уведомления о безопасности, верификации и обновлениях.',
+  },
 };

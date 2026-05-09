@@ -5,7 +5,7 @@
 .card {
   display: flex;
   align-items: flex-start;
-  gap: $space-4;
+  gap: $space-3;
   padding: $space-4 $space-5;
   background: #fff;
   border: 1px solid rgba(226, 232, 240, 0.5);
@@ -17,37 +17,94 @@
 
   &:hover {
     border-color: rgba(34, 197, 94, 0.15);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
     transform: translateY(-1px);
   }
 }
 
 .cardUnread {
-  background: rgba(34, 197, 94, 0.015);
+  background: rgba(34, 197, 94, 0.02);
   border-color: rgba(34, 197, 94, 0.12);
 }
 
 .cardUrgent {
   border-left: 3px solid $color-error;
+  background: rgba(239, 68, 68, 0.015);
 }
 
 .cardHigh {
   border-left: 3px solid $color-warning;
+  background: rgba(245, 158, 11, 0.015);
 }
 
-/* ─── Icon circle ─── */
+/* ─── Avatar / Icon area ─── */
+
+.avatarWrap {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  position: relative;
+}
+
+.avatarInitials {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.avatarImage {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-full;
+  object-fit: cover;
+}
 
 .iconCircle {
-  flex-shrink: 0;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: $radius-full;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  svg { width: 18px; height: 18px; }
+  svg { width: 20px; height: 20px; }
 }
+
+.typeBadge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: $radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+
+  svg { width: 10px; height: 10px; }
+}
+
+.unreadDot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: $color-primary;
+  border: 2px solid #fff;
+  transform: translate(-2px, -2px);
+}
+
+/* ─── Icon color variants ─── */
 
 .iconDeal {
   background: rgba(34, 197, 94, 0.07);
@@ -94,6 +151,7 @@
 .cardTitleRow {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: $space-2;
   margin-bottom: 2px;
 }
@@ -110,11 +168,11 @@
   font-weight: $font-weight-bold;
 }
 
-.unreadDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: $color-primary;
+.cardTime {
+  font-size: 11px;
+  color: $color-text-secondary;
+  opacity: 0.65;
+  white-space: nowrap;
   flex-shrink: 0;
 }
 
@@ -132,57 +190,66 @@
 .cardMeta {
   display: flex;
   align-items: center;
-  gap: $space-3;
+  gap: $space-2;
   flex-wrap: wrap;
-}
-
-.cardTime {
-  font-size: 10px;
-  color: $color-text-secondary;
-  opacity: 0.7;
 }
 
 .cardItemTag {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  font-size: 10px;
+  font-size: 11px;
   color: $color-text-secondary;
-  background: rgba(100, 116, 139, 0.05);
-  padding: 1px 6px;
+  background: rgba(100, 116, 139, 0.06);
+  padding: 2px 8px;
   border-radius: $radius-full;
 
   svg { width: 10px; height: 10px; }
 }
 
 .cardAmount {
-  font-size: 10px;
-  font-weight: $font-weight-600;
+  font-size: 11px;
+  font-weight: $font-weight-bold;
   color: $color-text;
+  padding: 2px 8px;
+  border-radius: $radius-full;
+  background: rgba(100, 116, 139, 0.05);
 }
 
 .cardAmountPositive {
   color: $color-primary;
+  background: rgba(34, 197, 94, 0.06);
 }
 
 .cardAmountNegative {
   color: $color-error;
+  background: rgba(239, 68, 68, 0.05);
 }
 
 .cardRating {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: $font-weight-600;
   color: #f59e0b;
 
   svg { width: 11px; height: 11px; fill: #f59e0b; }
 }
 
-/* ─── Action button inside card ─── */
+/* ─── Card footer: status + action ─── */
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-top: $space-2;
+}
 
 .cardAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   padding: 4px $space-3;
   border-radius: $radius-full;
   font-size: 11px;
@@ -195,18 +262,10 @@
   transition: $transition-smooth;
   white-space: nowrap;
 
+  svg { flex-shrink: 0; }
+
   &:hover {
     background: rgba(34, 197, 94, 0.1);
     border-color: $color-primary;
   }
-}
-
-/* ─── Right side of card ─── */
-
-.cardRight {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: $space-2;
-  flex-shrink: 0;
 }

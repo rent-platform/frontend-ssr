@@ -9,11 +9,12 @@ import {
   Settings,
 } from 'lucide-react';
 import clsx from 'clsx';
-import type { NotificationItem, NotificationTab } from './types';
-import { NOTIFICATION_TAB_LABELS } from './types';
+import { AnimatePresence, motion } from 'framer-motion';
+import type { NotificationItem } from './types';
 import { ROUTES } from '@/ux/utils';
 import { NotificationCard } from './components/NotificationCard';
 import { useNotifications } from './hooks/useNotifications';
+import { TAB_CONFIG, TAB_EMPTY_STATE } from './components/notificationHelpers';
 import styles from './NotificationsPage.module.scss';
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -103,7 +104,9 @@ export function NotificationsPage({
               type="button"
               className={clsx(styles.tab, tab !== 'all' && styles.tabActive)}
             >
-              {tab !== 'all' ? NOTIFICATION_TAB_LABELS[tab] : 'Категория'}
+              {tab !== 'all'
+                ? TAB_CONFIG.find((t) => t.key === tab)!.label
+                : 'Категория'}
               {tab !== 'all' && tabCounts[tab] > 0 && (
                 <span className={clsx(styles.tabBadge, styles.tabBadgeActive)}>
                   {tabCounts[tab]}
@@ -112,50 +115,70 @@ export function NotificationsPage({
               <ChevronDown size={14} className={styles.dropdownChevron} />
             </button>
             <div className={styles.dropdown}>
-              {(Object.keys(NOTIFICATION_TAB_LABELS) as NotificationTab[])
-                .filter((t) => t !== 'all')
-                .map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    className={clsx(styles.dropdownItem, tab === t && styles.dropdownItemActive)}
-                    onClick={() => setTab(t)}
-                  >
-                    <span>{NOTIFICATION_TAB_LABELS[t]}</span>
-                    {tabCounts[t] > 0 && (
-                      <span className={styles.dropdownItemBadge}>{tabCounts[t]}</span>
-                    )}
-                  </button>
-                ))}
+              {TAB_CONFIG.filter((t) => t.key !== 'all').map(({ key, label, Icon }) => (
+                <button
+                  key={key}
+                  type="button"
+                  className={clsx(styles.dropdownItem, tab === key && styles.dropdownItemActive)}
+                  onClick={() => setTab(key)}
+                >
+                  <span className={styles.dropdownItemLeft}>
+                    <Icon size={15} />
+                    {label}
+                  </span>
+                  {tabCounts[key] > 0 && (
+                    <span className={styles.dropdownItemBadge}>{tabCounts[key]}</span>
+                  )}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
         {/* ─── Notification List ─── */}
-        {groups.length > 0 ? (
-          groups.map((group) => (
-            <div key={group.label} className={styles.dateGroup}>
-              <h3 className={styles.dateLabel}>{group.label}</h3>
-              {group.items.map((ntf) => (
-                <NotificationCard
-                  key={ntf.id}
-                  notification={ntf}
-                  onRead={handleMarkRead}
-                />
+        <AnimatePresence mode="wait">
+          {groups.length > 0 ? (
+            <motion.div
+              key={tab}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+            >
+              {groups.map((group) => (
+                <div key={group.label} className={styles.dateGroup}>
+                  <h3 className={styles.dateLabel}>{group.label}</h3>
+                  {group.items.map((ntf, i) => (
+                    <motion.div
+                      key={ntf.id}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2, delay: i * 0.03 }}
+                    >
+                      <NotificationCard
+                        notification={ntf}
+                        onRead={handleMarkRead}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
               ))}
-            </div>
-          ))
-        ) : (
-          <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}><BellOff /></div>
-            <h3 className={styles.emptyTitle}>Нет уведомлений</h3>
-            <p className={styles.emptyText}>
-              {tab === 'all'
-                ? 'У вас пока нет уведомлений. Они появятся, когда начнётся активность.'
-                : 'В этой категории нет уведомлений.'}
-            </p>
-          </div>
-        )}
+            </motion.div>
+          ) : (
+            <motion.div
+              key={`empty-${tab}`}
+              className={styles.emptyState}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className={styles.emptyIcon}><BellOff /></div>
+              <h3 className={styles.emptyTitle}>{TAB_EMPTY_STATE[tab].title}</h3>
+              <p className={styles.emptyText}>{TAB_EMPTY_STATE[tab].text}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
