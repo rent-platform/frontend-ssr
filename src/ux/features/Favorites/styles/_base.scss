@@ -11,12 +11,26 @@
   background: $gradient-surface;
   padding: $space-8 0 $space-16;
   font-family: $font-family-base;
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
 }
 
 .detailPage {
   min-height: 100vh;
   background: $gradient-surface;
   font-family: $font-family-base;
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
 }
 
 .detailMain {

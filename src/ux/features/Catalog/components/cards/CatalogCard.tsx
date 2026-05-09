@@ -175,7 +175,7 @@ export function CatalogCard({
               item.isAvailable ? styles.cardStatusAvailable : styles.cardStatusSoon,
             )}
           >
-            {item.isAvailable ? 'Доступно' : 'Скоро'}
+            {item.isAvailable ? 'Доступно' : 'Занята'}
           </span>
         </div>
 
