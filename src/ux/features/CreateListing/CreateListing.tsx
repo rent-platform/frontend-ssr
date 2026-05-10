@@ -121,7 +121,8 @@ export function CreateListing({
           return (
             form.title.trim() !== '' &&
             form.category !== '' &&
-            form.description.trim() !== ''
+            form.description.trim() !== '' &&
+            (form.specs.length === 0 || form.specs.every((s) => s.value !== ''))
           );
         case 2:
           return (
