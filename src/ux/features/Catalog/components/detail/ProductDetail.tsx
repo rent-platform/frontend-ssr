@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import {
@@ -66,6 +66,14 @@ export function ProductDetail({
   const [reportOpen, setReportOpen] = useState(false);
   const [reportSent, setReportSent] = useState(false);
   const [reportDone, setReportDone] = useState(false);
+  const [descExpanded, setDescExpanded] = useState(false);
+  const [descOverflows, setDescOverflows] = useState(true);
+  const descRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = descRef.current;
+    if (el) setDescOverflows(el.scrollHeight > 160);
+  }, [item.description]);
 
   const handleReport = useCallback((reasonId: string) => {
     setReportSent(true);
@@ -128,14 +136,8 @@ export function ProductDetail({
           viewport={{ once: true }}
         >
           <div className={styles.detailMetaTop}>
-            <div className={styles.detailRating}>
-              <Star size={16} />
-              {(item.ownerRating ?? 0).toFixed(1)}
-            </div>
-            <span className={styles.detailMetaDot} />
             <div className={styles.detailLocation}>
-              <MapPin size={15} />
-              {locationLabel}
+              <MapPin size={15} /> {locationLabel}
             </div>
           </div>
 
@@ -205,11 +207,26 @@ export function ProductDetail({
           <div className={styles.detailSectionHeader}>
             <h2>Описание</h2>
           </div>
-          <div className={styles.detailParagraphs}>
+          <div
+            ref={descRef}
+            className={clsx(
+              styles.detailParagraphs,
+              descOverflows && (descExpanded ? styles.detailParagraphsExpanded : styles.detailParagraphsClamped),
+            )}
+          >
             {(item.description ?? []).map((p: string, i: number) => (
               <p key={i}>{p}</p>
             ))}
           </div>
+          {descOverflows && (
+            <button
+              type="button"
+              className={styles.descToggleBtn}
+              onClick={() => setDescExpanded((v) => !v)}
+            >
+              {descExpanded ? 'Свернуть' : 'Читать полностью'}
+            </button>
+          )}
         </motion.section>
 
         {/* ─── Guarantee Banner ─── */}

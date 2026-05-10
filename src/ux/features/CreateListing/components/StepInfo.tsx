@@ -1,7 +1,10 @@
 'use client';
 
+import { useCallback } from 'react';
 import clsx from 'clsx';
-import type { ListingCondition, CreateListingFormData } from '../types';
+import type { ListingCondition, CreateListingFormData, SpecEntry } from '../types';
+import { CATEGORY_SPECS } from '../categorySpecs';
+import { SpecSelect } from './SpecSelect';
 import styles from '../CreateListing.module.scss';
 
 const CONDITIONS: { value: ListingCondition; label: string; desc: string }[] = [
@@ -22,11 +25,31 @@ const CATEGORIES = [
 ];
 
 type StepInfoProps = {
-  form: Pick<CreateListingFormData, 'title' | 'category' | 'condition' | 'description'>;
+  form: Pick<CreateListingFormData, 'title' | 'category' | 'condition' | 'description' | 'specs'>;
   onPatch: (updates: Partial<CreateListingFormData>) => void;
 };
 
 export function StepInfo({ form, onPatch }: StepInfoProps) {
+  const handleCategoryChange = useCallback(
+    (category: string) => {
+      const templates = CATEGORY_SPECS[category] ?? [];
+      const specs: SpecEntry[] = templates.map((t) => ({ label: t.label, value: '' }));
+      onPatch({ category, specs });
+    },
+    [onPatch],
+  );
+
+  const handleSpecChange = useCallback(
+    (index: number, value: string) => {
+      const next = [...form.specs];
+      next[index] = { ...next[index], value };
+      onPatch({ specs: next });
+    },
+    [form.specs, onPatch],
+  );
+
+  const specTemplates = CATEGORY_SPECS[form.category] ?? [];
+
   return (
     <>
       <h2 className={styles.sectionTitle}>Описание вещи</h2>
@@ -47,19 +70,34 @@ export function StepInfo({ form, onPatch }: StepInfoProps) {
 
         <div className={styles.field}>
           <label className={styles.fieldLabel}>Категория</label>
-          <select
-            className={styles.select}
+          <SpecSelect
             value={form.category}
-            onChange={(e) => onPatch({ category: e.target.value })}
-          >
-            <option value="">Выберите категорию</option>
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+            options={CATEGORIES}
+            placeholder="Выберите категорию"
+            onChange={handleCategoryChange}
+          />
         </div>
+
+        {form.specs.length > 0 && (
+          <div className={styles.field}>
+            <label className={styles.fieldLabel}>Характеристики</label>
+            <p className={styles.fieldHint}>
+              Заполните подходящие — пустые поля будут пропущены
+            </p>
+            <div className={styles.specsGrid}>
+              {form.specs.map((spec, i) => (
+                <div key={spec.label} className={styles.specRow}>
+                  <span className={styles.specLabel}>{spec.label}</span>
+                  <SpecSelect
+                    value={spec.value}
+                    options={specTemplates[i]?.options ?? []}
+                    onChange={(v) => handleSpecChange(i, v)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className={styles.field}>
           <label className={styles.fieldLabel}>Состояние</label>

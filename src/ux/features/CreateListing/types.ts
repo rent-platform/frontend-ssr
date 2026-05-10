@@ -9,6 +9,13 @@ export type ImagePreview = {
   url: string;
 };
 
+/* ─── Spec entry (label + value pair) ─── */
+
+export type SpecEntry = {
+  label: string;
+  value: string;
+};
+
 /* ─── Create listing form data ─── */
 
 export type CreateListingFormData = {
@@ -17,6 +24,7 @@ export type CreateListingFormData = {
   condition: ListingCondition;
   description: string;
   images: ImagePreview[];
+  specs: SpecEntry[];
   pricePerDay: string;
   pricePerHour: string;
   depositAmount: string;

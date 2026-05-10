@@ -469,6 +469,46 @@
   }
 }
 
+.detailParagraphsClamped {
+  max-height: 160px;
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, #fff);
+    pointer-events: none;
+  }
+}
+
+.detailParagraphsExpanded {
+  max-height: 500px;
+  overflow-y: auto;
+  @include scrollbar;
+}
+
+.descToggleBtn {
+  display: inline-block;
+  margin-top: $space-3;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-primary;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    color: $color-primary-hover;
+  }
+}
+
 
 /* ─── Report Link & Menu ─── */
 .detailReportRow {

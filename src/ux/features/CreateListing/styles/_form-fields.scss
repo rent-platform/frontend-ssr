@@ -112,6 +112,187 @@
   }
 }
 
+/* ═══ Specs Grid ═══ */
+.specsGrid {
+  display: grid;
+  gap: $space-3;
+  margin-top: $space-1;
+}
+
+.specRow {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: $space-3;
+
+  @include respond-below(sm) {
+    grid-template-columns: 1fr;
+    gap: $space-1;
+  }
+}
+
+.specLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text-secondary;
+  white-space: nowrap;
+}
+
+/* ═══ Spec Custom Select ═══ */
+.specSelect {
+  position: relative;
+}
+
+.specTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+  width: 100%;
+  height: 44px;
+  padding: 0 $space-3 0 $space-4;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  font-family: inherit;
+  font-size: $font-size-sm;
+  color: $color-text;
+  cursor: pointer;
+  transition: $transition-smooth;
+  text-align: left;
+
+  &:hover { border-color: color.adjust($color-border, $lightness: -10%); }
+}
+
+.specTriggerOpen {
+  border-color: $color-primary;
+  box-shadow: $shadow-green-glow;
+}
+
+.specTriggerFilled {
+  border-color: $color-border-green;
+  background: $color-green-50;
+}
+
+.specTriggerValue {
+  flex: 1;
+  font-weight: $font-weight-medium;
+  color: $color-text;
+}
+
+.specTriggerPlaceholder {
+  flex: 1;
+  color: $color-text-secondary;
+}
+
+.specChevron {
+  color: $color-text-secondary;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.specChevronOpen {
+  transform: rotate(180deg);
+}
+
+.specDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: $z-dropdown;
+  background: $color-surface;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-xl;
+  overflow: hidden;
+  animation: fadeSlideIn 0.18s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.specOptionsList {
+  max-height: 220px;
+  overflow-y: auto;
+  padding: $space-1 0;
+  @include scrollbar(4px);
+}
+
+.specOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: $space-2 $space-4;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: $font-size-sm;
+  color: $color-text;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover { background: $color-surface-muted; }
+
+  svg { color: $color-primary; flex-shrink: 0; }
+}
+
+.specOptionActive {
+  background: $color-green-50;
+  color: color.adjust($color-primary, $lightness: -8%);
+  font-weight: $font-weight-600;
+
+  &:hover { background: $color-green-50; }
+}
+
+/* ═══ City Search (inside spec dropdown) ═══ */
+.citySearchRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: 0 $space-4;
+  height: 42px;
+  border-bottom: 1px solid $color-border;
+  background: $color-surface-muted;
+
+  svg { color: $color-text-secondary; flex-shrink: 0; }
+}
+
+.citySearchField {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: $font-size-sm;
+  color: $color-text;
+  outline: none;
+
+  &::placeholder { color: $color-text-secondary; }
+}
+
+.cityNoResults {
+  padding: $space-4;
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.cityOptionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cityName {
+  font-size: $font-size-sm;
+  line-height: $line-height-tight;
+}
+
+.cityRegion {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: $line-height-tight;
+}
+
 .inputWithPrefix {
   position: relative;
 }

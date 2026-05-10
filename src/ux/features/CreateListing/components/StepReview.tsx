@@ -15,6 +15,8 @@ type StepReviewProps = {
 };
 
 export function StepReview({ form }: StepReviewProps) {
+  const filledSpecs = (form.specs ?? []).filter((s) => s.value.trim() !== '');
+
   return (
     <>
       <h2 className={styles.sectionTitle}>Проверьте перед публикацией</h2>
@@ -41,6 +43,15 @@ export function StepReview({ form }: StepReviewProps) {
         <ReviewRow label="Категория" value={form.category} />
         <ReviewRow label="Состояние" value={CONDITION_LABELS[form.condition]} />
       </div>
+
+      {filledSpecs.length > 0 && (
+        <div className={styles.reviewBlock}>
+          <h3 className={styles.reviewBlockTitle}>Характеристики</h3>
+          {filledSpecs.map((spec) => (
+            <ReviewRow key={spec.label} label={spec.label} value={spec.value} />
+          ))}
+        </div>
+      )}
 
       <div className={styles.reviewBlock}>
         <h3 className={styles.reviewBlockTitle}>Стоимость</h3>

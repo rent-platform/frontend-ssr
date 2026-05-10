@@ -33,6 +33,7 @@ const INITIAL: CreateListingFormData = {
   condition: 'good',
   description: '',
   images: [],
+  specs: [],
   pricePerDay: '',
   pricePerHour: '',
   depositAmount: '',
