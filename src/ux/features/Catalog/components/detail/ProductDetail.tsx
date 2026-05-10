@@ -228,23 +228,6 @@ export function ProductDetail({
           </section>
         )}
 
-        {/* ─── Similar Items ─── */}
-        {similarItems.length > 0 && (
-          <section className={styles.similarSection}>
-            <div className={styles.sectionHeader}>
-              <h2>Похожие предложения</h2>
-              <button type="button" className={styles.viewAllLink}>
-                Смотреть все <ChevronRight size={16} />
-              </button>
-            </div>
-            <div className={styles.similarGrid}>
-              {similarItems.slice(0, 3).map((sim, i) => (
-                <CatalogCard key={sim.id} item={sim} index={i} onOpen={onOpenSimilar} />
-              ))}
-            </div>
-          </section>
-        )}
-
         {/* ─── Report Link ─── */}
         <div className={styles.detailReportRow}>
           {reportDone ? (
@@ -267,6 +250,23 @@ export function ProductDetail({
             </button>
           )}
         </div>
+
+        {/* ─── Similar Items ─── */}
+        {similarItems.length > 0 && (
+          <section className={styles.similarSection}>
+            <div className={styles.sectionHeader}>
+              <h2>Похожие предложения</h2>
+              <button type="button" className={styles.viewAllLink}>
+                Смотреть все <ChevronRight size={16} />
+              </button>
+            </div>
+            <div className={styles.similarGrid}>
+              {similarItems.slice(0, 3).map((sim, i) => (
+                <CatalogCard key={sim.id} item={sim} index={i} onOpen={onOpenSimilar} />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ─── Report Modal ─── */}
         <AnimatePresence>
