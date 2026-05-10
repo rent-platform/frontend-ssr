@@ -1,18 +1,20 @@
 'use client';
 
-import { Fragment, useCallback, useRef, useState } from 'react';
+import { Fragment, useCallback, useMemo, useRef, useState } from 'react';
 import {
   Camera,
   Check,
   ChevronLeft,
   ChevronRight,
+  AlertTriangle,
   Eye,
   FileText,
   Plus,
   Sparkles,
   Tag,
+  X,
 } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { CreateListingFormData, ImagePreview } from './types';
 import { StepPhotos, StepInfo, StepPricing, StepReview } from './components';
 import clsx from 'clsx';
@@ -61,6 +63,7 @@ export function CreateListing({
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<CreateListingFormData>(INITIAL);
   const [published, setPublished] = useState(false);
+  const [showExitModal, setShowExitModal] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const dragSourceId = useRef<string | null>(null);
@@ -133,6 +136,35 @@ export function CreateListing({
     [form],
   );
 
+  const router = useRouter();
+
+  const isFormDirty = useMemo(() => {
+    return (
+      form.images.length > 0 ||
+      form.title.trim() !== '' ||
+      form.category !== '' ||
+      form.description.trim() !== '' ||
+      form.pricePerDay.trim() !== '' ||
+      form.pricePerHour.trim() !== '' ||
+      form.depositAmount.trim() !== '' ||
+      form.pickupLocation.trim() !== '' ||
+      form.specs.length > 0 ||
+      form.noDeposit !== false
+    );
+  }, [form]);
+
+  const handleExitClick = (e: React.MouseEvent) => {
+    if (isFormDirty) {
+      e.preventDefault();
+      setShowExitModal(true);
+    }
+  };
+
+  const confirmExit = () => {
+    setShowExitModal(false);
+    router.push(ROUTES.catalog);
+  };
+
   const canAdvance = isStepValid(step);
 
   const goNext = () => {
@@ -195,10 +227,10 @@ export function CreateListing({
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>
-          <Link href={ROUTES.catalog} className={styles.backLink}>
-            <ChevronLeft size={18} />
-            Вернуться в каталог
-          </Link>
+          <a href={ROUTES.catalog} className={styles.backLink} onClick={handleExitClick}>
+            <ChevronLeft size={16} />
+            Выйти в каталог
+          </a>
           <h1 className={styles.headerTitle}>Сдать в аренду</h1>
           <p className={styles.headerSubtitle}>
             Заполните информацию о вашей вещи — это займёт пару минут
@@ -290,6 +322,43 @@ export function CreateListing({
           )}
         </div>
       </div>
+      {/* Exit confirmation modal */}
+      {showExitModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowExitModal(false)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className={styles.modalClose}
+              onClick={() => setShowExitModal(false)}
+            >
+              <X size={18} />
+            </button>
+            <div className={styles.modalIcon}>
+              <AlertTriangle size={28} />
+            </div>
+            <h3 className={styles.modalTitle}>Вы уверены?</h3>
+            <p className={styles.modalText}>
+              Введённые вами данные будут утеряны. Это действие нельзя отменить.
+            </p>
+            <div className={styles.modalActions}>
+              <button
+                type="button"
+                className={styles.modalCancel}
+                onClick={() => setShowExitModal(false)}
+              >
+                Остаться
+              </button>
+              <button
+                type="button"
+                className={styles.modalConfirm}
+                onClick={confirmExit}
+              >
+                Выйти
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

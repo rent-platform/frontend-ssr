@@ -175,3 +175,123 @@
   line-height: $line-height-normal;
   margin: 0;
 }
+
+/* ═══ Exit Confirmation Modal ═══ */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: $z-modal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  animation: modalFadeIn 0.2s ease;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal {
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+  background: $color-surface;
+  border-radius: $radius-2xl;
+  padding: $space-8 $space-6 $space-6;
+  box-shadow: $shadow-xl;
+  text-align: center;
+  animation: modalSlideUp 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modalClose {
+  position: absolute;
+  top: $space-4;
+  right: $space-4;
+  @include flex-center;
+  @include square(32px);
+  border: 0;
+  border-radius: 50%;
+  background: $color-surface-muted;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: $color-border;
+    color: $color-text;
+  }
+}
+
+.modalIcon {
+  @include flex-center;
+  @include square(56px);
+  margin: 0 auto $space-4;
+  border-radius: 50%;
+  background: #fef3c7;
+  color: #d97706;
+  border: 1.5px solid #fde68a;
+}
+
+.modalTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  margin: 0 0 $space-2;
+}
+
+.modalText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  margin: 0 0 $space-6;
+}
+
+.modalActions {
+  display: flex;
+  gap: $space-3;
+}
+
+.modalCancel {
+  flex: 1;
+  padding: $space-3 $space-4;
+  border-radius: $radius-full;
+  border: 1.5px solid $color-border;
+  background: $color-surface;
+  color: $color-text;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: color.adjust($color-border, $lightness: -10%);
+    background: $color-surface-muted;
+  }
+}
+
+.modalConfirm {
+  flex: 1;
+  padding: $space-3 $space-4;
+  border-radius: $radius-full;
+  border: 0;
+  background: $color-secondary;
+  color: #fff;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: color.adjust($color-secondary, $lightness: -6%);
+    transform: translateY(-1px);
+  }
+}
