@@ -1,5 +1,13 @@
 'use client';
 
+import {
+  Camera,
+  FileText,
+  Settings2,
+  Tag,
+  MapPin,
+  AlignLeft,
+} from 'lucide-react';
 import type { CreateListingFormData, ListingCondition } from '../types';
 import styles from '../CreateListing.module.scss';
 
@@ -26,7 +34,11 @@ export function StepReview({ form }: StepReviewProps) {
 
       {form.images.length > 0 && (
         <div className={styles.reviewBlock}>
-          <h3 className={styles.reviewBlockTitle}>Фотографии</h3>
+          <div className={styles.reviewBlockHeader}>
+            <div className={styles.reviewBlockIcon}><Camera size={16} /></div>
+            <h3 className={styles.reviewBlockTitle}>Фотографии</h3>
+            <span className={styles.reviewBlockBadge}>{form.images.length} шт.</span>
+          </div>
           <div className={styles.reviewImages}>
             {form.images.map((img, i) => (
               <div key={img.id} className={styles.reviewImageThumb}>
@@ -38,15 +50,32 @@ export function StepReview({ form }: StepReviewProps) {
       )}
 
       <div className={styles.reviewBlock}>
-        <h3 className={styles.reviewBlockTitle}>Описание</h3>
+        <div className={styles.reviewBlockHeader}>
+          <div className={styles.reviewBlockIcon}><FileText size={16} /></div>
+          <h3 className={styles.reviewBlockTitle}>Описание</h3>
+        </div>
         <ReviewRow label="Название" value={form.title} />
         <ReviewRow label="Категория" value={form.category} />
         <ReviewRow label="Состояние" value={CONDITION_LABELS[form.condition]} />
       </div>
 
+      {form.description.trim() && (
+        <div className={styles.reviewBlock}>
+          <div className={styles.reviewBlockHeader}>
+            <div className={styles.reviewBlockIcon}><AlignLeft size={16} /></div>
+            <h3 className={styles.reviewBlockTitle}>Текст объявления</h3>
+          </div>
+          <p className={styles.reviewDescription}>{form.description}</p>
+        </div>
+      )}
+
       {filledSpecs.length > 0 && (
         <div className={styles.reviewBlock}>
-          <h3 className={styles.reviewBlockTitle}>Характеристики</h3>
+          <div className={styles.reviewBlockHeader}>
+            <div className={styles.reviewBlockIcon}><Settings2 size={16} /></div>
+            <h3 className={styles.reviewBlockTitle}>Характеристики</h3>
+            <span className={styles.reviewBlockBadge}>{filledSpecs.length}</span>
+          </div>
           {filledSpecs.map((spec) => (
             <ReviewRow key={spec.label} label={spec.label} value={spec.value} />
           ))}
@@ -54,10 +83,16 @@ export function StepReview({ form }: StepReviewProps) {
       )}
 
       <div className={styles.reviewBlock}>
-        <h3 className={styles.reviewBlockTitle}>Стоимость</h3>
+        <div className={styles.reviewBlockHeader}>
+          <div className={styles.reviewBlockIcon}>
+            <Tag size={16} />
+          </div>
+          <h3 className={styles.reviewBlockTitle}>Стоимость</h3>
+        </div>
         <ReviewRow
           label="Цена за сутки"
           value={form.pricePerDay ? `${form.pricePerDay} ₽` : undefined}
+          highlight
         />
         {form.pricePerHour && (
           <ReviewRow label="Цена за час" value={`${form.pricePerHour} ₽`} />
@@ -76,7 +111,10 @@ export function StepReview({ form }: StepReviewProps) {
 
       {form.pickupLocation && (
         <div className={styles.reviewBlock}>
-          <h3 className={styles.reviewBlockTitle}>Место выдачи</h3>
+          <div className={styles.reviewBlockHeader}>
+            <div className={styles.reviewBlockIcon}><MapPin size={16} /></div>
+            <h3 className={styles.reviewBlockTitle}>Место выдачи</h3>
+          </div>
           <ReviewRow label="Адрес" value={form.pickupLocation} />
         </div>
       )}
@@ -84,11 +122,21 @@ export function StepReview({ form }: StepReviewProps) {
   );
 }
 
-function ReviewRow({ label, value }: { label: string; value?: string }) {
+function ReviewRow({
+  label,
+  value,
+  highlight,
+}: {
+  label: string;
+  value?: string;
+  highlight?: boolean;
+}) {
   return (
     <div className={styles.reviewRow}>
       <span className={styles.reviewLabel}>{label}</span>
-      <span className={styles.reviewValue}>{value || '—'}</span>
+      <span className={highlight ? styles.reviewValueHighlight : styles.reviewValue}>
+        {value || '—'}
+      </span>
     </div>
   );
 }

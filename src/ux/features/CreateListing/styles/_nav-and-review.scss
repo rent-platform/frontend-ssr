@@ -77,19 +77,56 @@
 .reviewBlock {
   padding: $space-5;
   border: 1px solid $color-border;
-  border-radius: $radius-lg;
-  background: $color-surface-muted;
+  border-radius: $radius-xl;
+  background: $color-surface;
+  transition: $transition-smooth;
 
-  & + & { margin-top: $space-4; }
+  & + & { margin-top: $space-3; }
+
+  &:hover {
+    border-color: color.adjust($color-border, $lightness: -8%);
+    box-shadow: $shadow-sm;
+  }
+}
+
+.reviewBlockHeader {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: $space-3;
+  padding-bottom: $space-3;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.reviewBlockIcon {
+  @include flex-center;
+  @include square(28px);
+  border-radius: $radius-md;
+  background: $color-green-50;
+  color: $color-primary;
+  flex-shrink: 0;
+
+  svg { width: 16px; height: 16px; }
 }
 
 .reviewBlockTitle {
-  font-size: $font-size-xs;
+  font-size: $font-size-sm;
   font-weight: $font-weight-bold;
-  color: $color-text-secondary;
+  color: $color-text;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0 0 $space-3;
+  letter-spacing: 0.04em;
+  margin: 0;
+  flex: 1;
+}
+
+.reviewBlockBadge {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: $color-primary;
+  background: $color-green-50;
+  padding: 2px 10px;
+  border-radius: $radius-full;
+  border: 1px solid $color-border-green;
 }
 
 .reviewRow {
@@ -114,6 +151,27 @@
   @include text-truncate;
 }
 
+.reviewValueHighlight {
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  text-align: right;
+  max-width: 60%;
+  font-size: $font-size-base;
+}
+
+.reviewDescription {
+  font-size: $font-size-sm;
+  color: $color-text;
+  line-height: $line-height-loose;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: $color-surface-muted;
+  padding: $space-3 $space-4;
+  border-radius: $radius-lg;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
 .reviewImages {
   display: flex;
   gap: $space-2;
@@ -123,10 +181,16 @@
 
 .reviewImageThumb {
   flex-shrink: 0;
-  @include square(64px);
-  border-radius: $radius-md;
+  @include square(72px);
+  border-radius: $radius-lg;
   overflow: hidden;
-  border: 1px solid $color-border;
+  border: 1.5px solid $color-border;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: $color-primary;
+    transform: scale(1.05);
+  }
 
   img {
     width: 100%;
@@ -174,6 +238,14 @@
   max-width: 380px;
   line-height: $line-height-normal;
   margin: 0;
+}
+
+.successActions {
+  display: flex;
+  gap: $space-3;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* ═══ Exit Confirmation Modal ═══ */

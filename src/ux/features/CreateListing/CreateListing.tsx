@@ -203,18 +203,24 @@ export function CreateListing({
                 Ваше объявление опубликовано и уже доступно в каталоге.
                 Арендаторы смогут найти его по поиску.
               </p>
-              <button
-                type="button"
-                className={styles.navNext}
-                onClick={() => {
-                  setPublished(false);
-                  setStep(0);
-                  setForm(INITIAL);
-                }}
-              >
-                <Plus size={16} />
-                Создать ещё
-              </button>
+              <div className={styles.successActions}>
+                <a href={ROUTES.catalog} className={styles.navBack}>
+                  <ChevronLeft size={16} />
+                  Выйти в каталог
+                </a>
+                <button
+                  type="button"
+                  className={styles.navNext}
+                  onClick={() => {
+                    setPublished(false);
+                    setStep(0);
+                    setForm(INITIAL);
+                  }}
+                >
+                  <Plus size={16} />
+                  Создать ещё
+                </button>
+              </div>
             </div>
           </div>
         </div>
