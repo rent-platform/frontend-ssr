@@ -506,14 +506,21 @@
   align-items: center;
   gap: $space-2;
   padding: 8px 18px;
+  border: 1px solid $color-border-green;
   border-radius: $radius-full;
   background: $color-green-50;
-  border: 1px solid $color-border-green;
   font-size: 13px;
   font-weight: 600;
   color: $color-primary;
+  cursor: pointer;
+  transition: $transition-smooth;
 
   svg { flex-shrink: 0; }
+
+  &:hover {
+    background: $color-green-100;
+    box-shadow: $shadow-green-sm;
+  }
 }
 
 .reportOverlay {
@@ -627,6 +634,56 @@
   color: $color-text-secondary;
   flex-shrink: 0;
   transition: $transition-smooth;
+}
+
+.reportModalSuccess {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: $space-12 $space-6;
+  gap: $space-3;
+
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: $color-text;
+    margin: 0;
+  }
+
+  p {
+    font-size: 14px;
+    color: $color-text-secondary;
+    margin: 0;
+  }
+}
+
+.reportSuccessIcon {
+  @include flex-center;
+  @include square(64px);
+  border-radius: $radius-full;
+  background: $color-green-50;
+  color: $color-primary;
+  margin-bottom: $space-2;
+}
+
+.reportModalOkBtn {
+  margin-top: $space-4;
+  padding: $space-3 $space-8;
+  border: 0;
+  border-radius: $radius-full;
+  background: $color-primary;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: $color-primary-hover;
+    box-shadow: $shadow-green-sm;
+  }
 }
 
 /* ─── Guarantee Banner ─── */
