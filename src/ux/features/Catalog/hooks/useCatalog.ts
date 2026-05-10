@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { mockCatalogItems } from '../mockCatalogItems';
 import type { CatalogUiItem } from '../types';
 import { INITIAL_FILTERS, applyCatalogFilters, filtersToSearchParams } from '../utils';
@@ -23,6 +23,7 @@ export function useCatalog({
   hasMore: externalHasMore,
 }: UseCatalogOptions = {}) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
@@ -100,8 +101,22 @@ export function useCatalog({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  useEffect(() => {
+    const itemId = searchParams.get('item');
+    if (!itemId || selectedItem) return;
+    const source = useMockMode ? mockCatalogItems : (externalItems ?? []);
+    const found = source.find((i) => i.id === itemId);
+    if (found) {
+      setSelectedItem(found);
+      window.scrollTo({ top: 0 });
+    }
+  }, [searchParams]);
+
   const handleBackToCatalog = () => {
     setSelectedItem(null);
+    if (searchParams.get('item')) {
+      router.replace(ROUTES.catalog, { scroll: false });
+    }
   };
 
   useEffect(() => {

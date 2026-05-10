@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -49,6 +50,9 @@ export function PublicProfile() {
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [helpfulReviews, setHelpfulReviews] = useState<Set<string>>(new Set());
   const [showShareModal, setShowShareModal] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const fromItemId = searchParams.get('from');
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1200);
@@ -95,10 +99,17 @@ export function PublicProfile() {
       {/* ── Breadcrumb bar ── */}
       <div className={styles.topBar}>
         <div className={styles.topBarInner}>
-          <Link href={ROUTES.home} className={styles.backLink}>
-            <ArrowLeft size={16} />
-            Каталог
-          </Link>
+          {fromItemId ? (
+            <Link href={`${ROUTES.catalog}?item=${fromItemId}`} className={styles.backLink}>
+              <ArrowLeft size={16} />
+              Назад к объявлению
+            </Link>
+          ) : (
+            <Link href={ROUTES.home} className={styles.backLink}>
+              <ArrowLeft size={16} />
+              Каталог
+            </Link>
+          )}
           <span className={styles.breadcrumbSep}>/</span>
           <span className={styles.breadcrumbCurrent}>Профиль</span>
           <span className={styles.breadcrumbSep}>/</span>
@@ -301,6 +312,7 @@ export function PublicProfile() {
                           key={item.id}
                           item={publicListingToCatalogItem(item, user)}
                           index={i}
+                          onOpen={(catalogItem) => router.push(`${ROUTES.catalog}?item=${catalogItem.id}`)}
                         />
                       ))}
                     </div>

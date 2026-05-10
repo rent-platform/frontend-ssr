@@ -35,6 +35,7 @@ export function publicListingToCatalogItem(listing: PublicListing, user: PublicU
     viewsCount: 0,
     createdAt: user.memberSince,
     nearestAvailableDate: null,
+    ownerId: user.id,
     ownerName: user.fullName,
     ownerAvatar: user.avatarUrl,
     ownerRating: listing.rating,

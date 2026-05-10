@@ -193,7 +193,7 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
       </motion.div>
 
       {/* ─── Owner Card ─── */}
-      <Link href={ROUTES.publicProfile(item.ownerId)} className={styles.ownerCardCompact}>
+      <Link href={`${ROUTES.publicProfile(item.ownerId)}?from=${item.id}`} className={styles.ownerCardCompact}>
         <div className={styles.ownerAvatarWrap}>
           <div className={styles.ownerAvatarFallback}>
             {item.ownerName.charAt(0)}
