@@ -7,6 +7,8 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
   background: #eef2f7;
 }
 
@@ -15,8 +17,8 @@
 .convHeader {
   display: flex;
   align-items: center;
-  gap: $space-4;
-  padding: $space-4 $space-6;
+  gap: $space-3;
+  padding: $space-2 $space-5;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(226, 232, 240, 0.6);
@@ -29,8 +31,8 @@
 }
 
 .convAvatar {
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: $radius-full;
   background: $gradient-green;
   display: flex;
@@ -44,8 +46,8 @@
 }
 
 .convAvatarImg {
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: $radius-full;
   object-fit: cover;
 }
@@ -96,23 +98,23 @@
   display: flex;
   align-items: center;
   gap: $space-3;
-  padding: $space-3 $space-6;
+  padding: $space-2 $space-5;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(226, 232, 240, 0.5);
 }
 
 .dealBarImg {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   border-radius: $radius-md;
   object-fit: cover;
   flex-shrink: 0;
 }
 
 .dealBarPlaceholder {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   border-radius: $radius-md;
   background: rgba(100, 116, 139, 0.06);
   display: flex;
@@ -166,13 +168,13 @@
   display: flex;
   align-items: center;
   gap: $space-2;
-  padding: $space-3 $space-6;
+  padding: $space-2 $space-5;
   background: rgba(255, 255, 255, 0.6);
   border-bottom: 1px solid rgba(226, 232, 240, 0.3);
 }
 
 .qaBtn {
-  padding: 6px $space-4;
+  padding: 5px $space-3;
   border-radius: $radius-full;
   font-size: $font-size-xs;
   font-weight: $font-weight-600;
@@ -211,7 +213,7 @@
 .messagesArea {
   flex: 1;
   overflow-y: auto;
-  padding: $space-5 $space-6 $space-4;
+  padding: $space-4 $space-5 $space-3;
   display: flex;
   flex-direction: column;
   gap: 2px;
