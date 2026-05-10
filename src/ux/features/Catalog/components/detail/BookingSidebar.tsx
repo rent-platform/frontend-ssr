@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import {
   Calendar,
   CheckCircle2,
+  ChevronRight,
   Clock3,
   CreditCard,
   Info,
@@ -23,6 +24,8 @@ import {
   formatPrice,
 } from '../../utils';
 import { RentalCalendar } from './RentalCalendar';
+import { ROUTES } from '@/ux/utils';
+import Link from 'next/link';
 import styles from '../../Catalog.module.scss';
 
 type BookingSidebarProps = {
@@ -190,7 +193,7 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
       </motion.div>
 
       {/* ─── Owner Card ─── */}
-      <div className={styles.ownerCardCompact}>
+      <Link href={ROUTES.publicProfile(item.ownerId)} className={styles.ownerCardCompact}>
         <div className={styles.ownerAvatarWrap}>
           <div className={styles.ownerAvatarFallback}>
             {item.ownerName.charAt(0)}
@@ -207,7 +210,8 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
             {(item.ownerRating ?? 0).toFixed(1)} · {item.ownerReviewCount ?? 0} {pluralize(item.ownerReviewCount ?? 0, 'отзыв', 'отзыва', 'отзывов')}
           </div>
         </div>
-      </div>
+        <ChevronRight size={18} className={styles.ownerCardArrow} />
+      </Link>
 
       {/* ─── Guarantee Card ─── */}
       <div className={styles.guaranteeCard}>

@@ -3,6 +3,7 @@ import type { CatalogItemCardVM } from '@/business/types';
 export type CatalogUiItem = CatalogItemCardVM & {
   /* ── Derivable via JOINs (category_id → categories, owner_id → users, item_id → photos) ── */
   category: string;
+  ownerId: string;
   ownerName: string;
   ownerAvatar: string | null;
   images: string[];

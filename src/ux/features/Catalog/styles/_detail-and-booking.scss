@@ -1080,11 +1080,27 @@
   box-shadow: $shadow-card;
   cursor: pointer;
   transition: $transition-smooth;
+  text-decoration: none;
+  color: inherit;
 
   &:hover {
     border-color: $color-border-green;
     box-shadow: $shadow-card-hover;
+
+    .ownerCardArrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
+}
+
+.ownerCardArrow {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: $color-text-secondary;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: $transition-smooth;
 }
 
 .ownerAvatarWrap {
