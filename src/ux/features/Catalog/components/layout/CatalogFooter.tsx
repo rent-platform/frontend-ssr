@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { ROUTES } from '@/ux/utils';
 import styles from '../../Catalog.module.scss';
@@ -39,7 +42,21 @@ function getFooterNav(catalogHref: string) {
 }
 
 export function CatalogFooter({ catalogHref = ROUTES.catalog }: CatalogFooterProps = {}) {
+  const pathname = usePathname();
   const FOOTER_NAV = getFooterNav(catalogHref);
+
+  const handleLinkClick = (href: string, e: React.MouseEvent) => {
+    if (href === catalogHref && pathname === catalogHref) {
+      e.preventDefault();
+      const catalog = document.getElementById('catalog-results');
+      if (catalog) {
+        catalog.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={styles.footerInner}>
@@ -82,7 +99,7 @@ export function CatalogFooter({ catalogHref = ROUTES.catalog }: CatalogFooterPro
               <ul>
                 {section.links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href}>{link.label}</Link>
+                    <Link href={link.href} onClick={(e) => handleLinkClick(link.href, e)}>{link.label}</Link>
                   </li>
                 ))}
               </ul>
