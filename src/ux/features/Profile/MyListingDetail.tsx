@@ -196,7 +196,7 @@ export function MyListingDetail() {
             >
               {/* Price hero */}
               <div className={s.dashPriceHero}>
-                <div className={s.dashPriceLeft}>
+                <div className={s.dashPriceRow}>
                   <span className={s.dashPriceAmount}>
                     {listing.pricePerDay ? `${Number(listing.pricePerDay).toLocaleString('ru-RU')} ₽` : '—'}
                   </span>
@@ -205,15 +205,13 @@ export function MyListingDetail() {
                     <span className={s.dashPriceSecondary}>{Number(listing.pricePerHour).toLocaleString('ru-RU')} ₽/час</span>
                   )}
                 </div>
-                <div className={s.dashPriceRight}>
-                  {listing.depositAmount && (
-                    <div className={s.dashDepositChip}>
-                      <Shield size={14} />
-                      <span className={s.dashDepositLabel}>Залог</span>
-                      <span className={s.dashDepositValue}>{Number(listing.depositAmount).toLocaleString('ru-RU')} ₽</span>
-                    </div>
-                  )}
-                </div>
+                {listing.depositAmount && (
+                  <div className={s.dashDepositRow}>
+                    <Shield size={15} />
+                    <span className={s.dashDepositLabel}>Залог</span>
+                    <span className={s.dashDepositValue}>{Number(listing.depositAmount).toLocaleString('ru-RU')} ₽</span>
+                  </div>
+                )}
               </div>
 
               {/* Stats strip */}
