@@ -207,12 +207,10 @@ export function MyListingDetail() {
                 </div>
                 <div className={s.dashPriceRight}>
                   {listing.depositAmount && (
-                    <div className={s.dashMeta}>
-                      <Shield size={15} />
-                      <div>
-                        <span className={s.dashMetaLabel}>Залог</span>
-                        <span className={s.dashMetaValue}>{Number(listing.depositAmount).toLocaleString('ru-RU')} ₽</span>
-                      </div>
+                    <div className={s.dashDepositChip}>
+                      <Shield size={14} />
+                      <span className={s.dashDepositLabel}>Залог</span>
+                      <span className={s.dashDepositValue}>{Number(listing.depositAmount).toLocaleString('ru-RU')} ₽</span>
                     </div>
                   )}
                 </div>

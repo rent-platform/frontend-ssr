@@ -42,7 +42,7 @@
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   overflow: hidden;
-  box-shadow: $shadow-sm;
+  box-shadow: $shadow-md;
 }
 
 /* ── Price hero (top half) ── */
@@ -52,8 +52,10 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: $space-4;
-  padding: $space-6 $space-7;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.04) 0%, rgba(34, 197, 94, 0.01) 100%);
+  padding: $space-7 $space-7 $space-6;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 50%, rgba(34, 197, 94, 0.06) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(34, 197, 94, 0.03) 0%, transparent 100%);
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -66,10 +68,10 @@
 
 .dashPriceAmount {
   font-family: $font-family-display;
-  font-size: 32px;
+  font-size: 34px;
   font-weight: 800;
   color: var(--color-text);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
   line-height: 1;
 }
 
@@ -84,7 +86,7 @@
   font-weight: 500;
   color: var(--color-text-secondary);
   padding-left: $space-2;
-  border-left: 1px solid var(--color-border);
+  border-left: 1.5px solid var(--color-border);
   margin-left: $space-1;
 }
 
@@ -94,46 +96,50 @@
   gap: $space-5;
 }
 
-.dashMeta {
-  display: flex;
+.dashDepositChip {
+  display: inline-flex;
   align-items: center;
   gap: $space-2;
+  padding: $space-2 $space-4;
+  border-radius: $radius-full;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  transition: $transition-smooth;
 
   > svg {
     color: var(--color-primary);
     flex-shrink: 0;
-    opacity: 0.6;
   }
 
-  > div {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
+  &:hover {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.25);
   }
 }
 
-.dashMetaLabel {
+.dashDepositLabel {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   color: var(--color-text-secondary);
   line-height: 1;
 }
 
-.dashMetaValue {
+.dashDepositValue {
   font-family: $font-family-display;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--color-text);
-  line-height: 1.2;
+  line-height: 1;
 }
 
 /* ── Stats strip (bottom half) ── */
 .dashStats {
   display: flex;
-  align-items: center;
-  padding: $space-4 0;
+  align-items: stretch;
+  padding: $space-2;
+  gap: 0;
 }
 
 .dashStat {
@@ -141,15 +147,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $space-1;
-  padding: $space-2 $space-3;
+  gap: 6px;
+  padding: $space-4 $space-3;
+  border-radius: $radius-lg;
+  cursor: default;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: var(--color-bg-secondary, rgba(0, 0, 0, 0.02));
+  }
 }
 
 .dashStatIcon {
   @include flex-center;
-  @include square(32px);
-  border-radius: $radius-md;
+  @include square(36px);
+  border-radius: $radius-lg;
   margin-bottom: 2px;
+  transition: $transition-smooth;
+
+  .dashStat:hover & {
+    transform: scale(1.08);
+  }
 }
 
 .dashStatIconBlue   { background: rgba(59, 130, 246, 0.08); color: #3b82f6; }
@@ -159,24 +177,25 @@
 
 .dashStatValue {
   font-family: $font-family-display;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
   color: var(--color-text);
   line-height: 1;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .dashStatLabel {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--color-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
 }
 
 .dashStatDivider {
   width: 1px;
-  height: 36px;
+  align-self: center;
+  height: 32px;
   background: var(--color-border);
   flex-shrink: 0;
 }
