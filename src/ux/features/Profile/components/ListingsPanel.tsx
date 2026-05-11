@@ -40,6 +40,8 @@ export function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilte
               key={item.id}
               item={profileListingToCatalogItem(item)}
               index={i}
+              hideFavorite
+              hideRating
             />
           ))}
         </div>

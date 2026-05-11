@@ -33,6 +33,8 @@ type CatalogCardProps = {
   initialFavorite?: boolean;
   onFavoriteChange?: (id: string, value: boolean) => void;
   isGuest?: boolean;
+  hideFavorite?: boolean;
+  hideRating?: boolean;
 };
 
 const highlightVisuals = {
@@ -139,6 +141,8 @@ export function CatalogCard({
   initialFavorite = false,
   onFavoriteChange,
   isGuest = false,
+  hideFavorite = false,
+  hideRating = false,
 }: CatalogCardProps) {
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
   const locationLabel = formatCatalogCardLocation(item);
@@ -159,14 +163,16 @@ export function CatalogCard({
     >
       {/* ── Image area ── */}
       <div className={styles.cardImageArea}>
-        <button
-          type="button"
-          className={clsx(styles.cardFavorite, isFavorite && styles.cardFavoriteActive)}
-          aria-label={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
-          onClick={(e) => { e.stopPropagation(); if (isGuest) { onFavoriteChange?.(item.id, true); return; } const next = !isFavorite; setIsFavorite(next); onFavoriteChange?.(item.id, next); }}
-        >
-          <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
-        </button>
+        {!hideFavorite && (
+          <button
+            type="button"
+            className={clsx(styles.cardFavorite, isFavorite && styles.cardFavoriteActive)}
+            aria-label={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
+            onClick={(e) => { e.stopPropagation(); if (isGuest) { onFavoriteChange?.(item.id, true); return; } const next = !isFavorite; setIsFavorite(next); onFavoriteChange?.(item.id, next); }}
+          >
+            <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
+          </button>
+        )}
 
         <div className={styles.cardBadgeRow}>
           {item.featured && <span className={styles.cardFeatured}>Топ</span>}
@@ -199,10 +205,12 @@ export function CatalogCard({
         <div className={styles.cardTop}>
           <div className={styles.cardMetaRow}>
             <span className={styles.cardCategory}>{item.category}</span>
-            <div className={styles.cardRating}>
-              <Star size={12} className={styles.starIcon} />
-              <span>{(item.ownerRating ?? 0).toFixed(1)}</span>
-            </div>
+            {!hideRating && (
+              <div className={styles.cardRating}>
+                <Star size={12} className={styles.starIcon} />
+                <span>{(item.ownerRating ?? 0).toFixed(1)}</span>
+              </div>
+            )}
           </div>
 
           <button type="button" onClick={() => onOpen(item)} className={styles.cardTitle}>

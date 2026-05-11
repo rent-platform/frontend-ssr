@@ -7,7 +7,6 @@ import {
   ArrowLeft,
   ArrowUpRight,
   BadgeCheck,
-  BarChart3,
   Calendar,
   Camera,
   CheckCircle2,
@@ -23,9 +22,7 @@ import {
   Shield,
   ShoppingBag,
   Star,
-  TrendingUp,
   Upload,
-  Wallet,
   Zap,
 } from 'lucide-react';
 import { CatalogHeader, CatalogFooter } from '../Catalog';
@@ -226,36 +223,6 @@ export function ProfileDashboard({
             <div className={styles.statData}>
               <span className={clsx(styles.statNum, styles.statNumHighlight)}>{user.rating.toFixed(1)}</span>
               <span className={styles.statLabel}>Рейтинг</span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* ── Earnings ── */}
-        <motion.div
-          className={styles.earningsRow}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.15, ease: EASE }}
-        >
-          <div className={clsx(styles.earningsCard, styles.earningsCardGreen)}>
-            <div className={styles.earningsIcon}><TrendingUp size={18} /></div>
-            <div className={styles.earningsData}>
-              <span className={styles.earningsVal}>{stats.totalEarnings} ₽</span>
-              <span className={styles.earningsLabel}>Заработано</span>
-            </div>
-          </div>
-          <div className={clsx(styles.earningsCard, styles.earningsCardBlue)}>
-            <div className={styles.earningsIcon}><Wallet size={18} /></div>
-            <div className={styles.earningsData}>
-              <span className={styles.earningsVal}>{stats.totalSpent} ₽</span>
-              <span className={styles.earningsLabel}>Потрачено</span>
-            </div>
-          </div>
-          <div className={clsx(styles.earningsCard, styles.earningsCardAmber)}>
-            <div className={styles.earningsIcon}><BarChart3 size={18} /></div>
-            <div className={styles.earningsData}>
-              <span className={styles.earningsVal}>{stats.responseRate}%</span>
-              <span className={styles.earningsLabel}>Отвечаемость</span>
             </div>
           </div>
         </motion.div>

@@ -21,6 +21,7 @@ export const LISTING_FILTERS: { value: ListingFilter; label: string; tip: string
   { value: 'all', label: 'Все', tip: 'Показать все объявления' },
   { value: 'ACTIVE', label: 'Активные', tip: 'Опубликованы и доступны для аренды' },
   { value: 'MODERATION', label: 'Модерация', tip: 'На проверке модератором' },
+  { value: 'REJECTED', label: 'Отклонённые', tip: 'Отклонены модератором, требуют исправления' },
   { value: 'DRAFT', label: 'Черновики', tip: 'Незавершённые объявления' },
   { value: 'ARCHIVED', label: 'Архив', tip: 'Снятые с публикации' },
 ];
