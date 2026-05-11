@@ -9,7 +9,7 @@
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  background: #eef2f7;
+  background: var(--color-surface-muted);
 }
 
 /* ─── Conversation Header ─── */
@@ -19,9 +19,9 @@
   align-items: center;
   gap: $space-3;
   padding: $space-2 $space-5;
-  background: rgba(255, 255, 255, 0.95);
+  background: color-mix(in srgb, var(--color-surface) 95%, transparent);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  border-bottom: 1px solid var(--color-border);
   box-shadow: 0 1px 12px rgba(0, 0, 0, 0.04);
 }
 
@@ -34,7 +34,7 @@
   width: 36px;
   height: 36px;
   border-radius: $radius-full;
-  background: $gradient-green;
+  background: var(--gradient-green);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,8 +59,8 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: $color-success;
-  border: 2px solid #fff;
+  background: var(--color-success);
+  border: 2px solid var(--color-surface);
 }
 
 .convInfo {
@@ -71,19 +71,19 @@
 .convName {
   font-size: $font-size-sm;
   font-weight: $font-weight-bold;
-  color: $color-text;
+  color: var(--color-text);
   letter-spacing: -0.1px;
 }
 
 .convStatus {
   font-size: 11px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
-.convStatusOnline { color: $color-success; }
+.convStatusOnline { color: var(--color-success); }
 
 .convStatusTyping {
-  color: $color-primary;
+  color: var(--color-primary);
   font-style: italic;
 }
 
@@ -99,9 +99,9 @@
   align-items: center;
   gap: $space-3;
   padding: $space-2 $space-5;
-  background: rgba(255, 255, 255, 0.85);
+  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .dealBarImg {
@@ -120,7 +120,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   flex-shrink: 0;
   svg { width: 16px; height: 16px; }
 }
@@ -133,7 +133,7 @@
 .dealBarTitle {
   font-size: $font-size-xs;
   font-weight: $font-weight-600;
-  color: $color-text;
+  color: var(--color-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -141,7 +141,7 @@
 
 .dealBarMeta {
   font-size: 10px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   display: flex;
   align-items: center;
   gap: $space-2;
@@ -156,11 +156,11 @@
   white-space: nowrap;
 }
 
-.dealBadgeActive { background: rgba(34, 197, 94, 0.08); color: $color-primary; }
+.dealBadgeActive { background: rgba(34, 197, 94, 0.08); color: var(--color-primary); }
 .dealBadgeConfirmed { background: rgba(59, 130, 246, 0.08); color: #3b82f6; }
-.dealBadgeCompleted { background: rgba(100, 116, 139, 0.08); color: $color-text-secondary; }
+.dealBadgeCompleted { background: rgba(100, 116, 139, 0.08); color: var(--color-text-secondary); }
 .dealBadgeNew { background: rgba(245, 158, 11, 0.08); color: #f59e0b; }
-.dealBadgeRejected { background: rgba(239, 68, 68, 0.08); color: $color-error; }
+.dealBadgeRejected { background: rgba(239, 68, 68, 0.08); color: var(--color-error); }
 
 /* ─── Quick Actions Bar ─── */
 
@@ -169,8 +169,8 @@
   align-items: center;
   gap: $space-2;
   padding: $space-2 $space-5;
-  background: rgba(255, 255, 255, 0.6);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+  background: color-mix(in srgb, var(--color-surface) 60%, transparent);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .qaBtn {
@@ -185,27 +185,27 @@
 }
 
 .qaBtnPrimary {
-  background: $gradient-green;
+  background: var(--gradient-green);
   color: #fff;
-  border-color: $color-primary;
+  border-color: var(--color-primary);
 
   &:hover { box-shadow: $shadow-green-sm; transform: translateY(-1px); }
 }
 
 .qaBtnSecondary {
-  background: #fff;
-  color: $color-text;
-  border-color: $color-border;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
 
-  &:hover { border-color: $color-primary; color: $color-primary; }
+  &:hover { border-color: var(--color-primary); color: var(--color-primary); }
 }
 
 .qaBtnDanger {
-  background: #fff;
-  color: $color-error;
+  background: var(--color-surface);
+  color: var(--color-error);
   border-color: rgba(239, 68, 68, 0.2);
 
-  &:hover { background: rgba(239, 68, 68, 0.04); border-color: $color-error; }
+  &:hover { background: rgba(239, 68, 68, 0.04); border-color: var(--color-error); }
 }
 
 /* ─── Messages Area ─── */
@@ -234,11 +234,11 @@
 .dateLabel {
   font-size: 11px;
   font-weight: $font-weight-medium;
-  color: $color-text-secondary;
-  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-text-secondary);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
   padding: 4px 14px;
   border-radius: $radius-full;
-  border: 1px solid rgba(226, 232, 240, 0.6);
+  border: 1px solid var(--color-border);
   backdrop-filter: blur(8px);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
@@ -254,9 +254,9 @@
 
 .systemEventText {
   font-size: 11px;
-  color: $color-text-secondary;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(226, 232, 240, 0.6);
+  color: var(--color-text-secondary);
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  border: 1px solid var(--color-border);
   padding: 5px 14px;
   border-radius: $radius-full;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
@@ -267,7 +267,7 @@
     height: 11px;
     vertical-align: -1px;
     margin-right: 4px;
-    color: $color-primary;
+    color: var(--color-primary);
   }
 }
 
@@ -291,14 +291,14 @@
 }
 
 .bubbleOther {
-  background: #fff;
-  color: $color-text;
+  background: var(--color-surface);
+  color: var(--color-text);
   border-bottom-left-radius: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .bubbleOwn {
-  background: $gradient-green;
+  background: var(--gradient-green);
   color: #fff;
   border-bottom-right-radius: 4px;
   box-shadow: 0 2px 8px rgba(34, 197, 94, 0.28);
@@ -329,7 +329,7 @@
   color: rgba(255, 255, 255, 0.75);
 
   .bubbleOther & {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     opacity: 0.75;
   }
 }
@@ -360,7 +360,7 @@
   align-items: center;
   gap: 3px;
   padding: 12px 16px;
-  background: #fff;
+  background: var(--color-surface);
   border-radius: 18px;
   border-bottom-left-radius: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
@@ -370,7 +370,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: $color-text-secondary;
+  background: var(--color-text-secondary);
   opacity: 0.45;
   animation: typingBounce 1.3s infinite;
 

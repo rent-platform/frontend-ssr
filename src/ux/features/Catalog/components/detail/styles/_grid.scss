@@ -13,7 +13,7 @@
   text-align: center;
   font-size: 11px;
   font-weight: 700;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -38,14 +38,14 @@
   background: transparent;
   font-size: 14px;
   font-weight: 600;
-  color: $color-text;
+  color: var(--color-text);
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   position: relative;
 
   &:hover:not(:disabled) {
-    background: $color-green-50;
-    color: $color-primary;
+    background: var(--color-green-50);
+    color: var(--color-primary);
   }
 }
 
@@ -56,7 +56,7 @@
 
 .dayToday {
   font-weight: 800;
-  color: $color-primary;
+  color: var(--color-primary);
 
   &::after {
     content: '';
@@ -67,31 +67,31 @@
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: $color-primary;
+    background: var(--color-primary);
   }
 }
 
 .dayStart,
 .dayEnd {
-  background: $gradient-green;
+  background: var(--gradient-green);
   color: #fff;
   font-weight: 800;
   box-shadow: 0 4px 12px -4px rgba(34, 197, 94, 0.45);
   border-radius: 12px;
 
   &:hover:not(:disabled) {
-    background: $gradient-green;
+    background: var(--gradient-green);
     color: #fff;
   }
 }
 
 .dayInRange {
   background: rgba(34, 197, 94, 0.1);
-  color: color.adjust($color-primary, $lightness: -10%);
+  color: var(--color-primary-hover);
   border-radius: 4px;
 
   &:hover:not(:disabled) {
     background: rgba(34, 197, 94, 0.18);
-    color: color.adjust($color-primary, $lightness: -12%);
+    color: var(--color-primary-hover);
   }
 }

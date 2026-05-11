@@ -6,10 +6,10 @@
 .emptyState {
   text-align: center;
   padding: $space-12 $space-4;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 
   svg { width: 32px; height: 32px; margin-bottom: $space-3; opacity: 0.3; }
-  h3 { font-size: 15px; font-weight: $font-weight-600; color: $color-text; margin: 0 0 $space-2; }
+  h3 { font-size: 15px; font-weight: $font-weight-600; color: var(--color-text); margin: 0 0 $space-2; }
   p { font-size: 13px; margin: 0; }
 }
 
@@ -32,7 +32,7 @@
   > svg {
     width: 20px;
     height: 20px;
-    color: $color-primary;
+    color: var(--color-primary);
     flex-shrink: 0;
     margin-top: 2px;
   }
@@ -41,13 +41,13 @@
     display: block;
     font-size: 14px;
     font-weight: $font-weight-600;
-    color: $color-text;
+    color: var(--color-text);
     margin-bottom: $space-1;
   }
 
   p {
     font-size: 13px;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     margin: 0;
     line-height: 1.5;
   }
@@ -62,14 +62,14 @@
   display: flex;
   align-items: center;
   padding: $space-4 $space-6;
-  background: #fff;
-  border-bottom: 1px solid $color-border;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .skeletonBreadcrumb {
   padding: $space-3 $space-6;
-  background: #fff;
-  border-bottom: 1px solid $color-border;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: $space-6;
 }
 
@@ -90,8 +90,8 @@
 }
 
 .skeletonCard {
-  background: #fff;
-  border: 1px solid $color-border;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-xl;
   padding: $space-6;
   display: flex;
@@ -112,8 +112,8 @@
 }
 
 .skeletonStatCard {
-  background: #fff;
-  border: 1px solid $color-border;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-lg;
   padding: $space-4;
   display: flex;
@@ -128,15 +128,15 @@
 }
 
 .skeletonListingCard {
-  background: #fff;
-  border: 1px solid $color-border;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-xl;
   overflow: hidden;
 }
 
 .skeletonCardPadded {
-  background: #fff;
-  border: 1px solid $color-border;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-xl;
   padding: $space-5;
 }
@@ -189,6 +189,6 @@
     left: 50%;
     transform: translateX(-50%);
     border: 5px solid transparent;
-    border-top-color: #1e293b;
+    border-top-color: var(--color-text);
   }
 }

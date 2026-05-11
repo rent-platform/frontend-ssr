@@ -10,14 +10,14 @@
 .label {
   font-size: v.$font-size-sm;
   font-weight: v.$font-weight-medium;
-  color: v.$color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .inputWrapper {
   position: relative;
   display: flex;
   align-items: center;
-  color: v.$color-text;
+  color: var(--color-text);
 }
 
 .passwordWrapper {
@@ -31,7 +31,7 @@
   left: 19px;
   display: flex;
   align-items: center;
-  color: v.$color-text-secondary;
+  color: var(--color-text-secondary);
   pointer-events: none;
   transition: color v.$transition-fast;
 }
@@ -54,7 +54,7 @@
   padding: 0 v.$space-4;
   font-size: v.$font-size-base;
   color: currentColor;
-  background: v.$color-bg-secondary;
+  background: var(--color-bg-secondary);
   border: 1.5px solid v.$auth-input-border;
   border-radius: v.$radius-lg;
   box-sizing: border-box;
@@ -65,13 +65,13 @@
 
   &:focus {
     outline: none;
-    border-color: v.$color-primary;
-    background: #fff;
+    border-color: var(--color-primary);
+    background: var(--color-surface);
     box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
   }
 
   &::placeholder {
-    color: rgba(100, 116, 139, 0.5);
+    color: var(--color-text-secondary);
   }
 
   &.withLeft {
@@ -87,11 +87,11 @@
   }
 
   &.inputError {
-    border-color: v.$color-error;
+    border-color: var(--color-error);
 
     &:focus {
       outline: none;
-      background: #fff;
+      background: var(--color-surface);
       box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
     }
   }
@@ -102,7 +102,7 @@
   top: 50%;
   left: 44px;
   max-width: calc(100% - 92px);
-  color: rgba(100, 116, 139, 0.62);
+  color: var(--color-text-secondary);
   font-size: 16px;
   line-height: 1;
   white-space: nowrap;
@@ -119,7 +119,7 @@
 
 .floatingActive {
   .floatingLabel {
-    color: rgba(100, 116, 139, 0.82);
+    color: var(--color-text-secondary);
     transform: translateY(-24.5px) scale(0.89);
   }
 }
@@ -133,13 +133,13 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: v.$color-text-secondary;
+  color: var(--color-text-secondary);
   padding: 4px;
   border-radius: v.$radius-sm;
   transition: color 0.2s ease;
 
   &:hover {
-    color: #22c55e;
+    color: var(--color-primary);
   }
 }
 
@@ -148,7 +148,7 @@
   align-items: center;
   gap: 5px;
   font-size: v.$font-size-xs;
-  color: v.$color-error;
+  color: var(--color-error);
   line-height: v.$line-height-normal;
   font-weight: 500;
 }

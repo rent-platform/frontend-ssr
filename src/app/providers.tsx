@@ -2,6 +2,7 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { SessionProvider } from "next-auth/react";
 import { StoreProvider } from "@/business/shared";
+import { ThemeProvider } from "@/ux/utils/ThemeContext";
 
 // ── MSW ───────────────────────────────────────────────────────────────────────
 // Включается переменной окружения NEXT_PUBLIC_API_MOCKING=enabled
@@ -31,7 +32,9 @@ export const Providers = ({ children }: PropsWithChildren) => {
 
   return (
     <SessionProvider>
-      <StoreProvider>{children}</StoreProvider>
+      <ThemeProvider>
+        <StoreProvider>{children}</StoreProvider>
+      </ThemeProvider>
     </SessionProvider>
   );
 };

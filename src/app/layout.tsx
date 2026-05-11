@@ -24,7 +24,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="ru">
+    <html lang="ru" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('arendai-theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.setAttribute('data-theme','dark')}}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body className={`${inter.variable} ${jakarta.variable} ${inter.className}`}>
         <Providers>{children}</Providers>
       </body>

@@ -10,7 +10,7 @@
 }
 
 .emptyIcon {
-  @include empty-state-icon(80px, rgba(244, 63, 94, 0.06), $color-secondary);
+  @include empty-state-icon(80px, rgba(244, 63, 94, 0.06), var(--color-secondary));
 }
 
 .emptyTitle {
@@ -27,7 +27,7 @@
 .emptyHeartInline {
   display: inline;
   vertical-align: -2px;
-  color: $color-secondary;
+  color: var(--color-secondary);
 }
 
 .emptyBtn {
@@ -38,7 +38,7 @@
   padding: 0 20px;
   border: 0;
   border-radius: $radius-lg;
-  background: $gradient-green;
+  background: var(--gradient-green);
   color: #fff;
   font-size: 13.5px;
   font-weight: 700;

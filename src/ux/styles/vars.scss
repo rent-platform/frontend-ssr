@@ -157,35 +157,6 @@ $shadow-modal:    $shadow-lg;
 $breakpoint-sm:   $bp-sm;
 
 // ─── CSS Custom Properties ────────────────────────────────────────────────────
-:root {
-  --color-primary:        #{$color-primary};
-  --color-primary-hover:  #{$color-primary-hover};
-  --color-secondary:      #{$color-secondary};
-  --color-bg:             #{$color-bg};
-  --color-surface:        #{$color-surface};
-  --color-surface-muted:  #{$color-surface-muted};
-  --color-text:           #{$color-text};
-  --color-text-secondary: #{$color-text-secondary};
-  --color-text-inverse:   #{$color-text-inverse};
-  --color-border:         #{$color-border};
-  --color-success:        #{$color-success};
-  --color-warning:        #{$color-warning};
-  --color-error:          #{$color-error};
-  --font-family-base:     #{$font-family-base};
-  --font-family-display:  #{$font-family-display};
-  --font-family-mono:     #{$font-family-mono};
-  --radius-sm:  #{$radius-sm};
-  --radius-md:  #{$radius-md};
-  --radius-lg:  #{$radius-lg};
-  --radius-xl:  #{$radius-xl};
-  --radius-2xl: #{$radius-2xl};
-  --radius-3xl: #{$radius-3xl};
-  --shadow-sm: #{$shadow-sm};
-  --shadow-md: #{$shadow-md};
-  --shadow-lg: #{$shadow-lg};
-  --gradient-green: #{$gradient-green};
-  --gradient-green-soft: #{$gradient-green-soft};
-  --color-green-50: #{$color-green-50};
-  --color-green-100: #{$color-green-100};
-}
+// NOTE: :root and [data-theme="dark"] blocks are defined in globals.scss
+// to avoid CSS modules purity errors when vars.scss is @use'd from .module.scss files.
 

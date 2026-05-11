@@ -17,27 +17,27 @@
   flex-direction: column;
   height: 100%;
   padding: 10px 10px 14px;
-  background: #fff;
-  border: 1px solid $color-border;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-2xl;
-  box-shadow: $shadow-card;
+  box-shadow: var(--shadow-card);
   transition: $transition-smooth;
   overflow: hidden;
 
   &:hover {
-    border-color: $color-border-green;
-    box-shadow: $shadow-card-hover;
+    border-color: rgba(34, 197, 94, 0.2);
+    box-shadow: var(--shadow-card-hover);
 
     .cardImage {
       transform: scale(1.04);
     }
 
     .cardTitleButton {
-      color: $color-primary;
+      color: var(--color-primary);
     }
 
     .cardActionButton {
-      background: $gradient-green;
+      background: var(--gradient-green);
       border-color: transparent;
       color: #fff;
       box-shadow: $shadow-green-sm;
@@ -62,25 +62,25 @@
   z-index: 10;
   @include square(34px);
   @include flex-center;
-  background: rgba(255, 255, 255, 0.92);
+  background: color-mix(in srgb, var(--color-bg) 92%, transparent);
   backdrop-filter: blur(8px);
   border: 0;
   border-radius: 50%;
-  color: $color-text-secondary;
-  box-shadow: $shadow-sm;
+  color: var(--color-text-secondary);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition: $transition-spring;
 
   &:hover {
     transform: scale(1.1);
-    background: #fff;
-    color: $color-secondary;
-    box-shadow: $shadow-md;
+    background: var(--color-surface);
+    color: var(--color-secondary);
+    box-shadow: var(--shadow-md);
   }
 
   &Active {
-    color: $color-secondary;
-    background: #fff;
+    color: var(--color-secondary);
+    background: var(--color-surface);
 
     svg {
       fill: currentColor;
@@ -93,7 +93,7 @@
   aspect-ratio: 1 / 1;
   border-radius: 18px;
   overflow: hidden;
-  background: $color-surface-muted;
+  background: var(--color-surface-muted);
   transition: $transition-smooth;
   border: 0;
 
@@ -129,7 +129,7 @@
 .cardFeatured {
   display: inline-flex;
   align-items: center;
-  background: $gradient-green;
+  background: var(--gradient-green);
   color: #fff;
   padding: 5px 12px;
   border-radius: $radius-full;
@@ -160,8 +160,8 @@
 }
 
 .cardStatusSoon {
-  background: rgba(255, 255, 255, 0.92);
-  color: $color-text;
+  background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+  color: var(--color-text);
 }
 
 .cardBody {
@@ -190,9 +190,9 @@
   max-width: calc(100% - 72px);
   padding: 5px 10px;
   border-radius: $radius-full;
-  background: $color-green-50;
-  border: 1px solid $color-border-green;
-  color: color.adjust($color-primary, $lightness: -8%);
+  background: var(--color-green-50);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: var(--color-primary-hover);
   font-size: 11px;
   font-weight: 700;
   line-height: 1;
@@ -207,7 +207,7 @@
   font-size: 17px;
   font-weight: 750;
   letter-spacing: -0.012em;
-  color: $color-text;
+  color: var(--color-text);
   text-align: left;
   line-height: 1.32;
   display: -webkit-box;
@@ -223,10 +223,10 @@
   gap: 4px;
   padding: 4px 8px;
   border-radius: $radius-full;
-  background: $color-surface-muted;
+  background: var(--color-surface-muted);
   font-size: 12px;
   font-weight: 700;
-  color: $color-text;
+  color: var(--color-text);
   flex-shrink: 0;
 }
 
@@ -246,13 +246,13 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   margin: 0;
   font-weight: 500;
 
   svg {
     flex-shrink: 0;
-    color: rgba(100, 116, 139, 0.9);
+    color: var(--color-text-secondary);
   }
 
   span {
@@ -273,7 +273,7 @@
   gap: 6px;
   font-size: 12px;
   font-weight: 600;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 
   svg {
     flex-shrink: 0;
@@ -300,16 +300,16 @@
   max-width: 100%;
   padding: 6px 10px;
   border-radius: $radius-full;
-  background: $color-surface-muted;
-  border: 1px solid $color-border;
-  color: $color-text;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
   font-size: 11px;
   font-weight: 600;
   line-height: 1;
 
   svg {
     flex-shrink: 0;
-    color: $color-primary;
+    color: var(--color-primary);
   }
 
   span {
@@ -319,10 +319,10 @@
 
 .cardHighlightChipMuted {
   background: rgba(244, 246, 248, 0.9);
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 
   svg {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
   }
 }
 
@@ -341,22 +341,22 @@
   strong {
     font-size: 20px;
     font-weight: 800;
-    color: $color-text;
+    color: var(--color-text);
     line-height: 1.1;
   }
 }
 
 .cardPriceSecondary {
   font-size: 12px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-weight: 600;
 }
 
 .cardDepositBadge {
   font-size: 11px;
   font-weight: 600;
-  color: $color-text-secondary;
-  background: $color-surface-muted;
+  color: var(--color-text-secondary);
+  background: var(--color-surface-muted);
   padding: 2px 8px;
   border-radius: $radius-full;
 }
@@ -366,7 +366,7 @@
   gap: $space-4;
   margin-top: auto;
   padding-top: $space-4;
-  border-top: 1px solid rgba(226, 232, 240, 0.9);
+  border-top: 1px solid var(--color-border);
 }
 
 .cardOwnerRow {
@@ -380,7 +380,7 @@
   @include flex-center;
   overflow: hidden;
   border-radius: 50%;
-  background: $gradient-green;
+  background: var(--gradient-green);
   color: #fff;
   font-size: 13px;
   font-weight: 800;
@@ -402,14 +402,14 @@
   strong {
     font-size: 14px;
     font-weight: 700;
-    color: $color-text;
+    color: var(--color-text);
     @include text-truncate;
   }
 
   span {
     font-size: 12px;
     font-weight: 500;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     @include text-truncate;
   }
 }
@@ -422,9 +422,9 @@
   min-height: 40px;
   padding: 0 16px;
   border-radius: $radius-full;
-  border: 1px solid $color-border;
-  background: #fff;
-  color: $color-text;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
   font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
@@ -433,8 +433,8 @@
   cursor: pointer;
 
   &:hover {
-    border-color: $color-primary;
-    color: $color-primary;
-    background: $color-green-50;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-green-50);
   }
 }

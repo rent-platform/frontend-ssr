@@ -2,10 +2,10 @@
 
 /* ═══ Rating Summary Card ═══ */
 .summaryCard {
-  background: rgba(255, 255, 255, 0.8);
+  background: color-mix(in srgb, var(--color-surface) 80%, transparent);
   backdrop-filter: blur(16px);
   border-radius: $radius-2xl;
-  border: 1px solid rgba(226, 232, 240, 0.6);
+  border: 1px solid var(--color-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   padding: $space-6;
   margin-bottom: $space-6;
@@ -26,7 +26,7 @@
   font-family: $font-family-display;
   font-size: 48px;
   font-weight: $font-weight-800;
-  color: $color-text;
+  color: var(--color-text);
   line-height: 1;
   letter-spacing: -2px;
 }
@@ -41,12 +41,12 @@
 }
 
 .starEmpty {
-  color: rgba(100, 116, 139, 0.2);
+  color: var(--color-text-secondary);
 }
 
 .summaryTotal {
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .summaryRight {
@@ -74,7 +74,7 @@
 .barLabel {
   font-size: $font-size-xs;
   font-weight: $font-weight-600;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   min-width: 14px;
   text-align: right;
 }
@@ -96,6 +96,6 @@
 
 .barCount {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   min-width: 20px;
 }

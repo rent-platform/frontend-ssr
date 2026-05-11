@@ -8,7 +8,7 @@
   min-height: 100vh;
   background:
     radial-gradient(ellipse 70% 40% at 50% 0%, rgba(34, 197, 94, 0.03) 0%, transparent 70%),
-    $color-surface-muted;
+    var(--color-surface-muted);
   font-family: $font-family-base;
   padding: $space-8 $space-6 $space-16;
 }
@@ -43,14 +43,14 @@
   border-radius: $radius-lg;
   border: 1px solid transparent;
   background: none;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   text-decoration: none;
   transition: $transition-smooth;
 
   svg { width: 18px; height: 18px; }
 
   &:hover {
-    color: $color-primary;
+    color: var(--color-primary);
     background: rgba(34, 197, 94, 0.06);
     border-color: rgba(34, 197, 94, 0.15);
   }
@@ -60,7 +60,7 @@
   font-family: $font-family-display;
   font-size: $font-size-2xl;
   font-weight: $font-weight-800;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0;
   letter-spacing: -0.5px;
 }
@@ -73,7 +73,7 @@
   height: 22px;
   padding: 0 6px;
   border-radius: $radius-full;
-  background: $color-primary;
+  background: var(--color-primary);
   color: #fff;
   font-size: 11px;
   font-weight: $font-weight-bold;
@@ -88,18 +88,18 @@
 .markReadBtn {
   padding: 6px $space-4;
   border-radius: $radius-full;
-  border: 1px solid $color-border;
-  background: #fff;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   font-size: $font-size-xs;
   font-weight: $font-weight-600;
   font-family: $font-family-base;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition: $transition-smooth;
 
   &:hover {
-    border-color: $color-primary;
-    color: $color-primary;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
     background: rgba(34, 197, 94, 0.03);
   }
 
@@ -116,9 +116,9 @@
   width: 34px;
   height: 34px;
   border-radius: $radius-full;
-  border: 1px solid $color-border;
-  background: #fff;
-  color: $color-text-secondary;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
   cursor: pointer;
   text-decoration: none;
   transition: $transition-smooth;
@@ -126,7 +126,7 @@
   svg { width: 16px; height: 16px; }
 
   &:hover {
-    color: $color-primary;
+    color: var(--color-primary);
     border-color: rgba(34, 197, 94, 0.3);
   }
 }
@@ -140,7 +140,7 @@
 .dateLabel {
   font-size: $font-size-xs;
   font-weight: $font-weight-600;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   margin: 0 0 $space-3;
   padding-left: $space-1;
 }

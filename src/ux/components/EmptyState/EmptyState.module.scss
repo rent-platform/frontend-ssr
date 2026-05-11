@@ -16,9 +16,9 @@
 .icon {
   @include flex-center;
   border-radius: $radius-full;
-  background: $color-green-50;
-  border: 1px solid $color-border-green;
-  color: $color-primary;
+  background: var(--color-green-50);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: var(--color-primary);
   margin: 0 auto $space-4;
 }
 
@@ -44,7 +44,7 @@
 .title {
   font-family: $font-family-display;
   font-weight: $font-weight-800;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0 0 $space-2;
 }
 
@@ -55,7 +55,7 @@
 /* ─── Text ─── */
 .text {
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   max-width: 320px;
   margin: 0;
   line-height: 1.5;

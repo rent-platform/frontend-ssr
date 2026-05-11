@@ -10,7 +10,7 @@
   background:
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34, 197, 94, 0.08) 0%, transparent 60%),
     radial-gradient(ellipse 60% 40% at 100% 0%, rgba(59, 130, 246, 0.04) 0%, transparent 50%),
-    $color-surface-muted;
+    var(--color-surface-muted);
   padding: $space-10 $space-4 $space-16;
   font-family: $font-family-base;
 }
@@ -31,7 +31,7 @@
   border: 1px solid transparent;
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   text-decoration: none;
   transition: $transition-smooth;
   backdrop-filter: blur(8px);
@@ -39,7 +39,7 @@
   svg { width: 16px; height: 16px; transition: transform 0.2s ease; }
 
   &:hover {
-    color: $color-primary;
+    color: var(--color-primary);
     background: rgba(34, 197, 94, 0.06);
     border-color: rgba(34, 197, 94, 0.15);
     svg { transform: translateX(-3px); }
@@ -51,14 +51,14 @@
   font-family: $font-family-display;
   font-size: $font-size-2xl;
   font-weight: $font-weight-800;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0 0 $space-2;
   letter-spacing: -0.5px;
 }
 
 .pageSubtitle {
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   margin: 0 0 $space-8;
 }
 
@@ -77,10 +77,10 @@
   display: flex;
   flex-direction: column;
   gap: $space-1;
-  background: rgba(255, 255, 255, 0.7);
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
   backdrop-filter: blur(16px);
   border-radius: $radius-xl;
-  border: 1px solid rgba(226, 232, 240, 0.6);
+  border: 1px solid var(--color-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   padding: $space-2;
 }
@@ -93,7 +93,7 @@
   border-radius: $radius-lg;
   border: 0;
   background: transparent;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
   font-family: $font-family-base;
@@ -105,40 +105,40 @@
   svg { width: 18px; height: 18px; flex-shrink: 0; }
 
   &:hover {
-    color: $color-text;
+    color: var(--color-text);
     background: rgba(100, 116, 139, 0.06);
   }
 }
 
 .sidebarItemActive {
-  background: #fff;
-  color: $color-text;
+  background: var(--color-surface);
+  color: var(--color-text);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
   font-weight: $font-weight-600;
 
-  svg { color: $color-primary; }
+  svg { color: var(--color-primary); }
 
   &:hover {
-    background: #fff;
-    color: $color-text;
+    background: var(--color-surface);
+    color: var(--color-text);
   }
 }
 
 .sidebarItemDanger {
-  color: $color-error;
+  color: var(--color-error);
 
   &:hover {
     background: rgba(239, 68, 68, 0.06);
-    color: $color-error;
+    color: var(--color-error);
   }
 }
 
 /* ─── Section ─── */
 .section {
-  background: rgba(255, 255, 255, 0.8);
+  background: color-mix(in srgb, var(--color-surface) 80%, transparent);
   backdrop-filter: blur(16px);
   border-radius: $radius-2xl;
-  border: 1px solid rgba(226, 232, 240, 0.6);
+  border: 1px solid var(--color-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   padding: $space-7 $space-6;
 }
@@ -147,19 +147,19 @@
   font-family: $font-family-display;
   font-size: $font-size-lg;
   font-weight: $font-weight-800;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0 0 $space-1;
   letter-spacing: -0.3px;
 }
 
 .sectionSubtitle {
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   margin: 0 0 $space-6;
 }
 
 .sectionDivider {
   height: 1px;
-  background: $color-border;
+  background: var(--color-border);
   margin: $space-6 0;
 }

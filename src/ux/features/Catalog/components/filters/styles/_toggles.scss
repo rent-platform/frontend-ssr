@@ -8,9 +8,9 @@
   justify-content: space-between;
   gap: $space-4;
   padding: 13px 14px;
-  border: 1px solid $color-border;
+  border: 1px solid var(--color-border);
   border-radius: 18px;
-  background: #fff;
+  background: var(--color-surface);
   cursor: pointer;
   user-select: none;
   text-align: left;
@@ -18,19 +18,19 @@
 
   &:hover {
     border-color: rgba(34, 197, 94, 0.28);
-    background: linear-gradient(180deg, #fff, rgba(240, 253, 244, 0.55));
+    background: linear-gradient(180deg, var(--color-surface), var(--color-green-50));
   }
 
   &:focus-visible {
     outline: 0;
-    border-color: $color-primary;
+    border-color: var(--color-primary);
     box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
   }
 }
 
 .toggleRowOn {
   border-color: rgba(34, 197, 94, 0.28);
-  background: linear-gradient(180deg, rgba(240, 253, 244, 0.95), #fff);
+  background: linear-gradient(180deg, var(--color-green-50), var(--color-surface));
 }
 
 .toggleText {
@@ -42,13 +42,13 @@
 .toggleLabel {
   font-size: 14px;
   font-weight: 700;
-  color: $color-text;
+  color: var(--color-text);
 }
 
 .toggleHint {
   font-size: 11px;
   font-weight: 500;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: 1.4;
 }
 
@@ -68,12 +68,12 @@
 }
 
 .toggleTrack {
-  background: rgba(15, 23, 42, 0.1);
+  background: color-mix(in srgb, var(--color-text) 15%, transparent);
   justify-content: flex-start;
 }
 
 .toggleTrackOn {
-  background: $color-primary;
+  background: var(--color-primary);
   box-shadow: $shadow-green-sm;
   justify-content: flex-end;
 }
@@ -83,6 +83,6 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--color-surface);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }

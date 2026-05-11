@@ -13,13 +13,13 @@
   align-items: center;
   gap: $space-4;
   padding: $space-4 $space-5;
-  border: 1px solid rgba(226, 232, 240, 0.7);
+  border: 1px solid var(--color-border);
   border-radius: $radius-xl;
-  background: rgba(255, 255, 255, 0.5);
+  background: color-mix(in srgb, var(--color-surface) 50%, transparent);
   transition: $transition-smooth;
 
   &:hover {
-    background: #fff;
+    background: var(--color-surface);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   }
 }
@@ -59,7 +59,7 @@
 .paymentName {
   font-size: $font-size-sm;
   font-weight: $font-weight-600;
-  color: $color-text;
+  color: var(--color-text);
 }
 
 .paymentDefaultBadge {
@@ -68,12 +68,12 @@
   padding: 2px $space-2;
   border-radius: $radius-full;
   background: rgba(34, 197, 94, 0.08);
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 .paymentExpiry {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .paymentRight {
@@ -93,13 +93,13 @@
 .dangerZoneTitle {
   font-size: $font-size-sm;
   font-weight: $font-weight-600;
-  color: $color-error;
+  color: var(--color-error);
   margin: 0 0 $space-1;
 }
 
 .dangerZoneText {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   margin: 0 0 $space-4;
   line-height: $line-height-normal;
 }
@@ -123,7 +123,7 @@
   max-width: 420px;
   margin: $space-4;
   padding: $space-8 $space-6 $space-6;
-  background: #fff;
+  background: var(--color-surface);
   border-radius: $radius-2xl;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.04);
   text-align: center;
@@ -142,13 +142,13 @@
   border: 0;
   border-radius: $radius-lg;
   background: transparent;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition: $transition-smooth;
 
   &:hover {
     background: rgba(100, 116, 139, 0.08);
-    color: $color-text;
+    color: var(--color-text);
   }
 }
 
@@ -161,21 +161,21 @@
   justify-content: center;
   border-radius: $radius-full;
   background: rgba(239, 68, 68, 0.08);
-  color: $color-error;
+  color: var(--color-error);
 }
 
 .modalTitle {
   font-family: $font-family-display;
   font-size: $font-size-lg;
   font-weight: $font-weight-800;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0 0 $space-2;
   letter-spacing: -0.3px;
 }
 
 .modalText {
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: $line-height-normal;
   margin: 0 0 $space-6;
 }

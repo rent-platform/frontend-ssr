@@ -356,7 +356,7 @@ function ModerationQueueTab({ toast }: { toast: ToastFn }) {
           />
         </div>
         <div className={s.toolbarRight}>
-          <span style={{ fontSize: 13, color: '#64748b' }}>
+          <span style={{ fontSize: 13, color: 'var(--color-text-secondary)' }}>
             Всего: <strong>{q.allCount}</strong>
           </span>
         </div>
@@ -436,7 +436,7 @@ function ModerationQueueTab({ toast }: { toast: ToastFn }) {
             {q.selectedItem.itemDescription && (
               <div style={{ marginTop: 16 }}>
                 <span className={s.detailLabel}>Описание</span>
-                <p style={{ fontSize: 14, color: '#334155', marginTop: 4, lineHeight: 1.6 }}>
+                <p style={{ fontSize: 14, color: 'var(--color-text)', marginTop: 4, lineHeight: 1.6 }}>
                   {q.selectedItem.itemDescription}
                 </p>
               </div>
@@ -737,14 +737,14 @@ function ComplaintsTab({ toast }: { toast: ToastFn }) {
             </div>
             <div style={{ marginTop: 16 }}>
               <span className={s.detailLabel}>Причина жалобы</span>
-              <p style={{ fontSize: 14, color: '#334155', marginTop: 4, lineHeight: 1.6 }}>
+              <p style={{ fontSize: 14, color: 'var(--color-text)', marginTop: 4, lineHeight: 1.6 }}>
                 {c.selectedComplaint.reason}
               </p>
             </div>
             {c.selectedComplaint.moderatorComment && (
               <div style={{ marginTop: 12 }}>
                 <span className={s.detailLabel}>Комментарий модератора</span>
-                <p style={{ fontSize: 14, color: '#334155', marginTop: 4 }}>
+                <p style={{ fontSize: 14, color: 'var(--color-text)', marginTop: 4 }}>
                   {c.selectedComplaint.moderatorComment}
                 </p>
               </div>
@@ -964,7 +964,7 @@ function ReviewsModerationTab({ toast }: { toast: ToastFn }) {
           />
         </div>
         <div className={s.toolbarRight}>
-          <span style={{ fontSize: 13, color: '#64748b' }}>
+          <span style={{ fontSize: 13, color: 'var(--color-text-secondary)' }}>
             Всего: <strong>{r.totalCount}</strong> · С флагом: <strong>{r.flaggedCount}</strong>
           </span>
         </div>
@@ -1016,7 +1016,7 @@ function ReviewsModerationTab({ toast }: { toast: ToastFn }) {
             {r.selectedReview.text && (
               <div style={{ marginTop: 16 }}>
                 <span className={s.detailLabel}>Текст отзыва</span>
-                <p style={{ fontSize: 14, color: '#334155', marginTop: 4, lineHeight: 1.6 }}>
+                <p style={{ fontSize: 14, color: 'var(--color-text)', marginTop: 4, lineHeight: 1.6 }}>
                   {r.selectedReview.text}
                 </p>
               </div>
@@ -1024,7 +1024,7 @@ function ReviewsModerationTab({ toast }: { toast: ToastFn }) {
             {r.selectedReview.flagReason && (
               <div style={{ marginTop: 12, padding: 12, background: 'rgba(239,68,68,0.06)', borderRadius: 10, border: '1px solid rgba(239,68,68,0.15)' }}>
                 <span className={s.detailLabel}>Причина флага</span>
-                <p style={{ fontSize: 14, marginTop: 4, color: '#334155' }}>{r.selectedReview.flagReason}</p>
+                <p style={{ fontSize: 14, marginTop: 4, color: 'var(--color-text)' }}>{r.selectedReview.flagReason}</p>
               </div>
             )}
           </div>

@@ -9,10 +9,10 @@
 }
 
 .faqItem {
-  border: 1px solid $color-border;
+  border: 1px solid var(--color-border);
   border-radius: $radius-lg;
   overflow: hidden;
-  background: $color-surface;
+  background: var(--color-surface);
 }
 
 .faqQuestion {
@@ -26,18 +26,18 @@
   cursor: pointer;
   font-size: $font-size-base;
   font-weight: 600;
-  color: $color-text;
+  color: var(--color-text);
   text-align: left;
   transition: color 0.2s ease;
 
   svg {
     flex-shrink: 0;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     transition: transform 0.2s ease;
   }
 
   &:hover {
-    color: $color-primary;
+    color: var(--color-primary);
   }
 }
 
@@ -48,7 +48,7 @@
 .faqAnswer {
   padding: 0 $space-5 $space-4;
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: 1.7;
 }
 
@@ -64,16 +64,16 @@
   align-items: center;
   gap: $space-4;
   padding: $space-5;
-  border: 1px solid $color-border;
+  border: 1px solid var(--color-border);
   border-radius: $radius-xl;
-  background: $color-surface;
+  background: var(--color-surface);
   text-decoration: none;
-  color: $color-text;
+  color: var(--color-text);
   transition: all 0.2s ease;
 
   &:hover {
     border-color: rgba($color-primary, 0.3);
-    box-shadow: $shadow-sm;
+    box-shadow: var(--shadow-sm);
   }
 
   strong {
@@ -85,7 +85,7 @@
 
   span {
     font-size: $font-size-xs;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
   }
 }
 
@@ -93,10 +93,10 @@
   width: 44px;
   height: 44px;
   border-radius: $radius-lg;
-  background: $color-green-50;
+  background: var(--color-green-50);
   display: grid;
   place-items: center;
-  color: $color-primary;
+  color: var(--color-primary);
   flex-shrink: 0;
 }
 
@@ -115,10 +115,10 @@
   width: 80px;
   height: 80px;
   border-radius: $radius-full;
-  background: $color-green-50;
+  background: var(--color-green-50);
   display: grid;
   place-items: center;
-  color: $color-primary;
+  color: var(--color-primary);
   font-family: $font-family-display;
   font-size: 28px;
   font-weight: 800;
@@ -129,13 +129,13 @@
   font-family: $font-family-display;
   font-size: $font-size-base;
   font-weight: 700;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0 0 2px;
 }
 
 .teamRole {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 // ═══════ Stats Row ═══════
@@ -149,8 +149,8 @@
 .statCard {
   text-align: center;
   padding: $space-6;
-  background: $color-surface;
-  border: 1px solid $color-border;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-xl;
 }
 
@@ -158,12 +158,12 @@
   font-family: $font-family-display;
   font-size: 32px;
   font-weight: 800;
-  color: $color-primary;
+  color: var(--color-primary);
   letter-spacing: -0.03em;
 }
 
 .statLabel {
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   margin-top: $space-1;
 }

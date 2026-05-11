@@ -8,15 +8,15 @@
 }
 
 .card {
-  background: $color-surface;
-  border: 1px solid $color-border;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-xl;
   padding: $space-7;
   transition: all 0.25s ease;
 
   &:hover {
     border-color: rgba($color-primary, 0.3);
-    box-shadow: $shadow-md;
+    box-shadow: var(--shadow-md);
     transform: translateY(-2px);
   }
 }
@@ -25,10 +25,10 @@
   width: 44px;
   height: 44px;
   border-radius: $radius-lg;
-  background: $color-green-50;
+  background: var(--color-green-50);
   display: grid;
   place-items: center;
-  color: $color-primary;
+  color: var(--color-primary);
   margin-bottom: $space-4;
 }
 
@@ -36,13 +36,13 @@
   font-family: $font-family-display;
   font-size: $font-size-lg;
   font-weight: 700;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0 0 $space-2;
 }
 
 .cardText {
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: 1.65;
   margin: 0;
 }
@@ -61,7 +61,7 @@
     top: 48px;
     bottom: 48px;
     width: 2px;
-    background: linear-gradient(180deg, $color-primary, rgba($color-primary, 0.1));
+    background: linear-gradient(180deg, var(--color-primary), rgba($color-primary, 0.1));
     border-radius: 1px;
   }
 }
@@ -76,7 +76,7 @@
   width: 48px;
   height: 48px;
   border-radius: $radius-full;
-  background: $gradient-green;
+  background: var(--gradient-green);
   display: grid;
   place-items: center;
   color: #fff;
@@ -95,13 +95,13 @@
     font-family: $font-family-display;
     font-size: $font-size-xl;
     font-weight: 700;
-    color: $color-text;
+    color: var(--color-text);
     margin: 0 0 $space-2;
   }
 
   p {
     font-size: $font-size-sm;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     line-height: 1.65;
     margin: 0;
     max-width: 520px;

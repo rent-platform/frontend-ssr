@@ -2,12 +2,12 @@
 @use '../../../styles/helpers/mixins' as *;
 
 .header {
-  background: rgba(255, 255, 255, 0.85);
+  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
   backdrop-filter: blur(16px) saturate(180%);
   position: sticky;
   top: 0;
   z-index: $z-sticky;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  border-bottom: 1px solid var(--color-border);
   transition: all 0.3s ease;
 }
 
@@ -48,7 +48,7 @@
   strong {
     font-size: 22px;
     font-weight: 800;
-    color: $color-text;
+    color: var(--color-text);
     letter-spacing: -0.05em;
     line-height: 1;
     font-family: $font-family-display;
@@ -58,7 +58,7 @@
 .brandSymbol {
   @include square(34px);
   @include flex-center;
-  background: $gradient-green;
+  background: var(--gradient-green);
   color: #fff;
   border-radius: 10px;
   box-shadow: $shadow-green-sm;
@@ -83,7 +83,7 @@
 .brandTagline {
   font-size: 11px;
   font-weight: 600;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-top: 2px;
@@ -102,19 +102,19 @@
   gap: $space-2;
   font-size: 14px;
   font-weight: 600;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   text-decoration: none;
   transition: color 0.2s ease;
   padding: $space-2 0;
   position: relative;
 
   &:hover {
-    color: $color-primary;
+    color: var(--color-primary);
   }
 }
 
 .navLinkActive {
-  color: $color-primary;
+  color: var(--color-primary);
   
   &::after {
     content: '';
@@ -123,7 +123,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: $color-primary;
+    background: var(--color-primary);
     border-radius: $radius-full;
   }
 }
@@ -144,18 +144,18 @@
   align-items: center;
   gap: $space-2;
   padding: 8px 18px;
-  background: #fff;
-  border: 1px solid $color-border;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-full;
-  color: $color-text;
+  color: var(--color-text);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: $transition-smooth;
 
   &:hover {
-    border-color: $color-primary;
-    color: $color-primary;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
     box-shadow: $shadow-green-sm;
     transform: translateY(-1px);
   }
@@ -164,7 +164,7 @@
 .divider {
   width: 1px;
   height: 24px;
-  background: $color-border;
+  background: var(--color-border);
 }
 
 .iconActionRow {
@@ -180,13 +180,13 @@
   background: transparent;
   border: 0;
   border-radius: 50%;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition: $transition-smooth;
 
   &:hover {
-    background: $color-green-50;
-    color: $color-primary;
+    background: var(--color-green-50);
+    color: var(--color-primary);
   }
 
   &Badge {
@@ -195,7 +195,7 @@
     right: 4px;
     @include square(16px);
     @include flex-center;
-    background: $color-primary;
+    background: var(--color-primary);
     color: #fff;
     font-size: 10px;
     font-weight: 700;
@@ -215,18 +215,18 @@
   align-items: center;
   gap: $space-2;
   padding: 6px 12px;
-  background: $color-surface-muted;
+  background: var(--color-surface-muted);
   border-radius: $radius-full;
   font-size: 13px;
   font-weight: 600;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   border: 1px solid transparent;
   transition: $transition-base;
 
   &:hover {
-    background: #fff;
-    border-color: $color-border;
-    color: $color-text;
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
   }
 }
 
@@ -235,15 +235,15 @@
   align-items: center;
   gap: $space-2;
   padding: 4px;
-  background: #fff;
-  border: 1px solid $color-border;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-full;
   cursor: pointer;
   transition: $transition-smooth;
-  box-shadow: $shadow-sm;
+  box-shadow: var(--shadow-sm);
 
   &:hover {
-    border-color: $color-primary;
+    border-color: var(--color-primary);
     box-shadow: $shadow-green-sm;
   }
 }
@@ -251,13 +251,13 @@
 .avatarWrap {
   @include square(32px);
   @include flex-center;
-  background: $gradient-green;
+  background: var(--gradient-green);
   color: #fff;
   border-radius: 50%;
 }
 
 .chevron {
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   margin-right: $space-2;
 }
 
@@ -279,10 +279,10 @@
   top: calc(100% + $space-2);
   right: 0;
   min-width: 200px;
-  background: #fff;
-  border: 1px solid $color-border;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-lg;
-  box-shadow: $shadow-lg;
+  box-shadow: var(--shadow-lg);
   padding: $space-2;
   z-index: $z-dropdown;
 
@@ -311,38 +311,38 @@
   border: 0;
   border-radius: $radius-md;
   background: transparent;
-  color: $color-text;
+  color: var(--color-text);
   font-size: $font-size-sm;
   font-family: $font-family-base;
   text-decoration: none;
   cursor: pointer;
   transition: $transition-fast;
 
-  svg { width: 16px; height: 16px; color: $color-text-secondary; flex-shrink: 0; }
+  svg { width: 16px; height: 16px; color: var(--color-text-secondary); flex-shrink: 0; }
 
   &:hover {
-    background: $color-surface-muted;
-    color: $color-primary;
+    background: var(--color-surface-muted);
+    color: var(--color-primary);
 
-    svg { color: $color-primary; }
+    svg { color: var(--color-primary); }
   }
 }
 
 .profileMenuDivider {
   height: 1px;
-  background: $color-border;
+  background: var(--color-border);
   margin: $space-1 $space-2;
 }
 
 .profileMenuLogout {
-  color: $color-error;
+  color: var(--color-error);
 
-  svg { color: $color-error; }
+  svg { color: var(--color-error); }
 
   &:hover {
     background: rgba($color-error, 0.06);
-    color: $color-error;
+    color: var(--color-error);
 
-    svg { color: $color-error; }
+    svg { color: var(--color-error); }
   }
 }

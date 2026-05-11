@@ -4,9 +4,9 @@
 
 .inputArea {
   padding: $space-3 $space-5;
-  background: rgba(255, 255, 255, 0.96);
+  background: color-mix(in srgb, var(--color-bg) 96%, transparent);
   backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(226, 232, 240, 0.6);
+  border-top: 1px solid var(--color-border);
   box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.04);
   display: flex;
   align-items: flex-end;
@@ -17,9 +17,9 @@
   width: 38px;
   height: 38px;
   border-radius: $radius-full;
-  border: 1.5px solid rgba(226, 232, 240, 0.8);
-  background: #f8fafc;
-  color: $color-text-secondary;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +30,7 @@
   svg { width: 18px; height: 18px; }
 
   &:hover {
-    color: $color-primary;
+    color: var(--color-primary);
     border-color: rgba(34, 197, 94, 0.35);
     background: rgba(34, 197, 94, 0.04);
   }
@@ -46,22 +46,22 @@
   resize: none;
   padding: 8px $space-4;
   border-radius: 20px;
-  border: 1.5px solid rgba(226, 232, 240, 0.8);
-  background: #f8fafc;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface-muted);
   font-size: $font-size-sm;
   font-family: $font-family-base;
-  color: $color-text;
+  color: var(--color-text);
   outline: none;
   min-height: 38px;
   max-height: 140px;
   transition: $transition-smooth;
   line-height: 1.5;
 
-  &::placeholder { color: rgba(100, 116, 139, 0.7); }
+  &::placeholder { color: var(--color-text-secondary); }
 
   &:focus {
     border-color: rgba(34, 197, 94, 0.5);
-    background: #fff;
+    background: var(--color-surface);
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.08);
   }
 }
@@ -71,7 +71,7 @@
   height: 38px;
   border-radius: $radius-full;
   border: none;
-  background: $gradient-green;
+  background: var(--gradient-green);
   color: #fff;
   display: flex;
   align-items: center;
@@ -105,7 +105,7 @@
   align-items: center;
   justify-content: center;
   gap: $space-4;
-  background: #eef2f7;
+  background: var(--color-surface-muted);
 }
 
 .emptyIcon {
@@ -116,7 +116,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $color-primary;
+  color: var(--color-primary);
   box-shadow: 0 4px 20px rgba(34, 197, 94, 0.15);
   svg { width: 36px; height: 36px; }
 }
@@ -125,13 +125,13 @@
   font-family: $font-family-display;
   font-size: $font-size-lg;
   font-weight: $font-weight-800;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0;
 }
 
 .emptyText {
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   max-width: 300px;
   text-align: center;
   margin: 0;
@@ -145,7 +145,7 @@
   padding: $space-10 $space-5;
   text-align: center;
   gap: $space-2;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 
   svg { width: 28px; height: 28px; opacity: 0.4; margin-bottom: $space-1; }
 }
@@ -153,12 +153,12 @@
 .emptyListTitle {
   font-size: $font-size-sm;
   font-weight: $font-weight-600;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0;
 }
 
 .emptyListText {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   margin: 0;
 }

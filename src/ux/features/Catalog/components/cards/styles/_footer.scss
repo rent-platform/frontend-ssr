@@ -7,7 +7,7 @@
   gap: $space-3;
   margin-top: auto;
   padding-top: $space-3;
-  border-top: 1px solid rgba(226, 232, 240, 0.85);
+  border-top: 1px solid var(--color-border);
 }
 
 .cardOwner {
@@ -21,7 +21,7 @@
   @include flex-center;
   overflow: hidden;
   border-radius: 50%;
-  background: $gradient-green;
+  background: var(--gradient-green);
   color: #fff;
   font-size: 12px;
   font-weight: 800;
@@ -43,14 +43,14 @@
   strong {
     font-size: 13px;
     font-weight: 700;
-    color: $color-text;
+    color: var(--color-text);
     @include text-truncate;
   }
 
   span {
     font-size: 11px;
     font-weight: 500;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     @include text-truncate;
   }
 }
@@ -70,7 +70,7 @@
   strong {
     font-size: 15px;
     font-weight: 700;
-    color: $color-text;
+    color: var(--color-text);
     line-height: 1.2;
     letter-spacing: -0.01em;
   }
@@ -78,7 +78,7 @@
 
 .cardPriceSub {
   font-size: 12px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-weight: 600;
 }
 
@@ -90,9 +90,9 @@
   min-height: 30px;
   padding: 0 11px;
   border-radius: $radius-full;
-  border: 1px solid $color-border;
-  background: #fff;
-  color: $color-text;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
   font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
@@ -101,9 +101,9 @@
   cursor: pointer;
 
   &:hover {
-    border-color: $color-primary;
-    color: $color-primary;
-    background: $color-green-50;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-green-50);
   }
 }
 
@@ -120,7 +120,7 @@
     gap: 4px;
     font-size: 12px;
     font-weight: 600;
-    color: rgba(100, 116, 139, 0.72);
+    color: var(--color-text-secondary);
 
     svg {
       flex-shrink: 0;

@@ -4,10 +4,10 @@
 .card {
   width: 100%;
   max-width: v.$auth-form-width;
-  background: #fff;
+  background: var(--color-surface);
   border-radius: v.$radius-2xl;
-  border: 1px solid v.$color-border;
-  box-shadow: v.$shadow-premium;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-premium);
   padding: 40px 40px 32px;
 
   @media (max-width: v.$bp-sm) {
@@ -22,7 +22,7 @@
 .title {
   font-size: v.$font-size-2xl;
   font-weight: 800;
-  color: v.$color-text;
+  color: var(--color-text);
   margin: 0 0 8px;
   letter-spacing: -0.03em;
   font-family: v.$font-family-display;
@@ -30,7 +30,7 @@
 
 .subtitle {
   font-size: v.$font-size-sm;
-  color: v.$color-text-secondary;
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
@@ -49,7 +49,7 @@
   padding: 12px 16px;
   border-radius: v.$radius-sm;
   background: rgba(255, 90, 95, 0.1);
-  color: v.$color-error;
+  color: var(--color-error);
   font-size: v.$font-size-sm;
   line-height: v.$line-height-normal;
 }
@@ -60,14 +60,14 @@
   align-items: center;
   gap: 8px;
   font-size: v.$font-size-sm;
-  color: v.$color-text-secondary;
+  color: var(--color-text-secondary);
   user-select: none;
 }
 
 .checkBox {
   width: 16px;
   height: 16px;
-  accent-color: #22c55e;
+  accent-color: var(--color-primary);
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -79,7 +79,7 @@
   justify-content: center;
   gap: 8px;
   height: v.$auth-input-height;
-  background: v.$gradient-green;
+  background: var(--gradient-green);
   color: #fff;
   font-size: v.$font-size-base;
   font-weight: 700;
@@ -118,17 +118,17 @@
   margin-top: 24px;
   text-align: center;
   font-size: v.$font-size-sm;
-  color: v.$color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .link {
-  color: v.$color-primary;
+  color: var(--color-primary);
   font-weight: 600;
   text-decoration: none;
   transition: color v.$transition-fast;
 
   &:hover { 
-    color: v.$color-primary-hover;
+    color: var(--color-primary-hover);
     text-decoration: underline; 
   }
 }

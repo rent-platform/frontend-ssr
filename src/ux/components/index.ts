@@ -11,3 +11,5 @@ export type { TabsItem } from "./Tabs/Tabs";
 export { ShareModal } from "./ShareModal";
 export { SkipToContent } from "./SkipToContent";
 export { ShimmerBlock } from "./ShimmerBlock";
+export { ThemeToggle } from "./ThemeToggle";
+export type { ThemeToggleProps } from "./ThemeToggle";

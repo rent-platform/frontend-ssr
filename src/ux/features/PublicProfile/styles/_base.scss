@@ -5,14 +5,14 @@
 /* ═══ Page ═══ */
 .page {
   min-height: 100vh;
-  background: $color-surface-muted;
+  background: var(--color-surface-muted);
   font-family: $font-family-base;
 }
 
 /* ═══ Top bar / breadcrumb ═══ */
 .topBar {
-  background: #fff;
-  border-bottom: 1px solid $color-border;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   padding: $space-3 $space-4;
   margin-bottom: $space-6;
 }
@@ -30,7 +30,7 @@
   display: inline-flex;
   align-items: center;
   gap: $space-1;
-  color: $color-primary;
+  color: var(--color-primary);
   text-decoration: none;
   font-weight: $font-weight-medium;
   transition: $transition-base;
@@ -41,12 +41,12 @@
 }
 
 .breadcrumbSep {
-  color: $color-border;
+  color: var(--color-border);
   user-select: none;
 }
 
 .breadcrumbCurrent {
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-weight: $font-weight-medium;
 }
 

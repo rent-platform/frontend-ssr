@@ -29,17 +29,17 @@
   @include flex-center;
   border: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
+  background: color-mix(in srgb, var(--color-bg) 92%, transparent);
   backdrop-filter: blur(6px);
-  color: $color-text;
-  box-shadow: $shadow-sm;
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.2s ease, transform 0.15s ease;
 
   &:hover {
     transform: translateY(-50%) scale(1.08);
-    box-shadow: $shadow-md;
+    box-shadow: var(--shadow-md);
   }
 
   &:active {
@@ -75,11 +75,11 @@
 }
 
 .carouselDot {
-  background: rgba(255, 255, 255, 0.5);
+  background: color-mix(in srgb, var(--color-surface) 50%, transparent);
 }
 
 .carouselDotActive {
-  background: #fff;
+  background: var(--color-surface);
   transform: scale(1.3);
 }
 

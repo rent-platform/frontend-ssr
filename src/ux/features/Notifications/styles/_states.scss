@@ -12,9 +12,9 @@
 
 .statusNew { background: rgba(245, 158, 11, 0.08); color: #f59e0b; }
 .statusConfirmed { background: rgba(59, 130, 246, 0.08); color: #3b82f6; }
-.statusActive { background: rgba(34, 197, 94, 0.08); color: $color-primary; }
-.statusCompleted { background: rgba(100, 116, 139, 0.08); color: $color-text-secondary; }
-.statusRejected { background: rgba(239, 68, 68, 0.08); color: $color-error; }
+.statusActive { background: rgba(34, 197, 94, 0.08); color: var(--color-primary); }
+.statusCompleted { background: rgba(100, 116, 139, 0.08); color: var(--color-text-secondary); }
+.statusRejected { background: rgba(239, 68, 68, 0.08); color: var(--color-error); }
 
 /* ─── Empty state ─── */
 
@@ -35,7 +35,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $color-primary;
+  color: var(--color-primary);
   margin-bottom: $space-5;
 
   svg { width: 36px; height: 36px; opacity: 0.7; }
@@ -45,13 +45,13 @@
   font-family: $font-family-display;
   font-size: $font-size-lg;
   font-weight: $font-weight-800;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0 0 $space-2;
 }
 
 .emptyText {
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   max-width: 340px;
   margin: 0;
   line-height: $line-height-normal;

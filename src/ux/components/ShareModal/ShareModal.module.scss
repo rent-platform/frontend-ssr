@@ -20,7 +20,7 @@
   h3 {
     font-size: 17px;
     font-weight: $font-weight-bold;
-    color: $color-text;
+    color: var(--color-text);
     margin: 0;
   }
 }
@@ -31,7 +31,7 @@
 
 .modalDesc {
   font-size: 13px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   margin: 0 0 $space-4;
 }
 
@@ -44,15 +44,15 @@
   flex: 1;
   min-width: 0;
   padding: 10px 12px;
-  background: $color-surface-muted;
-  border: 1px solid $color-border;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
   border-radius: $radius-lg;
   font-size: 13px;
   font-family: $font-family-base;
-  color: $color-text;
+  color: var(--color-text);
   outline: none;
 
-  &:focus { border-color: $color-primary; }
+  &:focus { border-color: var(--color-primary); }
 }
 
 .modalCopyBtn {
@@ -60,7 +60,7 @@
   align-items: center;
   gap: $space-1;
   padding: 10px 16px;
-  background: $color-primary;
+  background: var(--color-primary);
   color: #fff;
   border: none;
   border-radius: $radius-lg;
@@ -74,7 +74,7 @@
   svg { width: 14px; height: 14px; }
 
   &:hover {
-    background: color.adjust($color-primary, $lightness: -6%);
+    background: var(--color-primary-hover);
     transform: translateY(-1px);
   }
 }

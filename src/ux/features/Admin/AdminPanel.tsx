@@ -839,7 +839,7 @@ function UsersTab({ toast }: { toast: ToastFn }) {
                     title: 'Пользователь',
                     desc: 'Стандартный доступ к платформе',
                     perms: ['Создание объявлений', 'Аренда вещей', 'Оставление отзывов'],
-                    color: '#64748b',
+                    color: 'var(--color-text-secondary)',
                     bg: 'rgba(100, 116, 139, 0.08)',
                   },
                   {
@@ -1312,7 +1312,7 @@ function DealsTab({ toast }: { toast: ToastFn }) {
             {d.selectedDeal.rejectionReason && (
               <div style={{ marginTop: 16, padding: 12, background: 'rgba(239,68,68,0.06)', borderRadius: 10, border: '1px solid rgba(239,68,68,0.15)' }}>
                 <span className={s.detailLabel}>Причина отмены/отклонения</span>
-                <p style={{ fontSize: 14, marginTop: 4, color: '#334155' }}>{d.selectedDeal.rejectionReason}</p>
+                <p style={{ fontSize: 14, marginTop: 4, color: 'var(--color-text)' }}>{d.selectedDeal.rejectionReason}</p>
               </div>
             )}
             {/* History timeline */}
@@ -1326,7 +1326,7 @@ function DealsTab({ toast }: { toast: ToastFn }) {
                       <div className={s.timelineText}>
                         {h.oldStatus ? `${DEAL_STATUS_MAP[h.oldStatus]?.label ?? h.oldStatus} → ` : ''}
                         <strong>{DEAL_STATUS_MAP[h.newStatus]?.label ?? h.newStatus}</strong>
-                        {h.comment && <span style={{ color: '#64748b' }}> — {h.comment}</span>}
+                        {h.comment && <span style={{ color: 'var(--color-text-secondary)' }}> — {h.comment}</span>}
                       </div>
                     </div>
                   ))}
@@ -1846,7 +1846,7 @@ function ActivityLogTab() {
         <div className={s.cardHeader}>
           <h3 className={s.cardTitle}>
             Журнал действий
-            <span style={{ fontWeight: 400, fontSize: 13, color: '#64748b', marginLeft: 8 }}>
+            <span style={{ fontWeight: 400, fontSize: 13, color: 'var(--color-text-secondary)', marginLeft: 8 }}>
               ({al.items.length} из {al.totalCount})
             </span>
           </h3>
@@ -1886,7 +1886,7 @@ function ActivityLogTab() {
                     </td>
                     <td style={{ fontWeight: 500 }}>{entry.targetTitle}</td>
                     <td>{entry.performedByName}</td>
-                    <td style={{ fontSize: 13, color: '#64748b', maxWidth: 200 }}>
+                    <td style={{ fontSize: 13, color: 'var(--color-text-secondary)', maxWidth: 200 }}>
                       {entry.details ?? '—'}
                     </td>
                   </tr>
@@ -2065,20 +2065,20 @@ function AdminComplaintsTab({ toast }: { toast: ToastFn }) {
             </div>
             <div style={{ marginTop: 16 }}>
               <span className={s.detailLabel}>Причина жалобы</span>
-              <p style={{ fontSize: 14, color: '#334155', marginTop: 4, lineHeight: 1.6 }}>
+              <p style={{ fontSize: 14, color: 'var(--color-text)', marginTop: 4, lineHeight: 1.6 }}>
                 {c.selectedComplaint.reason}
               </p>
             </div>
             <div style={{ marginTop: 8 }}>
               <span className={s.detailLabel}>Описание</span>
-              <p style={{ fontSize: 14, color: '#334155', marginTop: 4, lineHeight: 1.6 }}>
+              <p style={{ fontSize: 14, color: 'var(--color-text)', marginTop: 4, lineHeight: 1.6 }}>
                 {c.selectedComplaint.description}
               </p>
             </div>
             {c.selectedComplaint.moderatorComment && (
               <div style={{ marginTop: 12 }}>
                 <span className={s.detailLabel}>Комментарий модератора</span>
-                <p style={{ fontSize: 14, color: '#334155', marginTop: 4 }}>
+                <p style={{ fontSize: 14, color: 'var(--color-text)', marginTop: 4 }}>
                   {c.selectedComplaint.moderatorComment}
                 </p>
               </div>

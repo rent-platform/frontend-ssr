@@ -7,8 +7,8 @@
   align-items: flex-start;
   gap: $space-3;
   padding: $space-4 $space-5;
-  background: #fff;
-  border: 1px solid rgba(226, 232, 240, 0.5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-xl;
   margin-bottom: $space-2;
   cursor: pointer;
@@ -28,17 +28,17 @@
 }
 
 .cardUrgent {
-  border-left: 3px solid $color-error;
+  border-left: 3px solid var(--color-error);
   background: rgba(239, 68, 68, 0.015);
 }
 
 .cardHigh {
-  border-left: 3px solid $color-warning;
+  border-left: 3px solid var(--color-warning);
   background: rgba(245, 158, 11, 0.015);
 }
 
 .cardGreen {
-  border-left: 3px solid $color-primary;
+  border-left: 3px solid var(--color-primary);
   background: rgba(34, 197, 94, 0.015);
 }
 
@@ -104,14 +104,14 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: $color-primary;
+  background: var(--color-primary);
 }
 
 /* ─── Icon color variants ─── */
 
 .iconDealRequest {
   background: rgba(34, 197, 94, 0.07);
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 .iconDealConfirmed {
@@ -121,7 +121,7 @@
 
 .iconDealActive {
   background: rgba(34, 197, 94, 0.07);
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 .iconDealEnding {
@@ -131,12 +131,12 @@
 
 .iconDealCompleted {
   background: rgba(100, 116, 139, 0.07);
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .iconDealRejected {
   background: rgba(239, 68, 68, 0.07);
-  color: $color-error;
+  color: var(--color-error);
 }
 
 .iconPayment {
@@ -156,12 +156,12 @@
 
 .iconSystem {
   background: rgba(100, 116, 139, 0.07);
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .iconSecurity {
   background: rgba(239, 68, 68, 0.07);
-  color: $color-error;
+  color: var(--color-error);
 }
 
 .iconPromo {
@@ -187,7 +187,7 @@
 .cardTitle {
   font-size: $font-size-sm;
   font-weight: $font-weight-600;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0;
   line-height: $line-height-tight;
 }
@@ -198,7 +198,7 @@
 
 .cardTime {
   font-size: 11px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   opacity: 0.65;
   white-space: nowrap;
   flex-shrink: 0;
@@ -206,7 +206,7 @@
 
 .cardText {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: $line-height-normal;
   margin: 0 0 $space-2;
   display: -webkit-box;
@@ -227,7 +227,7 @@
   align-items: center;
   gap: 3px;
   font-size: 11px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   background: rgba(100, 116, 139, 0.06);
   padding: 2px 8px;
   border-radius: $radius-full;
@@ -238,19 +238,19 @@
 .cardAmount {
   font-size: 11px;
   font-weight: $font-weight-bold;
-  color: $color-text;
+  color: var(--color-text);
   padding: 2px 8px;
   border-radius: $radius-full;
   background: rgba(100, 116, 139, 0.05);
 }
 
 .cardAmountPositive {
-  color: $color-primary;
+  color: var(--color-primary);
   background: rgba(34, 197, 94, 0.06);
 }
 
 .cardAmountNegative {
-  color: $color-error;
+  color: var(--color-error);
   background: rgba(239, 68, 68, 0.05);
 }
 
@@ -285,7 +285,7 @@
   font-family: $font-family-base;
   border: 1px solid rgba(34, 197, 94, 0.2);
   background: rgba(34, 197, 94, 0.04);
-  color: $color-primary;
+  color: var(--color-primary);
   cursor: pointer;
   transition: $transition-smooth;
   white-space: nowrap;
@@ -294,6 +294,6 @@
 
   &:hover {
     background: rgba(34, 197, 94, 0.1);
-    border-color: $color-primary;
+    border-color: var(--color-primary);
   }
 }

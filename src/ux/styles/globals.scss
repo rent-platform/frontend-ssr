@@ -5,34 +5,119 @@
 body[class] {
   font-family: $font-family-base;
   font-size: $font-size-base;
-  color: $color-text;
-  background-color: $color-bg;
+  color: var(--color-text);
+  background-color: var(--color-bg);
   line-height: $line-height-normal;
   font-optical-sizing: auto;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+// ─── CSS Custom Properties (light theme defaults) ───────────────────────────
 :root {
   @include scrollbar;
   color-scheme: light;
+
+  --color-primary:        #{$color-primary};
+  --color-primary-hover:  #{$color-primary-hover};
+  --color-secondary:      #{$color-secondary};
+  --color-bg:             #{$color-bg};
+  --color-surface:        #{$color-surface};
+  --color-surface-muted:  #{$color-surface-muted};
+  --color-text:           #{$color-text};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-inverse:   #{$color-text-inverse};
+  --color-border:         #{$color-border};
+  --color-border-focus:   #{$color-border-focus};
+  --color-success:        #{$color-success};
+  --color-warning:        #{$color-warning};
+  --color-error:          #{$color-error};
+  --font-family-base:     #{$font-family-base};
+  --font-family-display:  #{$font-family-display};
+  --font-family-mono:     #{$font-family-mono};
+  --radius-sm:  #{$radius-sm};
+  --radius-md:  #{$radius-md};
+  --radius-lg:  #{$radius-lg};
+  --radius-xl:  #{$radius-xl};
+  --radius-2xl: #{$radius-2xl};
+  --radius-3xl: #{$radius-3xl};
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+  --shadow-xl: #{$shadow-xl};
+  --shadow-card:       #{$shadow-card};
+  --shadow-card-hover: #{$shadow-card-hover};
+  --shadow-premium:    #{$shadow-premium};
+  --gradient-green: #{$gradient-green};
+  --gradient-green-soft: #{$gradient-green-soft};
+  --gradient-green-hero: #{$gradient-green-hero};
+  --gradient-surface:    #{$gradient-surface};
+  --color-green-50:  #{$color-green-50};
+  --color-green-100: #{$color-green-100};
+  --color-green-900: #{$color-green-900};
+  --color-bg-primary:   #{$color-surface};
+  --color-bg-secondary: #{$color-surface-muted};
+}
+
+// ─── Dark Theme ──────────────────────────────────────────────────────────────
+[data-theme="dark"] {
+  @include scrollbar(6px, #4ade80, #242834);
+  color-scheme: dark;
+
+  --color-primary:        #4ade80;
+  --color-primary-hover:  #22c55e;
+  --color-secondary:      #fb7185;
+
+  --color-bg:             #0f1117;
+  --color-surface:        #1a1d27;
+  --color-surface-muted:  #242834;
+  --color-text:           #e8eaed;
+  --color-text-secondary: #9ca3af;
+  --color-text-inverse:   #0f1117;
+
+  --color-border:         #2d3142;
+  --color-border-focus:   #4ade80;
+  --color-success:        #34d399;
+  --color-warning:        #fbbf24;
+  --color-error:          #f87171;
+
+  --color-green-50:  rgba(74, 222, 128, 0.06);
+  --color-green-100: rgba(74, 222, 128, 0.12);
+  --color-green-900: #bbf7d0;
+
+  --color-bg-primary:   #1a1d27;
+  --color-bg-secondary: #242834;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 12px 24px -4px rgba(0, 0, 0, 0.5);
+  --shadow-premium: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px 4px rgba(0, 0, 0, 0.3), 0 12px 24px rgba(0, 0, 0, 0.3);
+
+  --gradient-green: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  --gradient-green-soft: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+  --gradient-green-hero: linear-gradient(135deg, rgba(74, 222, 128, 0.08) 0%, rgba(52, 211, 153, 0.04) 50%, rgba(15, 17, 23, 0) 100%);
+  --gradient-surface: linear-gradient(180deg, #1a1d27 0%, #242834 100%);
 }
 
 ::selection {
   background: rgba(34, 197, 94, 0.15);
-  color: $color-text;
+  color: var(--color-text);
 }
 
 :focus-visible {
-  outline: 2px solid $color-primary;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
   border-radius: $radius-sm;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: $font-family-display;
-  color: $color-text;
+  color: var(--color-text);
 }
 
 button {
@@ -47,7 +132,7 @@ a {
 hr {
   border: 0;
   height: 1px;
-  background: $color-border;
+  background: var(--color-border);
 }
 
 /* ═══ Utility classes ═══ */

@@ -13,13 +13,13 @@
   align-items: center;
   gap: $space-4;
   padding: $space-4;
-  border: 1px solid rgba(226, 232, 240, 0.7);
+  border: 1px solid var(--color-border);
   border-radius: $radius-xl;
-  background: rgba(255, 255, 255, 0.5);
+  background: color-mix(in srgb, var(--color-surface) 50%, transparent);
   transition: $transition-smooth;
 
   &:hover {
-    background: #fff;
+    background: var(--color-surface);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   }
 }
@@ -38,14 +38,14 @@
   justify-content: center;
   flex-shrink: 0;
   background: rgba(100, 116, 139, 0.06);
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 
   svg { width: 20px; height: 20px; }
 }
 
 .sessionIconCurrent {
   background: rgba(34, 197, 94, 0.08);
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 .sessionInfo {
@@ -63,7 +63,7 @@
 .sessionName {
   font-size: $font-size-sm;
   font-weight: $font-weight-600;
-  color: $color-text;
+  color: var(--color-text);
 }
 
 .sessionCurrentBadge {
@@ -72,12 +72,12 @@
   padding: 2px $space-2;
   border-radius: $radius-full;
   background: rgba(34, 197, 94, 0.08);
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 .sessionDevice {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .sessionRight {
@@ -90,5 +90,5 @@
 
 .sessionTime {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }

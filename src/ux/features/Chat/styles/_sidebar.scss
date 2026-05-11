@@ -7,8 +7,8 @@
   min-width: 380px;
   display: flex;
   flex-direction: column;
-  background: #fff;
-  border-right: 1px solid rgba(226, 232, 240, 0.8);
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
   box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
 }
 
@@ -18,14 +18,14 @@
   align-items: center;
   justify-content: space-between;
   gap: $space-3;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.4);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .sidebarTitle {
   font-family: $font-family-display;
   font-size: $font-size-lg;
   font-weight: $font-weight-800;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0;
   letter-spacing: -0.3px;
 }
@@ -44,7 +44,7 @@
   border-radius: $radius-lg;
   border: 1px solid transparent;
   background: none;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition: $transition-smooth;
   text-decoration: none;
@@ -52,7 +52,7 @@
   svg { width: 18px; height: 18px; }
 
   &:hover {
-    color: $color-primary;
+    color: var(--color-primary);
     background: rgba(34, 197, 94, 0.06);
     border-color: rgba(34, 197, 94, 0.15);
   }
@@ -65,7 +65,7 @@
   align-items: center;
   gap: $space-2;
   padding: $space-3 $space-5;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .sidebarTab {
@@ -76,20 +76,20 @@
   font-size: $font-size-xs;
   font-weight: $font-weight-medium;
   font-family: $font-family-base;
-  color: $color-text-secondary;
-  background: #fff;
-  border: 1px solid rgba(226, 232, 240, 0.6);
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-full;
   cursor: pointer;
   transition: $transition-smooth;
   white-space: nowrap;
 
-  &:hover { color: $color-text; border-color: $color-border; }
+  &:hover { color: var(--color-text); border-color: var(--color-border); }
 }
 
 .sidebarTabActive {
   background: rgba(34, 197, 94, 0.06);
-  color: $color-primary;
+  color: var(--color-primary);
   font-weight: $font-weight-600;
   border-color: rgba(34, 197, 94, 0.2);
 }
@@ -109,7 +109,7 @@
 
 .sidebarTabBadgeActive {
   background: rgba(34, 197, 94, 0.12);
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 /* ─── Tab Dropdown ─── */
@@ -132,10 +132,10 @@
   top: calc(100% + 6px);
   left: 0;
   min-width: 160px;
-  background: #fff;
-  border: 1px solid rgba(226, 232, 240, 0.6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: $radius-lg;
-  box-shadow: $shadow-lg;
+  box-shadow: var(--shadow-lg);
   padding: $space-1;
   z-index: $z-dropdown;
   opacity: 0;
@@ -159,7 +159,7 @@
   font-size: $font-size-xs;
   font-weight: $font-weight-medium;
   font-family: $font-family-base;
-  color: $color-text;
+  color: var(--color-text);
   background: none;
   border: none;
   border-radius: $radius-md;
@@ -168,13 +168,13 @@
 
   &:hover {
     background: rgba(34, 197, 94, 0.05);
-    color: $color-primary;
+    color: var(--color-primary);
   }
 }
 
 .tabDropdownItemActive {
   background: rgba(34, 197, 94, 0.06);
-  color: $color-primary;
+  color: var(--color-primary);
   font-weight: $font-weight-600;
 }
 
@@ -189,7 +189,7 @@
   font-size: 10px;
   font-weight: $font-weight-600;
   background: rgba(100, 116, 139, 0.07);
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 /* ─── Search ─── */
@@ -208,7 +208,7 @@
     transform: translateY(-50%);
     width: 15px;
     height: 15px;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     pointer-events: none;
   }
 }
@@ -217,19 +217,19 @@
   width: 100%;
   padding: 7px $space-3 7px 34px;
   border-radius: $radius-lg;
-  border: 1px solid $color-border;
-  background: $color-surface-muted;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
   font-size: $font-size-xs;
   font-family: $font-family-base;
-  color: $color-text;
+  color: var(--color-text);
   outline: none;
   transition: $transition-smooth;
 
-  &::placeholder { color: $color-text-secondary; }
+  &::placeholder { color: var(--color-text-secondary); }
 
   &:focus {
-    border-color: $color-primary;
-    background: #fff;
+    border-color: var(--color-primary);
+    background: var(--color-surface);
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.08);
   }
 }
@@ -262,14 +262,14 @@
   transition: background 0.15s ease;
   position: relative;
 
-  &:hover { background: #f8fafc; }
+  &:hover { background: var(--color-surface-muted); }
 }
 
 .chatItemActive {
   background: rgba(34, 197, 94, 0.06);
-  border-left-color: $color-primary;
+  border-left-color: var(--color-primary);
 
-  .chatName { color: $color-primary; }
+  .chatName { color: var(--color-primary); }
 
   &:hover { background: rgba(34, 197, 94, 0.09); }
 }
@@ -284,7 +284,7 @@
   width: 46px;
   height: 46px;
   border-radius: $radius-full;
-  background: $gradient-green;
+  background: var(--gradient-green);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -309,7 +309,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: $color-success;
+  background: var(--color-success);
   border: 2px solid #fff;
 }
 
@@ -329,7 +329,7 @@
 .chatName {
   font-size: $font-size-sm;
   font-weight: $font-weight-600;
-  color: $color-text;
+  color: var(--color-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -337,7 +337,7 @@
 
 .chatTime {
   font-size: 10px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -352,7 +352,7 @@
 
 .chatLastMsg {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -365,7 +365,7 @@
   height: 20px;
   padding: 0 6px;
   border-radius: $radius-full;
-  background: $color-primary;
+  background: var(--color-primary);
   color: #fff;
   font-size: 11px;
   font-weight: $font-weight-bold;
@@ -380,7 +380,7 @@
   align-items: center;
   gap: 4px;
   font-size: 10px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   opacity: 0.65;
 
   svg { width: 11px; height: 11px; flex-shrink: 0; }
@@ -407,7 +407,7 @@
 
 .roleBadgeOwner {
   background: rgba(34, 197, 94, 0.06);
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 .roleBadgeRenter {
@@ -426,7 +426,7 @@
   position: absolute;
   top: 6px;
   right: $space-5;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   opacity: 0.35;
   svg { width: 10px; height: 10px; }
 }
@@ -434,6 +434,6 @@
 /* ─── Typing indicator (sidebar) ─── */
 
 .typingText {
-  color: $color-primary;
+  color: var(--color-primary);
   font-style: italic;
 }

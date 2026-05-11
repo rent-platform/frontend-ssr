@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import { ROUTES } from '@/ux/utils';
+import { ThemeToggle } from '@/ux/components/ThemeToggle';
 import styles from '../../Catalog.module.scss';
 
 type CatalogHeaderProps = {
@@ -97,6 +98,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
             <div className={styles.divider} />
 
             <div className={styles.iconActionRow}>
+              <ThemeToggle />
               {actionIcons.map(({ label, count, Icon, href }) => {
                 const btn = (
                   <motion.button 

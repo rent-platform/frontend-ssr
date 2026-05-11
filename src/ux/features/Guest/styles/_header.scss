@@ -5,8 +5,8 @@
   position: sticky;
   top: 0;
   z-index: $z-sticky;
-  background: rgba(255, 255, 255, 0.98);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  background: color-mix(in srgb, var(--color-bg) 98%, transparent);
+  border-bottom: 1px solid var(--color-border);
   transition: border-color 0.3s ease;
 }
 
@@ -40,7 +40,7 @@
   border-radius: 10px;
   display: grid;
   place-items: center;
-  background: $gradient-green;
+  background: var(--gradient-green);
   color: #fff;
   font-family: $font-family-display;
   font-size: 20px;
@@ -63,14 +63,14 @@
     font-weight: $font-weight-800;
     letter-spacing: -0.05em;
     line-height: 1;
-    color: $color-text;
+    color: var(--color-text);
   }
 
 }
 
 .brandTagline {
   margin-top: 2px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-size: 11px;
   font-weight: $font-weight-600;
   text-transform: uppercase;
@@ -96,19 +96,19 @@
   gap: $space-2;
   font-size: 14px;
   font-weight: $font-weight-600;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   text-decoration: none;
   transition: color 0.2s ease;
   padding: $space-2 0;
   position: relative;
 
   &:hover {
-    color: $color-primary;
+    color: var(--color-primary);
   }
 }
 
 .navLinkActive {
-  color: $color-primary;
+  color: var(--color-primary);
 
   &::after {
     content: '';
@@ -117,7 +117,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: $color-primary;
+    background: var(--color-primary);
     border-radius: $radius-full;
   }
 }
@@ -149,20 +149,20 @@
 }
 
 .loginBtn {
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   background: transparent;
-  border: 1px solid $color-border;
+  border: 1px solid var(--color-border);
 
   &:hover {
-    color: $color-text;
-    background: $color-surface-muted;
+    color: var(--color-text);
+    background: var(--color-surface-muted);
     transform: translateY(-1px);
   }
 }
 
 .registerBtn {
   color: #fff;
-  background: $gradient-green;
+  background: var(--gradient-green);
   border: 1px solid transparent;
   box-shadow: $shadow-green-sm;
 

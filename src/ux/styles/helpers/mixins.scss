@@ -90,11 +90,11 @@
 
 // ─── Visuals ──────────────────────────────────────────────────────────────────
 
-@mixin scrollbar($width: 6px, $thumb: $color-primary, $track: $color-surface-muted) {
+@mixin scrollbar($width: 6px, $thumb: var(--color-primary), $track: var(--color-surface-muted)) {
   &::-webkit-scrollbar              { width: $width; }
   &::-webkit-scrollbar-track        { background: $track; border-radius: $radius-full; }
   &::-webkit-scrollbar-thumb        { background: $thumb; border-radius: $radius-full; }
-  &::-webkit-scrollbar-thumb:hover  { background: $color-primary-hover; }
+  &::-webkit-scrollbar-thumb:hover  { background: var(--color-primary-hover); }
 }
 
 @mixin scrollbar-none {
@@ -113,7 +113,7 @@
     rgba(255, 255, 255, 0.5) 60%,
     rgba(255, 255, 255, 0)
   );
-  background-color: $color-surface-muted;
+  background-color: var(--color-surface-muted);
   background-size: 200% 100%;
   animation: shimmer 2s infinite linear;
 }
@@ -124,7 +124,7 @@
   }
 }
 
-@mixin focus-ring($color: $color-border-focus) {
+@mixin focus-ring($color: var(--color-border-focus)) {
   outline: 1px solid $color;
 }
 
@@ -140,18 +140,18 @@
 }
 
 @mixin green-surface {
-  background: $color-green-50;
-  border: 1px solid $color-border-green;
+  background: var(--color-green-50);
+  border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
 @mixin glass-card($blur: 20px) {
-  background: rgba(255, 255, 255, 0.7);
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
   backdrop-filter: blur($blur) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--color-border);
 }
 
 @mixin green-gradient-text {
-  background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+  background: var(--gradient-green);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -177,7 +177,7 @@
   padding: $padding;
 }
 
-@mixin empty-state-icon($size: 72px, $bg: rgba(100, 116, 139, 0.06), $color: $color-text-secondary) {
+@mixin empty-state-icon($size: 72px, $bg: rgba(100, 116, 139, 0.06), $color: var(--color-text-secondary)) {
   @include flex-center;
   @include square($size);
   border-radius: $radius-full;
@@ -190,13 +190,13 @@
   font-family: $font-family-display;
   font-size: $size;
   font-weight: $font-weight-800;
-  color: $color-text;
+  color: var(--color-text);
   margin: 0 0 $space-2;
 }
 
 @mixin empty-state-text($max-width: 320px) {
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   max-width: $max-width;
   margin: 0 0 $space-6;
   line-height: 1.6;
@@ -216,7 +216,7 @@
 }
 
 @mixin modal-panel($max-width: 440px) {
-  background: #fff;
+  background: var(--color-surface);
   border-radius: $radius-2xl;
   padding: $space-6;
   width: 100%;
@@ -232,7 +232,7 @@
   border: none;
   border-radius: $radius-full;
   cursor: pointer;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   transition: $transition-base;
-  &:hover { background: $color-surface-muted; color: $color-text; }
+  &:hover { background: var(--color-surface-muted); color: var(--color-text); }
 }

@@ -14,30 +14,30 @@
   flex-direction: column;
   gap: 4px;
   padding: $space-3 $space-4;
-  border: 1.5px solid $color-border;
+  border: 1.5px solid var(--color-border);
   border-radius: $radius-lg;
-  background: $color-surface;
+  background: var(--color-surface);
   cursor: pointer;
   transition: $transition-smooth;
 
-  &:hover { border-color: color.adjust($color-border, $lightness: -10%); }
+  &:hover { border-color: var(--color-border); }
 }
 
 .conditionCardActive {
-  border-color: $color-primary;
-  background: $color-green-50;
+  border-color: var(--color-primary);
+  background: var(--color-green-50);
   box-shadow: $shadow-green-glow;
 }
 
 .conditionLabel {
   font-size: $font-size-sm;
   font-weight: $font-weight-bold;
-  color: $color-text;
+  color: var(--color-text);
 }
 
 .conditionDesc {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: $line-height-normal;
 }
 
@@ -54,9 +54,9 @@
   gap: 4px;
   padding: 6px 14px;
   border-radius: $radius-full;
-  border: 1.5px solid $color-border;
-  background: $color-surface;
-  color: $color-text;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
   font-family: inherit;
   font-size: $font-size-xs;
   font-weight: $font-weight-600;
@@ -64,15 +64,15 @@
   transition: $transition-smooth;
 
   &:hover:not(:disabled) {
-    border-color: $color-primary;
-    background: $color-green-50;
+    border-color: var(--color-primary);
+    background: var(--color-green-50);
   }
 }
 
 .tagChipActive {
-  border-color: $color-primary;
-  background: $color-green-50;
-  color: color.adjust($color-primary, $lightness: -8%);
+  border-color: var(--color-primary);
+  background: var(--color-green-50);
+  color: var(--color-primary-hover);
 
   svg { flex-shrink: 0; }
 }
@@ -88,9 +88,9 @@
   gap: 4px;
   padding: 4px 10px;
   border-radius: $radius-full;
-  background: $color-green-50;
-  border: 1px solid $color-border-green;
-  color: color.adjust($color-primary, $lightness: -8%);
+  background: var(--color-green-50);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: var(--color-primary-hover);
   font-size: $font-size-xs;
   font-weight: $font-weight-bold;
 }
@@ -107,23 +107,23 @@
   width: 100%;
   height: 48px;
   padding: 0 $space-4;
-  border: 1.5px solid $color-border;
+  border: 1.5px solid var(--color-border);
   border-radius: $radius-lg;
-  background: $color-surface;
+  background: var(--color-surface);
   font-family: inherit;
   font-size: $font-size-sm;
-  color: $color-text;
+  color: var(--color-text);
   cursor: pointer;
   transition: $transition-smooth;
   text-align: left;
 
-  svg { color: $color-text-secondary; flex-shrink: 0; }
+  svg { color: var(--color-text-secondary); flex-shrink: 0; }
   span { flex: 1; }
 
-  &:hover { border-color: color.adjust($color-border, $lightness: -10%); }
+  &:hover { border-color: var(--color-border); }
   &:focus {
     outline: none;
-    border-color: $color-primary;
+    border-color: var(--color-primary);
     box-shadow: $shadow-green-glow;
   }
 }
@@ -143,10 +143,10 @@
   left: 0;
   right: 0;
   z-index: 200;
-  background: $color-surface;
-  border: 1.5px solid $color-border;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
   border-radius: $radius-lg;
-  box-shadow: $shadow-xl;
+  box-shadow: var(--shadow-xl);
   overflow: hidden;
   animation: fadeSlideIn 0.18s cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -157,13 +157,13 @@
   height: 42px;
   padding: 0 $space-4;
   border: 0;
-  border-bottom: 1px solid $color-border;
-  background: $color-surface-muted;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
   font-family: inherit;
   font-size: $font-size-sm;
-  color: $color-text;
+  color: var(--color-text);
 
-  &::placeholder { color: $color-text-secondary; }
+  &::placeholder { color: var(--color-text-secondary); }
   &:focus { outline: none; }
 }
 
@@ -181,20 +181,20 @@
   background: transparent;
   font-family: inherit;
   font-size: $font-size-sm;
-  color: $color-text;
+  color: var(--color-text);
   text-align: left;
   cursor: pointer;
   transition: background 0.15s ease;
 
-  &:hover { background: $color-surface-muted; }
+  &:hover { background: var(--color-surface-muted); }
 }
 
 .cityOptionActive {
-  background: $color-green-50;
-  color: color.adjust($color-primary, $lightness: -8%);
+  background: var(--color-green-50);
+  color: var(--color-primary-hover);
   font-weight: $font-weight-600;
 
-  &:hover { background: $color-green-50; }
+  &:hover { background: var(--color-green-50); }
 }
 
 /* ═══ Toggle ═══ */
@@ -203,17 +203,17 @@
   align-items: center;
   justify-content: space-between;
   padding: $space-4;
-  border: 1.5px solid $color-border;
+  border: 1.5px solid var(--color-border);
   border-radius: $radius-lg;
   cursor: pointer;
   transition: $transition-smooth;
 
-  &:hover { border-color: color.adjust($color-border, $lightness: -10%); }
+  &:hover { border-color: var(--color-border); }
 }
 
 .toggleRowActive {
-  border-color: $color-border-green;
-  background: $color-green-50;
+  border-color: rgba(34, 197, 94, 0.2);
+  background: var(--color-green-50);
 }
 
 .toggleInfo {
@@ -228,14 +228,14 @@
   gap: 6px;
   font-size: $font-size-sm;
   font-weight: $font-weight-600;
-  color: $color-text;
+  color: var(--color-text);
 
-  svg { width: 14px; height: 14px; color: $color-primary; flex-shrink: 0; }
+  svg { width: 14px; height: 14px; color: var(--color-primary); flex-shrink: 0; }
 }
 
 .toggleHint {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .toggle {
@@ -244,7 +244,7 @@
   height: 24px;
   border: 0;
   border-radius: $radius-full;
-  background: $color-border;
+  background: var(--color-border);
   cursor: pointer;
   transition: $transition-smooth;
   flex-shrink: 0;
@@ -258,14 +258,14 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #fff;
-    box-shadow: $shadow-sm;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
     transition: $transition-smooth;
   }
 }
 
 .toggleOn {
-  background: $color-primary;
+  background: var(--color-primary);
 
   &::after { left: 22px; }
 }
