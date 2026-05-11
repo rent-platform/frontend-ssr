@@ -106,7 +106,6 @@ export function MyListingDetail() {
     );
   }
 
-  const totalEarned = listing.bookingsCount * Number(listing.pricePerDay ?? 0) * 3;
   const publishedLabel = formatRelativeDate(listing.createdAt);
 
   return (
@@ -180,9 +179,7 @@ export function MyListingDetail() {
                 </div>
               </div>
               <div className={c.detailTrustItem}>
-                <div className={clsx(s.galleryStatus, STATUS_CLS[listing.status])} style={{ borderRadius: 9999, padding: '4px 12px', fontSize: 12, fontWeight: 700 }}>
-                  {STATUS_LABEL[listing.status]}
-                </div>
+                <span className={clsx(s.statusDot, STATUS_CLS[listing.status])} />
                 <div>
                   <span>Статус</span>
                   <strong>{STATUS_LABEL[listing.status]}</strong>
@@ -190,57 +187,61 @@ export function MyListingDetail() {
               </div>
             </section>
 
-            {/* ─── Combined Stats + Pricing ─── */}
+            {/* ─── Owner Dashboard Card ─── */}
             <motion.section
-              className={s.ownerPanel}
+              className={s.dashboardCard}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <div className={s.statsGrid}>
-                <div className={clsx(s.statCard, s.statCardBlue)}>
-                  <Eye size={20} />
-                  <span className={s.statNumber}>{listing.viewsCount}</span>
-                  <span className={s.statCaption}>просмотров</span>
+              {/* Price hero */}
+              <div className={s.dashPriceHero}>
+                <div className={s.dashPriceLeft}>
+                  <span className={s.dashPriceAmount}>
+                    {listing.pricePerDay ? `${Number(listing.pricePerDay).toLocaleString('ru-RU')} ₽` : '—'}
+                  </span>
+                  <span className={s.dashPricePeriod}>/ сутки</span>
+                  {listing.pricePerHour && (
+                    <span className={s.dashPriceSecondary}>{Number(listing.pricePerHour).toLocaleString('ru-RU')} ₽/час</span>
+                  )}
                 </div>
-                <div className={clsx(s.statCard, s.statCardGreen)}>
-                  <ShoppingBag size={20} />
-                  <span className={s.statNumber}>{listing.bookingsCount}</span>
-                  <span className={s.statCaption}>бронирований</span>
-                </div>
-                <div className={clsx(s.statCard, s.statCardAmber)}>
-                  <Heart size={20} />
-                  <span className={s.statNumber}>{listing.favoritesCount}</span>
-                  <span className={s.statCaption}>в избранном</span>
-                </div>
-                <div className={clsx(s.statCard, s.statCardViolet)}>
-                  <MessageCircle size={20} />
-                  <span className={s.statNumber}>{listing.messagesCount}</span>
-                  <span className={s.statCaption}>сообщений</span>
+                <div className={s.dashPriceRight}>
+                  {listing.depositAmount && (
+                    <div className={s.dashMeta}>
+                      <Shield size={15} />
+                      <div>
+                        <span className={s.dashMetaLabel}>Залог</span>
+                        <span className={s.dashMetaValue}>{Number(listing.depositAmount).toLocaleString('ru-RU')} ₽</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className={s.pricingRow}>
-                <div className={s.priceMain}>
-                  <span className={s.priceAmount}>{listing.pricePerDay ? `${Number(listing.pricePerDay).toLocaleString('ru-RU')} ₽` : '—'}</span>
-                  <span className={s.pricePeriod}>/ сутки</span>
-                  {listing.pricePerHour && (
-                    <span className={s.priceHour}>· {Number(listing.pricePerHour).toLocaleString('ru-RU')} ₽/час</span>
-                  )}
+              {/* Stats strip */}
+              <div className={s.dashStats}>
+                <div className={s.dashStat}>
+                  <div className={clsx(s.dashStatIcon, s.dashStatIconBlue)}><Eye size={16} /></div>
+                  <span className={s.dashStatValue}>{listing.viewsCount}</span>
+                  <span className={s.dashStatLabel}>Просмотры</span>
                 </div>
-                <div className={s.priceMeta}>
-                  {listing.depositAmount && (
-                    <div className={s.priceChip}>
-                      <Shield size={14} />
-                      <span>Залог {Number(listing.depositAmount).toLocaleString('ru-RU')} ₽</span>
-                    </div>
-                  )}
-                  {totalEarned > 0 && (
-                    <div className={clsx(s.priceChip, s.priceChipGreen)}>
-                      <ShoppingBag size={14} />
-                      <span>Доход ~{totalEarned.toLocaleString('ru-RU')} ₽</span>
-                    </div>
-                  )}
+                <div className={s.dashStatDivider} />
+                <div className={s.dashStat}>
+                  <div className={clsx(s.dashStatIcon, s.dashStatIconGreen)}><ShoppingBag size={16} /></div>
+                  <span className={s.dashStatValue}>{listing.bookingsCount}</span>
+                  <span className={s.dashStatLabel}>Брони</span>
+                </div>
+                <div className={s.dashStatDivider} />
+                <div className={s.dashStat}>
+                  <div className={clsx(s.dashStatIcon, s.dashStatIconAmber)}><Heart size={16} /></div>
+                  <span className={s.dashStatValue}>{listing.favoritesCount}</span>
+                  <span className={s.dashStatLabel}>Избранное</span>
+                </div>
+                <div className={s.dashStatDivider} />
+                <div className={s.dashStat}>
+                  <div className={clsx(s.dashStatIcon, s.dashStatIconViolet)}><MessageCircle size={16} /></div>
+                  <span className={s.dashStatValue}>{listing.messagesCount}</span>
+                  <span className={s.dashStatLabel}>Сообщения</span>
                 </div>
               </div>
             </motion.section>

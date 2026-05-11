@@ -22,151 +22,163 @@
   gap: 6px;
 }
 
+.statusDot {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 .statusActive     { background: rgba(34, 197, 94, 0.88);  color: #fff; }
 .statusModeration { background: rgba(245, 158, 11, 0.9);  color: #fff; }
 .statusDraft      { background: rgba(100, 116, 139, 0.9); color: #fff; }
 .statusArchived   { background: rgba(100, 116, 139, 0.85); color: #fff; }
 .statusRejected   { background: rgba(239, 68, 68, 0.9);   color: #fff; }
 
-/* ═══ Owner Panel (stats + pricing combined) ═══ */
-.ownerPanel {
-  padding-top: $space-6;
-  border-top: 1px solid var(--color-border);
-  display: grid;
-  gap: $space-5;
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: $space-3;
-}
-
-.statCard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $space-1;
-  padding: $space-5 $space-3;
+/* ═══ Owner Dashboard Card ═══ */
+.dashboardCard {
   border-radius: $radius-xl;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
-  text-align: center;
-  transition: $transition-smooth;
-
-  svg { flex-shrink: 0; opacity: 0.7; }
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: $shadow-card-hover;
-  }
+  overflow: hidden;
+  box-shadow: $shadow-sm;
 }
 
-.statNumber {
-  font-family: $font-family-display;
-  font-size: 26px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-.statCaption {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-text-secondary);
-}
-
-.statCardBlue {
-  svg { color: #3b82f6; }
-  .statNumber { color: var(--color-text); }
-  &:hover { border-color: rgba(59, 130, 246, 0.3); }
-}
-
-.statCardGreen {
-  svg { color: var(--color-primary); }
-  .statNumber { color: var(--color-text); }
-  &:hover { border-color: rgba(34, 197, 94, 0.3); }
-}
-
-.statCardAmber {
-  svg { color: #f59e0b; }
-  .statNumber { color: var(--color-text); }
-  &:hover { border-color: rgba(245, 158, 11, 0.3); }
-}
-
-.statCardViolet {
-  svg { color: #8b5cf6; }
-  .statNumber { color: var(--color-text); }
-  &:hover { border-color: rgba(139, 92, 246, 0.3); }
-}
-
-/* ─── Pricing Row ─── */
-.pricingRow {
+/* ── Price hero (top half) ── */
+.dashPriceHero {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: $space-3;
-  padding: $space-5 $space-6;
-  border-radius: $radius-xl;
-  background: var(--color-green-50);
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  gap: $space-4;
+  padding: $space-6 $space-7;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.04) 0%, rgba(34, 197, 94, 0.01) 100%);
+  border-bottom: 1px solid var(--color-border);
 }
 
-.priceMain {
+.dashPriceLeft {
   display: flex;
   align-items: baseline;
-  gap: $space-2;
-}
-
-.priceAmount {
-  font-family: $font-family-display;
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--color-text);
-  letter-spacing: -0.02em;
-}
-
-.pricePeriod {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-}
-
-.priceHour {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-}
-
-.priceMeta {
-  display: flex;
-  align-items: center;
   gap: $space-2;
   flex-wrap: wrap;
 }
 
-.priceChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: $radius-full;
-  background: rgba(245, 158, 11, 0.08);
-  border: 1px solid rgba(245, 158, 11, 0.15);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-warning);
-
-  svg { flex-shrink: 0; }
+.dashPriceAmount {
+  font-family: $font-family-display;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.025em;
+  line-height: 1;
 }
 
-.priceChipGreen {
-  background: rgba(34, 197, 94, 0.08);
-  border-color: rgba(34, 197, 94, 0.2);
-  color: var(--color-primary-hover);
+.dashPricePeriod {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.dashPriceSecondary {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  padding-left: $space-2;
+  border-left: 1px solid var(--color-border);
+  margin-left: $space-1;
+}
+
+.dashPriceRight {
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+}
+
+.dashMeta {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  > svg {
+    color: var(--color-primary);
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+}
+
+.dashMetaLabel {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary);
+  line-height: 1;
+}
+
+.dashMetaValue {
+  font-family: $font-family-display;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+/* ── Stats strip (bottom half) ── */
+.dashStats {
+  display: flex;
+  align-items: center;
+  padding: $space-4 0;
+}
+
+.dashStat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-1;
+  padding: $space-2 $space-3;
+}
+
+.dashStatIcon {
+  @include flex-center;
+  @include square(32px);
+  border-radius: $radius-md;
+  margin-bottom: 2px;
+}
+
+.dashStatIconBlue   { background: rgba(59, 130, 246, 0.08); color: #3b82f6; }
+.dashStatIconGreen  { background: rgba(34, 197, 94, 0.08);  color: var(--color-primary); }
+.dashStatIconAmber  { background: rgba(245, 158, 11, 0.08); color: #f59e0b; }
+.dashStatIconViolet { background: rgba(139, 92, 246, 0.08); color: #8b5cf6; }
+
+.dashStatValue {
+  font-family: $font-family-display;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.dashStatLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.dashStatDivider {
+  width: 1px;
+  height: 36px;
+  background: var(--color-border);
+  flex-shrink: 0;
 }
 
 /* ═══ Quick Actions ═══ */
@@ -352,11 +364,19 @@
 @media (max-width: $bp-md) {
   .container { padding: 0 $space-4 $space-12; }
 
-  .statsGrid { grid-template-columns: repeat(2, 1fr); }
+  .dashPriceHero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: $space-5;
+  }
+
+  .dashPriceRight { flex-direction: column; align-items: flex-start; gap: $space-3; }
+
+  .dashStats { flex-wrap: wrap; }
+  .dashStatDivider { display: none; }
+  .dashStat { min-width: 45%; }
 
   .actionsRow { grid-template-columns: repeat(2, 1fr); }
-
-  .pricingRow { flex-direction: column; align-items: flex-start; }
 
   .bookingItem { flex-wrap: wrap; }
 }
@@ -364,9 +384,7 @@
 @media (max-width: $bp-sm) {
   .container { padding: 0 $space-3 $space-10; }
 
-  .statsGrid { grid-template-columns: repeat(2, 1fr); gap: $space-2; }
+  .dashPriceAmount { font-size: 24px; }
 
   .actionsRow { grid-template-columns: repeat(2, 1fr); gap: $space-2; }
-
-  .priceAmount { font-size: 22px; }
 }
