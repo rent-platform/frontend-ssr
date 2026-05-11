@@ -2,12 +2,92 @@
 @use '../../../styles/vars' as *;
 @use '../../../styles/helpers/mixins' as *;
 
-/* ═══ Earnings row ═══ */
+/* ═══ Stats Row ═══ */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-3;
+  margin-bottom: $space-4;
+}
+
+.statCard {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: 18px $space-4;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: #fff;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.statIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  svg { width: 20px; height: 20px; }
+}
+
+.statGreen {
+  .statIcon { background: rgba(34, 197, 94, 0.08); color: $color-primary; }
+  &:hover .statIcon { background: rgba(34, 197, 94, 0.14); }
+}
+
+.statBlue {
+  .statIcon { background: rgba(59, 130, 246, 0.08); color: #3b82f6; }
+  &:hover .statIcon { background: rgba(59, 130, 246, 0.14); }
+}
+
+.statViolet {
+  .statIcon { background: rgba(139, 92, 246, 0.08); color: #8b5cf6; }
+  &:hover .statIcon { background: rgba(139, 92, 246, 0.14); }
+}
+
+.statAmber {
+  .statIcon { background: rgba(245, 158, 11, 0.08); color: #f59e0b; }
+  &:hover .statIcon { background: rgba(245, 158, 11, 0.14); }
+}
+
+.statData {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statNum {
+  font-family: $font-family-display;
+  font-size: 22px;
+  font-weight: $font-weight-800;
+  color: $color-text;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.statNumHighlight {
+  color: $color-primary;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+/* ═══ Earnings Row ═══ */
 .earningsRow {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: $space-4;
-  margin-bottom: $space-6;
+  gap: $space-3;
+  margin-bottom: $space-4;
 }
 
 .earningsCard {
@@ -15,20 +95,20 @@
   align-items: center;
   gap: $space-3;
   padding: $space-4 $space-5;
-  border-radius: $radius-xl;
-  border: 1px solid $color-border;
-  transition: $transition-smooth;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 
   &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   }
 }
 
 .earningsIcon {
   width: 40px;
   height: 40px;
-  border-radius: $radius-lg;
+  border-radius: 10px;
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -36,23 +116,24 @@
 }
 
 .earningsCardGreen {
-  background: rgba(34, 197, 94, 0.04);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.04), rgba(34, 197, 94, 0.01));
   .earningsIcon { background: rgba(34, 197, 94, 0.1); color: $color-primary; }
 }
 
 .earningsCardBlue {
-  background: rgba(59, 130, 246, 0.04);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.04), rgba(59, 130, 246, 0.01));
   .earningsIcon { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
 }
 
 .earningsCardAmber {
-  background: rgba(245, 158, 11, 0.04);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.04), rgba(245, 158, 11, 0.01));
   .earningsIcon { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
 }
 
 .earningsData {
   display: flex;
   flex-direction: column;
+  gap: 1px;
 }
 
 .earningsVal {
@@ -60,7 +141,7 @@
   font-size: $font-size-lg;
   font-weight: $font-weight-800;
   color: $color-text;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   line-height: 1.2;
 }
 
@@ -76,31 +157,31 @@
 }
 
 .skeletonBar {
-  padding: $space-3 $space-5;
-  background: #fff;
-  border-bottom: 1px solid $color-border;
+  padding: $space-4 $space-6;
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 30%, #eff6ff 70%, #f0f9ff 100%);
+  border-bottom: 1px solid rgba(34, 197, 94, 0.08);
 }
 
 .skeletonWrap {
-  max-width: 860px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: $space-6 $space-4;
+  padding: $space-6 $space-6;
   display: flex;
   flex-direction: column;
-  gap: $space-5;
+  gap: $space-4;
 }
 
 .skeletonCard {
   background: #fff;
-  border: 1px solid $color-border;
-  border-radius: $radius-xl;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 20px;
   overflow: hidden;
 }
 
 .skeletonUserRow {
   display: flex;
-  gap: $space-4;
-  padding: $space-6 $space-6 $space-4;
+  gap: $space-5;
+  padding: 32px 32px $space-5;
 }
 
 .skeletonUserInfo {
@@ -108,17 +189,19 @@
 }
 
 .skeletonStatsRow {
-  display: flex;
-  border-top: 1px solid $color-border;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-3;
+  padding: 0 $space-6;
 }
 
 .skeletonStatCell {
-  flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: $space-1;
-  padding: $space-3;
+  gap: $space-3;
+  padding: 18px $space-4;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 16px;
 }
 
 .skeletonCardPadded {
@@ -150,7 +233,7 @@
   left: 50%;
   transform: translateX(-50%) translateY(4px);
   padding: 8px 14px;
-  background: #1e293b;
+  background: #0f172a;
   color: #fff;
   font-size: 12px;
   font-weight: 500;
@@ -164,7 +247,7 @@
   transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
   pointer-events: none;
   z-index: 50;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 
   &::after {
     content: '';
@@ -173,6 +256,6 @@
     left: 50%;
     transform: translateX(-50%);
     border: 5px solid transparent;
-    border-top-color: #1e293b;
+    border-top-color: #0f172a;
   }
 }

@@ -3,24 +3,30 @@
 @use '../../../styles/helpers/mixins' as *;
 
 /* ═══ Responsive ═══ */
+@media (max-width: $bp-lg) {
+  .statsRow { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: $bp-md) {
-  .profileHeader {
+  .container { padding: 0 $space-4 $space-12; }
+
+  .cardTop {
     flex-direction: column;
     align-items: flex-start;
-    padding: 24px 24px 0;
+    padding: 24px 24px 20px;
   }
 
-  .profileBody { padding: 16px 24px 20px; }
-  .statsGrid { padding: 16px 24px 20px; grid-template-columns: repeat(2, 1fr); }
+  .cardActions { width: 100%; }
+  .btnEdit { width: 100%; justify-content: center; }
+
+  .verifySection { padding: 14px 24px; }
   .completionStrip { padding: 12px 24px; }
 
-  .profileActions { width: 100%; }
-
+  .statsRow { grid-template-columns: repeat(2, 1fr); }
   .earningsRow { grid-template-columns: 1fr; }
-  .quickActions { flex-direction: column; }
+  .quickActions { grid-template-columns: 1fr; }
   .listingsGrid { grid-template-columns: 1fr 1fr; }
 
-  .tabBar { overflow-x: auto; }
   .panelHeader { flex-direction: column; align-items: flex-start; }
 
   .bookingRow { flex-wrap: wrap; }
@@ -28,17 +34,28 @@
 }
 
 @media (max-width: $bp-sm) {
-  .profileHeader { padding: 20px 20px 0; }
-  .profileBody { padding: 14px 20px 18px; }
-  .statsGrid { padding: 14px 20px 18px; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .completionStrip { padding: 10px 20px; }
+  .hero { padding: $space-3 $space-4; }
+  .container { padding: 0 $space-3 $space-10; }
+
+  .cardTop { padding: 20px 20px 16px; gap: 16px; }
+  .verifySection { padding: 12px 20px; }
+  .completionStrip { padding: 10px 20px; flex-wrap: wrap; }
+  .completionTrack { min-width: 80px; }
+
+  .avatarRing { width: 72px; height: 72px; }
+  .nameRow h1 { font-size: 20px; }
+
+  .statsRow { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .statCard { padding: 14px $space-3; }
+  .statNum { font-size: 18px; }
+  .statIcon { width: 36px; height: 36px; svg { width: 16px; height: 16px; } }
+
+  .earningsRow { grid-template-columns: 1fr; gap: 8px; }
+  .quickActions { grid-template-columns: 1fr; gap: 8px; }
 
   .listingsGrid { grid-template-columns: 1fr; }
 
-  .tab { padding: 10px 14px; font-size: 13px; }
+  .tabBar { border-radius: 12px; }
+  .tab { padding: 10px 14px; font-size: 13px; border-radius: 8px; }
   .tabCount { display: none; }
-
-  .nameRow h1 { font-size: 19px; }
-  .statNum { font-size: 18px; }
-  .statCard { padding: 12px 8px; }
 }
