@@ -5,7 +5,7 @@ export { Favorites } from './Favorites';
 export { GuestExperience } from './Guest';
 export { InfoPageLayout } from './InfoPages';
 export { NotificationsPage } from './Notifications';
-export { ProfileDashboard, MyListingDetail } from './Profile';
+export { ProfileDashboard, MyListingDetail, EditListing } from './Profile';
 export { PublicProfile } from './PublicProfile';
 export { ReviewsPage } from './Reviews';
 export { SettingsPage } from './Settings';

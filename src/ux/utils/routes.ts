@@ -23,6 +23,7 @@ export const ROUTES = {
   reviews: `${BASE}/reviews`,
   settings: `${BASE}/settings`,
   listing: (id: string) => `${BASE}/listing/${id}`,
+  editListing: (id: string) => `${BASE}/listing/${id}/edit`,
   publicProfile: (id: string) => `${BASE}/user/${id}`,
   pricing: '/pricing',
   business: '/business',

@@ -270,7 +270,7 @@ export function MyListingDetail() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <button type="button" className={s.actionCard}>
+              <button type="button" className={s.actionCard} onClick={() => router.push(ROUTES.editListing(listing.id))}>
                 <div className={s.actionIcon}><Edit3 size={20} /></div>
                 <span className={s.actionLabel}>Редактировать</span>
               </button>
