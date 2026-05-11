@@ -22,6 +22,7 @@ export const ROUTES = {
   profile: `${BASE}/profile`,
   reviews: `${BASE}/reviews`,
   settings: `${BASE}/settings`,
+  listing: (id: string) => `${BASE}/listing/${id}`,
   publicProfile: (id: string) => `${BASE}/user/${id}`,
   pricing: '/pricing',
   business: '/business',

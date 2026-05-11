@@ -34,17 +34,25 @@ export const BOOKING_FILTERS: { value: BookingFilter; label: string; tip: string
   { value: 'REJECTED', label: 'Отклонённые', tip: 'Запрос на аренду отклонён' },
 ];
 
+export const ITEM_STATUS_MAP: Record<ItemStatus, { label: string; cls: string }> = {
+  ACTIVE:     { label: 'Активно',    cls: styles.statusActive },
+  MODERATION: { label: 'Модерация',  cls: styles.statusModeration },
+  DRAFT:      { label: 'Черновик',   cls: styles.statusDraft },
+  ARCHIVED:   { label: 'В архиве',   cls: styles.statusArchived },
+  REJECTED:   { label: 'Отклонено',  cls: styles.statusRejected },
+};
+
 export function profileListingToCatalogItem(listing: ProfileListing): CatalogUiItem {
   return {
     id: listing.id,
     title: listing.title,
     coverImageUrl: listing.image ?? '',
-    images: listing.image ? [listing.image] : [],
+    images: listing.images.length > 0 ? listing.images : (listing.image ? [listing.image] : []),
     category: listing.category,
     pricePerDay: listing.pricePerDay ?? null,
-    pricePerHour: null,
-    depositAmount: '',
-    pickupLocation: 'Новосибирск',
+    pricePerHour: listing.pricePerHour ?? null,
+    depositAmount: listing.depositAmount ?? '',
+    pickupLocation: listing.location,
     status: listing.status,
     isAvailable: listing.status === 'ACTIVE',
     viewsCount: listing.viewsCount,

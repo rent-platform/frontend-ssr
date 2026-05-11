@@ -33,11 +33,19 @@ export type ProfileListing = {
   id: string;
   title: string;
   image: string | null;
+  images: string[];
   category: string;
   pricePerDay: string | null;
+  pricePerHour: string | null;
+  depositAmount: string | null;
   status: ItemStatus;
   viewsCount: number;
   bookingsCount: number;
+  favoritesCount: number;
+  messagesCount: number;
+  location: string;
+  description: string[];
+  condition: string;
   createdAt: string;
 };
 

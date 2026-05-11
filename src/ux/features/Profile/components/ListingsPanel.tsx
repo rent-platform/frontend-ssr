@@ -8,10 +8,11 @@ import { pluralize } from '@/ux/utils';
 import { MOCK_LISTINGS } from '../mockProfileData';
 import { LISTING_FILTERS, profileListingToCatalogItem } from '../profileHelpers';
 import type { ListingFilter } from '../profileHelpers';
+import type { CatalogUiItem } from '../../Catalog';
 import { EmptyState } from './EmptyState';
 import styles from '../ProfileDashboard.module.scss';
 
-export function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilter; onFilterChange: (f: ListingFilter) => void }) {
+export function ListingsPanel({ filter, onFilterChange, onOpen }: { filter: ListingFilter; onFilterChange: (f: ListingFilter) => void; onOpen?: (item: CatalogUiItem) => void }) {
   const filtered = useMemo(() => (filter === 'all' ? MOCK_LISTINGS : MOCK_LISTINGS.filter((l) => l.status === filter)), [filter]);
 
   return (
@@ -40,6 +41,7 @@ export function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilte
               key={item.id}
               item={profileListingToCatalogItem(item)}
               index={i}
+              onOpen={onOpen}
               hideFavorite
               hideRating
             />

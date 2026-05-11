@@ -50,6 +50,7 @@ type ProductDetailProps = {
   onAuthRequired?: () => void;
   className?: string;
   hideSidebar?: boolean;
+  backLabel?: string;
 };
 
 export function ProductDetail({
@@ -61,6 +62,7 @@ export function ProductDetail({
   onAuthRequired,
   className,
   hideSidebar = false,
+  backLabel = 'К каталогу',
 }: ProductDetailProps) {
   const [isFav, setIsFav] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
@@ -108,7 +110,7 @@ export function ProductDetail({
         <nav className={styles.backBar}>
           <button type="button" onClick={onBack} className={styles.backButton}>
             <ArrowLeft size={16} />
-            <span>К каталогу</span>
+            <span>{backLabel}</span>
           </button>
           <div className={styles.detailActions}>
             <button type="button" className={styles.detailActionBtn}>

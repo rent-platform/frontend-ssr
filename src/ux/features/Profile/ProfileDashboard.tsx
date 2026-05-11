@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -26,6 +27,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { CatalogHeader, CatalogFooter } from '../Catalog';
+import type { CatalogUiItem } from '../Catalog';
 import clsx from 'clsx';
 import { pluralize, formatDate, getInitials, ROUTES, EASE } from '@/ux/utils';
 import type { ProfileTab, BookingSide } from './types';
@@ -57,6 +59,7 @@ export function ProfileDashboard({
   stats: externalStats,
   isLoading: externalLoading,
 }: ProfileDashboardProps = {}) {
+  const router = useRouter();
   const [mockLoading, setMockLoading] = useState(!externalUser);
   const [tab, setTab] = useState<ProfileTab>('listings');
   const [listingFilter, setListingFilter] = useState<ListingFilter>('all');
@@ -79,6 +82,10 @@ export function ProfileDashboard({
   const profileUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/dev-ui/user/${user.id}`
     : `https://arendai.ru/user/${user.id}`;
+
+  const handleOpenItem = (item: CatalogUiItem) => {
+    router.push(ROUTES.listing(item.id));
+  };
 
   if (isLoading) return <DashboardSkeleton />;
 
@@ -280,7 +287,7 @@ export function ProfileDashboard({
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.25, ease: EASE }}
           >
-            {tab === 'listings' && <ListingsPanel filter={listingFilter} onFilterChange={setListingFilter} />}
+            {tab === 'listings' && <ListingsPanel filter={listingFilter} onFilterChange={setListingFilter} onOpen={handleOpenItem} />}
             {tab === 'deals' && <DealsPanel side={dealSide} onSideChange={setDealSide} filter={dealFilter} onFilterChange={setDealFilter} />}
           </motion.div>
         </AnimatePresence>
