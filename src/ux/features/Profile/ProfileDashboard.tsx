@@ -99,19 +99,6 @@ export function ProfileDashboard({
             <span className={styles.breadcrumbSep}>/</span>
             <span className={styles.breadcrumbCurrent}>Мой профиль</span>
           </div>
-          <div className={styles.heroActions}>
-            <button
-              type="button"
-              className={styles.heroBtn}
-              onClick={() => setShowShareModal(true)}
-              title="Поделиться"
-            >
-              <Share2 size={16} />
-            </button>
-            <Link href={ROUTES.publicProfile(user.id)} className={styles.heroBtn} title="Публичный профиль">
-              <Eye size={16} />
-            </Link>
-          </div>
         </div>
       </div>
 
@@ -159,6 +146,17 @@ export function ProfileDashboard({
             <div className={styles.cardActions}>
               <Link href={ROUTES.settings} className={styles.btnEdit}>
                 <Edit3 size={15} /> Редактировать
+              </Link>
+              <button
+                type="button"
+                className={styles.btnIcon}
+                onClick={() => setShowShareModal(true)}
+                title="Поделиться"
+              >
+                <Share2 size={16} />
+              </button>
+              <Link href={ROUTES.publicProfile(user.id)} className={styles.btnIcon} title="Публичный профиль">
+                <Eye size={16} />
               </Link>
             </div>
           </div>
