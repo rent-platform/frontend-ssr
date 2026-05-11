@@ -176,8 +176,15 @@ export function EditListing() {
   }, [form, initial]);
 
   const canAdvance = isStepValid(step);
-  const goNext = () => { if (canAdvance) setStep((s) => Math.min(s + 1, STEPS.length - 1)); };
-  const goBack = () => setStep((s) => Math.max(s - 1, 0));
+  const goNext = () => {
+    if (!canAdvance) return;
+    setStep((s) => Math.min(s + 1, STEPS.length - 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  const goBack = () => {
+    setStep((s) => Math.max(s - 1, 0));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
