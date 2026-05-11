@@ -190,88 +190,57 @@ export function MyListingDetail() {
               </div>
             </section>
 
-            {/* ─── Owner Stats (catalog specs style) ─── */}
+            {/* ─── Combined Stats + Pricing ─── */}
             <motion.section
-              className={c.detailSpecsSection}
+              className={s.ownerPanel}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <div className={c.detailSectionHeader}>
-                <h2>Статистика объявления</h2>
-              </div>
-              <div className={c.detailSpecsGrid}>
-                <div className={c.detailSpecItem}>
-                  <div className={c.specIcon}><Eye size={18} /></div>
-                  <div className={c.specContent}>
-                    <span>Просмотры</span>
-                    <span>{listing.viewsCount}</span>
-                  </div>
+              <div className={s.statsGrid}>
+                <div className={clsx(s.statCard, s.statCardBlue)}>
+                  <Eye size={20} />
+                  <span className={s.statNumber}>{listing.viewsCount}</span>
+                  <span className={s.statCaption}>просмотров</span>
                 </div>
-                <div className={c.detailSpecItem}>
-                  <div className={c.specIcon}><ShoppingBag size={18} /></div>
-                  <div className={c.specContent}>
-                    <span>Бронирования</span>
-                    <span>{listing.bookingsCount}</span>
-                  </div>
+                <div className={clsx(s.statCard, s.statCardGreen)}>
+                  <ShoppingBag size={20} />
+                  <span className={s.statNumber}>{listing.bookingsCount}</span>
+                  <span className={s.statCaption}>бронирований</span>
                 </div>
-                <div className={c.detailSpecItem}>
-                  <div className={c.specIcon}><Heart size={18} /></div>
-                  <div className={c.specContent}>
-                    <span>В избранном</span>
-                    <span>{listing.favoritesCount}</span>
-                  </div>
+                <div className={clsx(s.statCard, s.statCardAmber)}>
+                  <Heart size={20} />
+                  <span className={s.statNumber}>{listing.favoritesCount}</span>
+                  <span className={s.statCaption}>в избранном</span>
                 </div>
-                <div className={c.detailSpecItem}>
-                  <div className={c.specIcon}><MessageCircle size={18} /></div>
-                  <div className={c.specContent}>
-                    <span>Сообщения</span>
-                    <span>{listing.messagesCount}</span>
-                  </div>
+                <div className={clsx(s.statCard, s.statCardViolet)}>
+                  <MessageCircle size={20} />
+                  <span className={s.statNumber}>{listing.messagesCount}</span>
+                  <span className={s.statCaption}>сообщений</span>
                 </div>
               </div>
-            </motion.section>
 
-            {/* ─── Pricing Details (catalog specs style) ─── */}
-            <motion.section
-              className={c.detailSpecsSection}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className={c.detailSectionHeader}>
-                <h2>Цены и условия</h2>
-              </div>
-              <div className={c.detailSpecsGrid}>
-                <div className={c.detailSpecItem}>
-                  <div className={c.specIcon}><Clock3 size={18} /></div>
-                  <div className={c.specContent}>
-                    <span>Цена за день</span>
-                    <span>{listing.pricePerDay ? `${Number(listing.pricePerDay).toLocaleString('ru-RU')} ₽` : '—'}</span>
-                  </div>
+              <div className={s.pricingRow}>
+                <div className={s.priceMain}>
+                  <span className={s.priceAmount}>{listing.pricePerDay ? `${Number(listing.pricePerDay).toLocaleString('ru-RU')} ₽` : '—'}</span>
+                  <span className={s.pricePeriod}>/ сутки</span>
+                  {listing.pricePerHour && (
+                    <span className={s.priceHour}>· {Number(listing.pricePerHour).toLocaleString('ru-RU')} ₽/час</span>
+                  )}
                 </div>
-                {listing.pricePerHour && (
-                  <div className={c.detailSpecItem}>
-                    <div className={c.specIcon}><Clock3 size={18} /></div>
-                    <div className={c.specContent}>
-                      <span>Цена за час</span>
-                      <span>{Number(listing.pricePerHour).toLocaleString('ru-RU')} ₽</span>
+                <div className={s.priceMeta}>
+                  {listing.depositAmount && (
+                    <div className={s.priceChip}>
+                      <Shield size={14} />
+                      <span>Залог {Number(listing.depositAmount).toLocaleString('ru-RU')} ₽</span>
                     </div>
-                  </div>
-                )}
-                <div className={c.detailSpecItem}>
-                  <div className={c.specIcon}><Shield size={18} /></div>
-                  <div className={c.specContent}>
-                    <span>Залог</span>
-                    <span>{listing.depositAmount ? `${Number(listing.depositAmount).toLocaleString('ru-RU')} ₽` : 'Без залога'}</span>
-                  </div>
-                </div>
-                <div className={c.detailSpecItem}>
-                  <div className={c.specIcon}><ShoppingBag size={18} /></div>
-                  <div className={c.specContent}>
-                    <span>Примерный доход</span>
-                    <span>{totalEarned > 0 ? `~${totalEarned.toLocaleString('ru-RU')} ₽` : '—'}</span>
-                  </div>
+                  )}
+                  {totalEarned > 0 && (
+                    <div className={clsx(s.priceChip, s.priceChipGreen)}>
+                      <ShoppingBag size={14} />
+                      <span>Доход ~{totalEarned.toLocaleString('ru-RU')} ₽</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.section>
