@@ -10,6 +10,7 @@ import {
   Award,
   BadgeCheck,
   Calendar,
+  Check,
   CheckCircle2,
   Flag,
   MapPin,
@@ -53,6 +54,7 @@ export function PublicProfile() {
   const [helpfulReviews, setHelpfulReviews] = useState<Set<string>>(new Set());
   const [showShareModal, setShowShareModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [reported, setReported] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const fromItemId = searchParams.get('from');
@@ -178,9 +180,13 @@ export function PublicProfile() {
               <button type="button" className={styles.iconBtn} title="Поделиться" onClick={() => setShowShareModal(true)}>
                 <Share2 size={15} />
               </button>
-              <button type="button" className={styles.reportBtn} onClick={() => setShowReportModal(true)}>
-                <Flag size={14} />
-                Пожаловаться
+              <button
+                type="button"
+                className={clsx(styles.reportBtn, reported && styles.reportBtnDone)}
+                onClick={() => !reported && setShowReportModal(true)}
+                disabled={reported}
+              >
+                {reported ? <><Check size={14} /> Жалоба отправлена</> : <><Flag size={14} /> Пожаловаться</>}
               </button>
             </div>
           </motion.div>
@@ -433,7 +439,13 @@ export function PublicProfile() {
 
       {/* ═══ Report modal ═══ */}
       <AnimatePresence>
-        {showReportModal && <ReportModal userName={user.fullName} onClose={() => setShowReportModal(false)} />}
+        {showReportModal && (
+          <ReportModal
+            userName={user.fullName}
+            onClose={() => setShowReportModal(false)}
+            onSubmitted={() => setReported(true)}
+          />
+        )}
       </AnimatePresence>
     </div>
   );

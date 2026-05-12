@@ -17,9 +17,10 @@ const REPORT_REASONS = [
 type ReportModalProps = {
   userName: string;
   onClose: () => void;
+  onSubmitted?: () => void;
 };
 
-export function ReportModal({ userName, onClose }: ReportModalProps) {
+export function ReportModal({ userName, onClose, onSubmitted }: ReportModalProps) {
   const trapRef = useFocusTrap<HTMLDivElement>(true);
   const [selectedReason, setSelectedReason] = useState<string | null>(null);
   const [customText, setCustomText] = useState('');
@@ -36,8 +37,9 @@ export function ReportModal({ userName, onClose }: ReportModalProps) {
   const handleSubmit = useCallback(() => {
     if (!canSubmit) return;
     setSubmitted(true);
+    onSubmitted?.();
     setTimeout(onClose, 2000);
-  }, [canSubmit, onClose]);
+  }, [canSubmit, onClose, onSubmitted]);
 
   return (
     <motion.div

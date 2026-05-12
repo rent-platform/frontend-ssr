@@ -209,10 +209,23 @@
 
   svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-  &:hover {
+  &:hover:not(:disabled) {
     color: #ef4444;
     border-color: #ef4444;
     background: rgba(239, 68, 68, 0.04);
+  }
+}
+
+.reportBtnDone {
+  color: var(--color-primary);
+  border-color: rgba(34, 197, 94, 0.25);
+  background: rgba(34, 197, 94, 0.06);
+  cursor: default;
+
+  &:hover:not(:disabled) {
+    color: var(--color-primary);
+    border-color: rgba(34, 197, 94, 0.25);
+    background: rgba(34, 197, 94, 0.06);
   }
 }
 
