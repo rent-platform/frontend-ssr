@@ -21,7 +21,9 @@ export function QuickActionsBar({ actions }: QuickActionsBarProps) {
         <button
           key={a.id}
           type="button"
-          className={clsx(styles.qaBtn, variantCls[a.variant])}
+          className={clsx(styles.qaBtn, variantCls[a.variant], a.disabled && styles.qaBtnDisabled)}
+          disabled={a.disabled}
+          title={a.tooltip}
         >
           {a.label}
         </button>

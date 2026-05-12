@@ -56,6 +56,7 @@ export function StepReview({ form }: StepReviewProps) {
         </div>
         <ReviewRow label="Название" value={form.title} />
         <ReviewRow label="Категория" value={form.category} />
+        <ReviewRow label="Город" value={form.city} />
         <ReviewRow label="Состояние" value={CONDITION_LABELS[form.condition]} />
       </div>
 

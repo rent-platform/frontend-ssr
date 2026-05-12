@@ -133,13 +133,148 @@ export const MOCK_CHATS: ChatPreview[] = [
     unreadCount: 0,
     itemTitle: 'Велосипед Trek Marlin 7',
     itemImage: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400',
-    dealStatus: 'CONFIRMED',
+    dealStatus: 'AWAITING_PAYMENT',
     dealPrice: '1 200',
     dealDates: { start: '2025-04-08', end: '2025-04-10' },
     dealDeposit: '3 000',
     myRole: 'renter',
     pinned: false,
     archived: false,
+  },
+  /* ── I'm the OWNER: new pending request ── */
+  {
+    id: 'chat-008',
+    itemId: 'item-020',
+    dealId: 'deal-020',
+    createdAt: '2025-04-25T11:00:00Z',
+    counterpartyId: 'u-030',
+    counterpartyName: 'Иван Петров',
+    counterpartyAvatar: null,
+    isOnline: true,
+    isTyping: false,
+    lastMessage: {
+      text: 'Здравствуйте, хочу арендовать шуруповёрт на сутки.',
+      senderId: 'u-030',
+      createdAt: '2025-04-25T11:05:00Z',
+    },
+    unreadCount: 1,
+    itemTitle: 'Шуруповёрт Makita DDF484',
+    itemImage: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400',
+    dealStatus: 'PENDING',
+    dealPrice: '1 200',
+    dealDates: { start: '2025-04-27', end: '2025-04-28' },
+    dealDeposit: '3 000',
+    myRole: 'owner',
+    pinned: false,
+    archived: false,
+  },
+  /* ── I'm the RENTER: pending request for projector ── */
+  {
+    id: 'chat-009',
+    itemId: 'item-021',
+    dealId: 'deal-021',
+    createdAt: '2025-04-26T09:00:00Z',
+    counterpartyId: 'u-031',
+    counterpartyName: 'Анна Кузнецова',
+    counterpartyAvatar: null,
+    isOnline: false,
+    isTyping: false,
+    lastMessage: {
+      text: 'Отправила заявку на аренду проектора!',
+      senderId: CURRENT_USER_ID,
+      createdAt: '2025-04-26T09:10:00Z',
+    },
+    unreadCount: 0,
+    itemTitle: 'Проектор Epson EH-TW7100',
+    itemImage: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400',
+    dealStatus: 'PENDING',
+    dealPrice: '2 500',
+    dealDates: { start: '2025-04-28', end: '2025-04-30' },
+    dealDeposit: '8 000',
+    myRole: 'renter',
+    pinned: false,
+    archived: false,
+  },
+  /* ── I'm the OWNER: awaiting payment for guitar ── */
+  {
+    id: 'chat-010',
+    itemId: 'item-022',
+    dealId: 'deal-022',
+    createdAt: '2025-04-24T14:00:00Z',
+    counterpartyId: 'u-032',
+    counterpartyName: 'Сергей Михайлов',
+    counterpartyAvatar: null,
+    isOnline: true,
+    isTyping: false,
+    lastMessage: {
+      text: 'Сейчас оплачу!',
+      senderId: 'u-032',
+      createdAt: '2025-04-24T15:20:00Z',
+    },
+    unreadCount: 0,
+    itemTitle: 'Гитара Fender Stratocaster',
+    itemImage: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=400',
+    dealStatus: 'AWAITING_PAYMENT',
+    dealPrice: '1 500',
+    dealDates: { start: '2025-04-26', end: '2025-04-28' },
+    dealDeposit: '5 000',
+    myRole: 'owner',
+    pinned: false,
+    archived: false,
+  },
+  /* ── I'm the RENTER: cancelled deal for tent ── */
+  {
+    id: 'chat-011',
+    itemId: 'item-023',
+    dealId: 'deal-023',
+    createdAt: '2025-04-12T10:00:00Z',
+    counterpartyId: 'u-033',
+    counterpartyName: 'Олег Виноградов',
+    counterpartyAvatar: null,
+    isOnline: false,
+    isTyping: false,
+    lastMessage: {
+      text: 'Понял, ничего страшного. В следующий раз!',
+      senderId: 'u-033',
+      createdAt: '2025-04-13T11:00:00Z',
+    },
+    unreadCount: 0,
+    itemTitle: 'Палатка MSR Hubba Hubba NX2',
+    itemImage: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400',
+    dealStatus: 'CANCELLED',
+    dealPrice: '1 800',
+    dealDates: { start: '2025-04-15', end: '2025-04-17' },
+    dealDeposit: '4 000',
+    myRole: 'renter',
+    pinned: false,
+    archived: true,
+  },
+  /* ── I'm the OWNER: cancelled by renter ── */
+  {
+    id: 'chat-012',
+    itemId: 'item-024',
+    dealId: 'deal-024',
+    createdAt: '2025-04-20T08:00:00Z',
+    counterpartyId: 'u-034',
+    counterpartyName: 'Екатерина Соколова',
+    counterpartyAvatar: null,
+    isOnline: false,
+    isTyping: false,
+    lastMessage: {
+      text: 'Простите, планы поменялись, отменяю сделку.',
+      senderId: 'u-034',
+      createdAt: '2025-04-21T14:00:00Z',
+    },
+    unreadCount: 0,
+    itemTitle: 'Объектив Sony FE 70-200mm f/2.8 GM',
+    itemImage: 'https://images.unsplash.com/photo-1617005082133-548c4dd27f35?w=400',
+    dealStatus: 'CANCELLED',
+    dealPrice: '3 500',
+    dealDates: { start: '2025-04-22', end: '2025-04-24' },
+    dealDeposit: '12 000',
+    myRole: 'owner',
+    pinned: false,
+    archived: true,
   },
   /* ── INQUIRY: no deal yet ── */
   {
@@ -201,22 +336,52 @@ export const MOCK_CHATS: ChatPreview[] = [
    Quick actions per deal status
    ═══════════════════════════════════════════════════════════════════════════════ */
 
-export const QUICK_ACTIONS: Record<string, QuickAction[]> = {
+/* ── Owner actions per deal status ── */
+export const OWNER_ACTIONS: Record<string, QuickAction[]> = {
   PENDING: [
-    { id: 'qa-confirm', label: 'Подтвердить', variant: 'primary' },
-    { id: 'qa-reject', label: 'Отклонить', variant: 'danger' },
+    { id: 'qa-confirm', label: 'Подтвердить заявку', variant: 'primary' },
+    { id: 'qa-reject', label: 'Отклонить заявку', variant: 'danger' },
   ],
   CONFIRMED: [
-    { id: 'qa-start', label: 'Передать вещь', variant: 'primary' },
+    { id: 'qa-waiting-pay', label: 'Ожидание оплаты', variant: 'secondary', disabled: true, tooltip: 'Ожидается формирование счёта' },
     { id: 'qa-cancel', label: 'Отменить', variant: 'danger' },
   ],
+  AWAITING_PAYMENT: [
+    { id: 'qa-pay-wait', label: 'Ожидание оплаты', variant: 'secondary', disabled: true, tooltip: 'Арендатор должен оплатить аренду' },
+    { id: 'qa-cancel', label: 'Отменить сделку', variant: 'danger' },
+  ],
   ACTIVE: [
-    { id: 'qa-complete', label: 'Завершить аренду', variant: 'primary' },
+    { id: 'qa-confirm-return', label: 'Подтвердить возврат', variant: 'primary' },
   ],
   COMPLETED: [
     { id: 'qa-review', label: 'Оставить отзыв', variant: 'secondary' },
   ],
 };
+
+/* ── Renter actions per deal status ── */
+export const RENTER_ACTIONS: Record<string, QuickAction[]> = {
+  PENDING: [
+    { id: 'qa-waiting', label: 'Ожидание подтверждения', variant: 'secondary', disabled: true, tooltip: 'Владелец рассматривает вашу заявку' },
+    { id: 'qa-cancel', label: 'Отменить заявку', variant: 'danger' },
+  ],
+  CONFIRMED: [
+    { id: 'qa-waiting-invoice', label: 'Ожидание счёта', variant: 'secondary', disabled: true, tooltip: 'Система формирует счёт на оплату' },
+    { id: 'qa-cancel', label: 'Отменить сделку', variant: 'danger' },
+  ],
+  AWAITING_PAYMENT: [
+    { id: 'qa-pay', label: 'Оплатить', variant: 'primary' },
+    { id: 'qa-cancel', label: 'Отменить сделку', variant: 'danger' },
+  ],
+  ACTIVE: [
+    { id: 'qa-confirm-return', label: 'Подтвердить возврат', variant: 'primary' },
+  ],
+  COMPLETED: [
+    { id: 'qa-review', label: 'Оставить отзыв', variant: 'secondary' },
+  ],
+};
+
+/** @deprecated Use OWNER_ACTIONS / RENTER_ACTIONS */
+export const QUICK_ACTIONS: Record<string, QuickAction[]> = OWNER_ACTIONS;
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    Messages for chat-001 (Canon EOS R5 — Алексей Иванов)
@@ -295,6 +460,7 @@ const MSG_004: ChatMessage[] = [
 const SYS_005: SystemEvent[] = [
   { id: 'sys-005a', type: 'deal_created', text: 'Вы создали заявку на аренду', createdAt: '2025-04-07T10:10:00Z' },
   { id: 'sys-005b', type: 'deal_confirmed', text: 'Велопрокат «Колесо» подтвердил заявку', createdAt: '2025-04-07T10:30:00Z' },
+  { id: 'sys-005c', type: 'deal_awaiting_payment', text: 'Счёт выставлен. Оплатите аренду', createdAt: '2025-04-07T10:35:00Z' },
 ];
 
 const MSG_005: ChatMessage[] = [
@@ -347,6 +513,76 @@ function buildTimeline(messages: ChatMessage[], events: SystemEvent[]): Timeline
   return result;
 }
 
+/* ═══ chat-008 (PENDING — owner: Шуруповёрт — Иван) ═══ */
+
+const SYS_008: SystemEvent[] = [
+  { id: 'sys-008a', type: 'deal_created', text: 'Иван Петров создал заявку на аренду', createdAt: '2025-04-25T11:10:00Z' },
+];
+
+const MSG_008: ChatMessage[] = [
+  { id: 'm008-1', chatId: 'chat-008', senderId: 'u-030', text: 'Здравствуйте, хочу арендовать шуруповёрт на сутки. Можно забрать сегодня вечером?', createdAt: '2025-04-25T11:00:00Z', isOwn: false, readAt: null, image: null },
+  { id: 'm008-2', chatId: 'chat-008', senderId: 'u-030', text: 'Можно забрать сегодня вечером?', createdAt: '2025-04-25T11:05:00Z', isOwn: false, readAt: null, image: null },
+];
+
+/* ═══ chat-009 (PENDING — renter: Проектор — Анна) ═══ */
+
+const SYS_009: SystemEvent[] = [
+  { id: 'sys-009a', type: 'deal_created', text: 'Вы создали заявку на аренду', createdAt: '2025-04-26T09:08:00Z' },
+];
+
+const MSG_009: ChatMessage[] = [
+  { id: 'm009-1', chatId: 'chat-009', senderId: CURRENT_USER_ID, text: 'Здравствуйте! Проектор доступен на 28-30 апреля? Нужен для презентации.', createdAt: '2025-04-26T09:00:00Z', isOwn: true, readAt: '2025-04-26T09:05:00Z', image: null },
+  { id: 'm009-2', chatId: 'chat-009', senderId: 'u-031', text: 'Да, доступен. Оформляйте заявку!', createdAt: '2025-04-26T09:06:00Z', isOwn: false, readAt: '2025-04-26T09:07:00Z', image: null },
+  { id: 'm009-3', chatId: 'chat-009', senderId: CURRENT_USER_ID, text: 'Отправила заявку на аренду проектора!', createdAt: '2025-04-26T09:10:00Z', isOwn: true, readAt: '2025-04-26T09:12:00Z', image: null },
+];
+
+/* ═══ chat-010 (AWAITING_PAYMENT — owner: Гитара — Сергей) ═══ */
+
+const SYS_010: SystemEvent[] = [
+  { id: 'sys-010a', type: 'deal_created', text: 'Сергей Михайлов создал заявку', createdAt: '2025-04-24T14:10:00Z' },
+  { id: 'sys-010b', type: 'deal_confirmed', text: 'Вы подтвердили заявку', createdAt: '2025-04-24T14:30:00Z' },
+  { id: 'sys-010c', type: 'deal_awaiting_payment', text: 'Счёт выставлен. Ожидается оплата', createdAt: '2025-04-24T14:35:00Z' },
+];
+
+const MSG_010: ChatMessage[] = [
+  { id: 'm010-1', chatId: 'chat-010', senderId: 'u-032', text: 'Привет! Хочу арендовать гитару Fender на выходные. Свободна?', createdAt: '2025-04-24T14:00:00Z', isOwn: false, readAt: '2025-04-24T14:05:00Z', image: null },
+  { id: 'm010-2', chatId: 'chat-010', senderId: CURRENT_USER_ID, text: 'Привет! Да, гитара свободна. Чехол и медиаторы в комплекте. Оформляй!', createdAt: '2025-04-24T14:08:00Z', isOwn: true, readAt: '2025-04-24T14:09:00Z', image: null },
+  { id: 'm010-3', chatId: 'chat-010', senderId: 'u-032', text: 'Отлично, отправил заявку!', createdAt: '2025-04-24T14:12:00Z', isOwn: false, readAt: '2025-04-24T14:13:00Z', image: null },
+  { id: 'm010-4', chatId: 'chat-010', senderId: CURRENT_USER_ID, text: 'Подтвердил ✅ Оплатите через систему и договоримся о встрече.', createdAt: '2025-04-24T14:32:00Z', isOwn: true, readAt: '2025-04-24T14:35:00Z', image: null },
+  { id: 'm010-5', chatId: 'chat-010', senderId: 'u-032', text: 'Сейчас оплачу!', createdAt: '2025-04-24T15:20:00Z', isOwn: false, readAt: '2025-04-24T15:22:00Z', image: null },
+];
+
+/* ═══ chat-011 (CANCELLED — renter: Палатка — Олег) ═══ */
+
+const SYS_011: SystemEvent[] = [
+  { id: 'sys-011a', type: 'deal_created', text: 'Вы создали заявку на аренду', createdAt: '2025-04-12T10:15:00Z' },
+  { id: 'sys-011b', type: 'deal_confirmed', text: 'Олег Виноградов подтвердил заявку', createdAt: '2025-04-12T11:00:00Z' },
+  { id: 'sys-011c', type: 'deal_cancelled', text: 'Вы отменили сделку', createdAt: '2025-04-13T10:00:00Z' },
+];
+
+const MSG_011: ChatMessage[] = [
+  { id: 'm011-1', chatId: 'chat-011', senderId: CURRENT_USER_ID, text: 'Здравствуйте! Палатка MSR доступна на 15-17 апреля?', createdAt: '2025-04-12T10:00:00Z', isOwn: true, readAt: '2025-04-12T10:05:00Z', image: null },
+  { id: 'm011-2', chatId: 'chat-011', senderId: 'u-033', text: 'Да, свободна! Оформляйте.', createdAt: '2025-04-12T10:10:00Z', isOwn: false, readAt: '2025-04-12T10:12:00Z', image: null },
+  { id: 'm011-3', chatId: 'chat-011', senderId: CURRENT_USER_ID, text: 'Отправил заявку!', createdAt: '2025-04-12T10:18:00Z', isOwn: true, readAt: '2025-04-12T10:20:00Z', image: null },
+  { id: 'm011-4', chatId: 'chat-011', senderId: CURRENT_USER_ID, text: 'Простите, планы изменились — поход отменяется. Отменяю сделку.', createdAt: '2025-04-13T09:50:00Z', isOwn: true, readAt: '2025-04-13T10:00:00Z', image: null },
+  { id: 'm011-5', chatId: 'chat-011', senderId: 'u-033', text: 'Понял, ничего страшного. В следующий раз!', createdAt: '2025-04-13T11:00:00Z', isOwn: false, readAt: '2025-04-13T11:05:00Z', image: null },
+];
+
+/* ═══ chat-012 (CANCELLED — owner: Объектив — Екатерина) ═══ */
+
+const SYS_012: SystemEvent[] = [
+  { id: 'sys-012a', type: 'deal_created', text: 'Екатерина Соколова создала заявку', createdAt: '2025-04-20T08:30:00Z' },
+  { id: 'sys-012b', type: 'deal_confirmed', text: 'Вы подтвердили заявку', createdAt: '2025-04-20T09:00:00Z' },
+  { id: 'sys-012c', type: 'deal_awaiting_payment', text: 'Счёт выставлен', createdAt: '2025-04-20T09:05:00Z' },
+  { id: 'sys-012d', type: 'deal_cancelled', text: 'Екатерина отменила сделку', createdAt: '2025-04-21T14:00:00Z' },
+];
+
+const MSG_012: ChatMessage[] = [
+  { id: 'm012-1', chatId: 'chat-012', senderId: 'u-034', text: 'Здравствуйте! Объектив Sony 70-200 доступен на 22-24 апреля?', createdAt: '2025-04-20T08:00:00Z', isOwn: false, readAt: '2025-04-20T08:10:00Z', image: null },
+  { id: 'm012-2', chatId: 'chat-012', senderId: CURRENT_USER_ID, text: 'Добрый день! Да, свободен. Подтверждаю заявку.', createdAt: '2025-04-20T09:00:00Z', isOwn: true, readAt: '2025-04-20T09:02:00Z', image: null },
+  { id: 'm012-3', chatId: 'chat-012', senderId: 'u-034', text: 'Простите, планы поменялись, отменяю сделку.', createdAt: '2025-04-21T14:00:00Z', isOwn: false, readAt: '2025-04-21T14:05:00Z', image: null },
+];
+
 /* ═══ Exported timelines by chatId ═══ */
 
 export const MOCK_TIMELINES: Record<string, TimelineEntry[]> = {
@@ -357,4 +593,9 @@ export const MOCK_TIMELINES: Record<string, TimelineEntry[]> = {
   'chat-005': buildTimeline(MSG_005, SYS_005),
   'chat-006': buildTimeline(MSG_006, SYS_006),
   'chat-007': buildTimeline(MSG_007, SYS_007),
+  'chat-008': buildTimeline(MSG_008, SYS_008),
+  'chat-009': buildTimeline(MSG_009, SYS_009),
+  'chat-010': buildTimeline(MSG_010, SYS_010),
+  'chat-011': buildTimeline(MSG_011, SYS_011),
+  'chat-012': buildTimeline(MSG_012, SYS_012),
 };

@@ -63,7 +63,7 @@ import { useComplaints } from '../Moderator/hooks/useComplaints';
 import { mockComplaintComments } from '../Moderator/mockModeratorData';
 import type { Complaint, ComplaintPriority, ComplaintStatus, ComplaintTarget } from '../Moderator/types';
 import type { ItemStatus } from '@/business/ads';
-import type { DealStatus } from '@/business/deals';
+import type { UiDealStatus } from '@/ux/types';
 import type { PaymentStatus } from '@/business/payments';
 import type { UserRole } from '@/business/auth';
 import { mockAnalyticsData, mockTodayActivity } from './mockAdminData';
@@ -162,10 +162,11 @@ const ITEM_STATUS_MAP: Record<ItemStatus, { label: string; cls: string }> = {
   ARCHIVED: { label: 'Архив', cls: s.badgeGray },
 };
 
-const DEAL_STATUS_MAP: Record<DealStatus, { label: string; cls: string }> = {
+const DEAL_STATUS_MAP: Record<UiDealStatus, { label: string; cls: string }> = {
   PENDING: { label: 'Ожидание', cls: s.badgeOrange },
   CONFIRMED: { label: 'Подтверждена', cls: s.badgeBlue },
-  ACTIVE: { label: 'Активна', cls: s.badgeGreen },
+  AWAITING_PAYMENT: { label: 'Ожидает оплаты', cls: s.badgePurple },
+  ACTIVE: { label: 'В аренде', cls: s.badgeGreen },
   COMPLETED: { label: 'Завершена', cls: s.badgeGreen },
   REJECTED: { label: 'Отклонена', cls: s.badgeRed },
   CANCELLED: { label: 'Отменена', cls: s.badgeGray },
@@ -1251,6 +1252,7 @@ function DealsTab({ toast }: { toast: ToastFn }) {
               { value: 'all', label: `Все статусы (${d.countByStatus.all})` },
               { value: 'PENDING', label: `Ожидание (${d.countByStatus.PENDING ?? 0})` },
               { value: 'CONFIRMED', label: `Подтверждены (${d.countByStatus.CONFIRMED ?? 0})` },
+              { value: 'AWAITING_PAYMENT', label: `Ожидают оплаты (${(d.countByStatus as any).AWAITING_PAYMENT ?? 0})` },
               { value: 'ACTIVE', label: `Активные (${d.countByStatus.ACTIVE ?? 0})` },
               { value: 'COMPLETED', label: `Завершены (${d.countByStatus.COMPLETED ?? 0})` },
               { value: 'REJECTED', label: `Отклонены (${d.countByStatus.REJECTED ?? 0})` },
@@ -1913,8 +1915,8 @@ const COMPLAINT_PRIORITY_MAP: Record<ComplaintPriority, { label: string; cls: st
 };
 
 const COMPLAINT_STATUS_MAP: Record<ComplaintStatus, { label: string; cls: string }> = {
-  new: { label: 'Новая', cls: s.badgeBlue },
-  in_review: { label: 'На рассмотрении', cls: s.badgeOrange },
+  new: { label: 'Открыта', cls: s.badgeBlue },
+  in_review: { label: 'В обработке', cls: s.badgeOrange },
   resolved: { label: 'Решена', cls: s.badgeGreen },
   dismissed: { label: 'Отклонена', cls: s.badgeGray },
 };
@@ -1989,10 +1991,10 @@ function AdminComplaintsTab({ toast }: { toast: ToastFn }) {
             onChange={(v) => c.updateFilter({ status: v as any })}
             options={[
               { value: 'all', label: `Все статусы (${c.countByStatus.all})` },
-              { value: 'new', label: `Новые (${c.countByStatus.new})` },
-              { value: 'in_review', label: `На рассмотрении (${c.countByStatus.in_review})` },
-              { value: 'resolved', label: `Решённые (${c.countByStatus.resolved})` },
-              { value: 'dismissed', label: `Отклонённые (${c.countByStatus.dismissed})` },
+              { value: 'new', label: `Открытые (${c.countByStatus.new})` },
+              { value: 'in_review', label: `В обработке (${c.countByStatus.in_review})` },
+              { value: 'resolved', label: `Решенные (${c.countByStatus.resolved})` },
+              { value: 'dismissed', label: `Отклоненные (${c.countByStatus.dismissed})` },
             ]}
           />
           <AdminSelect

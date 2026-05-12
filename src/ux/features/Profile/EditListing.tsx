@@ -63,6 +63,7 @@ function listingToFormData(listing: typeof MOCK_LISTINGS[number]): CreateListing
     depositAmount: listing.depositAmount ?? '',
     noDeposit: !listing.depositAmount,
     pickupLocation: listing.location,
+    city: (listing as any).city ?? '',
   };
 }
 
@@ -84,7 +85,7 @@ export function EditListing() {
   const [form, setForm] = useState<CreateListingFormData>(initial ?? {
     title: '', category: '', condition: 'good', description: '',
     images: [], specs: [], pricePerDay: '', pricePerHour: '',
-    depositAmount: '', noDeposit: false, pickupLocation: '',
+    depositAmount: '', noDeposit: false, pickupLocation: '', city: '',
   });
   const [saved, setSaved] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);

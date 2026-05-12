@@ -7,7 +7,7 @@ import {
   Send,
 } from 'lucide-react';
 import type { ChatListTab } from './types';
-import { MOCK_CHATS, MOCK_TIMELINES, QUICK_ACTIONS } from './mockChatData';
+import { MOCK_CHATS, MOCK_TIMELINES, OWNER_ACTIONS, RENTER_ACTIONS } from './mockChatData';
 import { ChatSidebar, ConversationHeader, DealContextBar, QuickActionsBar, TypingIndicator, TimelineItem } from './components';
 import styles from './ChatPage.module.scss';
 
@@ -33,8 +33,9 @@ export function ChatPage() {
   );
 
   const quickActions = useMemo(() => {
-    if (!activeChat?.dealStatus || activeChat.myRole !== 'owner') return [];
-    return QUICK_ACTIONS[activeChat.dealStatus] ?? [];
+    if (!activeChat?.dealStatus || activeChat.myRole === 'inquiry') return [];
+    const actionsMap = activeChat.myRole === 'owner' ? OWNER_ACTIONS : RENTER_ACTIONS;
+    return actionsMap[activeChat.dealStatus] ?? [];
   }, [activeChat]);
 
   const filteredChats = useMemo(() => {

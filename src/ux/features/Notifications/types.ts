@@ -1,4 +1,4 @@
-import type { DealStatus } from '@/business/deals/types';
+import type { UiDealStatus } from '@/ux/types';
 
 /* ─── Notification categories ─── */
 
@@ -48,7 +48,7 @@ export interface NotificationItem {
     itemTitle?: string;
     counterpartyName?: string;
     counterpartyAvatar?: string;
-    dealStatus?: DealStatus;
+    dealStatus?: UiDealStatus;
     amount?: number;
     currency?: string;
     rating?: number;

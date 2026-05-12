@@ -1,5 +1,5 @@
 import type { Chat, ChatMessage as BaseMessage } from '@/business/chat/types';
-import type { DealStatus } from '@/business/deals/types';
+import type { UiDealStatus } from '@/ux/types';
 
 /* ═══ Current user (stub) ═══ */
 
@@ -27,7 +27,7 @@ export type ChatPreview = Pick<Chat, 'id' | 'itemId' | 'dealId' | 'createdAt'> &
   itemTitle: string;
   itemImage: string | null;
   /** Deal context */
-  dealStatus: DealStatus | null;
+  dealStatus: UiDealStatus | null;
   dealPrice: string | null;
   dealDates: { start: string; end: string } | null;
   dealDeposit: string | null;
@@ -51,7 +51,19 @@ export type ChatMessage = Pick<BaseMessage, 'id' | 'chatId' | 'senderId' | 'text
 
 export type SystemEvent = {
   id: string;
-  type: 'deal_created' | 'deal_confirmed' | 'deal_active' | 'deal_completed' | 'deal_rejected' | 'deal_reviewed';
+  type:
+    | 'deal_created'
+    | 'deal_confirmed'
+    | 'deal_awaiting_payment'
+    | 'deal_paid'
+    | 'deal_start_confirmed'
+    | 'deal_active'
+    | 'deal_return_confirmed'
+    | 'deal_completed'
+    | 'deal_rejected'
+    | 'deal_cancelled'
+    | 'deal_early_termination'
+    | 'deal_reviewed';
   text: string;
   createdAt: string;
 };
@@ -63,6 +75,10 @@ export type QuickAction = {
   label: string;
   variant: 'primary' | 'secondary' | 'danger';
   icon?: string;
+  /** Disable action (e.g. waiting for other party) */
+  disabled?: boolean;
+  /** Tooltip explaining why disabled */
+  tooltip?: string;
 };
 
 /* ═══ Timeline ═══ */

@@ -1,20 +1,21 @@
 import type { ItemStatus } from '@/business/ads/types';
-import type { DealStatus } from '@/business/deals/types';
+import type { UiDealStatus } from '@/ux/types';
 import type { CatalogUiItem } from '../Catalog';
 import type { ProfileListing } from './types';
 import { MOCK_USER } from './mockProfileData';
 import styles from './ProfileDashboard.module.scss';
 
 export type ListingFilter = 'all' | ItemStatus;
-export type BookingFilter = 'all' | DealStatus;
+export type BookingFilter = 'all' | UiDealStatus;
 
-export const DEAL_STATUS_MAP: Record<DealStatus, { label: string; cls: string }> = {
-  PENDING:   { label: 'Ожидает',     cls: styles.statusNew },
-  CONFIRMED: { label: 'Подтверждена', cls: styles.statusConfirmed },
-  ACTIVE:    { label: 'Активна',     cls: styles.statusActive },
-  COMPLETED: { label: 'Завершена',   cls: styles.statusCompleted },
-  REJECTED:  { label: 'Отклонена',   cls: styles.statusRejected },
-  CANCELLED: { label: 'Отменена',    cls: styles.statusArchived },
+export const DEAL_STATUS_MAP: Record<UiDealStatus, { label: string; cls: string }> = {
+  PENDING:          { label: 'Ожидает подтверждения', cls: styles.statusNew },
+  CONFIRMED:        { label: 'Подтверждена',      cls: styles.statusConfirmed },
+  AWAITING_PAYMENT: { label: 'Ожидает оплаты',   cls: styles.statusPayment },
+  ACTIVE:           { label: 'В аренде',          cls: styles.statusActive },
+  COMPLETED:        { label: 'Завершена',         cls: styles.statusCompleted },
+  REJECTED:         { label: 'Отклонена',         cls: styles.statusRejected },
+  CANCELLED:        { label: 'Отменена',          cls: styles.statusArchived },
 };
 
 export const LISTING_FILTERS: { value: ListingFilter; label: string; tip: string }[] = [
@@ -29,7 +30,8 @@ export const LISTING_FILTERS: { value: ListingFilter; label: string; tip: string
 export const BOOKING_FILTERS: { value: BookingFilter; label: string; tip: string }[] = [
   { value: 'all', label: 'Все', tip: 'Показать все аренды' },
   { value: 'ACTIVE', label: 'Активные', tip: 'Вещь сейчас у арендатора' },
-  { value: 'CONFIRMED', label: 'Подтверждённые', tip: 'Ожидают начала аренды' },
+  { value: 'CONFIRMED', label: 'Подтверждённые', tip: 'Ожидают формирования счёта' },
+  { value: 'AWAITING_PAYMENT', label: 'Ожидают оплаты', tip: 'Счёт выставлен, ожидается оплата' },
   { value: 'COMPLETED', label: 'Завершённые', tip: 'Аренда успешно завершена' },
   { value: 'REJECTED', label: 'Отклонённые', tip: 'Запрос на аренду отклонён' },
 ];

@@ -94,17 +94,21 @@ export function getIconProps(type: NotificationType): { Icon: typeof Bell; cls: 
 export const DEAL_STATUS_CLS: Record<string, string> = {
   PENDING: styles.statusNew,
   CONFIRMED: styles.statusConfirmed,
+  AWAITING_PAYMENT: styles.statusPayment,
   ACTIVE: styles.statusActive,
   COMPLETED: styles.statusCompleted,
   REJECTED: styles.statusRejected,
+  CANCELLED: styles.statusRejected,
 };
 
 export const DEAL_STATUS_LABEL: Record<string, string> = {
   PENDING: 'Новая',
   CONFIRMED: 'Подтверждена',
-  ACTIVE: 'Активна',
+  AWAITING_PAYMENT: 'Ожидает оплаты',
+  ACTIVE: 'В аренде',
   COMPLETED: 'Завершена',
   REJECTED: 'Отклонена',
+  CANCELLED: 'Отменена',
 };
 
 /* ─── Tab configuration for flat pill tabs ─── */

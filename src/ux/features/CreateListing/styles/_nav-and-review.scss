@@ -73,6 +73,56 @@
   font-size: $font-size-base;
 }
 
+.navFinalActions {
+  display: flex;
+  gap: $space-3;
+  margin-left: auto;
+}
+
+.navDraft {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-3 $space-6;
+  border-radius: $radius-full;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    border-color: var(--color-primary);
+    background: var(--color-green-50);
+  }
+
+  svg { width: 16px; height: 16px; }
+}
+
+.modalDraft {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  padding: $space-3 $space-4;
+  border-radius: $radius-full;
+  border: 1.5px solid var(--color-primary);
+  background: var(--color-green-50);
+  color: var(--color-primary);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: var(--color-primary);
+    color: #fff;
+  }
+}
+
 /* ═══ Review Step ═══ */
 .reviewBlock {
   padding: $space-5;

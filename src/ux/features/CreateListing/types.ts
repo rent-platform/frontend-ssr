@@ -25,6 +25,7 @@ export type CreateListingFormData = {
   description: string;
   images: ImagePreview[];
   specs: SpecEntry[];
+  city: string;
   pricePerDay: string;
   pricePerHour: string;
   depositAmount: string;

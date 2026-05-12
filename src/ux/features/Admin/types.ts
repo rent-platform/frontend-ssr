@@ -1,5 +1,6 @@
 import type { AdsItemResponseDto, ItemStatus } from '@/business/ads';
-import type { Deal, DealStatus } from '@/business/deals';
+import type { Deal } from '@/business/deals';
+import type { UiDealStatus } from '@/ux/types';
 import type { Payment, PaymentStatus } from '@/business/payments';
 import type { UserResponseDTO, UserRole } from '@/business/auth';
 import type { ReviewDTO } from '@/business/reviews';
@@ -77,7 +78,7 @@ export type AdminDeal = Deal & {
 
 export type DealsFilter = {
   search: string;
-  status: DealStatus | 'all';
+  status: UiDealStatus | 'all';
 };
 
 /* ── Finance ─────────────────────────────────────────────────────────────── */

@@ -11,6 +11,7 @@ import {
   Edit3,
   Eye,
   Heart,
+  Info,
   MapPin,
   MessageCircle,
   Package,
@@ -27,7 +28,7 @@ import { formatRelativeDate } from '../Catalog/utils';
 import { MOCK_LISTINGS, MOCK_BOOKINGS } from './mockProfileData';
 import { profileListingToCatalogItem } from './profileHelpers';
 import type { ItemStatus } from '@/business/ads/types';
-import type { DealStatus } from '@/business/deals/types';
+import type { UiDealStatus } from '@/ux/types';
 import { pluralize, formatDate, ROUTES } from '@/ux/utils';
 import c from '../Catalog/Catalog.module.scss';
 import s from './MyListingDetail.module.scss';
@@ -48,18 +49,20 @@ const STATUS_CLS: Record<ItemStatus, string> = {
   REJECTED: s.statusRejected,
 };
 
-const DEAL_LABEL: Record<DealStatus, string> = {
-  PENDING: 'Ожидает',
+const DEAL_LABEL: Record<UiDealStatus, string> = {
+  PENDING: 'Ожидает подтверждения',
   CONFIRMED: 'Подтверждена',
-  ACTIVE: 'Активна',
+  AWAITING_PAYMENT: 'Ожидает оплаты',
+  ACTIVE: 'В аренде',
   COMPLETED: 'Завершена',
   REJECTED: 'Отклонена',
   CANCELLED: 'Отменена',
 };
 
-const DEAL_CLS: Record<DealStatus, string> = {
+const DEAL_CLS: Record<UiDealStatus, string> = {
   PENDING: s.statusModeration,
   CONFIRMED: s.statusActive,
+  AWAITING_PAYMENT: s.statusPayment,
   ACTIVE: s.statusActive,
   COMPLETED: s.statusArchived,
   REJECTED: s.statusRejected,
@@ -212,6 +215,11 @@ export function MyListingDetail() {
                     <span className={s.dashDepositValue}>{Number(listing.depositAmount).toLocaleString('ru-RU')} ₽</span>
                   </div>
                 )}
+                <div className={s.dashServiceFeeRow}>
+                  <Info size={14} />
+                  <span className={s.dashServiceFeeLabel}>Сервисный сбор</span>
+                  <span className={s.dashServiceFeeValue}>10%</span>
+                </div>
               </div>
 
               {/* Stats strip */}

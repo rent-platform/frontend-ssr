@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import type { ListingCondition, CreateListingFormData, SpecEntry } from '../types';
 import { CATEGORY_SPECS } from '../categorySpecs';
 import { SpecSelect } from './SpecSelect';
+import { CitySelect } from './CitySelect';
 import styles from '../CreateListing.module.scss';
 
 const CONDITIONS: { value: ListingCondition; label: string; desc: string }[] = [
@@ -25,7 +26,7 @@ const CATEGORIES = [
 ];
 
 type StepInfoProps = {
-  form: Pick<CreateListingFormData, 'title' | 'category' | 'condition' | 'description' | 'specs'>;
+  form: Pick<CreateListingFormData, 'title' | 'category' | 'condition' | 'description' | 'specs' | 'city'>;
   onPatch: (updates: Partial<CreateListingFormData>) => void;
 };
 
@@ -75,6 +76,14 @@ export function StepInfo({ form, onPatch }: StepInfoProps) {
             options={CATEGORIES}
             placeholder="Выберите категорию"
             onChange={handleCategoryChange}
+          />
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.fieldLabel}>Город</label>
+          <CitySelect
+            value={form.city}
+            onChange={(city) => onPatch({ city })}
           />
         </div>
 

@@ -12,6 +12,7 @@
 
 .statusNew { background: rgba(245, 158, 11, 0.08); color: #f59e0b; }
 .statusConfirmed { background: rgba(59, 130, 246, 0.08); color: #3b82f6; }
+.statusPayment { background: rgba(168, 85, 247, 0.08); color: #a855f7; }
 .statusActive { background: rgba(34, 197, 94, 0.08); color: var(--color-primary); }
 .statusCompleted { background: rgba(100, 116, 139, 0.08); color: var(--color-text-secondary); }
 .statusRejected { background: rgba(239, 68, 68, 0.08); color: var(--color-error); }

@@ -10,7 +10,8 @@ import {
   Eye,
   FileText,
   Plus,
-  Sparkles,
+  Save,
+  Send,
   Tag,
   X,
 } from 'lucide-react';
@@ -26,7 +27,7 @@ const STEPS = [
   { id: 'photos', label: 'Фотографии', Icon: Camera },
   { id: 'info', label: 'Описание', Icon: FileText },
   { id: 'pricing', label: 'Стоимость', Icon: Tag },
-  { id: 'review', label: 'Публикация', Icon: Eye },
+  { id: 'review', label: 'Проверка', Icon: Eye },
 ] as const;
 
 const INITIAL: CreateListingFormData = {
@@ -36,6 +37,7 @@ const INITIAL: CreateListingFormData = {
   description: '',
   images: [],
   specs: [],
+  city: '',
   pricePerDay: '',
   pricePerHour: '',
   depositAmount: '',
@@ -50,19 +52,23 @@ const MAX_IMAGES = 10;
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 export type CreateListingProps = {
-  /** Called with form data on publish. Wire to useCreateAd + useUploadAdPhotos. */
+  /** Called with form data on publish (sends to moderation). Wire to useCreateAd + useUploadAdPhotos. */
   onSubmit?: (data: CreateListingFormData) => void | Promise<void>;
+  /** Called when user saves draft without submitting for moderation. */
+  onSaveDraft?: (data: CreateListingFormData) => void | Promise<void>;
   /** True while API is processing the submission. */
   isSubmitting?: boolean;
 };
 
 export function CreateListing({
   onSubmit,
+  onSaveDraft,
   isSubmitting = false,
 }: CreateListingProps = {}) {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<CreateListingFormData>(INITIAL);
   const [published, setPublished] = useState(false);
+  const [draftSaved, setDraftSaved] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
@@ -121,6 +127,7 @@ export function CreateListing({
           return (
             form.title.trim() !== '' &&
             form.category !== '' &&
+            form.city !== '' &&
             form.description.trim() !== '' &&
             (form.specs.length === 0 || form.specs.every((s) => s.value !== ''))
           );
@@ -144,6 +151,7 @@ export function CreateListing({
       form.images.length > 0 ||
       form.title.trim() !== '' ||
       form.category !== '' ||
+      form.city !== '' ||
       form.description.trim() !== '' ||
       form.pricePerDay.trim() !== '' ||
       form.pricePerHour.trim() !== '' ||
@@ -192,8 +200,13 @@ export function CreateListing({
     setPublished(true);
   };
 
+  const handleSaveDraft = async () => {
+    if (onSaveDraft) await onSaveDraft(form);
+    setDraftSaved(true);
+  };
+
   /* ─── Success screen ─── */
-  if (published) {
+  if (published || draftSaved) {
     return (
       <div className={styles.page}>
         <div className={styles.container}>
@@ -202,10 +215,11 @@ export function CreateListing({
               <div className={styles.successIcon}>
                 <Check size={36} />
               </div>
-              <h2 className={styles.successTitle}>Объявление создано!</h2>
+              <h2 className={styles.successTitle}>{draftSaved ? 'Черновик сохранён!' : 'Отправлено на модерацию!'}</h2>
               <p className={styles.successText}>
-                Ваше объявление опубликовано и уже доступно в каталоге.
-                Арендаторы смогут найти его по поиску.
+                {draftSaved
+                  ? 'Ваше объявление сохранено как черновик. Вы можете продолжить редактирование и отправить его на модерацию позже.'
+                  : 'Ваше объявление отправлено на проверку модератору. После одобрения оно станет доступно в каталоге.'}
               </p>
               <div className={styles.successActions}>
                 <a href={ROUTES.catalog} className={styles.navBack}>
@@ -217,6 +231,7 @@ export function CreateListing({
                   className={styles.navNext}
                   onClick={() => {
                     setPublished(false);
+                    setDraftSaved(false);
                     setStep(0);
                     setForm(INITIAL);
                   }}
@@ -321,15 +336,26 @@ export function CreateListing({
               <ChevronRight size={16} />
             </button>
           ) : (
-            <button
-              type="button"
-              className={clsx(styles.navNext, styles.publishBtn)}
-              onClick={handlePublish}
-              disabled={isSubmitting}
-            >
-              <Sparkles size={16} />
-              {isSubmitting ? 'Публикация…' : 'Опубликовать'}
-            </button>
+            <div className={styles.navFinalActions}>
+              <button
+                type="button"
+                className={styles.navDraft}
+                onClick={handleSaveDraft}
+                disabled={isSubmitting}
+              >
+                <Save size={16} />
+                Сохранить черновик
+              </button>
+              <button
+                type="button"
+                className={clsx(styles.navNext, styles.publishBtn)}
+                onClick={handlePublish}
+                disabled={isSubmitting}
+              >
+                <Send size={16} />
+                {isSubmitting ? 'Отправка…' : 'На модерацию'}
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -349,7 +375,7 @@ export function CreateListing({
             </div>
             <h3 className={styles.modalTitle}>Вы уверены?</h3>
             <p className={styles.modalText}>
-              Введённые вами данные будут утеряны. Это действие нельзя отменить.
+              У вас есть несохранённые данные. Сохраните черновик, чтобы продолжить позже.
             </p>
             <div className={styles.modalActions}>
               <button
@@ -361,10 +387,22 @@ export function CreateListing({
               </button>
               <button
                 type="button"
+                className={styles.modalDraft}
+                onClick={async () => {
+                  await handleSaveDraft();
+                  setShowExitModal(false);
+                  router.push(ROUTES.catalog);
+                }}
+              >
+                <Save size={14} />
+                Сохранить черновик
+              </button>
+              <button
+                type="button"
                 className={styles.modalConfirm}
                 onClick={confirmExit}
               >
-                Выйти
+                Выйти без сохранения
               </button>
             </div>
           </div>

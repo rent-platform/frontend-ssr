@@ -38,6 +38,7 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [comment, setComment] = useState('');
 
   const primaryPrice = formatCatalogCardPrimaryPrice(item);
   const hourPrice = formatCatalogCardHourSecondary(item);
@@ -132,6 +133,26 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
           </div>
         )}
 
+        {/* Comment */}
+        {startDate && endDate && (
+          <div className={styles.commentSection}>
+            <label className={styles.commentLabel}>Комментарий к запросу</label>
+            <textarea
+              className={styles.commentTextarea}
+              placeholder="Опишите детали или пожелания к аренде..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              rows={3}
+            />
+          </div>
+        )}
+
+        {/* Service fee notice */}
+        <div className={styles.serviceFeeRow}>
+          <span><Info size={14} /> Сервисный сбор</span>
+          <span>10% с арендодателя</span>
+        </div>
+
         {/* Actions */}
         <AnimatePresence mode="wait">
           {startDate && endDate ? (
@@ -145,7 +166,7 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
             >
               <button type="button" className={styles.primaryAction} onClick={isGuest ? onAuthRequired : undefined}>
                 <CreditCard size={18} />
-                Перейти к оплате
+                Отправить запрос
               </button>
               <button
                 type="button"

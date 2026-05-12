@@ -121,8 +121,8 @@ const PRIORITY_MAP: Record<ComplaintPriority, { label: string; cls: string }> = 
 };
 
 const STATUS_MAP: Record<ComplaintStatus, { label: string; cls: string }> = {
-  new: { label: 'Новая', cls: s.badgeBlue },
-  in_review: { label: 'На рассмотрении', cls: s.badgeOrange },
+  new: { label: 'Открыта', cls: s.badgeBlue },
+  in_review: { label: 'В обработке', cls: s.badgeOrange },
   resolved: { label: 'Решена', cls: s.badgeGreen },
   dismissed: { label: 'Отклонена', cls: s.badgeGray },
 };
@@ -629,19 +629,19 @@ function ComplaintsTab({ toast }: { toast: ToastFn }) {
       <div className={s.complaintStats}>
         <div className={s.complaintStatItem}>
           <div className={s.complaintStatValue}>{c.countByStatus.new}</div>
-          <div className={s.complaintStatLabel}>Новых</div>
+          <div className={s.complaintStatLabel}>Открытых</div>
         </div>
         <div className={s.complaintStatItem}>
           <div className={s.complaintStatValue}>{c.countByStatus.in_review}</div>
-          <div className={s.complaintStatLabel}>В работе</div>
+          <div className={s.complaintStatLabel}>В обработке</div>
         </div>
         <div className={s.complaintStatItem}>
           <div className={s.complaintStatValue}>{c.countByStatus.resolved}</div>
-          <div className={s.complaintStatLabel}>Решённых</div>
+          <div className={s.complaintStatLabel}>Решено</div>
         </div>
         <div className={s.complaintStatItem}>
           <div className={s.complaintStatValue}>{c.countByStatus.dismissed}</div>
-          <div className={s.complaintStatLabel}>Отклонённых</div>
+          <div className={s.complaintStatLabel}>Отклонено</div>
         </div>
       </div>
 
@@ -661,10 +661,10 @@ function ComplaintsTab({ toast }: { toast: ToastFn }) {
             onChange={(v) => c.updateFilter({ status: v as any })}
             options={[
               { value: 'all', label: `Все статусы (${c.countByStatus.all})` },
-              { value: 'new', label: `Новые (${c.countByStatus.new})` },
-              { value: 'in_review', label: `На рассмотрении (${c.countByStatus.in_review})` },
-              { value: 'resolved', label: `Решённые (${c.countByStatus.resolved})` },
-              { value: 'dismissed', label: `Отклонённые (${c.countByStatus.dismissed})` },
+              { value: 'new', label: `Открытые (${c.countByStatus.new})` },
+              { value: 'in_review', label: `В обработке (${c.countByStatus.in_review})` },
+              { value: 'resolved', label: `Решенные (${c.countByStatus.resolved})` },
+              { value: 'dismissed', label: `Отклоненные (${c.countByStatus.dismissed})` },
             ]}
           />
           <AdminSelect
