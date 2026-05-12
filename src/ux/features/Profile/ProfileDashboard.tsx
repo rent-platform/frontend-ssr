@@ -241,39 +241,6 @@ export function ProfileDashboard({
           </div>
         </motion.div>
 
-        {/* ── Quick Actions ── */}
-        <motion.div
-          className={styles.quickActions}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2, ease: EASE }}
-        >
-          <Link href={ROUTES.createListing} className={styles.quickAction}>
-            <div className={styles.quickActionIcon}><Plus size={18} /></div>
-            <div className={styles.quickActionText}>
-              <span className={styles.quickActionLabel}>Новое объявление</span>
-              <span className={styles.quickActionHint}>Разместить вещь</span>
-            </div>
-            <ArrowUpRight size={16} className={styles.quickActionArrow} />
-          </Link>
-          <Link href={ROUTES.chat} className={styles.quickAction}>
-            <div className={styles.quickActionIcon}><MessageCircle size={18} /></div>
-            <div className={styles.quickActionText}>
-              <span className={styles.quickActionLabel}>Сообщения</span>
-              <span className={styles.quickActionHint}>Чат с арендаторами</span>
-            </div>
-            <ArrowUpRight size={16} className={styles.quickActionArrow} />
-          </Link>
-          <Link href={ROUTES.reviews} className={styles.quickAction}>
-            <div className={styles.quickActionIcon}><Star size={18} /></div>
-            <div className={styles.quickActionText}>
-              <span className={styles.quickActionLabel}>Мои отзывы</span>
-              <span className={styles.quickActionHint}>{user.reviewCount} {pluralize(user.reviewCount, 'отзыв', 'отзыва', 'отзывов')}</span>
-            </div>
-            <ArrowUpRight size={16} className={styles.quickActionArrow} />
-          </Link>
-        </motion.div>
-
         {/* ── Tabs ── */}
         <motion.nav
           className={styles.tabBar}
