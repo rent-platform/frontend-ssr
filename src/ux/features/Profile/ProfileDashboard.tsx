@@ -133,7 +133,15 @@ export function ProfileDashboard({
                 <h1>{user.fullName}</h1>
                 <BadgeCheck size={20} className={styles.verifiedBadge} />
               </div>
-              {user.nickname && <span className={styles.nickname}>@{user.nickname}</span>}
+              <div className={styles.subRow}>
+                {user.nickname && <span className={styles.nickname}>@{user.nickname}</span>}
+                {user.phone && (
+                  <>
+                    <span className={styles.subRowDot} />
+                    <span className={styles.phoneInline}><Phone size={13} /> {user.phone}</span>
+                  </>
+                )}
+              </div>
               {user.bio && <p className={styles.bio}>{user.bio}</p>}
 
               <div className={styles.metaRow}>
@@ -143,7 +151,6 @@ export function ProfileDashboard({
                   <span>({user.reviewCount} {pluralize(user.reviewCount, 'отзыв', 'отзыва', 'отзывов')})</span>
                 </Link>
                 <span className={styles.metaChip}><Calendar size={13} /> С {formatDate(user.memberSince)}</span>
-                {user.phone && <span className={styles.metaChip}><Phone size={13} /> {user.phone}</span>}
               </div>
             </div>
 
