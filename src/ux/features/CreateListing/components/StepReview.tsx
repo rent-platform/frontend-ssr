@@ -110,13 +110,16 @@ export function StepReview({ form }: StepReviewProps) {
         />
       </div>
 
-      {form.pickupLocation && (
+      {(form.city || form.pickupLocation) && (
         <div className={styles.reviewBlock}>
           <div className={styles.reviewBlockHeader}>
             <div className={styles.reviewBlockIcon}><MapPin size={16} /></div>
-            <h3 className={styles.reviewBlockTitle}>Место выдачи</h3>
+            <h3 className={styles.reviewBlockTitle}>Место передачи</h3>
           </div>
-          <ReviewRow label="Адрес" value={form.pickupLocation} />
+          <ReviewRow label="Город" value={form.city} />
+          {form.pickupLocation && (
+            <ReviewRow label="Адрес" value={form.pickupLocation} />
+          )}
         </div>
       )}
     </>

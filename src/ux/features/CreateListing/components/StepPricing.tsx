@@ -6,7 +6,7 @@ import type { CreateListingFormData } from '../types';
 import styles from '../CreateListing.module.scss';
 
 type StepPricingProps = {
-  form: Pick<CreateListingFormData, 'pricePerDay' | 'pricePerHour' | 'depositAmount' | 'noDeposit' | 'pickupLocation'>;
+  form: Pick<CreateListingFormData, 'pricePerDay' | 'pricePerHour' | 'depositAmount' | 'noDeposit' | 'pickupLocation' | 'city'>;
   onPatch: (updates: Partial<CreateListingFormData>) => void;
 };
 
@@ -84,14 +84,19 @@ export function StepPricing({ form, onPatch }: StepPricingProps) {
         )}
 
         <div className={styles.field}>
-          <label className={styles.fieldLabel}>Место выдачи</label>
+          <label className={styles.fieldLabel}>Место передачи</label>
+          {form.city && (
+            <span className={styles.fieldHint} style={{ marginBottom: 4 }}>
+              Город: {form.city}
+            </span>
+          )}
           <input
             className={styles.input}
-            placeholder="Новосибирск, Центральный район"
+            placeholder="Район, улица или станция метро"
             value={form.pickupLocation}
             onChange={(e) => onPatch({ pickupLocation: e.target.value })}
           />
-          <span className={styles.fieldHint}>Город, район или адрес для самовывоза</span>
+          <span className={styles.fieldHint}>Укажите адрес для самовывоза</span>
         </div>
       </div>
     </>
