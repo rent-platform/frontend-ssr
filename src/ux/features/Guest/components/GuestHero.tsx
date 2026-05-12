@@ -24,7 +24,7 @@ export function GuestHero({ heroRef }: GuestHeroProps) {
         <div className={styles.heroCopy}>
           <div className={styles.eyebrow}>
             <Sparkles size={14} />
-            Шеринг-платформа №1 в Новосибирске
+            Арендай — Ваша шеринг платформа
           </div>
 
           <h1 className={styles.title}>
