@@ -27,6 +27,7 @@ import { ProductGallery } from '../Catalog/components/detail/ProductGallery';
 import { formatRelativeDate } from '../Catalog/utils';
 import { MOCK_LISTINGS, MOCK_BOOKINGS } from './mockProfileData';
 import { profileListingToCatalogItem } from './profileHelpers';
+import { AvailabilityCalendar } from './components/AvailabilityCalendar';
 import type { ItemStatus } from '@/business/ads/types';
 import type { UiDealStatus } from '@/ux/types';
 import { pluralize, formatDate, ROUTES } from '@/ux/utils';
@@ -266,6 +267,9 @@ export function MyListingDetail() {
                 ))}
               </div>
             </motion.section>
+
+            {/* ─── Availability Calendar ─── */}
+            <AvailabilityCalendar bookings={relatedBookings} />
 
             {/* ─── Quick Actions (owner-specific) ─── */}
             <motion.div
