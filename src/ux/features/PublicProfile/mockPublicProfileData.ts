@@ -1,5 +1,25 @@
 import type { PublicUser, PublicListing, PublicReview } from './types';
 
+export const MOCK_OWN_PUBLIC_USER: PublicUser = {
+  id: 'u-001',
+  fullName: 'Владислав Петров',
+  nickname: 'vlad_rent',
+  avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
+  bio: 'Сдаю фототехнику и электронику в Новосибирске. Быстрая выдача, всё проверено.',
+  rating: 4.8,
+  reviewCount: 54,
+  memberSince: '2024-03-15',
+  city: 'Новосибирск',
+  isVerified: true,
+  responseTime: '~10 мин',
+  responseRate: 96,
+  completedDeals: 47,
+  activeListings: 8,
+  lastOnline: 'Онлайн',
+  languages: ['Русский'],
+  trustLevel: 'experienced',
+};
+
 export const MOCK_PUBLIC_USER: PublicUser = {
   id: 'u-042',
   fullName: 'Алексей Иванов',

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -21,7 +21,7 @@ import {
   Star,
 } from 'lucide-react';
 import { CatalogHeader, CatalogFooter, CatalogCard } from '../Catalog';
-import { MOCK_PUBLIC_USER, MOCK_PUBLIC_LISTINGS, MOCK_PUBLIC_REVIEWS } from './mockPublicProfileData';
+import { MOCK_PUBLIC_USER, MOCK_OWN_PUBLIC_USER, MOCK_PUBLIC_LISTINGS, MOCK_PUBLIC_REVIEWS } from './mockPublicProfileData';
 import clsx from 'clsx';
 import { pluralize, formatDate, getInitials, ROUTES, EASE } from '@/ux/utils';
 import { ShareModal } from '@/ux/components/ShareModal';
@@ -40,7 +40,8 @@ type Tab = 'listings' | 'reviews';
 
 /* ═══ Main component ═══ */
 export function PublicProfile() {
-  const user = MOCK_PUBLIC_USER;
+  const { id } = useParams<{ id: string }>();
+  const user = id === 'u-001' ? MOCK_OWN_PUBLIC_USER : MOCK_PUBLIC_USER;
   const listings = MOCK_PUBLIC_LISTINGS;
   const reviews = MOCK_PUBLIC_REVIEWS;
 
