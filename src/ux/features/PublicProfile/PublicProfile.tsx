@@ -34,6 +34,7 @@ import {
 } from './publicProfileHelpers';
 import { ProfileSkeleton } from './components/ProfileSkeleton';
 import { PublicReviewCard } from './components/PublicReviewCard';
+import { ReportModal } from './components/ReportModal';
 import styles from './PublicProfile.module.scss';
 
 type Tab = 'listings' | 'reviews';
@@ -51,6 +52,7 @@ export function PublicProfile() {
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [helpfulReviews, setHelpfulReviews] = useState<Set<string>>(new Set());
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const fromItemId = searchParams.get('from');
@@ -176,8 +178,9 @@ export function PublicProfile() {
               <button type="button" className={styles.iconBtn} title="Поделиться" onClick={() => setShowShareModal(true)}>
                 <Share2 size={15} />
               </button>
-              <button type="button" className={clsx(styles.iconBtn, styles.iconBtnDanger)} title="Пожаловаться">
+              <button type="button" className={styles.reportBtn} onClick={() => setShowReportModal(true)}>
                 <Flag size={14} />
+                Пожаловаться
               </button>
             </div>
           </motion.div>
@@ -426,6 +429,11 @@ export function PublicProfile() {
       {/* ═══ Share modal ═══ */}
       <AnimatePresence>
         {showShareModal && <ShareModal url={profileUrl} onClose={() => setShowShareModal(false)} />}
+      </AnimatePresence>
+
+      {/* ═══ Report modal ═══ */}
+      <AnimatePresence>
+        {showReportModal && <ReportModal userName={user.fullName} onClose={() => setShowReportModal(false)} />}
       </AnimatePresence>
     </div>
   );
