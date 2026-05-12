@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { LayoutGrid, LogIn, UserPlus } from 'lucide-react';
 import { BrandIcon } from '../../Catalog';
 import { ROUTES } from '@/ux/utils';
+import { ThemeToggle } from '@/ux/components/ThemeToggle';
 import styles from '../GuestExperience.module.scss';
 
 export function GuestHeader() {
@@ -34,6 +35,7 @@ export function GuestHeader() {
         </div>
 
         <div className={styles.authButtons}>
+          <ThemeToggle />
           <Link href={ROUTES.login} className={styles.loginBtn}>
             <LogIn size={18} />
             Войти

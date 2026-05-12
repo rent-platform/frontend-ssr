@@ -281,7 +281,7 @@ export function ProductDetail({
           <section className={styles.similarSection}>
             <div className={styles.sectionHeader}>
               <h2>Похожие предложения</h2>
-              <button type="button" className={styles.viewAllLink}>
+              <button type="button" className={styles.viewAllLink} onClick={isGuest ? () => onAuthRequired?.() : undefined}>
                 Смотреть все <ChevronRight size={16} />
               </button>
             </div>

@@ -61,6 +61,7 @@ export function GuestCatalogSection({
           onChange={onUpdateFilters}
           onResetFilters={onResetFilters}
           onSearch={handleSearch}
+          onFiltersConfirm={handleSearch}
         />
       </section>
 
