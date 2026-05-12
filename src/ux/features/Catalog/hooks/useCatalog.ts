@@ -50,7 +50,7 @@ export function useCatalog({
   const similarItems = selectedItem
     ? mockCatalogItems
         .filter((item) => item.id !== selectedItem.id && item.category === selectedItem.category)
-        .slice(0, 4)
+        .slice(0, 3)
     : [];
 
   const hasMore = useMockMode

@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback } from 'react';
 import {
   ArrowRight,
   Lock,
@@ -42,6 +43,11 @@ export function GuestCatalogSection({
   onOpenItem,
   onAuthRequired,
 }: GuestCatalogSectionProps) {
+  const handleSearch = useCallback(() => {
+    onCloseFilters();
+    document.getElementById('guest-catalog-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [onCloseFilters]);
+
   return (
     <>
       {/* ═══════ Search Bar (shared with auth) ═══════ */}
@@ -54,6 +60,7 @@ export function GuestCatalogSection({
           onCloseFilters={onCloseFilters}
           onChange={onUpdateFilters}
           onResetFilters={onResetFilters}
+          onSearch={handleSearch}
         />
       </section>
 
@@ -67,7 +74,7 @@ export function GuestCatalogSection({
       </section>
 
       {/* ═══════ Catalog ═══════ */}
-      <section className={styles.catalogSection}>
+      <section id="guest-catalog-results" className={styles.catalogSection}>
         <CatalogToolbar
           filters={filters}
           onChange={onUpdateFilters}

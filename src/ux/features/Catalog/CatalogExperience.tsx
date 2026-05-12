@@ -207,10 +207,11 @@ export function CatalogExperience({
 
                 {visibleItems.length > 0 ? (
                   <div className={styles.resultsGrid}>
-                    {visibleItems.map((item) => (
+                    {visibleItems.map((item, index) => (
                       <CatalogCard
                         key={item.id}
                         item={item}
+                        index={index}
                         onOpen={handleOpenItem}
                       />
                     ))}

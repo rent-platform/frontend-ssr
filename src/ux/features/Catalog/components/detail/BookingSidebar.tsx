@@ -193,7 +193,16 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
       </motion.div>
 
       {/* ─── Owner Card ─── */}
-      <Link href={`${ROUTES.publicProfile(item.ownerId)}?from=${item.id}`} className={styles.ownerCardCompact}>
+      <Link
+        href={isGuest ? '#' : `${ROUTES.publicProfile(item.ownerId)}?from=${item.id}`}
+        className={styles.ownerCardCompact}
+        onClick={(e) => {
+          if (isGuest) {
+            e.preventDefault();
+            onAuthRequired?.();
+          }
+        }}
+      >
         <div className={styles.ownerAvatarWrap}>
           <div className={styles.ownerAvatarFallback}>
             {item.ownerName.charAt(0)}

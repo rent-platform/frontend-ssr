@@ -48,7 +48,7 @@ export function GuestExperience() {
     () => selectedItem
       ? mockCatalogItems
           .filter((item) => item.id !== selectedItem.id && item.category === selectedItem.category)
-          .slice(0, 4)
+          .slice(0, 3)
       : [],
     [selectedItem],
   );
@@ -148,7 +148,7 @@ export function GuestExperience() {
       </main>
 
       {/* ═══════ Footer ═══════ */}
-      <CatalogFooter catalogHref="#guest-catalog" />
+      <CatalogFooter catalogHref="#guest-catalog" howItWorksHref="#how-it-works" />
 
       {/* ═══════ Mobile Floating CTA ═══════ */}
       <div className={clsx(styles.floatingBar, selectedItem && styles.floatingBarHidden)}>

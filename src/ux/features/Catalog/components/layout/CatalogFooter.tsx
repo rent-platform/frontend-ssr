@@ -8,15 +8,16 @@ import styles from '../../Catalog.module.scss';
 
 interface CatalogFooterProps {
   catalogHref?: string;
+  howItWorksHref?: string;
 }
 
-function getFooterNav(catalogHref: string) {
+function getFooterNav(catalogHref: string, howItWorksHref: string) {
   return {
     platform: {
       title: 'Платформа',
       links: [
         { label: 'Каталог', href: catalogHref },
-        { label: 'Как это работает', href: ROUTES.howItWorks },
+        { label: 'Как это работает', href: howItWorksHref },
         { label: 'Цены и тарифы', href: ROUTES.pricing },
         { label: 'Для бизнеса', href: ROUTES.business },
       ],
@@ -41,9 +42,9 @@ function getFooterNav(catalogHref: string) {
   };
 }
 
-export function CatalogFooter({ catalogHref = ROUTES.catalog }: CatalogFooterProps = {}) {
+export function CatalogFooter({ catalogHref = ROUTES.catalog, howItWorksHref = ROUTES.howItWorks }: CatalogFooterProps = {}) {
   const pathname = usePathname();
-  const FOOTER_NAV = getFooterNav(catalogHref);
+  const FOOTER_NAV = getFooterNav(catalogHref, howItWorksHref);
 
   const handleLinkClick = (href: string, e: React.MouseEvent) => {
     if (href === catalogHref && pathname === catalogHref) {

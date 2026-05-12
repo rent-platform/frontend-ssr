@@ -262,7 +262,13 @@ export function ProductDetail({
             <button
               type="button"
               className={styles.detailReportBtn}
-              onClick={() => setReportOpen(true)}
+              onClick={() => {
+                if (isGuest) {
+                  onAuthRequired?.();
+                  return;
+                }
+                setReportOpen(true);
+              }}
             >
               <Flag size={14} />
               Пожаловаться на объявление
@@ -281,7 +287,14 @@ export function ProductDetail({
             </div>
             <div className={styles.similarGrid}>
               {similarItems.slice(0, 3).map((sim, i) => (
-                <CatalogCard key={sim.id} item={sim} index={i} onOpen={onOpenSimilar} />
+                <CatalogCard
+                  key={sim.id}
+                  item={sim}
+                  index={i}
+                  onOpen={onOpenSimilar}
+                  isGuest={isGuest}
+                  onFavoriteChange={isGuest ? () => onAuthRequired?.() : undefined}
+                />
               ))}
             </div>
           </section>
