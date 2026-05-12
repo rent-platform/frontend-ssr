@@ -19,6 +19,7 @@ import {
   applyCatalogFilters,
   searchParamsToFilters,
   filtersToSearchParams,
+  getFilterSummaryItems,
 } from './utils';
 import { ROUTES, pluralize } from '@/ux/utils';
 import styles from './Catalog.module.scss';
@@ -53,6 +54,8 @@ export function SearchResultsPage() {
         .filter((item) => item.id !== selectedItem.id && item.category === selectedItem.category)
         .slice(0, 4)
     : [];
+
+  const summaryChips = useMemo(() => getFilterSummaryItems(filters), [filters]);
 
   const hasMore = visibleCount < filteredItems.length;
 
@@ -130,23 +133,30 @@ export function SearchResultsPage() {
           onResetFilters={() => setFilters(INITIAL_FILTERS)}
           onSearch={handleSearch}
           onFiltersConfirm={handleFiltersConfirm}
+          hideSummary
         />
 
         {!selectedItem && (
-          <div className={styles.searchResultsHeader}>
-            <Link href={ROUTES.home} className={styles.backLink}>
-              <ArrowLeft size={16} />
-              <span>На главную</span>
-            </Link>
-            <h2 className={styles.searchResultsTitle}>
-              {filters.search.trim()
-                ? <>Результаты по запросу «{filters.search.trim()}»</>
-                : 'Результаты поиска'}
-            </h2>
-            <span className={styles.searchResultsCount}>
-              {filteredItems.length} {pluralize(filteredItems.length, 'объявление', 'объявления', 'объявлений')}
-            </span>
-          </div>
+          <>
+            <div className={styles.searchResultsHeader}>
+              <Link href={ROUTES.home} className={styles.backLink}>
+                <ArrowLeft size={16} />
+                <span>На главную</span>
+              </Link>
+              <h2 className={styles.searchResultsTitle}>
+                {filters.search.trim()
+                  ? <>Результаты по запросу «{filters.search.trim()}»</>
+                  : 'Результаты поиска'}
+              </h2>
+            </div>
+            {summaryChips.length > 0 && (
+              <div className={styles.activeFiltersRow}>
+                {summaryChips.map((item) => (
+                  <span key={item} className={styles.activeFilterChip}>{item}</span>
+                ))}
+              </div>
+            )}
+          </>
         )}
 
         <AnimatePresence mode="wait">

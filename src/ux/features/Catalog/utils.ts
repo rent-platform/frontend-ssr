@@ -99,6 +99,27 @@ export const sortCatalogItems = (items: CatalogUiItem[], sortBy: CatalogSortKey)
   }
 };
 
+/* ─── Filter summary chips ─── */
+
+export const getFilterSummaryItems = (filters: CatalogFilterState): string[] => {
+  const items: string[] = [];
+
+  if (filters.city !== INITIAL_FILTERS.city) items.push(filters.city);
+  if (filters.category !== INITIAL_FILTERS.category) items.push(filters.category);
+  if (filters.onlyAvailable !== INITIAL_FILTERS.onlyAvailable)
+    items.push(filters.onlyAvailable ? 'Доступно сегодня' : 'Все предложения');
+  if (filters.minPrice || filters.maxPrice) {
+    const minLabel = filters.minPrice ? `от ${filters.minPrice} ₽` : 'от любой цены';
+    const maxLabel = filters.maxPrice ? `до ${filters.maxPrice} ₽` : 'без лимита';
+    items.push(`${minLabel} · ${maxLabel}`);
+  }
+  if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit)
+    items.push(filters.hasDeposit === 'no' ? 'Без залога' : 'С залогом');
+  if (filters.quickFilter) items.push(filters.quickFilter);
+
+  return items;
+};
+
 /* ─── URL ↔ Filters serialization ─── */
 
 export const filtersToSearchParams = (filters: CatalogFilterState): string => {

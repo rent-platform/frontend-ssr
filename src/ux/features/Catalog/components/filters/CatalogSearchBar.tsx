@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useRef } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import type { CatalogFilterState } from '../../types';
-import { INITIAL_FILTERS } from '../../utils';
+import { INITIAL_FILTERS, getFilterSummaryItems } from '../../utils';
 import { CatalogFilters } from './CatalogFilters';
 import styles from './CatalogSearchBar.module.scss';
 
@@ -18,6 +18,7 @@ type CatalogSearchBarProps = {
   onResetFilters: () => void;
   onSearch?: () => void;
   onFiltersConfirm?: () => void;
+  hideSummary?: boolean;
 };
 
 export function CatalogSearchBar({
@@ -30,6 +31,7 @@ export function CatalogSearchBar({
   onResetFilters,
   onSearch,
   onFiltersConfirm,
+  hideSummary,
 }: CatalogSearchBarProps) {
   const shellRef = useRef<HTMLElement | null>(null);
 
@@ -79,37 +81,7 @@ export function CatalogSearchBar({
     return count;
   }, [filters]);
 
-  const summaryItems = useMemo(() => {
-    const items: string[] = [];
-
-    if (filters.city !== INITIAL_FILTERS.city) {
-      items.push(filters.city);
-    }
-
-    if (filters.category !== INITIAL_FILTERS.category) {
-      items.push(filters.category);
-    }
-
-    if (filters.onlyAvailable !== INITIAL_FILTERS.onlyAvailable) {
-      items.push(filters.onlyAvailable ? 'Доступно сегодня' : 'Все предложения');
-    }
-
-    if (filters.minPrice || filters.maxPrice) {
-      const minLabel = filters.minPrice ? `от ${filters.minPrice} ₽` : 'от любой цены';
-      const maxLabel = filters.maxPrice ? `до ${filters.maxPrice} ₽` : 'без лимита';
-      items.push(`${minLabel} · ${maxLabel}`);
-    }
-
-    if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit) {
-      items.push(filters.hasDeposit === 'no' ? 'Без залога' : 'С залогом');
-    }
-
-    if (filters.quickFilter) {
-      items.push(filters.quickFilter);
-    }
-
-    return items;
-  }, [filters]);
+  const summaryItems = useMemo(() => getFilterSummaryItems(filters), [filters]);
 
   const handleSearchAction = () => {
     if (onSearch) {
@@ -184,7 +156,7 @@ export function CatalogSearchBar({
           </motion.button>
         </div>
 
-        {(filters.search.trim() || summaryItems.length > 0) && (
+        {!hideSummary && (filters.search.trim() || summaryItems.length > 0) && (
           <div className={styles.searchMetaRow}>
             <div className={styles.searchSummary}>
               {filters.search.trim() ? (
