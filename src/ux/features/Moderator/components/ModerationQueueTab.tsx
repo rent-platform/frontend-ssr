@@ -22,7 +22,7 @@ import { useModerationQueue } from '../hooks/useModerationQueue';
 import { usePagination } from '../../Admin/hooks/usePagination';
 import { useSortable } from '../../Admin/hooks/useSortable';
 import { formatDate, formatPrice, getWaitingTime } from '../utils';
-import type { ToastFn } from './Toast';
+import type { ToastFn } from '@/ux/components/Toast';
 import type { ModerationQueueItem } from '../types';
 import { AdminSelect } from './AdminSelect';
 import { TableSkeleton } from './TableSkeleton';

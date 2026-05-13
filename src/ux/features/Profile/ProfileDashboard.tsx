@@ -28,6 +28,7 @@ import { CatalogHeader } from '@/ux/layouts/SiteHeader';
 import { CatalogFooter } from '@/ux/layouts/SiteFooter';
 import clsx from 'clsx';
 import { pluralize, formatDate, ROUTES, EASE } from '@/ux/utils';
+import type { ProfileUser, ProfileStats } from './types';
 import { MOCK_USER, MOCK_STATS } from './mockProfileData';
 import { ListingsPanel } from './components/ListingsPanel';
 import { DealsPanel } from './components/DealsPanel';
@@ -43,9 +44,9 @@ import styles from './ProfileDashboard.module.scss';
    ═══════════════════════════════════════════════════════════════════════════════ */
 export type ProfileDashboardProps = {
   /** User data from useProfile(). Falls back to mock. */
-  user?: typeof MOCK_USER;
+  user?: ProfileUser;
   /** Stats from API. Falls back to mock. */
-  stats?: typeof MOCK_STATS;
+  stats?: ProfileStats;
   /** True while loading from API. */
   isLoading?: boolean;
 };

@@ -15,7 +15,7 @@ import { formatDate } from '../helpers';
 import { useComplaints } from '../../Moderator/hooks/useComplaints';
 import { mockComplaintComments } from '../../Moderator/mockModeratorData';
 import type { Complaint, ComplaintPriority, ComplaintStatus, ComplaintTarget } from '../../Moderator/types';
-import type { ToastFn } from '../components/Toast';
+import type { ToastFn } from '@/ux/components/Toast';
 
 const COMPLAINT_PRIORITY_MAP: Record<ComplaintPriority, { label: string; cls: string }> = {
   low: { label: 'Низкий', cls: s.badgeGray },

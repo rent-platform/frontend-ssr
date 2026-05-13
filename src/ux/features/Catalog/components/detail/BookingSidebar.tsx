@@ -16,12 +16,11 @@ import {
   Zap,
 } from 'lucide-react';
 import type { CatalogUiItem } from '../../types';
-import { pluralize } from '@/ux/utils';
+import { pluralize, formatPrice } from '@/ux/utils';
 import {
   formatCatalogCardHourSecondary,
   formatCatalogCardPrimaryPrice,
   formatDepositAmount,
-  formatPrice,
 } from '../../utils';
 import { RentalCalendar } from './RentalCalendar';
 import { ROUTES } from '@/ux/utils';

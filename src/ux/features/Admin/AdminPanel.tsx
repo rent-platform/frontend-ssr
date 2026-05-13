@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { useToast, ToastContainer } from './components/Toast';
+import { useToast, ToastContainer } from '@/ux/components/Toast';
 import { DashboardTab } from './tabs/DashboardTab';
 import { UsersTab } from './tabs/UsersTab';
 import { ListingsTab } from './tabs/ListingsTab';

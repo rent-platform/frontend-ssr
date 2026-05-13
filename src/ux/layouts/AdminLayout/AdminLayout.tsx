@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import { getInitials } from '@/ux/utils';
 import s from './AdminLayout.module.scss';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
@@ -41,12 +42,7 @@ export function AdminLayout({
 
   const resolvedTitle = pageTitle ?? activeItem?.label ?? '';
 
-  const initials = userName
-    .split(' ')
-    .map((w) => w[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
+  const initials = getInitials(userName);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 

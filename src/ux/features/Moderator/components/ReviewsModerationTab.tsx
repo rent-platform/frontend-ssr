@@ -20,7 +20,7 @@ import { useReviewsModeration } from '../hooks/useReviewsModeration';
 import { usePagination } from '../../Admin/hooks/usePagination';
 import { useSortable } from '../../Admin/hooks/useSortable';
 import { formatDate, renderStars } from '../utils';
-import type { ToastFn } from './Toast';
+import type { ToastFn } from '@/ux/components/Toast';
 import type { ModeratedReview } from '../types';
 import { AdminSelect } from './AdminSelect';
 import { TableSkeleton } from './TableSkeleton';

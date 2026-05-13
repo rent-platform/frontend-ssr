@@ -15,7 +15,7 @@ import { TableSkeleton } from '../components/Skeletons';
 import { AdminUserProfile } from '../components/AdminUserProfile';
 import { ROLE_MAP, BAN_REASONS } from '../helpers';
 import type { AdminUser } from '../types';
-import type { ToastFn } from '../components/Toast';
+import type { ToastFn } from '@/ux/components/Toast';
 import type { UserRole } from '@/business/auth';
 
 type UserSortKey = 'name' | 'email' | 'role' | 'listings' | 'deals';

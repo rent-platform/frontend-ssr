@@ -15,7 +15,7 @@ import { TableSkeleton } from '../components/Skeletons';
 import { AdminListingDetail } from '../components/AdminListingDetail';
 import { formatPrice, ITEM_STATUS_MAP } from '../helpers';
 import type { AdminListing } from '../types';
-import type { ToastFn } from '../components/Toast';
+import type { ToastFn } from '@/ux/components/Toast';
 
 type ListingSortKey = 'title' | 'category' | 'city' | 'price' | 'status' | 'owner';
 const LISTING_SORT_ACCESSORS: Partial<Record<ListingSortKey, (i: AdminListing) => string | number | null | undefined>> = {

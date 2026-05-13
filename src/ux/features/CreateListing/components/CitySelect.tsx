@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Check, ChevronDown, MapPin, Search } from 'lucide-react';
 import clsx from 'clsx';
-import { RUSSIAN_CITY_OPTIONS } from '../../Catalog/russianCities';
+import type { RussianCityOption } from '../../Catalog/russianCities';
 import styles from '../CreateListing.module.scss';
 
 type CitySelectProps = {
@@ -14,18 +14,23 @@ type CitySelectProps = {
 export function CitySelect({ value, onChange }: CitySelectProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [cities, setCities] = useState<RussianCityOption[]>([]);
   const ref = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    import('../../Catalog/russianCities').then((m) => setCities(m.RUSSIAN_CITY_OPTIONS));
+  }, []);
+
   const filtered = useMemo(() => {
-    if (!search.trim()) return RUSSIAN_CITY_OPTIONS.slice(0, 20);
+    if (!search.trim()) return cities.slice(0, 20);
     const q = search.toLowerCase();
-    return RUSSIAN_CITY_OPTIONS.filter((c) => c.searchText.includes(q)).slice(0, 20);
-  }, [search]);
+    return cities.filter((c) => c.searchText.includes(q)).slice(0, 20);
+  }, [search, cities]);
 
   const selectedCity = useMemo(
-    () => RUSSIAN_CITY_OPTIONS.find((c) => c.value === value),
-    [value],
+    () => cities.find((c) => c.value === value),
+    [value, cities],
   );
 
   const handleSelect = useCallback(

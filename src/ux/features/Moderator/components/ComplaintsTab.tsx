@@ -17,7 +17,7 @@ import { usePagination } from '../../Admin/hooks/usePagination';
 import { useSortable } from '../../Admin/hooks/useSortable';
 import { mockComplaintComments } from '../mockModeratorData';
 import { formatDate, PRIORITY_MAP, STATUS_MAP, TARGET_MAP, PRIORITY_DOT_MAP } from '../utils';
-import type { ToastFn } from './Toast';
+import type { ToastFn } from '@/ux/components/Toast';
 import type { Complaint, ComplaintPriority } from '../types';
 import { AdminSelect } from './AdminSelect';
 import { TableSkeleton } from './TableSkeleton';

@@ -25,7 +25,7 @@ import {
   UserCog,
 } from 'lucide-react';
 import clsx from 'clsx';
-import { pluralize, formatDate, getInitials } from '@/ux/utils';
+import { pluralize, formatDate, getInitials, EASE } from '@/ux/utils';
 import { CatalogCard } from '../../Catalog';
 import { MOCK_PUBLIC_LISTINGS, MOCK_PUBLIC_REVIEWS } from '../../PublicProfile/mockPublicProfileData';
 import { RATING_DISTRIBUTION, publicListingToCatalogItem } from '../../PublicProfile/publicProfileHelpers';
@@ -41,7 +41,6 @@ const MOCK_CREATED_DATES = [
 ];
 
 
-const EASE = [0.23, 1, 0.32, 1] as const;
 const VISIBLE_LISTINGS = 6;
 const VISIBLE_REVIEWS = 4;
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { ProfileTab, BookingSide } from '../types';
+import type { ProfileUser, ProfileStats, ProfileTab, BookingSide } from '../types';
 import type { ListingFilter, BookingFilter } from '../profileHelpers';
 import { MOCK_USER, MOCK_STATS, MOCK_BOOKINGS } from '../mockProfileData';
 import { getProfileCompletion } from '../profileHelpers';
@@ -8,8 +8,8 @@ import { getInitials, ROUTES } from '@/ux/utils';
 import type { CatalogUiItem } from '../../Catalog';
 
 export type UseProfileDashboardOptions = {
-  user?: typeof MOCK_USER;
-  stats?: typeof MOCK_STATS;
+  user?: ProfileUser;
+  stats?: ProfileStats;
   isLoading?: boolean;
 };
 

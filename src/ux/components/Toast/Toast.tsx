@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, X, Eye } from 'lucide-react';
 import clsx from 'clsx';
-import s from '../../layouts/AdminLayout/AdminLayout.module.scss';
+import s from './Toast.module.scss';
 
 export type Toast = { id: number; message: string; type: 'success' | 'error' | 'info' };
 export type ToastFn = (message: string, type?: Toast['type']) => void;

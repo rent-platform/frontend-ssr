@@ -12,7 +12,7 @@ import { SortableHeader } from '../components/SortableHeader';
 import { StatsSkeleton, TableSkeleton } from '../components/Skeletons';
 import { formatPrice, formatDate, formatMoney, PAYMENT_STATUS_MAP } from '../helpers';
 import type { AdminPayment } from '../types';
-import type { ToastFn } from '../components/Toast';
+import type { ToastFn } from '@/ux/components/Toast';
 
 type FinanceSortKey = 'item' | 'renter' | 'owner' | 'total' | 'status' | 'date';
 const FINANCE_SORT_ACCESSORS: Partial<Record<FinanceSortKey, (p: AdminPayment) => string | number | null | undefined>> = {

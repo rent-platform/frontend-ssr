@@ -1,7 +1,7 @@
 import type { ItemStatus } from '@/business/ads/types';
 import type { UiDealStatus } from '@/ux/types';
 import type { CatalogUiItem } from '../Catalog';
-import type { ProfileListing } from './types';
+import type { ProfileUser, ProfileListing } from './types';
 import { MOCK_USER } from './mockProfileData';
 import styles from './ProfileDashboard.module.scss';
 
@@ -68,7 +68,7 @@ export function profileListingToCatalogItem(listing: ProfileListing): CatalogUiI
   } as CatalogUiItem;
 }
 
-export function getProfileCompletion(user: typeof MOCK_USER): number {
+export function getProfileCompletion(user: ProfileUser): number {
   let score = 0;
   if (user.avatarUrl) score += 20;
   if (user.bio) score += 20;

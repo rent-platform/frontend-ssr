@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import s from '../../../layouts/AdminLayout/AdminLayout.module.scss';
 import { useAdminSettings } from '../hooks/useAdminSettings';
 import { TableSkeleton } from '../components/Skeletons';
-import type { ToastFn } from '../components/Toast';
+import type { ToastFn } from '@/ux/components/Toast';
 
 export function SettingsTab({ toast }: { toast: ToastFn }) {
   const st = useAdminSettings();

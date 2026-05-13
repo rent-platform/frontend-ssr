@@ -1,4 +1,4 @@
-import { pluralize, formatPrice, getNumericPrice, timeAgo } from '@/ux/utils';
+import { pluralize, formatPrice, timeAgo } from '@/ux/utils';
 import type { CatalogFilterState, CatalogSortKey, CatalogUiItem } from './types';
 
 export const CATEGORY_OPTIONS = [
@@ -32,7 +32,6 @@ export const INITIAL_FILTERS: CatalogFilterState = {
   hasDeposit: 'all',
 };
 
-export { formatPrice, getNumericPrice };
 
 const normalizeNumberish = (value: string | null) => {
   if (!value) return null;

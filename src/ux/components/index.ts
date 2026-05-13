@@ -20,3 +20,4 @@ export { useToast, ToastContainer } from "./Toast";
 export type { Toast, ToastFn } from "./Toast";
 export { TableSkeleton } from "./TableSkeleton";
 export { Pagination } from "./AdminPagination";
+export { ErrorBoundary } from "./ErrorBoundary";

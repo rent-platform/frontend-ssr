@@ -1,7 +1,7 @@
 'use client';
 
 import { Sun, Moon } from 'lucide-react';
-import { useTheme } from '@/ux/utils/ThemeContext';
+import { useTheme } from '@/ux/contexts/ThemeContext';
 import clsx from 'clsx';
 import s from './ThemeToggle.module.scss';
 

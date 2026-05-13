@@ -14,7 +14,7 @@ import { SortableHeader } from '../components/SortableHeader';
 import { TableSkeleton } from '../components/Skeletons';
 import { formatDate, formatDateTime, formatPrice, DEAL_STATUS_MAP } from '../helpers';
 import type { AdminDeal } from '../types';
-import type { ToastFn } from '../components/Toast';
+import type { ToastFn } from '@/ux/components/Toast';
 
 type DealSortKey = 'item' | 'renter' | 'owner' | 'total' | 'status' | 'start';
 const DEAL_SORT_ACCESSORS: Partial<Record<DealSortKey, (d: AdminDeal) => string | number | null | undefined>> = {

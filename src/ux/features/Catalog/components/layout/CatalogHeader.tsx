@@ -20,10 +20,20 @@ import { ROUTES } from '@/ux/utils';
 import { ThemeToggle } from '@/ux/components/ThemeToggle';
 import styles from '../../Catalog.module.scss';
 
+type HeaderBadgeCounts = {
+  favorites?: number;
+  notifications?: number;
+  messages?: number;
+};
+
 type CatalogHeaderProps = {
   cityLabel: string;
   isHidden?: boolean;
   onBrandClick?: () => void;
+  /** Badge counts for header action icons. Defaults to 0 for all. */
+  counts?: HeaderBadgeCounts;
+  /** Called when the user clicks "Выйти". */
+  onLogout?: () => void;
 };
 
 export function BrandIcon() {
@@ -38,13 +48,12 @@ export function BrandIcon() {
   );
 }
 
-const actionIcons = [
-  { label: 'Избранное', count: 2, Icon: Heart, href: ROUTES.favorites },
-  { label: 'Уведомления', count: 5, Icon: Bell, href: ROUTES.notifications },
-  { label: 'Сообщения', count: 9, Icon: MessageSquare, href: ROUTES.chat },
-];
-
-export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: CatalogHeaderProps) {
+export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick, counts, onLogout }: CatalogHeaderProps) {
+  const actionIcons = [
+    { label: 'Избранное', count: counts?.favorites ?? 0, Icon: Heart, href: ROUTES.favorites },
+    { label: 'Уведомления', count: counts?.notifications ?? 0, Icon: Bell, href: ROUTES.notifications },
+    { label: 'Сообщения', count: counts?.messages ?? 0, Icon: MessageSquare, href: ROUTES.chat },
+  ];
   const router = useRouter();
 
   const handleBrandClick = (e: React.MouseEvent) => {
@@ -177,7 +186,7 @@ export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick }: Cat
                     <span>Настройки</span>
                   </Link>
                   <div className={styles.profileMenuDivider} />
-                  <button type="button" className={clsx(styles.profileMenuItem, styles.profileMenuLogout)}>
+                  <button type="button" className={clsx(styles.profileMenuItem, styles.profileMenuLogout)} onClick={onLogout}>
                     <LogOut size={16} />
                     <span>Выйти</span>
                   </button>
