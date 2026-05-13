@@ -1,0 +1,281 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+@use 'shared' as *;
+
+/* ── Reusable card ────────────────────────────────────────────────────── */
+
+.card {
+  @include card-base;
+}
+
+.cardHeader {
+  @include flex-between;
+  padding: $space-4 $space-5;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cardTitle {
+  font-family: $font-family-display;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-base;
+  color: var(--color-text);
+}
+
+.cardBody {
+  padding: $space-5;
+}
+
+/* ── Stat widgets ─────────────────────────────────────────────────────── */
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $space-4;
+  margin-bottom: $space-6;
+
+  @include respond-below('lg') {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: $space-3;
+  }
+
+  @include respond-below('md') {
+    grid-template-columns: 1fr 1fr;
+    gap: $space-2;
+    margin-bottom: $space-4;
+  }
+
+  @include respond-below('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.statCard {
+  @include card-base;
+  padding: $space-5;
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  transition: $transition-base;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  @include respond-below('md') {
+    padding: $space-3;
+    gap: $space-3;
+  }
+}
+
+.statIcon {
+  @include flex-center;
+  @include square(44px);
+  border-radius: $radius-md;
+  flex-shrink: 0;
+
+  @include respond-below('md') {
+    @include square(36px);
+  }
+}
+
+.statIconGreen  { background: var(--color-green-50); color: var(--color-primary); }
+.statIconBlue   { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.statIconOrange { background: rgba(245, 158, 11, 0.1); color: var(--color-warning); }
+.statIconRed    { background: rgba(239, 68, 68, 0.1); color: var(--color-error); }
+.statIconPurple { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+
+.statContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.statValue {
+  font-family: $font-family-display;
+  font-weight: $font-weight-800;
+  font-size: $font-size-2xl;
+  color: var(--color-text);
+  line-height: 1.2;
+
+  @include respond-below('md') {
+    font-size: $font-size-xl;
+  }
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+.statTrend {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  margin-top: $space-1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.statTrendUp   { color: var(--color-success); }
+.statTrendDown { color: var(--color-error); }
+
+/* ── Badges ───────────────────────────────────────────────────────────── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  white-space: nowrap;
+}
+
+.badgeGreen  { background: var(--color-green-50); color: var(--color-primary); }
+.badgeRed    { background: rgba(239, 68, 68, 0.1); color: var(--color-error); }
+.badgeOrange { background: rgba(245, 158, 11, 0.1); color: var(--color-warning); }
+.badgeBlue   { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.badgeGray   { background: var(--color-surface-muted); color: var(--color-text-secondary); }
+.badgePurple { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+
+.badgeClickable {
+  cursor: pointer;
+  transition: $transition-base;
+  border: none;
+  font-family: inherit;
+
+  &:hover {
+    filter: brightness(0.92);
+    transform: scale(1.05);
+  }
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────── */
+
+.btn {
+  @include btn-base;
+}
+
+.btnPrimary {
+  background: var(--gradient-green);
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    box-shadow: $shadow-green-sm;
+    transform: translateY(-1px);
+  }
+}
+
+.btnDanger {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+
+  &:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.2);
+  }
+}
+
+.btnGhost {
+  background: transparent;
+  color: var(--color-text-secondary);
+
+  &:hover:not(:disabled) {
+    background: var(--color-surface-muted);
+    color: var(--color-text);
+  }
+}
+
+.btnOutline {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+
+  &:hover:not(:disabled) {
+    background: var(--color-surface-muted);
+    border-color: var(--color-text-secondary);
+  }
+}
+
+.btnSm {
+  padding: $space-1 $space-3;
+  font-size: $font-size-xs;
+}
+
+.resetBtn {
+  @include btn-base;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: $font-size-xs;
+  padding: $space-1 $space-3;
+  border: 1px dashed var(--color-border);
+
+  &:hover {
+    border-color: var(--color-error);
+    color: var(--color-error);
+    background: rgba(239, 68, 68, 0.04);
+  }
+}
+
+/* ── Pagination ───────────────────────────────────────────────────────── */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-1;
+  padding: $space-4 0;
+}
+
+.pageBtn {
+  @include flex-center;
+  @include square(32px);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-sm;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &.pageBtnActive {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+  }
+}
+
+.paginationWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-4 $space-5;
+  border-top: 1px solid var(--color-border);
+  flex-wrap: wrap;
+  gap: $space-3;
+}
+
+.paginationInfo {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+}
+
+.paginationPerPage {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+}

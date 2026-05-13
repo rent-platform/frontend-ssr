@@ -1,0 +1,321 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+@use 'shared' as *;
+
+/* ── Layout grid ──────────────────────────────────────────────────────── */
+
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: var(--color-surface-muted);
+
+  @include respond-below('lg') {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────── */
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  @include scrollbar(4px);
+  z-index: $z-sticky;
+
+  @include respond-below('lg') {
+    position: fixed;
+    inset: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: $z-modal;
+
+    &.sidebarOpen {
+      transform: translateX(0);
+    }
+  }
+}
+
+.sidebarOverlay {
+  display: none;
+
+  @include respond-below('lg') {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: calc(#{$z-modal} - 1);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    &.overlayVisible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+/* ── Brand ────────────────────────────────────────────────────────────── */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-5 $space-5 $space-4;
+  border-bottom: 1px solid var(--color-border);
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.brandIcon {
+  @include flex-center;
+  @include square(36px);
+  border-radius: $radius-md;
+  background: var(--gradient-green);
+  color: #fff;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-lg;
+  flex-shrink: 0;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandName {
+  font-family: $font-family-display;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-sm;
+  line-height: 1.2;
+}
+
+.brandRole {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+  font-weight: $font-weight-medium;
+}
+
+/* ── Navigation ───────────────────────────────────────────────────────── */
+
+.nav {
+  flex: 1;
+  padding: $space-3;
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.navSection {
+  margin-top: $space-3;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.navSectionLabel {
+  font-size: 11px;
+  font-weight: $font-weight-600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: $space-2 $space-3;
+  margin-bottom: $space-1;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  transition: $transition-base;
+
+  &:hover {
+    background: var(--color-surface-muted);
+    color: var(--color-text);
+  }
+
+  &.navItemActive {
+    background: var(--color-green-50);
+    color: var(--color-primary);
+    font-weight: $font-weight-600;
+
+    .navItemIcon {
+      color: var(--color-primary);
+    }
+  }
+}
+
+.navItemIcon {
+  @include flex-center;
+  @include square(20px);
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+}
+
+.navItemBadge {
+  margin-left: auto;
+  @include flex-center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 $space-1;
+  border-radius: $radius-full;
+  background: var(--color-secondary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: $font-weight-bold;
+}
+
+/* ── Sidebar footer / User card ───────────────────────────────────────── */
+
+.sidebarFooter {
+  padding: $space-3;
+  border-top: 1px solid var(--color-border);
+}
+
+.userCard {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover {
+    background: var(--color-surface-muted);
+  }
+}
+
+.userAvatar {
+  @include flex-center;
+  @include square(32px);
+  border-radius: $radius-full;
+  background: var(--gradient-green);
+  color: #fff;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-xs;
+  flex-shrink: 0;
+}
+
+.userInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.userName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: var(--color-text);
+  @include text-truncate;
+}
+
+.userRole {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+}
+
+/* ── Main content ─────────────────────────────────────────────────────── */
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky;
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-3 $space-6;
+  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.menuBtn {
+  display: none;
+  @include flex-center;
+  @include square(36px);
+  border: none;
+  background: none;
+  border-radius: $radius-md;
+  color: var(--color-text);
+  cursor: pointer;
+
+  @include respond-below('lg') {
+    display: grid;
+    place-items: center;
+  }
+
+  &:hover {
+    background: var(--color-surface-muted);
+  }
+}
+
+.content {
+  flex: 1;
+  padding: $space-6;
+  min-width: 0;
+
+  @include respond-below('md') {
+    padding: $space-4;
+  }
+}
+
+/* ── Breadcrumbs ──────────────────────────────────────────────────────── */
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+  margin-right: auto;
+}
+
+.breadcrumbItem {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--color-text);
+  }
+}
+
+.breadcrumbActive {
+  color: var(--color-text);
+  font-weight: $font-weight-600;
+}
+
+.breadcrumbSep {
+  color: var(--color-border);
+  font-size: 10px;
+}

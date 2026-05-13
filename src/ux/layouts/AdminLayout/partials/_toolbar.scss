@@ -1,0 +1,257 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+@use 'shared' as *;
+
+/* ── Toolbar / Filters row ────────────────────────────────────────────── */
+
+.toolbar {
+  @include flex-between;
+  flex-wrap: wrap;
+  gap: $space-3;
+  margin-bottom: $space-4;
+
+  @include respond-below('md') {
+    flex-direction: column;
+    align-items: stretch;
+    gap: $space-2;
+  }
+}
+
+.toolbarLeft {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  flex-wrap: wrap;
+
+  @include respond-below('md') {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.toolbarRight {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.toolbarInfoText {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.searchInput {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2 $space-3;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  min-width: 240px;
+  transition: $transition-base;
+
+  &:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: $shadow-green-glow;
+  }
+
+  input {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    font-size: $font-size-sm;
+    color: var(--color-text);
+
+    &::placeholder {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  svg {
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+  }
+
+  @include respond-below('md') {
+    min-width: 100%;
+  }
+}
+
+.filterSelect {
+  padding: $space-2 $space-3;
+  padding-right: $space-8;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: var(--color-text);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: $transition-base;
+
+  &:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: $shadow-green-glow;
+  }
+
+  @include respond-below('md') {
+    width: 100%;
+  }
+}
+
+/* ── Date range inputs ────────────────────────────────────────────────── */
+
+.dateInput {
+  padding: $space-2 $space-3;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: var(--color-text);
+  transition: $transition-base;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: $shadow-green-glow;
+  }
+}
+
+/* ── Custom select (AdminSelect) ──────────────────────────────────────── */
+
+.adminSelect {
+  position: relative;
+  display: inline-block;
+}
+
+.adminSelectTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+  padding: 10px 14px;
+  padding-right: 36px;
+  min-width: 160px;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: $transition-smooth;
+  text-align: left;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: var(--color-text);
+    background: var(--color-surface);
+  }
+}
+
+.adminSelectTriggerOpen {
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+}
+
+.adminSelectChevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-secondary);
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+
+.adminSelectChevronOpen {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.adminSelectDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 100%;
+  background: var(--color-surface);
+  border-radius: $radius-xl;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  z-index: 500;
+  padding: 4px;
+  animation: adminSelectFadeIn 0.15s ease;
+}
+
+@keyframes adminSelectFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.adminSelectOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.45) transparent;
+}
+
+.adminSelectOption {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: $radius-md;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  transition: $transition-smooth;
+  white-space: nowrap;
+  width: 100%;
+
+  &:hover {
+    background: var(--color-surface-muted);
+  }
+}
+
+.adminSelectOptionActive {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: $radius-md;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  white-space: nowrap;
+  width: 100%;
+  transition: $transition-smooth;
+  background: rgba(34, 197, 94, 0.08);
+  color: var(--color-primary);
+  font-weight: 600;
+
+  &:hover {
+    background: rgba(34, 197, 94, 0.14);
+  }
+}

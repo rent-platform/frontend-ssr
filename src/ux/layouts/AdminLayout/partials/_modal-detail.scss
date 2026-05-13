@@ -1,0 +1,175 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+@use 'shared' as *;
+
+/* ── Modal ────────────────────────────────────────────────────────────── */
+
+.modalOverlay {
+  @include modal-overlay;
+}
+
+.modalPanel {
+  @include modal-panel(560px);
+  max-height: 90vh;
+  overflow-y: auto;
+  @include scrollbar(4px);
+}
+
+.modalHeader {
+  @include flex-between;
+  margin-bottom: $space-5;
+}
+
+.modalTitle {
+  font-family: $font-family-display;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-xl;
+  color: var(--color-text);
+}
+
+.modalClose {
+  @include modal-close-btn;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-3;
+  margin-top: $space-5;
+  padding-top: $space-4;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ── Detail Panel ─────────────────────────────────────────────────────── */
+
+.detailPanel {
+  @include detail-panel-base;
+}
+
+.detailPanelSpaced {
+  @include detail-panel-base;
+  margin-bottom: $space-5;
+}
+
+.detailHeader {
+  @include flex-between;
+  padding: $space-4 $space-5;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.detailBody {
+  padding: $space-5;
+}
+
+.detailTitle {
+  font-family: $font-family-display;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-lg;
+  color: var(--color-text);
+  margin-bottom: $space-4;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+
+  @include respond-below('md') {
+    grid-template-columns: 1fr;
+    gap: $space-3;
+  }
+}
+
+.detailField {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detailLabel {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+  font-weight: $font-weight-medium;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.detailValue {
+  font-size: $font-size-sm;
+  color: var(--color-text);
+  font-weight: $font-weight-medium;
+}
+
+.detailSection {
+  margin-top: $space-5;
+  padding-top: $space-4;
+  border-top: 1px solid var(--color-border);
+}
+
+.detailText {
+  font-size: $font-size-sm;
+  color: var(--color-text);
+  line-height: 1.6;
+  margin-top: $space-2;
+}
+
+.detailActions {
+  display: flex;
+  gap: $space-3;
+  padding: $space-4 $space-5;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ── Confirm dialog ───────────────────────────────────────────────────── */
+
+.confirmBody {
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: $space-4;
+}
+
+.confirmWarning {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+  padding: $space-3 $space-4;
+  background: rgba(245, 158, 11, 0.06);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: $radius-md;
+  margin-bottom: $space-4;
+  font-size: $font-size-sm;
+  color: var(--color-text);
+}
+
+.confirmWarningIcon {
+  color: var(--color-warning);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── Textarea ─────────────────────────────────────────────────────────── */
+
+.textarea {
+  width: 100%;
+  padding: $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-family: inherit;
+  color: var(--color-text);
+  resize: vertical;
+  min-height: 80px;
+  transition: $transition-base;
+
+  &::placeholder {
+    color: var(--color-text-secondary);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: $shadow-green-glow;
+  }
+}
+

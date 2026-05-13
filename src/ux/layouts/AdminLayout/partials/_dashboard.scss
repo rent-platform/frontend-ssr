@@ -1,0 +1,216 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+@use 'shared' as *;
+
+/* ── Welcome banner ───────────────────────────────────────────────────── */
+
+.welcomeBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-5 $space-6;
+  background: var(--gradient-green);
+  border-radius: $radius-lg;
+  color: #fff;
+  margin-bottom: $space-6;
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: -40px;
+    top: -40px;
+    @include square(160px);
+    border-radius: $radius-full;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  @include respond-below('md') {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $space-2;
+    padding: $space-4;
+  }
+}
+
+.welcomeText {
+  position: relative;
+  z-index: 1;
+}
+
+.welcomeTitle {
+  font-family: $font-family-display;
+  font-weight: $font-weight-800;
+  font-size: $font-size-xl;
+  margin-bottom: 2px;
+}
+
+.welcomeSubtitle {
+  font-size: $font-size-sm;
+  opacity: 0.85;
+}
+
+.welcomeDate {
+  font-size: $font-size-sm;
+  opacity: 0.7;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── MiniBarChart ─────────────────────────────────────────────────────── */
+
+.chartBar {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+
+  &:hover .chartTooltip {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+.chartBarInner {
+  width: 100%;
+  max-width: 40px;
+  min-height: 4px;
+  border-radius: 4px 4px 0 0;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, height 0.4s ease;
+}
+
+.chartBar:hover .chartBarInner {
+  opacity: 1;
+}
+
+.chartBarLabel {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.chartTooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: var(--color-text);
+  color: #fff;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  padding: 4px 10px;
+  border-radius: $radius-sm;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 10;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: var(--color-text);
+  }
+}
+
+/* ── Dashboard bottom row ─────────────────────────────────────────────── */
+
+.dashboardBottomRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-5;
+
+  @include respond-below('lg') {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Today activity widget ────────────────────────────────────────────── */
+
+.todayGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-3;
+
+  @include respond-below('md') {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.todayItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $space-3;
+  background: var(--color-surface-muted);
+  border-radius: $radius-md;
+  text-align: center;
+}
+
+.todayValue {
+  font-family: $font-family-display;
+  font-weight: $font-weight-800;
+  font-size: $font-size-xl;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+.todayLabel {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* ── Analytics cards ──────────────────────────────────────────────────── */
+
+.analyticsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-4;
+  margin-bottom: $space-6;
+
+  @include respond-below('lg') {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include respond-below('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.analyticsCard {
+  @include card-base;
+  padding: $space-4;
+  text-align: center;
+}
+
+.analyticsValue {
+  font-family: $font-family-display;
+  font-weight: $font-weight-800;
+  font-size: $font-size-2xl;
+  color: var(--color-text);
+}
+
+.analyticsLabel {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+.analyticsTrend {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  margin-top: $space-1;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}

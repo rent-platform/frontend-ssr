@@ -1,0 +1,443 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+@use 'shared' as *;
+
+/* ── Activity log action badges ───────────────────────────────────────── */
+
+.actionBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  white-space: nowrap;
+}
+
+.actionBan      { background: rgba(239, 68, 68, 0.1); color: var(--color-error); }
+.actionUnban    { background: var(--color-green-50); color: var(--color-primary); }
+.actionRole     { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+.actionArchive  { background: var(--color-surface-muted); color: var(--color-text-secondary); }
+.actionApprove  { background: var(--color-green-50); color: var(--color-primary); }
+.actionReject   { background: rgba(239, 68, 68, 0.1); color: var(--color-error); }
+.actionCancel   { background: rgba(245, 158, 11, 0.1); color: var(--color-warning); }
+.actionRefund   { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+.actionSettings { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+
+/* ── Priority dots ────────────────────────────────────────────────────── */
+
+.priorityDot {
+  display: inline-block;
+  @include square(8px);
+  border-radius: $radius-full;
+  flex-shrink: 0;
+}
+
+.priorityDotLow      { background: var(--color-text-secondary); }
+.priorityDotMedium   { background: var(--color-warning); }
+.priorityDotHigh     { background: var(--color-error); }
+.priorityDotCritical { background: #8b5cf6; }
+
+/* ── Waiting time badge ───────────────────────────────────────────────── */
+
+.waitingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-warning);
+  white-space: nowrap;
+}
+
+.waitingBadgeUrgent {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+}
+
+/* ── Complaint stats ──────────────────────────────────────────────────── */
+
+.complaintStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-4;
+  margin-bottom: $space-5;
+
+  @include respond-below(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-below(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.complaintStatItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-5 $space-4;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  box-shadow: var(--shadow-sm);
+  transition: $transition-base;
+  overflow: hidden;
+  text-align: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: $radius-lg $radius-lg 0 0;
+  }
+
+  &:nth-child(1)::before { background: #3b82f6; }
+  &:nth-child(2)::before { background: var(--color-warning); }
+  &:nth-child(3)::before { background: var(--color-primary); }
+  &:nth-child(4)::before { background: var(--color-text-secondary); }
+
+  &:nth-child(1) .complaintStatValue { color: #3b82f6; }
+  &:nth-child(2) .complaintStatValue { color: var(--color-warning); }
+  &:nth-child(3) .complaintStatValue { color: var(--color-primary); }
+  &:nth-child(4) .complaintStatValue { color: var(--color-text-secondary); }
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+}
+
+.complaintStatValue {
+  font-size: $font-size-3xl;
+  font-weight: 800;
+  font-family: $font-family-display;
+  line-height: 1;
+  margin-bottom: $space-1;
+}
+
+.complaintStatLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.01em;
+}
+
+/* ── Complaint timeline ───────────────────────────────────────────────── */
+
+.complaintTimeline {
+  margin-top: $space-4;
+  padding-left: $space-5;
+  border-left: 2px solid var(--color-border);
+}
+
+.complaintTimelineItem {
+  position: relative;
+  padding: $space-2 0 $space-3 $space-5;
+  display: flex;
+  gap: $space-3;
+}
+
+.complaintTimelineDot {
+  position: absolute;
+  left: calc(-1 * #{$space-5} - 5px);
+  top: $space-3;
+  @include square(8px);
+  border-radius: $radius-full;
+  background: var(--color-primary);
+  border: 2px solid var(--color-surface);
+  flex-shrink: 0;
+}
+
+.complaintTimelineContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.complaintTimelineAuthor {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: var(--color-text);
+}
+
+.complaintTimelineText {
+  font-size: $font-size-sm;
+  color: var(--color-text);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+.complaintTimelineDate {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+.chronologyLabel {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+  font-weight: $font-weight-600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: $space-3;
+  display: block;
+}
+
+/* ── Ban reason selector ──────────────────────────────────────────────── */
+
+.banReasonBlock {
+  margin-bottom: $space-4;
+}
+
+.banReasonLabel {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: var(--color-text);
+  margin-bottom: $space-2;
+}
+
+.banReasonSelect {
+  width: 100%;
+  padding: 10px 36px 10px 14px;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+
+  &:hover {
+    border-color: rgba(239, 68, 68, 0.4);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  }
+
+  option[value=""][disabled] {
+    color: var(--color-text-secondary);
+  }
+}
+
+/* ── Role management modal ────────────────────────────────────────────── */
+
+.roleModalUser {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4;
+  background: var(--color-surface-muted);
+  border-radius: $radius-lg;
+  margin-bottom: $space-5;
+}
+
+.roleModalAvatar {
+  @include flex-center;
+  @include square(44px);
+  border-radius: $radius-full;
+  background: linear-gradient(135deg, var(--color-primary), darken($color-primary, 10%));
+  color: #fff;
+  font-size: $font-size-sm;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.roleModalUserName {
+  font-weight: $font-weight-600;
+  font-size: $font-size-base;
+  color: var(--color-text);
+}
+
+.roleModalUserMeta {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+  margin-top: 1px;
+}
+
+.roleCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-3;
+  margin-bottom: $space-4;
+
+  @include respond-below(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.roleCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $space-5 $space-3 $space-4;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: $transition-base;
+  text-align: center;
+  font-family: inherit;
+
+  &:hover {
+    border-color: var(--role-color);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+  }
+}
+
+.roleCardActive {
+  border-color: var(--role-color);
+  background: var(--role-bg);
+  box-shadow: 0 0 0 1px var(--role-color), 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.roleCardIcon {
+  @include flex-center;
+  @include square(48px);
+  border-radius: $radius-full;
+  background: var(--role-bg);
+  color: var(--role-color);
+  margin-bottom: $space-3;
+  transition: $transition-base;
+
+  .roleCardActive & {
+    background: var(--role-color);
+    color: #fff;
+  }
+}
+
+.roleCardTitle {
+  font-weight: 700;
+  font-size: $font-size-base;
+  color: var(--color-text);
+  margin-bottom: $space-1;
+}
+
+.roleCardDesc {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  margin-bottom: $space-3;
+}
+
+.roleCardPerms {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    padding: 3px 0;
+
+    svg {
+      color: var(--role-color);
+      flex-shrink: 0;
+    }
+  }
+}
+
+.roleCardCheck {
+  position: absolute;
+  top: $space-2;
+  right: $space-2;
+  @include flex-center;
+  @include square(24px);
+  border-radius: $radius-full;
+  background: var(--role-color);
+  color: #fff;
+}
+
+.roleWarning {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-2;
+  padding: $space-3 $space-4;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: $radius-md;
+  margin-bottom: $space-4;
+  font-size: $font-size-sm;
+  color: darken($color-warning, 15%);
+  line-height: 1.5;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--color-warning);
+  }
+}
+
+/* ── Stars row (reviews) ──────────────────────────────────────────────── */
+
+.starsRow {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* ── Flag reason box ──────────────────────────────────────────────────── */
+
+.flagReasonBox {
+  padding: $space-3 $space-4;
+  background: rgba(239, 68, 68, 0.04);
+  border: 1px solid rgba(239, 68, 68, 0.12);
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: var(--color-text);
+  line-height: 1.5;
+  margin-top: $space-2;
+}
+
+/* ── Helper layout utilities ──────────────────────────────────────────── */
+
+.flexRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.flexRowTight {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.inlineIcon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+}
+
+.titleBtnLeft {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-weight: $font-weight-600;
+}

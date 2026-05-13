@@ -1,0 +1,81 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+@use 'shared' as *;
+
+/* ── History timeline ─────────────────────────────────────────────────── */
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-left: $space-5;
+  border-left: 2px solid var(--color-border);
+}
+
+.timelineItem {
+  position: relative;
+  padding: $space-3 0 $space-3 $space-5;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * #{$space-5} - 5px);
+    top: $space-4;
+    @include square(8px);
+    border-radius: $radius-full;
+    background: var(--color-primary);
+    border: 2px solid var(--color-surface);
+  }
+}
+
+.timelineTime {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+}
+
+.timelineText {
+  font-size: $font-size-sm;
+  color: var(--color-text);
+  margin-top: 2px;
+}
+
+/* ── Photo preview ────────────────────────────────────────────────────── */
+
+.photoPreviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: $space-2;
+  max-width: 360px;
+}
+
+.photoPreviewPlaceholder {
+  aspect-ratio: 1;
+  border-radius: $radius-md;
+  background: var(--color-surface-muted);
+  border: 1px dashed var(--color-border);
+  @include flex-center;
+  color: var(--color-text-secondary);
+}
+
+/* ── Focus-visible for interactive elements ───────────────────────────── */
+
+.btn:focus-visible,
+.navItem:focus-visible,
+.filterSelect:focus-visible,
+.pageBtn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ── Dark mode CSS variables preparation ──────────────────────────────── */
+
+:root {
+  --admin-bg: #{var(--color-surface-muted)};
+  --admin-surface: #{var(--color-surface)};
+  --admin-text: #{var(--color-text)};
+  --admin-text-secondary: #{var(--color-text-secondary)};
+  --admin-border: #{var(--color-border)};
+  --admin-primary: #{var(--color-primary)};
+  --admin-error: #{var(--color-error)};
+  --admin-warning: #{var(--color-warning)};
+}

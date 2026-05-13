@@ -1,0 +1,157 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+@use 'shared' as *;
+
+/* ── Table ────────────────────────────────────────────────────────────── */
+
+.tableWrapper {
+  overflow-x: auto;
+  @include scrollbar(4px);
+  position: relative;
+
+  &::after {
+    @include respond-below('lg') {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 24px;
+      background: linear-gradient(to left, color-mix(in srgb, var(--color-surface) 90%, transparent), transparent);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-sm;
+}
+
+.table th {
+  text-align: left;
+  padding: $space-3 $space-4;
+  font-weight: $font-weight-600;
+  color: var(--color-text-secondary);
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+  background: var(--color-surface-muted);
+}
+
+.table td {
+  padding: $space-3 $space-4;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(34, 197, 94, 0.03);
+  }
+
+  &:last-child td {
+    border-bottom: none;
+  }
+}
+
+/* ── Table zebra striping ─────────────────────────────────────────────── */
+
+.tableZebra tbody tr:nth-child(even) {
+  background: var(--color-surface-muted);
+}
+
+.tableZebra tbody tr:hover {
+  background: rgba(34, 197, 94, 0.04);
+}
+
+/* ── Sortable header ──────────────────────────────────────────────────── */
+
+.sortableHeader {
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--color-text);
+  }
+}
+
+.sortIcon {
+  opacity: 0.4;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.sortIconActive {
+  opacity: 1;
+  color: var(--color-primary);
+}
+
+.sortIconDesc {
+  transform: rotate(180deg);
+}
+
+/* ── Avatar/initials in tables ────────────────────────────────────────── */
+
+.tableAvatar {
+  @include flex-center;
+  @include square(32px);
+  border-radius: $radius-full;
+  background: var(--gradient-green-soft);
+  color: var(--color-primary);
+  font-weight: $font-weight-bold;
+  font-size: $font-size-xs;
+  flex-shrink: 0;
+}
+
+.tableUserCell {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.tableUserName {
+  font-weight: $font-weight-600;
+  font-size: $font-size-sm;
+  color: var(--color-text);
+}
+
+.tableUserSub {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+}
+
+/* ── Cell utilities ───────────────────────────────────────────────────── */
+
+.textTruncate {
+  @include text-truncate;
+}
+
+.cellBold {
+  font-weight: $font-weight-600;
+}
+
+.cellTruncate160 {
+  @include text-truncate;
+  max-width: 160px;
+}
+
+.cellTruncate200 {
+  @include text-truncate;
+  max-width: 200px;
+}
+
+.cellNoWrap {
+  white-space: nowrap;
+}

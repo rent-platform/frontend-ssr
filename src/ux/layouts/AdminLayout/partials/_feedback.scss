@@ -1,0 +1,114 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+@use 'shared' as *;
+
+/* ── Skeleton shimmer ─────────────────────────────────────────────────── */
+
+.skeleton {
+  @include skeleton-base;
+}
+
+.skeletonLine {
+  @include skeleton-base;
+  height: 14px;
+  width: 100%;
+
+  &.skeletonSm {
+    width: 60%;
+  }
+
+  &.skeletonMd {
+    width: 80%;
+  }
+}
+
+/* ── Empty state ──────────────────────────────────────────────────────── */
+
+.emptyPanel {
+  @include empty-state-layout($space-16 $space-5);
+}
+
+.emptyIcon {
+  @include empty-state-icon(64px);
+}
+
+.emptyTitle {
+  @include empty-state-title;
+}
+
+.emptyText {
+  @include empty-state-text(360px);
+}
+
+/* ── Toast notification ───────────────────────────────────────────────── */
+
+.toastContainer {
+  position: fixed;
+  top: $space-5;
+  right: $space-5;
+  z-index: $z-toast;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  pointer-events: none;
+
+  @include respond-below('md') {
+    top: $space-3;
+    right: $space-3;
+    left: $space-3;
+  }
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3 $space-4;
+  border-radius: $radius-lg;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  font-size: $font-size-sm;
+  color: var(--color-text);
+  min-width: 280px;
+  max-width: 420px;
+
+  @include respond-below('md') {
+    min-width: auto;
+    max-width: 100%;
+  }
+}
+
+.toastIcon {
+  @include flex-center;
+  @include square(28px);
+  border-radius: $radius-full;
+  flex-shrink: 0;
+}
+
+.toastSuccess .toastIcon { background: var(--color-green-50); color: var(--color-primary); }
+.toastError   .toastIcon { background: rgba(239, 68, 68, 0.1); color: var(--color-error); }
+.toastInfo    .toastIcon { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+
+.toastMessage {
+  flex: 1;
+  min-width: 0;
+}
+
+.toastClose {
+  @include flex-center;
+  @include square(24px);
+  border: none;
+  background: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: $radius-sm;
+  flex-shrink: 0;
+  transition: $transition-base;
+
+  &:hover {
+    background: var(--color-surface-muted);
+    color: var(--color-text);
+  }
+}
