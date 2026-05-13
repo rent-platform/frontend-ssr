@@ -58,7 +58,7 @@ export function ShareModal({
       >
         <div className={styles.modalHeader}>
           <h3 id="share-modal-title">{title}</h3>
-          <button type="button" className={styles.modalClose} onClick={onClose}><X size={18} /></button>
+          <button type="button" className={styles.modalClose} onClick={onClose} aria-label="Закрыть"><X size={18} /></button>
         </div>
         <p className={styles.modalDesc}>{description}</p>
         <div className={styles.modalCopyRow}>

@@ -1,4 +1,4 @@
-import type { CatalogItemCardVM } from '@/business/types';
+import type { CatalogItemCardVM } from '@/business/ads/types';
 
 export type CatalogUiItem = CatalogItemCardVM & {
   /* ── Derivable via JOINs (category_id → categories, owner_id → users, item_id → photos) ── */

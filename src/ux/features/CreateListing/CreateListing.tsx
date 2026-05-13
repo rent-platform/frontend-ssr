@@ -231,12 +231,13 @@ export function CreateListing({
       </div>
       {/* Exit confirmation modal */}
       {showExitModal && (
-        <div className={styles.modalOverlay} onClick={() => setShowExitModal(false)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalOverlay} onClick={() => setShowExitModal(false)} role="presentation">
+          <div className={styles.modal} role="dialog" aria-modal="true" aria-label="Подтверждение выхода" onClick={(e) => e.stopPropagation()}>
             <button
               type="button"
               className={styles.modalClose}
               onClick={() => setShowExitModal(false)}
+              aria-label="Закрыть"
             >
               <X size={18} />
             </button>

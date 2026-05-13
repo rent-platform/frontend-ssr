@@ -1,4 +1,4 @@
-import type { CatalogItemCardVM } from '@/business/types';
+import type { CatalogItemCardVM } from '@/business/ads/types';
 import type { CatalogUiItem } from './types';
 
 /**
@@ -10,11 +10,12 @@ import type { CatalogUiItem } from './types';
  */
 export function mapCardVMtoUiItem(
   vm: CatalogItemCardVM,
-  extra?: Partial<Pick<CatalogUiItem, 'category' | 'ownerName' | 'ownerAvatar' | 'ownerRating' | 'ownerReviewCount' | 'images'>>,
+  extra?: Partial<Pick<CatalogUiItem, 'category' | 'ownerId' | 'ownerName' | 'ownerAvatar' | 'ownerRating' | 'ownerReviewCount' | 'images'>>,
 ): CatalogUiItem {
   return {
     ...vm,
     category: extra?.category ?? '',
+    ownerId: extra?.ownerId ?? '',
     ownerName: extra?.ownerName ?? '',
     ownerAvatar: extra?.ownerAvatar ?? null,
     ownerRating: extra?.ownerRating,
@@ -28,7 +29,7 @@ export function mapCardVMtoUiItem(
  */
 export function mapCardVMsToUiItems(
   vms: CatalogItemCardVM[],
-  extraByIndex?: (index: number) => Partial<Pick<CatalogUiItem, 'category' | 'ownerName' | 'ownerAvatar' | 'ownerRating' | 'ownerReviewCount' | 'images'>>,
+  extraByIndex?: (index: number) => Partial<Pick<CatalogUiItem, 'category' | 'ownerId' | 'ownerName' | 'ownerAvatar' | 'ownerRating' | 'ownerReviewCount' | 'images'>>,
 ): CatalogUiItem[] {
   return vms.map((vm, i) => mapCardVMtoUiItem(vm, extraByIndex?.(i)));
 }

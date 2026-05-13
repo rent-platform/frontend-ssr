@@ -61,6 +61,7 @@ export function profileListingToCatalogItem(listing: ProfileListing): CatalogUiI
     viewsCount: listing.viewsCount,
     createdAt: listing.createdAt,
     nearestAvailableDate: null,
+    ownerId: MOCK_USER.id,
     ownerName: MOCK_USER.fullName,
     ownerAvatar: MOCK_USER.avatarUrl,
     ownerRating: MOCK_USER.rating,

@@ -7,20 +7,13 @@ import {
   ArrowLeft,
   ChevronRight,
   Clock3,
-  AlertTriangle,
-  Ban,
   CheckCircle2,
   Flag,
   Heart,
-  ImageOff,
-  Scale,
-  ShieldAlert,
-  X,
   MapPin,
   Package,
   Share2,
   ShieldCheck,
-  Star,
   Truck,
 } from 'lucide-react';
 import type { CatalogUiItem } from '../../types';
@@ -31,15 +24,8 @@ import {
 import { CatalogCard } from '../cards/CatalogCard';
 import { ProductGallery } from './ProductGallery';
 import { BookingSidebar } from './BookingSidebar';
+import { ListingReportModal } from './ListingReportModal';
 import styles from '../../Catalog.module.scss';
-
-const REPORT_REASONS = [
-  { id: 'fake', icon: ShieldAlert, label: 'Мошенничество' },
-  { id: 'wrong-info', icon: AlertTriangle, label: 'Неверное описание или цена' },
-  { id: 'bad-photos', icon: ImageOff, label: 'Фото не соответствуют товару' },
-  { id: 'prohibited', icon: Ban, label: 'Запрещённый товар' },
-  { id: 'duplicate', icon: Scale, label: 'Дубликат объявления' },
-] as const;
 
 type ProductDetailProps = {
   item: CatalogUiItem;
@@ -66,7 +52,6 @@ export function ProductDetail({
 }: ProductDetailProps) {
   const [isFav, setIsFav] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
-  const [reportSent, setReportSent] = useState(false);
   const [reportDone, setReportDone] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
   const [descOverflows, setDescOverflows] = useState(true);
@@ -76,15 +61,6 @@ export function ProductDetail({
     const el = descRef.current;
     if (el) setDescOverflows(el.scrollHeight > 160);
   }, [item.description]);
-
-  const handleReport = useCallback((reasonId: string) => {
-    setReportSent(true);
-    setTimeout(() => {
-      setReportOpen(false);
-      setReportSent(false);
-      setReportDone(true);
-    }, 1500);
-  }, []);
 
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.createdAt);
@@ -303,104 +279,11 @@ export function ProductDetail({
         {/* ─── Report Modal ─── */}
         <AnimatePresence>
           {reportOpen && (
-            <motion.div
-              className={styles.reportOverlay}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setReportOpen(false)}
-            >
-              <motion.div
-                className={styles.reportModal}
-                initial={{ opacity: 0, y: 40, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 40, scale: 0.95 }}
-                transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <AnimatePresence mode="wait">
-                  {reportDone ? (
-                    <motion.div
-                      key="already"
-                      className={styles.reportModalSuccess}
-                      initial={{ opacity: 0, scale: 0.85 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                    >
-                      <div className={styles.reportSuccessIcon}>
-                        <CheckCircle2 size={36} />
-                      </div>
-                      <h3>Жалоба уже отправлена</h3>
-                      <p>Вы уже отправили жалобу на это объявление</p>
-                      <button
-                        type="button"
-                        className={styles.reportModalOkBtn}
-                        onClick={() => setReportOpen(false)}
-                      >
-                        Понятно
-                      </button>
-                    </motion.div>
-                  ) : reportSent ? (
-                    <motion.div
-                      key="success"
-                      className={styles.reportModalSuccess}
-                      initial={{ opacity: 0, scale: 0.85 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                    >
-                      <div className={styles.reportSuccessIcon}>
-                        <CheckCircle2 size={36} />
-                      </div>
-                      <h3>Жалоба отправлена</h3>
-                      <p>Спасибо, мы рассмотрим вашу жалобу</p>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="form"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15 }}
-                    >
-                      <div className={styles.reportModalHeader}>
-                        <div className={styles.reportModalIconWrap}>
-                          <Flag size={20} />
-                        </div>
-                        <div>
-                          <h3>Пожаловаться</h3>
-                          <p>Укажите причину жалобы на это объявление</p>
-                        </div>
-                        <button
-                          type="button"
-                          className={styles.reportModalClose}
-                          onClick={() => setReportOpen(false)}
-                        >
-                          <X size={18} />
-                        </button>
-                      </div>
-                      <div className={styles.reportModalList}>
-                        {REPORT_REASONS.map((reason) => (
-                          <button
-                            key={reason.id}
-                            type="button"
-                            className={styles.reportMenuItem}
-                            onClick={() => handleReport(reason.id)}
-                          >
-                            <div className={styles.reportMenuItemIcon}>
-                              <reason.icon size={18} />
-                            </div>
-                            {reason.label}
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            </motion.div>
+            <ListingReportModal
+              reportDone={reportDone}
+              onClose={() => setReportOpen(false)}
+              onReported={() => setReportDone(true)}
+            />
           )}
         </AnimatePresence>
       </div>
