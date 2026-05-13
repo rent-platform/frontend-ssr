@@ -30,18 +30,11 @@ import { MOCK_LISTINGS, MOCK_BOOKINGS } from './mockProfileData';
 import { profileListingToCatalogItem } from './profileHelpers';
 import { AvailabilityCalendar } from './components/AvailabilityCalendar';
 import type { ItemStatus } from '@/business/ads/types';
+import { UI_DEAL_STATUS_LABEL, UI_ITEM_STATUS_LABEL } from '@/ux/types';
 import type { UiDealStatus } from '@/ux/types';
 import { pluralize, formatDate, formatPriceNum, formatNumber, ROUTES } from '@/ux/utils';
 import c from '../Catalog/Catalog.module.scss';
 import s from './MyListingDetail.module.scss';
-
-const STATUS_LABEL: Record<ItemStatus, string> = {
-  ACTIVE: 'Активно',
-  MODERATION: 'На модерации',
-  DRAFT: 'Черновик',
-  ARCHIVED: 'В архиве',
-  REJECTED: 'Отклонено',
-};
 
 const STATUS_CLS: Record<ItemStatus, string> = {
   ACTIVE: s.statusActive,
@@ -49,16 +42,6 @@ const STATUS_CLS: Record<ItemStatus, string> = {
   DRAFT: s.statusDraft,
   ARCHIVED: s.statusArchived,
   REJECTED: s.statusRejected,
-};
-
-const DEAL_LABEL: Record<UiDealStatus, string> = {
-  PENDING: 'Ожидает подтверждения',
-  CONFIRMED: 'Подтверждена',
-  AWAITING_PAYMENT: 'Ожидает оплаты',
-  ACTIVE: 'В аренде',
-  COMPLETED: 'Завершена',
-  REJECTED: 'Отклонена',
-  CANCELLED: 'Отменена',
 };
 
 const DEAL_CLS: Record<UiDealStatus, string> = {
@@ -187,7 +170,7 @@ export function MyListingDetail() {
                 <span className={clsx(s.statusDot, STATUS_CLS[listing.status])} />
                 <div>
                   <span>Статус</span>
-                  <strong>{STATUS_LABEL[listing.status]}</strong>
+                  <strong>{UI_ITEM_STATUS_LABEL[listing.status]}</strong>
                 </div>
               </div>
             </section>
@@ -321,7 +304,7 @@ export function MyListingDetail() {
                             <Calendar size={12} /> {formatDate(b.startDate)} — {formatDate(b.endDate)}
                           </div>
                         </div>
-                        <span className={clsx(s.bookingStatusBadge, DEAL_CLS[b.status])}>{DEAL_LABEL[b.status]}</span>
+                        <span className={clsx(s.bookingStatusBadge, DEAL_CLS[b.status])}>{UI_DEAL_STATUS_LABEL[b.status]}</span>
                         <span className={s.bookingPrice}>{formatPriceNum(Number(b.totalPrice))}</span>
                       </div>
                     );

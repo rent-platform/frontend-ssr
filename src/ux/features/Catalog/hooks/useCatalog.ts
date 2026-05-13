@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { mockCatalogItems } from '../mockCatalogItems';
-import type { CatalogUiItem } from '../types';
-import { INITIAL_FILTERS, applyCatalogFilters, filtersToSearchParams } from '../utils';
+import type { CatalogUiItem, CatalogFilterState } from '../types';
+import { INITIAL_FILTERS, applyCatalogFilters, filtersToSearchParams, searchParamsToFilters } from '../utils';
 import { ROUTES } from '@/ux/utils';
+import { useInfiniteScroll } from '@/ux/hooks';
 
 const BATCH_SIZE = 8;
 
@@ -13,6 +14,10 @@ export type UseCatalogOptions = {
   isLoading?: boolean;
   onLoadMore?: () => void;
   hasMore?: boolean;
+  /** When true, initializes filters from URL search params and re-syncs on param changes. */
+  syncWithSearchParams?: boolean;
+  /** Number of similar items to show (default 3). */
+  similarItemsCount?: number;
 };
 
 export function useCatalog({
@@ -21,16 +26,18 @@ export function useCatalog({
   isLoading: externalLoading,
   onLoadMore,
   hasMore: externalHasMore,
+  syncWithSearchParams = false,
+  similarItemsCount = 3,
 }: UseCatalogOptions = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [filters, setFilters] = useState(INITIAL_FILTERS);
+  const [filters, setFilters] = useState<CatalogFilterState>(
+    () => syncWithSearchParams ? searchParamsToFilters(searchParams) : INITIAL_FILTERS,
+  );
   const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(!externalItems);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const useMockMode = !externalItems;
 
@@ -50,7 +57,7 @@ export function useCatalog({
   const similarItems = selectedItem
     ? mockCatalogItems
         .filter((item) => item.id !== selectedItem.id && item.category === selectedItem.category)
-        .slice(0, 3)
+        .slice(0, similarItemsCount)
     : [];
 
   const hasMore = useMockMode
@@ -65,35 +72,39 @@ export function useCatalog({
     setVisibleCount(BATCH_SIZE);
   };
 
+  useEffect(() => {
+    if (!syncWithSearchParams) return;
+    setFilters(searchParamsToFilters(searchParams));
+    setVisibleCount(BATCH_SIZE);
+  }, [syncWithSearchParams, searchParams]);
+
   const navigateToSearch = useCallback(() => {
     if (isFiltersOpen) setIsFiltersOpen(false);
     const qs = filtersToSearchParams(filters);
     router.push(`${ROUTES.search}${qs ? `?${qs}` : ''}`);
   }, [filters, isFiltersOpen, router]);
 
-  useEffect(() => {
-    if (!hasMore || !sentinelRef.current || selectedItem) {
-      return undefined;
+  const navigateWithFilters = useCallback(
+    (currentFilters: CatalogFilterState) => {
+      const qs = filtersToSearchParams(currentFilters);
+      router.push(`${ROUTES.search}${qs ? `?${qs}` : ''}`);
+    },
+    [router],
+  );
+
+  const handleLoadMore = useCallback(() => {
+    if (useMockMode) {
+      setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length));
+    } else {
+      onLoadMore?.();
     }
+  }, [useMockMode, filteredItems.length, onLoadMore]);
 
-    const node = sentinelRef.current;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          if (useMockMode) {
-            setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length));
-          } else {
-            onLoadMore?.();
-          }
-        }
-      },
-      { rootMargin: '360px 0px' },
-    );
-
-    observer.observe(node);
-
-    return () => observer.disconnect();
-  }, [filteredItems.length, hasMore, selectedItem]);
+  const sentinelRef = useInfiniteScroll({
+    hasMore,
+    onLoadMore: handleLoadMore,
+    disabled: !!selectedItem,
+  });
 
   const handleOpenItem = (item: CatalogUiItem) => {
     setIsFiltersOpen(false);
@@ -102,6 +113,7 @@ export function useCatalog({
   };
 
   useEffect(() => {
+    if (syncWithSearchParams) return;
     const itemId = searchParams.get('item');
     if (!itemId || selectedItem) return;
     const source = useMockMode ? mockCatalogItems : (externalItems ?? []);
@@ -110,24 +122,14 @@ export function useCatalog({
       setSelectedItem(found);
       window.scrollTo({ top: 0 });
     }
-  }, [searchParams]);
+  }, [searchParams, syncWithSearchParams]);
 
   const handleBackToCatalog = () => {
     setSelectedItem(null);
-    if (searchParams.get('item')) {
+    if (!syncWithSearchParams && searchParams.get('item')) {
       router.replace(ROUTES.catalog, { scroll: false });
     }
   };
-
-  useEffect(() => {
-    const onScroll = () => setShowScrollTop(window.scrollY > 600);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
 
   return {
     filters,
@@ -136,7 +138,6 @@ export function useCatalog({
     setSelectedItem,
     isFiltersOpen,
     isInitialLoading,
-    showScrollTop,
     sentinelRef,
     useMockMode,
     externalLoading,
@@ -149,9 +150,9 @@ export function useCatalog({
     onToggleFilters,
     updateFilters,
     navigateToSearch,
+    navigateWithFilters,
     handleOpenItem,
     handleBackToCatalog,
-    scrollToTop,
     BATCH_SIZE,
   };
 }

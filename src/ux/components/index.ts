@@ -21,3 +21,5 @@ export type { Toast, ToastFn } from "./Toast";
 export { TableSkeleton } from "./TableSkeleton";
 export { Pagination } from "./AdminPagination";
 export { ErrorBoundary } from "./ErrorBoundary";
+export { ScrollToTop } from "./ScrollToTop";
+export type { ScrollToTopProps } from "./ScrollToTop";

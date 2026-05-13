@@ -1,0 +1,25 @@
+@use '../../styles/vars' as *;
+
+.btn {
+  position: fixed;
+  bottom: $space-6;
+  right: $space-6;
+  z-index: $z-sticky;
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-full;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: $shadow-lg;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: var(--color-primary-dark, #{$color-primary});
+    filter: brightness(1.08);
+  }
+}

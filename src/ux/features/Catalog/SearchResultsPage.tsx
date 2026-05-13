@@ -1,122 +1,52 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowLeft, ArrowUp, PackageSearch } from 'lucide-react';
+import { useCallback, useMemo } from 'react';
+import { ArrowLeft, PackageSearch } from 'lucide-react';
+import { ScrollToTop } from '@/ux/components/ScrollToTop';
 import Link from 'next/link';
-import { CatalogHeader } from './components/layout/CatalogHeader';
+import { CatalogHeader } from '@/ux/layouts/SiteHeader';
 import { CatalogSearchBar } from './components/filters/CatalogSearchBar';
 import { CatalogToolbar } from './components/filters/CatalogToolbar';
 import { CatalogCard } from './components/cards/CatalogCard';
 import { ProductDetail } from './components/detail/ProductDetail';
-import { CatalogSkeletonCard } from './components/cards/CatalogSkeletonCard';
-import { CatalogFooter } from './components/layout/CatalogFooter';
-import { mockCatalogItems } from './mockCatalogItems';
-import type { CatalogUiItem } from './types';
-import {
-  INITIAL_FILTERS,
-  applyCatalogFilters,
-  searchParamsToFilters,
-  filtersToSearchParams,
-  getFilterSummaryItems,
-} from './utils';
-import { ROUTES, pluralize } from '@/ux/utils';
+import { CatalogFooter } from '@/ux/layouts/SiteFooter';
+import { INITIAL_FILTERS, getFilterSummaryItems } from './utils';
+import { ROUTES } from '@/ux/utils';
+import { useCatalog } from './hooks/useCatalog';
 import styles from './Catalog.module.scss';
 
-const BATCH_SIZE = 8;
-
 export function SearchResultsPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const [filters, setFilters] = useState(() => searchParamsToFilters(searchParams));
-  const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
-  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    setFilters(searchParamsToFilters(searchParams));
-    setVisibleCount(BATCH_SIZE);
-  }, [searchParams]);
-
-  const filteredItems = useMemo(
-    () => applyCatalogFilters(mockCatalogItems, filters),
-    [filters],
-  );
-
-  const visibleItems = filteredItems.slice(0, visibleCount);
-
-  const similarItems = selectedItem
-    ? mockCatalogItems
-        .filter((item) => item.id !== selectedItem.id && item.category === selectedItem.category)
-        .slice(0, 4)
-    : [];
+  const {
+    filters,
+    setFilters,
+    selectedItem,
+    isFiltersOpen,
+    sentinelRef,
+    filteredItems,
+    visibleItems,
+    similarItems,
+    hasMore,
+    onCloseFilters,
+    onToggleFilters,
+    updateFilters,
+    navigateWithFilters,
+    handleOpenItem,
+    handleBackToCatalog,
+    BATCH_SIZE,
+  } = useCatalog({ syncWithSearchParams: true, similarItemsCount: 4 });
 
   const summaryChips = useMemo(() => getFilterSummaryItems(filters), [filters]);
 
-  const hasMore = visibleCount < filteredItems.length;
-
-  const onCloseFilters = () => setIsFiltersOpen(false);
-  const onToggleFilters = () => setIsFiltersOpen(!isFiltersOpen);
-
-  const updateFilters = (patch: Partial<typeof filters>) => {
-    setFilters((prev) => ({ ...prev, ...patch }));
-    setVisibleCount(BATCH_SIZE);
-  };
-
-  const navigateWithFilters = useCallback(
-    (currentFilters: typeof filters) => {
-      const qs = filtersToSearchParams(currentFilters);
-      router.push(`${ROUTES.search}${qs ? `?${qs}` : ''}`);
-    },
-    [router],
-  );
-
   const handleSearch = useCallback(() => {
-    if (isFiltersOpen) setIsFiltersOpen(false);
+    if (isFiltersOpen) onCloseFilters();
     navigateWithFilters(filters);
-  }, [filters, isFiltersOpen, navigateWithFilters]);
+  }, [filters, isFiltersOpen, onCloseFilters, navigateWithFilters]);
 
   const handleFiltersConfirm = useCallback(() => {
-    setIsFiltersOpen(false);
+    onCloseFilters();
     navigateWithFilters(filters);
-  }, [filters, navigateWithFilters]);
-
-  useEffect(() => {
-    if (!hasMore || !sentinelRef.current || selectedItem) return undefined;
-    const node = sentinelRef.current;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length));
-        }
-      },
-      { rootMargin: '360px 0px' },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [filteredItems.length, hasMore, selectedItem]);
-
-  const handleOpenItem = (item: CatalogUiItem) => {
-    setIsFiltersOpen(false);
-    setSelectedItem(item);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleBackToCatalog = () => setSelectedItem(null);
-
-  useEffect(() => {
-    const onScroll = () => setShowScrollTop(window.scrollY > 600);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  }, [filters, onCloseFilters, navigateWithFilters]);
 
   return (
     <div className={styles.page}>
@@ -231,21 +161,7 @@ export function SearchResultsPage() {
 
       <CatalogFooter />
 
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            type="button"
-            className={styles.scrollTopBtn}
-            onClick={scrollToTop}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            aria-label="Наверх"
-          >
-            <ArrowUp size={20} />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      <ScrollToTop className={styles.scrollTopBtn} />
     </div>
   );
 }

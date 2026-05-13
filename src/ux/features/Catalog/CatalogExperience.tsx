@@ -1,15 +1,16 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp, PackageSearch } from 'lucide-react';
-import { CatalogHeader } from './components/layout/CatalogHeader';
+import { PackageSearch } from 'lucide-react';
+import { ScrollToTop } from '@/ux/components/ScrollToTop';
+import { CatalogHeader } from '@/ux/layouts/SiteHeader';
 import { CatalogSearchBar } from './components/filters/CatalogSearchBar';
 import { CategoryRail } from './components/filters/CategoryRail';
 import { CatalogToolbar } from './components/filters/CatalogToolbar';
 import { CatalogCard } from './components/cards/CatalogCard';
 import { ProductDetail } from './components/detail/ProductDetail';
 import { CatalogSkeletonCard } from './components/cards/CatalogSkeletonCard';
-import { CatalogFooter } from './components/layout/CatalogFooter';
+import { CatalogFooter } from '@/ux/layouts/SiteFooter';
 import type { CatalogUiItem } from './types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS } from './utils';
 import { useCatalog } from './hooks/useCatalog';
@@ -45,7 +46,6 @@ export function CatalogExperience({
     setSelectedItem,
     isFiltersOpen,
     isInitialLoading,
-    showScrollTop,
     sentinelRef,
     useMockMode,
     filteredItems,
@@ -58,7 +58,6 @@ export function CatalogExperience({
     navigateToSearch,
     handleOpenItem,
     handleBackToCatalog,
-    scrollToTop,
     BATCH_SIZE,
   } = useCatalog({
     items: externalItems,
@@ -246,21 +245,7 @@ export function CatalogExperience({
 
       <CatalogFooter />
 
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            type="button"
-            className={styles.scrollTopBtn}
-            onClick={scrollToTop}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            aria-label="Наверх"
-          >
-            <ArrowUp size={20} />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      <ScrollToTop className={styles.scrollTopBtn} />
     </div>
   );
 }

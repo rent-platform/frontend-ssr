@@ -1,1 +1,1 @@
-export { CatalogHeader, BrandIcon } from '@/ux/features/Catalog';
+export { CatalogHeader, BrandIcon } from './CatalogHeader';

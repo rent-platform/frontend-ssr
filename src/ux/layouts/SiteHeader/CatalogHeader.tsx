@@ -1,0 +1,200 @@
+'use client';
+
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { 
+  Heart, 
+  Bell, 
+  MessageSquare, 
+  Plus, 
+  MapPin, 
+  User,
+  ChevronDown,
+  LayoutGrid,
+  LogOut,
+  Settings,
+} from 'lucide-react';
+import clsx from 'clsx';
+import { ROUTES } from '@/ux/utils';
+import { ThemeToggle } from '@/ux/components/ThemeToggle';
+import styles from '@/ux/features/Catalog/Catalog.module.scss';
+
+type HeaderBadgeCounts = {
+  favorites?: number;
+  notifications?: number;
+  messages?: number;
+};
+
+type CatalogHeaderProps = {
+  cityLabel: string;
+  isHidden?: boolean;
+  onBrandClick?: () => void;
+  /** Badge counts for header action icons. Defaults to 0 for all. */
+  counts?: HeaderBadgeCounts;
+  /** Called when the user clicks "Выйти". */
+  onLogout?: () => void;
+};
+
+export function BrandIcon() {
+  return (
+    <motion.div 
+      className={styles.brandSymbol}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <span className={styles.brandLetter}>А</span>
+    </motion.div>
+  );
+}
+
+export function CatalogHeader({ cityLabel, isHidden = false, onBrandClick, counts, onLogout }: CatalogHeaderProps) {
+  const actionIcons = [
+    { label: 'Избранное', count: counts?.favorites ?? 0, Icon: Heart, href: ROUTES.favorites },
+    { label: 'Уведомления', count: counts?.notifications ?? 0, Icon: Bell, href: ROUTES.notifications },
+    { label: 'Сообщения', count: counts?.messages ?? 0, Icon: MessageSquare, href: ROUTES.chat },
+  ];
+  const router = useRouter();
+
+  const handleBrandClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onBrandClick) onBrandClick();
+    router.push(ROUTES.home);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <header className={clsx(styles.header, isHidden && styles.headerHidden)}>
+        <div className={styles.topbarInner}>
+          <div className={styles.headerLeft}>
+            <Link href={ROUTES.home} className={styles.brandBlock} aria-label="Перейти на главную Арендай" onClick={handleBrandClick}>
+              <BrandIcon />
+              <div className={styles.brandTextWrap}>
+                <strong>Арендай</strong>
+                <span className={styles.brandTagline}>Шеринг вещей</span>
+              </div>
+            </Link>
+
+            <nav className={styles.mainNav}>
+              <Link href={ROUTES.catalog} className={styles.navLinkActive}>
+                <LayoutGrid size={18} />
+                <span>Каталог</span>
+              </Link>
+              <Link href={ROUTES.howItWorks} className={styles.navLink}>
+                Как это работает
+              </Link>
+              <Link href={ROUTES.safety} className={styles.navLink}>
+                Безопасность
+              </Link>
+            </nav>
+          </div>
+
+          <div className={styles.topbarActions}>
+            <div className={styles.actionButtons}>
+              <Link href={ROUTES.createListing} className="unstyledLink">
+                <motion.button 
+                  type="button" 
+                  className={styles.btnSecondary}
+                  whileHover={{ y: -1 }}
+                  whileTap={{ y: 0 }}
+                >
+                  <Plus size={18} />
+                  <span>Сдать в аренду</span>
+                </motion.button>
+              </Link>
+            </div>
+
+            <div className={styles.divider} />
+
+            <div className={styles.iconActionRow}>
+              <ThemeToggle />
+              {actionIcons.map(({ label, count, Icon, href }) => {
+                const btn = (
+                  <motion.button 
+                    key={label} 
+                    type="button" 
+                    className={styles.iconAction} 
+                    aria-label={label}
+                    whileHover={{ y: -2, color: 'var(--color-primary)' }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <Icon size={20} className={styles.iconSvg} />
+                    {count > 0 && (
+                      <motion.span 
+                        className={styles.iconBadge}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                      >
+                        {count}
+                      </motion.span>
+                    )}
+                  </motion.button>
+                );
+                return href ? (
+                  <Link key={label} href={href} className="unstyledLink">
+                    {btn}
+                  </Link>
+                ) : (
+                  <span key={label}>{btn}</span>
+                );
+              })}
+            </div>
+
+            <div className={styles.accountMeta}>
+              <motion.div 
+                className={styles.locationChip}
+                whileHover={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)' }}
+              >
+                <MapPin size={14} />
+                <span>{cityLabel}</span>
+              </motion.div>
+              
+              <div className={styles.profileDropdown}>
+                <Link href={ROUTES.profile} className="unstyledLink">
+                  <motion.button 
+                    type="button" 
+                    className={styles.profileTrigger}
+                    whileHover={{ y: -1, boxShadow: 'var(--shadow-md)' }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className={styles.avatarWrap}>
+                      <User size={18} />
+                    </div>
+                    <ChevronDown size={14} className={styles.chevron} />
+                  </motion.button>
+                </Link>
+
+                <div className={styles.profileMenu}>
+                  <Link href={ROUTES.profile} className={styles.profileMenuItem}>
+                    <User size={16} />
+                    <span>Мой профиль</span>
+                  </Link>
+                  <Link href={ROUTES.favorites} className={styles.profileMenuItem}>
+                    <Heart size={16} />
+                    <span>Избранное</span>
+                  </Link>
+                  <Link href={ROUTES.notifications} className={styles.profileMenuItem}>
+                    <Bell size={16} />
+                    <span>Уведомления</span>
+                  </Link>
+                  <Link href={ROUTES.chat} className={styles.profileMenuItem}>
+                    <MessageSquare size={16} />
+                    <span>Сообщения</span>
+                  </Link>
+                  <Link href={ROUTES.settings} className={styles.profileMenuItem}>
+                    <Settings size={16} />
+                    <span>Настройки</span>
+                  </Link>
+                  <div className={styles.profileMenuDivider} />
+                  <button type="button" className={clsx(styles.profileMenuItem, styles.profileMenuLogout)} onClick={onLogout}>
+                    <LogOut size={16} />
+                    <span>Выйти</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </header>
+  );
+}

@@ -1,1 +1,1 @@
-export { CatalogFooter } from '@/ux/features/Catalog';
+export { CatalogFooter } from './CatalogFooter';

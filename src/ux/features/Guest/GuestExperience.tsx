@@ -1,10 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { AnimatePresence, motion } from 'framer-motion';
-import {
-  ArrowUp,
-} from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
+import { ScrollToTop } from '@/ux/components/ScrollToTop';
 import { CatalogFooter } from '@/ux/layouts/SiteFooter';
 import { ProductDetail } from '../Catalog';
 import clsx from 'clsx';
@@ -22,7 +20,6 @@ export function GuestExperience() {
     filters,
     showAuthModal,
     selectedItem,
-    showScrollTop,
     isFiltersOpen,
     heroRef,
     filteredItems,
@@ -36,7 +33,6 @@ export function GuestExperience() {
     toggleFilters,
     closeFilters,
     resetFilters,
-    scrollToTop,
   } = useGuestExperience();
 
   return (
@@ -100,21 +96,7 @@ export function GuestExperience() {
       </div>
 
       {/* ═══════ Scroll-to-top ═══════ */}
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            type="button"
-            className={styles.scrollTopBtn}
-            onClick={scrollToTop}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            aria-label="Наверх"
-          >
-            <ArrowUp size={20} />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      <ScrollToTop className={styles.scrollTopBtn} />
 
       {/* ═══════ Auth Modal ═══════ */}
       <AnimatePresence>

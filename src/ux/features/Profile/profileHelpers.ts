@@ -1,4 +1,5 @@
 import type { ItemStatus } from '@/business/ads/types';
+import { UI_DEAL_STATUS_LABEL, UI_ITEM_STATUS_LABEL } from '@/ux/types';
 import type { UiDealStatus } from '@/ux/types';
 import type { CatalogUiItem } from '../Catalog';
 import type { ProfileUser, ProfileListing } from './types';
@@ -9,13 +10,13 @@ export type ListingFilter = 'all' | ItemStatus;
 export type BookingFilter = 'all' | UiDealStatus;
 
 export const DEAL_STATUS_MAP: Record<UiDealStatus, { label: string; cls: string }> = {
-  PENDING:          { label: 'Ожидает подтверждения', cls: styles.statusNew },
-  CONFIRMED:        { label: 'Подтверждена',      cls: styles.statusConfirmed },
-  AWAITING_PAYMENT: { label: 'Ожидает оплаты',   cls: styles.statusPayment },
-  ACTIVE:           { label: 'В аренде',          cls: styles.statusActive },
-  COMPLETED:        { label: 'Завершена',         cls: styles.statusCompleted },
-  REJECTED:         { label: 'Отклонена',         cls: styles.statusRejected },
-  CANCELLED:        { label: 'Отменена',          cls: styles.statusArchived },
+  PENDING:          { label: UI_DEAL_STATUS_LABEL.PENDING,          cls: styles.statusNew },
+  CONFIRMED:        { label: UI_DEAL_STATUS_LABEL.CONFIRMED,        cls: styles.statusConfirmed },
+  AWAITING_PAYMENT: { label: UI_DEAL_STATUS_LABEL.AWAITING_PAYMENT, cls: styles.statusPayment },
+  ACTIVE:           { label: UI_DEAL_STATUS_LABEL.ACTIVE,           cls: styles.statusActive },
+  COMPLETED:        { label: UI_DEAL_STATUS_LABEL.COMPLETED,        cls: styles.statusCompleted },
+  REJECTED:         { label: UI_DEAL_STATUS_LABEL.REJECTED,         cls: styles.statusRejected },
+  CANCELLED:        { label: UI_DEAL_STATUS_LABEL.CANCELLED,        cls: styles.statusArchived },
 };
 
 export const LISTING_FILTERS: { value: ListingFilter; label: string; tip: string }[] = [
@@ -37,11 +38,11 @@ export const BOOKING_FILTERS: { value: BookingFilter; label: string; tip: string
 ];
 
 export const ITEM_STATUS_MAP: Record<ItemStatus, { label: string; cls: string }> = {
-  ACTIVE:     { label: 'Активно',    cls: styles.statusActive },
-  MODERATION: { label: 'Модерация',  cls: styles.statusModeration },
-  DRAFT:      { label: 'Черновик',   cls: styles.statusDraft },
-  ARCHIVED:   { label: 'В архиве',   cls: styles.statusArchived },
-  REJECTED:   { label: 'Отклонено',  cls: styles.statusRejected },
+  ACTIVE:     { label: UI_ITEM_STATUS_LABEL.ACTIVE,     cls: styles.statusActive },
+  MODERATION: { label: UI_ITEM_STATUS_LABEL.MODERATION, cls: styles.statusModeration },
+  DRAFT:      { label: UI_ITEM_STATUS_LABEL.DRAFT,      cls: styles.statusDraft },
+  ARCHIVED:   { label: UI_ITEM_STATUS_LABEL.ARCHIVED,   cls: styles.statusArchived },
+  REJECTED:   { label: UI_ITEM_STATUS_LABEL.REJECTED,   cls: styles.statusRejected },
 };
 
 export function profileListingToCatalogItem(listing: ProfileListing): CatalogUiItem {

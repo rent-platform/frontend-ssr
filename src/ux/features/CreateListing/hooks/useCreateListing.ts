@@ -26,15 +26,22 @@ export type UseCreateListingOptions = {
   onSubmit?: (data: CreateListingFormData) => void | Promise<void>;
   onSaveDraft?: (data: CreateListingFormData) => void | Promise<void>;
   isSubmitting?: boolean;
+  /** Pre-fill the form for edit mode. When set, isFormDirty compares against this snapshot. */
+  initialData?: CreateListingFormData;
+  /** Route to navigate on exit. Defaults to ROUTES.catalog. */
+  exitRoute?: string;
 };
 
 export function useCreateListing({
   onSubmit,
   onSaveDraft,
   isSubmitting = false,
+  initialData,
+  exitRoute,
 }: UseCreateListingOptions = {}) {
+  const isEditMode = !!initialData;
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState<CreateListingFormData>(INITIAL);
+  const [form, setForm] = useState<CreateListingFormData>(initialData ?? INITIAL);
   const [published, setPublished] = useState(false);
   const [draftSaved, setDraftSaved] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
@@ -65,7 +72,7 @@ export function useCreateListing({
   const removeImage = useCallback(
     (id: string) => {
       const img = form.images.find((i) => i.id === id);
-      if (img) URL.revokeObjectURL(img.url);
+      if (img && !img.id.startsWith('existing-')) URL.revokeObjectURL(img.url);
       patch({ images: form.images.filter((i) => i.id !== id) });
     },
     [form.images, patch],
@@ -115,6 +122,19 @@ export function useCreateListing({
   );
 
   const isFormDirty = useMemo(() => {
+    if (initialData) {
+      return (
+        form.title !== initialData.title ||
+        form.category !== initialData.category ||
+        form.description !== initialData.description ||
+        form.pricePerDay !== initialData.pricePerDay ||
+        form.pricePerHour !== initialData.pricePerHour ||
+        form.depositAmount !== initialData.depositAmount ||
+        form.noDeposit !== initialData.noDeposit ||
+        form.pickupLocation !== initialData.pickupLocation ||
+        form.images.length !== initialData.images.length
+      );
+    }
     return (
       form.images.length > 0 ||
       form.title.trim() !== '' ||
@@ -128,7 +148,7 @@ export function useCreateListing({
       form.specs.length > 0 ||
       form.noDeposit !== false
     );
-  }, [form]);
+  }, [form, initialData]);
 
   const canAdvance = isStepValid(step);
 
@@ -144,20 +164,25 @@ export function useCreateListing({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
+  const resolvedExitRoute = exitRoute ?? ROUTES.catalog;
+
   const handleExitClick = useCallback(
     (e: React.MouseEvent) => {
       if (isFormDirty) {
         e.preventDefault();
         setShowExitModal(true);
+      } else if (isEditMode) {
+        e.preventDefault();
+        router.push(resolvedExitRoute);
       }
     },
-    [isFormDirty],
+    [isFormDirty, isEditMode, resolvedExitRoute, router],
   );
 
   const confirmExit = useCallback(() => {
     setShowExitModal(false);
-    router.push(ROUTES.catalog);
-  }, [router]);
+    router.push(resolvedExitRoute);
+  }, [router, resolvedExitRoute]);
 
   /* ─── Drop handler ─── */
   const handleDrop = useCallback(
@@ -183,15 +208,15 @@ export function useCreateListing({
   const handleSaveDraftAndExit = useCallback(async () => {
     await handleSaveDraft();
     setShowExitModal(false);
-    router.push(ROUTES.catalog);
-  }, [handleSaveDraft, router]);
+    router.push(resolvedExitRoute);
+  }, [handleSaveDraft, router, resolvedExitRoute]);
 
   const resetForm = useCallback(() => {
     setPublished(false);
     setDraftSaved(false);
     setStep(0);
-    setForm(INITIAL);
-  }, []);
+    setForm(initialData ?? INITIAL);
+  }, [initialData]);
 
   return {
     step,
@@ -226,5 +251,7 @@ export function useCreateListing({
     handleSaveDraft,
     handleSaveDraftAndExit,
     resetForm,
+    isEditMode,
+    exitRoute: resolvedExitRoute,
   };
 }

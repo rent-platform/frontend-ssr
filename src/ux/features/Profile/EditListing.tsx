@@ -1,7 +1,7 @@
 'use client';
 
-import { Fragment, useCallback, useMemo, useRef, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { Fragment, useMemo } from 'react';
+import { useParams } from 'next/navigation';
 import {
   AlertTriangle,
   Camera,
@@ -18,6 +18,7 @@ import {
 import clsx from 'clsx';
 import { StepPhotos, StepInfo, StepPricing, StepReview } from '../CreateListing/components';
 import type { CreateListingFormData, ImagePreview } from '../CreateListing/types';
+import { useCreateListing } from '../CreateListing/hooks/useCreateListing';
 import { MOCK_LISTINGS } from './mockProfileData';
 import { ROUTES } from '@/ux/utils';
 import styles from '../CreateListing/CreateListing.module.scss';
@@ -29,8 +30,6 @@ const STEPS = [
   { id: 'pricing', label: 'Стоимость', Icon: Tag },
   { id: 'review', label: 'Публикация', Icon: Eye },
 ] as const;
-
-const MAX_IMAGES = 10;
 
 const CONDITION_MAP: Record<string, CreateListingFormData['condition']> = {
   'Новый': 'new',
@@ -69,153 +68,54 @@ function listingToFormData(listing: typeof MOCK_LISTINGS[number]): CreateListing
 
 export function EditListing() {
   const params = useParams<{ id: string }>();
-  const router = useRouter();
 
   const listing = useMemo(
     () => MOCK_LISTINGS.find((l) => l.id === params.id) ?? null,
     [params.id],
   );
 
-  const initial = useMemo(
+  const initialData = useMemo(
     () => listing ? listingToFormData(listing) : null,
     [listing],
   );
 
-  const [step, setStep] = useState(0);
-  const [form, setForm] = useState<CreateListingFormData>(initial ?? {
-    title: '', category: '', condition: 'good', description: '',
-    images: [], specs: [], pricePerDay: '', pricePerHour: '',
-    depositAmount: '', noDeposit: false, pickupLocation: '', city: '',
+  const exitRoute = listing ? ROUTES.listing(listing.id) : ROUTES.profile;
+
+  const {
+    step,
+    setStep,
+    form,
+    published,
+    draftSaved,
+    showExitModal,
+    setShowExitModal,
+    dragging,
+    setDragging,
+    dragOverId,
+    setDragOverId,
+    dragSourceId,
+    fileInputRef,
+    canAdvance,
+    maxImages,
+    patch,
+    addImages,
+    removeImage,
+    reorderImages,
+    goNext,
+    goBack,
+    handleExitClick,
+    confirmExit,
+    handleDrop,
+    handlePublish,
+    resetForm,
+  } = useCreateListing({
+    initialData: initialData ?? undefined,
+    exitRoute,
+    onSubmit: async () => { /* wire to API later */ },
   });
-  const [saved, setSaved] = useState(false);
-  const [showExitModal, setShowExitModal] = useState(false);
-  const [dragging, setDragging] = useState(false);
-  const [dragOverId, setDragOverId] = useState<string | null>(null);
-  const dragSourceId = useRef<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleBack = () => router.push(listing ? ROUTES.listing(listing.id) : ROUTES.profile);
-
-  const patch = useCallback(
-    (updates: Partial<CreateListingFormData>) => setForm((prev) => ({ ...prev, ...updates })),
-    [],
-  );
-
-  const addImages = useCallback(
-    (files: FileList | null) => {
-      if (!files) return;
-      const newImages: ImagePreview[] = Array.from(files)
-        .filter((f) => f.type.startsWith('image/'))
-        .slice(0, MAX_IMAGES - form.images.length)
-        .map((f) => ({ id: crypto.randomUUID(), url: URL.createObjectURL(f) }));
-      if (newImages.length) patch({ images: [...form.images, ...newImages] });
-    },
-    [form.images, patch],
-  );
-
-  const removeImage = useCallback(
-    (id: string) => {
-      const img = form.images.find((i) => i.id === id);
-      if (img && !img.id.startsWith('existing-')) URL.revokeObjectURL(img.url);
-      patch({ images: form.images.filter((i) => i.id !== id) });
-    },
-    [form.images, patch],
-  );
-
-  const reorderImages = useCallback(
-    (fromId: string, toId: string) => {
-      if (fromId === toId) return;
-      setForm((prev) => {
-        const from = prev.images.findIndex((img) => img.id === fromId);
-        const to = prev.images.findIndex((img) => img.id === toId);
-        if (from === -1 || to === -1) return prev;
-        const next = [...prev.images];
-        const [moved] = next.splice(from, 1);
-        next.splice(to, 0, moved);
-        return { ...prev, images: next };
-      });
-    },
-    [],
-  );
-
-  const isStepValid = useCallback(
-    (s: number): boolean => {
-      switch (s) {
-        case 0: return form.images.length > 0;
-        case 1:
-          return (
-            form.title.trim() !== '' &&
-            form.category !== '' &&
-            form.description.trim() !== '' &&
-            (form.specs.length === 0 || form.specs.every((sp) => sp.value !== ''))
-          );
-        case 2:
-          return (
-            form.pricePerDay.trim() !== '' &&
-            (form.noDeposit || form.depositAmount.trim() !== '') &&
-            form.pickupLocation.trim() !== ''
-          );
-        default: return true;
-      }
-    },
-    [form],
-  );
-
-  const isFormDirty = useMemo(() => {
-    if (!initial) return false;
-    return (
-      form.title !== initial.title ||
-      form.category !== initial.category ||
-      form.description !== initial.description ||
-      form.pricePerDay !== initial.pricePerDay ||
-      form.pricePerHour !== initial.pricePerHour ||
-      form.depositAmount !== initial.depositAmount ||
-      form.noDeposit !== initial.noDeposit ||
-      form.pickupLocation !== initial.pickupLocation ||
-      form.images.length !== initial.images.length
-    );
-  }, [form, initial]);
-
-  const canAdvance = isStepValid(step);
-  const goNext = () => {
-    if (!canAdvance) return;
-    setStep((s) => Math.min(s + 1, STEPS.length - 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-  const goBack = () => {
-    setStep((s) => Math.max(s - 1, 0));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setDragging(false);
-      addImages(e.dataTransfer.files);
-    },
-    [addImages],
-  );
-
-  const handleSave = () => {
-    setSaved(true);
-  };
-
-  const handleExitClick = (e: React.MouseEvent) => {
-    if (isFormDirty) {
-      e.preventDefault();
-      setShowExitModal(true);
-    } else {
-      handleBack();
-    }
-  };
-
-  const confirmExit = () => {
-    setShowExitModal(false);
-    handleBack();
-  };
 
   /* ─── Success screen ─── */
-  if (saved) {
+  if (published || draftSaved) {
     return (
       <div className={styles.page}>
         <div className={styles.container}>
@@ -229,17 +129,14 @@ export function EditListing() {
                 Объявление «{form.title}» обновлено. Изменения вступят в силу после проверки модератором.
               </p>
               <div className={styles.successActions}>
-                <a href={listing ? ROUTES.listing(listing.id) : ROUTES.profile} className={styles.navBack}>
+                <a href={exitRoute} className={styles.navBack}>
                   <ChevronLeft size={16} />
                   К объявлению
                 </a>
                 <button
                   type="button"
                   className={styles.navNext}
-                  onClick={() => {
-                    setSaved(false);
-                    setStep(0);
-                  }}
+                  onClick={resetForm}
                 >
                   <Plus size={16} />
                   Продолжить редактирование
@@ -258,7 +155,7 @@ export function EditListing() {
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>
-          <a href={listing ? ROUTES.listing(listing.id) : ROUTES.profile} className={styles.backLink} onClick={handleExitClick}>
+          <a href={exitRoute} className={styles.backLink} onClick={handleExitClick}>
             <ChevronLeft size={16} />
             Вернуться к объявлению
           </a>
@@ -305,7 +202,7 @@ export function EditListing() {
               dragOverId={dragOverId}
               fileInputRef={fileInputRef}
               dragSourceId={dragSourceId}
-              maxImages={MAX_IMAGES}
+              maxImages={maxImages}
               onAddImages={addImages}
               onRemoveImage={removeImage}
               onReorderImages={reorderImages}
@@ -344,7 +241,7 @@ export function EditListing() {
             <button
               type="button"
               className={clsx(styles.navNext, styles.publishBtn)}
-              onClick={handleSave}
+              onClick={handlePublish}
             >
               <Sparkles size={16} />
               Сохранить изменения

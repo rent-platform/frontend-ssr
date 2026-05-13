@@ -12,7 +12,6 @@ export function useGuestExperience() {
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
-  const [showScrollTop, setShowScrollTop] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
 
@@ -72,12 +71,6 @@ export function useGuestExperience() {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => setShowScrollTop(window.scrollY > 600);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
     if (!showAuthModal) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -91,15 +84,10 @@ export function useGuestExperience() {
     };
   }, [showAuthModal]);
 
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
   return {
     filters,
     showAuthModal,
     selectedItem,
-    showScrollTop,
     isFiltersOpen,
     heroRef,
     filteredItems,
@@ -113,6 +101,5 @@ export function useGuestExperience() {
     toggleFilters,
     closeFilters,
     resetFilters,
-    scrollToTop,
   };
 }
