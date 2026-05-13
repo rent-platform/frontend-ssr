@@ -33,6 +33,8 @@ import type { CatalogUiItem } from '../../Catalog';
 import type { PublicListing } from '../../PublicProfile/types';
 import type { AdminUser } from '../types';
 import type { PublicUser, PublicReview } from '../../PublicProfile/types';
+import type { UserRole } from '@/business/auth';
+import styles from './AdminUserProfile.module.scss';
 
 const MOCK_CREATED_DATES = [
   '2025-03-05', '2025-02-20', '2025-01-15', '2025-03-01',
@@ -62,8 +64,6 @@ function adminListingToCatalogItem(listing: PublicListing, user: PublicUser, ind
     quickFilters: [],
   } as CatalogUiItem;
 }
-import type { UserRole } from '@/business/auth';
-import styles from './AdminUserProfile.module.scss';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 const VISIBLE_LISTINGS = 6;
