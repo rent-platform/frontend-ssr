@@ -4,35 +4,14 @@ import type { UiDealStatus } from '@/ux/types';
 import type { PaymentStatus } from '@/business/payments';
 import type { UserRole } from '@/business/auth';
 
-/* ── Format helpers ─────────────────────────────────────────────────────── */
+/* ── Format helpers (re-exported from @/ux/utils) ──────────────────────── */
 
-export function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
-}
-
-export function formatDateTime(iso: string) {
-  return new Date(iso).toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
-export function formatPrice(v: number | null | undefined) {
-  if (v == null) return '—';
-  return v.toLocaleString('ru-RU') + ' ₽';
-}
-
-export function formatMoney(v: number) {
-  if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + ' млн ₽';
-  if (v >= 1_000) return (v / 1_000).toFixed(0) + ' тыс. ₽';
-  return v.toLocaleString('ru-RU') + ' ₽';
-}
+export {
+  formatDate,
+  formatDateTime,
+  formatPriceNum as formatPrice,
+  formatMoney,
+} from '@/ux/utils';
 
 /* ── Status maps ────────────────────────────────────────────────────────── */
 

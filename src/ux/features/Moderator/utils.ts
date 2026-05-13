@@ -3,22 +3,9 @@ import { createElement } from 'react';
 import s from '../../layouts/AdminLayout/AdminLayout.module.scss';
 import type { ComplaintPriority, ComplaintStatus, ComplaintTarget } from './types';
 
-/* ── Date / price formatters ──────────────────────────────────────────── */
+/* ── Format helpers (re-exported from @/ux/utils) ──────────────────────── */
 
-export function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
-export function formatPrice(v: number | null | undefined) {
-  if (v == null) return '—';
-  return v.toLocaleString('ru-RU') + ' ₽';
-}
+export { formatDateTimeFull as formatDate, formatPriceNum as formatPrice } from '@/ux/utils';
 
 /* ── Waiting time ─────────────────────────────────────────────────────── */
 

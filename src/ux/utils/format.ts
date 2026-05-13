@@ -64,6 +64,55 @@ export function formatDate(iso: string, monthFormat: 'short' | 'long' = 'short')
 }
 
 /**
+ * Formats a numeric price: `formatPriceNum(1500)` → '1 500 ₽'
+ */
+export function formatPriceNum(v: number | null | undefined): string {
+  if (v == null) return '—';
+  return v.toLocaleString('ru-RU') + ' ₽';
+}
+
+/**
+ * Formats a compact money value: `formatMoney(15000)` → '15 тыс. ₽'
+ */
+export function formatMoney(v: number): string {
+  if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + ' млн ₽';
+  if (v >= 1_000) return (v / 1_000).toFixed(0) + ' тыс. ₽';
+  return v.toLocaleString('ru-RU') + ' ₽';
+}
+
+/**
+ * Locale-formatted number: `formatNumber(12345)` → '12 345'
+ */
+export function formatNumber(v: number): string {
+  return v.toLocaleString('ru-RU');
+}
+
+/**
+ * Formats date + time (short month, no year): '5 янв, 14:30'
+ */
+export function formatDateTime(iso: string): string {
+  return new Date(iso).toLocaleDateString('ru-RU', {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+/**
+ * Formats date + time (short month, with year): '5 янв 2025, 14:30'
+ */
+export function formatDateTimeFull(iso: string): string {
+  return new Date(iso).toLocaleDateString('ru-RU', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+/**
  * Extracts initials from a full name: 'Иван Петров' → 'ИП'
  */
 export function getInitials(name: string): string {
