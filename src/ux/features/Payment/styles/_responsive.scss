@@ -1,0 +1,42 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+@include mobile {
+  .header {
+    padding: $space-3 $space-4;
+  }
+
+  .content {
+    padding: $space-4;
+    justify-content: flex-start;
+    padding-top: $space-8;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+
+  .statusCard {
+    padding: $space-6 $space-4;
+  }
+
+  .statusIconWrap {
+    @include square(60px);
+  }
+
+  .statusLabel {
+    font-size: $font-size-lg;
+  }
+
+  .summary {
+    padding: $space-4;
+  }
+
+  .skeleton {
+    max-width: 100%;
+  }
+
+  .demoSwitcher {
+    max-width: 100%;
+  }
+}

@@ -9,5 +9,6 @@ export { ProfileDashboard, MyListingDetail, EditListing } from './Profile';
 export { PublicProfile } from './PublicProfile';
 export { ReviewsPage } from './Reviews';
 export { SettingsPage } from './Settings';
+export { PaymentPage } from './Payment';
 export { AdminPanel } from './Admin';
 export { ModeratorPanel } from './Moderator';

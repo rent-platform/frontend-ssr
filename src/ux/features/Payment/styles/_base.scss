@@ -1,0 +1,345 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+// ─── Color map for payment statuses ──────────────────────────────────────────
+$payment-colors: (
+  'warning': #f59e0b,
+  'info': #3b82f6,
+  'success': #22c55e,
+  'danger': #f43f5e,
+  'neutral': #64748b,
+);
+
+// ─── Page wrapper ────────────────────────────────────────────────────────────
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: $color-surface-muted;
+  font-family: $font-family-base;
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+.header {
+  @include flex-between;
+  padding: $space-4 $space-6;
+  background: $color-surface;
+  border-bottom: 1px solid $color-border;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  transition: $transition-base;
+
+  &:hover {
+    background: $color-surface-muted;
+    color: $color-text;
+  }
+}
+
+.brand {
+  font-family: $font-family-display;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-800;
+  @include green-gradient-text;
+}
+
+// ─── Content area ────────────────────────────────────────────────────────────
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-6;
+  gap: $space-5;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+// ─── Status card ─────────────────────────────────────────────────────────────
+.statusCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: $space-8 $space-6;
+  background: $color-surface;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-premium;
+}
+
+.statusIconWrap {
+  @include flex-center;
+  @include square(72px);
+  border-radius: $radius-full;
+  margin-bottom: $space-5;
+  position: relative;
+}
+
+@each $name, $color in $payment-colors {
+  .statusIconWrap--#{$name} {
+    background: rgba($color, 0.1);
+    color: $color;
+  }
+}
+
+.statusLabel {
+  font-family: $font-family-display;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  margin: 0 0 $space-2;
+}
+
+.statusDescription {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  max-width: 320px;
+  margin: 0;
+}
+
+// ─── Pulse animation ─────────────────────────────────────────────────────────
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(#f59e0b, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(#f59e0b, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(#f59e0b, 0);
+  }
+}
+
+.pulse {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+// ─── Summary ─────────────────────────────────────────────────────────────────
+.summary {
+  background: $color-surface;
+  border-radius: $radius-xl;
+  padding: $space-6;
+  box-shadow: $shadow-card;
+}
+
+.summaryRow {
+  @include flex-between;
+  padding: $space-3 0;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.summaryLabel {
+  font-weight: $font-weight-regular;
+}
+
+.summaryValue {
+  font-weight: $font-weight-medium;
+  color: $color-text;
+}
+
+.summaryDivider {
+  border: none;
+  border-top: 1px solid $color-border;
+  margin: $space-2 0;
+}
+
+.summaryTotal {
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+
+  .summaryValue {
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+    font-size: $font-size-lg;
+  }
+}
+
+// ─── Actions ─────────────────────────────────────────────────────────────────
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  width: 100%;
+  padding: $space-4;
+  font-size: $font-size-base;
+  font-weight: $font-weight-600;
+  color: $color-text-inverse;
+  background: $gradient-green;
+  border: none;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover {
+    box-shadow: $shadow-green-md;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  width: 100%;
+  padding: $space-4;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  background: transparent;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover {
+    background: $color-surface-muted;
+    color: $color-text;
+    border-color: darken($color-border, 10%);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btnDanger {
+  @extend .btnSecondary;
+  color: $color-secondary;
+  border-color: rgba($color-secondary, 0.3);
+
+  &:hover {
+    background: rgba($color-secondary, 0.05);
+    color: $color-secondary;
+    border-color: $color-secondary;
+  }
+}
+
+// ─── Skeleton ────────────────────────────────────────────────────────────────
+.skeleton {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+.skeletonBlock {
+  background: $color-surface;
+  border-radius: $radius-xl;
+  overflow: hidden;
+}
+
+.skeletonLine {
+  @include skeleton-shimmer;
+  border-radius: $radius-sm;
+}
+
+// ─── Toast ───────────────────────────────────────────────────────────────────
+.toast {
+  position: fixed;
+  top: $space-6;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: $z-toast;
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4 $space-6;
+  background: $color-primary;
+  color: $color-text-inverse;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+}
+
+// ─── Demo switcher ───────────────────────────────────────────────────────────
+.demoSwitcher {
+  width: 100%;
+  max-width: 480px;
+  background: $color-surface;
+  border-radius: $radius-xl;
+  padding: $space-4 $space-6;
+  box-shadow: $shadow-card;
+}
+
+.demoSwitcherLabel {
+  display: block;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: $space-3;
+}
+
+.demoSwitcherButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+}
+
+.demoBtn {
+  padding: $space-2 $space-3;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-sm;
+  border: 1px solid $color-border;
+  background: $color-surface;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+  }
+}
+
+.demoBtnActive {
+  background: $color-green-50;
+  border-color: $color-primary;
+  color: $color-primary;
+  font-weight: $font-weight-600;
+}
