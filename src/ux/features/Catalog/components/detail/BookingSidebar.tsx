@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import {
@@ -16,14 +17,14 @@ import {
   Zap,
 } from 'lucide-react';
 import type { CatalogUiItem } from '../../types';
-import { pluralize, formatPrice } from '@/ux/utils';
+import { useCreateDealRequest } from '@/business/deals/hooks';
+import { pluralize, formatPrice, ROUTES } from '@/ux/utils';
 import {
   formatCatalogCardHourSecondary,
   formatCatalogCardPrimaryPrice,
   formatDepositAmount,
 } from '../../utils';
 import { RentalCalendar } from './RentalCalendar';
-import { ROUTES } from '@/ux/utils';
 import Link from 'next/link';
 import styles from '../../Catalog.module.scss';
 
@@ -34,6 +35,9 @@ type BookingSidebarProps = {
 };
 
 export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebarProps) {
+  const router = useRouter();
+  const { createDealRequest, isCreating, isSuccess, isError, deal: createdDeal } = useCreateDealRequest();
+
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -70,6 +74,38 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
     }
     setCalendarOpen(true);
   }, [isGuest, onAuthRequired]);
+
+  const handleSubmitRequest = useCallback(async () => {
+    if (isGuest) {
+      onAuthRequired?.();
+      return;
+    }
+    if (!startDate || !endDate) return;
+
+    const toISODate = (d: Date) => d.toISOString().split('T')[0];
+    const pricingMode = item.pricePerDay ? 'DAY' : 'HOUR';
+
+    try {
+      await createDealRequest({
+        itemId: item.id,
+        startDate: toISODate(startDate),
+        endDate: toISODate(endDate),
+        pricingMode,
+      });
+    } catch {
+      router.push(ROUTES.deal());
+    }
+  }, [isGuest, onAuthRequired, startDate, endDate, item, createDealRequest, router]);
+
+  useEffect(() => {
+    if (isSuccess && createdDeal) {
+      router.push(ROUTES.deal(createdDeal.id));
+    } else if (isSuccess && !createdDeal) {
+      router.push(ROUTES.deal());
+    } else if (isError) {
+      router.push(ROUTES.deal());
+    }
+  }, [isSuccess, isError, createdDeal, router]);
 
   return (
     <aside className={styles.detailSidebar}>
@@ -163,9 +199,14 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.22 }}
             >
-              <button type="button" className={styles.primaryAction} onClick={isGuest ? onAuthRequired : undefined}>
+              <button
+                type="button"
+                className={styles.primaryAction}
+                onClick={handleSubmitRequest}
+                disabled={isCreating}
+              >
                 <CreditCard size={18} />
-                Отправить запрос
+                {isCreating ? 'Отправка...' : 'Отправить запрос'}
               </button>
               <button
                 type="button"

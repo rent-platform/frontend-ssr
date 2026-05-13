@@ -10,5 +10,6 @@ export { PublicProfile } from './PublicProfile';
 export { ReviewsPage } from './Reviews';
 export { SettingsPage } from './Settings';
 export { PaymentPage } from './Payment';
+export { DealDetailsPage } from './DealDetails';
 export { AdminPanel } from './Admin';
 export { ModeratorPanel } from './Moderator';

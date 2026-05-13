@@ -25,6 +25,8 @@ export const ROUTES = {
   listing: (id: string) => `${BASE}/listing/${id}`,
   editListing: (id: string) => `${BASE}/listing/${id}/edit`,
   publicProfile: (id: string) => `${BASE}/user/${id}`,
+  deal: (id?: string) => id ? `${BASE}/deal?id=${id}` : `${BASE}/deal`,
+  payment: (dealId?: string) => dealId ? `${BASE}/payment?dealId=${dealId}` : `${BASE}/payment`,
   pricing: '/pricing',
   business: '/business',
   help: '/help',

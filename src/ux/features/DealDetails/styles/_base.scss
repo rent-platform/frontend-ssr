@@ -1,0 +1,434 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+// ─── Page ────────────────────────────────────────────────────────────────────
+.page {
+  min-height: 100dvh;
+  background: $color-surface-muted;
+  font-family: $font-family-base;
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+.header {
+  @include flex-between;
+  padding: $space-4 $space-6;
+  background: $color-surface;
+  border-bottom: 1px solid $color-border;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text;
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  transition: $transition-base;
+
+  &:hover {
+    background: $color-surface-muted;
+  }
+}
+
+.headerTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-base;
+  font-weight: $font-weight-600;
+  color: $color-text;
+}
+
+// ─── Content ─────────────────────────────────────────────────────────────────
+.content {
+  max-width: 480px;
+  margin: 0 auto;
+  background: $color-surface;
+  min-height: calc(100dvh - 57px);
+}
+
+// ─── Deal image ──────────────────────────────────────────────────────────────
+.imageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: $color-surface-muted;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.statusBadge {
+  position: absolute;
+  top: $space-3;
+  left: $space-3;
+  padding: $space-1 $space-3;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: $color-text-inverse;
+  line-height: 1.4;
+}
+
+.statusBadge--green {
+  background: $color-primary;
+}
+
+.statusBadge--red {
+  background: $color-secondary;
+}
+
+// ─── Title section ───────────────────────────────────────────────────────────
+.titleSection {
+  padding: $space-5 $space-5 $space-4;
+}
+
+.dealTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  margin: 0 0 $space-1;
+}
+
+.dealSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 0;
+}
+
+// ─── Section containers ──────────────────────────────────────────────────────
+.section {
+  padding: 0 $space-5 $space-5;
+}
+
+.sectionTitle {
+  font-family: $font-family-display;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  margin: 0 0 $space-4;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid $color-border;
+  margin: 0;
+}
+
+// ─── Stepper ─────────────────────────────────────────────────────────────────
+.stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.step {
+  display: flex;
+  gap: $space-3;
+  position: relative;
+  padding-bottom: $space-4;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.stepIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.stepCircle {
+  @include flex-center;
+  @include square(28px);
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.stepCircle--active {
+  background: $color-primary;
+  color: $color-text-inverse;
+}
+
+.stepCircle--inactive {
+  background: $color-surface-muted;
+  color: $color-text-secondary;
+  border: 1px solid $color-border;
+}
+
+.stepLine {
+  width: 2px;
+  flex: 1;
+  min-height: 8px;
+  margin-top: $space-1;
+}
+
+.stepLine--active {
+  background: $color-primary;
+}
+
+.stepLine--inactive {
+  background: $color-border;
+}
+
+.stepContent {
+  padding-top: $space-1;
+  flex: 1;
+  min-width: 0;
+}
+
+.stepTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-600;
+  color: $color-text;
+  margin: 0 0 2px;
+}
+
+.stepDescription {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin: 0;
+  line-height: $line-height-normal;
+}
+
+// ─── Status message ──────────────────────────────────────────────────────────
+.statusMessage {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  margin: 0;
+  padding: $space-3 0 0;
+}
+
+// ─── Conditions ──────────────────────────────────────────────────────────────
+.conditionsGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: $space-2 $space-5;
+  align-items: baseline;
+}
+
+.conditionLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  white-space: nowrap;
+}
+
+.conditionValue {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text;
+  text-align: right;
+}
+
+// ─── Participant ─────────────────────────────────────────────────────────────
+.participant {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4 $space-5;
+}
+
+.participantAvatar {
+  @include flex-center;
+  @include square(40px);
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $color-text-inverse;
+  flex-shrink: 0;
+}
+
+.participantInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.participantRole {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.participantName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text;
+}
+
+// ─── Reason block ────────────────────────────────────────────────────────────
+.reasonBlock {
+  margin: 0 $space-5 $space-4;
+  padding: $space-4;
+  background: rgba($color-secondary, 0.06);
+  border-radius: $radius-md;
+  border-left: 3px solid $color-secondary;
+}
+
+.reasonTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  color: $color-secondary;
+  margin: 0 0 $space-2;
+}
+
+.reasonText {
+  font-size: $font-size-sm;
+  color: $color-text;
+  margin: 0;
+  line-height: $line-height-normal;
+}
+
+// ─── Actions ─────────────────────────────────────────────────────────────────
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  padding: $space-4 $space-5 $space-6;
+}
+
+.btnGreen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  width: 100%;
+  padding: $space-4;
+  font-size: $font-size-base;
+  font-weight: $font-weight-600;
+  color: $color-text-inverse;
+  background: $gradient-green;
+  border: none;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover {
+    box-shadow: $shadow-green-md;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btnDanger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: $space-3;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-secondary;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover {
+    background: rgba($color-secondary, 0.05);
+    border-radius: $radius-md;
+  }
+}
+
+.btnChat {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  width: 100%;
+  padding: $space-3;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  background: transparent;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover {
+    background: $color-surface-muted;
+    color: $color-text;
+  }
+}
+
+// ─── Demo switcher ───────────────────────────────────────────────────────────
+.demoSwitcher {
+  max-width: 480px;
+  margin: $space-4 auto 0;
+  background: $color-surface;
+  border-radius: $radius-xl;
+  padding: $space-4 $space-5;
+  box-shadow: $shadow-card;
+}
+
+.demoSwitcherLabel {
+  display: block;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-600;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: $space-3;
+}
+
+.demoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-2;
+}
+
+.demoBtn {
+  padding: $space-2 $space-1;
+  font-size: 11px;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-sm;
+  border: 1px solid $color-border;
+  background: $color-surface;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: $transition-base;
+  text-align: center;
+  line-height: 1.3;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+  }
+}
+
+.demoBtnActive {
+  background: $color-green-50;
+  border-color: $color-primary;
+  color: $color-primary;
+  font-weight: $font-weight-600;
+}
+
+// ─── Skeleton ────────────────────────────────────────────────────────────────
+.skeleton {
+  max-width: 480px;
+  margin: 0 auto;
+  background: $color-surface;
+}
+
+.skeletonLine {
+  @include skeleton-shimmer;
+  border-radius: $radius-sm;
+}

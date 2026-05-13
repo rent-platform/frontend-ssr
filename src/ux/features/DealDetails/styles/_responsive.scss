@@ -1,0 +1,57 @@
+@use '../../../styles/vars' as *;
+@use '../../../styles/helpers/mixins' as *;
+
+@include respond-to('md') {
+  .content {
+    margin-top: $space-4;
+    border-radius: $radius-xl;
+    overflow: hidden;
+    box-shadow: $shadow-premium;
+    min-height: auto;
+    margin-bottom: $space-8;
+  }
+
+  .demoSwitcher {
+    margin-bottom: $space-8;
+  }
+}
+
+@include mobile {
+  .header {
+    padding: $space-3 $space-4;
+  }
+
+  .content {
+    max-width: 100%;
+  }
+
+  .titleSection {
+    padding: $space-4 $space-4 $space-3;
+  }
+
+  .section {
+    padding: 0 $space-4 $space-4;
+  }
+
+  .participant {
+    padding: $space-3 $space-4;
+  }
+
+  .reasonBlock {
+    margin: 0 $space-4 $space-3;
+  }
+
+  .actions {
+    padding: $space-3 $space-4 $space-5;
+  }
+
+  .demoSwitcher {
+    max-width: 100%;
+    margin: $space-3 $space-4 0;
+    border-radius: $radius-lg;
+  }
+
+  .demoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
