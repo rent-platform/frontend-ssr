@@ -2,97 +2,44 @@
 
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowUp,
 } from 'lucide-react';
 import {
   CatalogFooter,
   ProductDetail,
-  mockCatalogItems,
-  INITIAL_FILTERS,
-  applyCatalogFilters,
-  type CatalogUiItem,
 } from '../Catalog';
 import clsx from 'clsx';
 import { ROUTES } from '@/ux/utils';
-import { GUEST_ITEM_LIMIT } from './guestConstants';
 import { GuestAuthModal } from './components/GuestAuthModal';
 import { GuestCatalogSection } from './components/GuestCatalogSection';
 import { GuestHeader } from './components/GuestHeader';
 import { GuestHero } from './components/GuestHero';
 import { HowItWorksSection, ValuePropsSection, EcoSection, FaqSection } from './components/GuestLandingSections';
+import { useGuestExperience } from './hooks/useGuestExperience';
 import styles from './GuestExperience.module.scss';
 
 export function GuestExperience() {
-  const [filters, setFilters] = useState(INITIAL_FILTERS);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const heroRef = useRef<HTMLElement>(null);
-
-  const allFiltered = useMemo(
-    () => applyCatalogFilters(mockCatalogItems, filters),
-    [filters],
-  );
-
-  const totalCount = allFiltered.length;
-
-  const filteredItems = useMemo(
-    () => allFiltered.slice(0, GUEST_ITEM_LIMIT),
-    [allFiltered],
-  );
-
-  const similarItems = useMemo(
-    () => selectedItem
-      ? mockCatalogItems
-          .filter((item) => item.id !== selectedItem.id && item.category === selectedItem.category)
-          .slice(0, 3)
-      : [],
-    [selectedItem],
-  );
-
-  const updateFilters = useCallback((patch: Partial<typeof filters>) => {
-    setFilters((prev) => ({ ...prev, ...patch }));
-  }, []);
-
-  const openAuthModal = useCallback(() => {
-    setShowAuthModal(true);
-  }, []);
-
-  const openItem = useCallback((item: CatalogUiItem) => {
-    setSelectedItem(item);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
-  const backToCatalog = useCallback(() => {
-    setSelectedItem(null);
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => setShowScrollTop(window.scrollY > 600);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    if (!showAuthModal) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShowAuthModal(false);
-    };
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [showAuthModal]);
-
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  const {
+    filters,
+    showAuthModal,
+    selectedItem,
+    showScrollTop,
+    isFiltersOpen,
+    heroRef,
+    filteredItems,
+    totalCount,
+    similarItems,
+    updateFilters,
+    openAuthModal,
+    closeAuthModal,
+    openItem,
+    backToCatalog,
+    toggleFilters,
+    closeFilters,
+    resetFilters,
+    scrollToTop,
+  } = useGuestExperience();
 
   return (
     <div className={styles.page}>
@@ -123,13 +70,10 @@ export function GuestExperience() {
               filteredItems={filteredItems}
               totalCount={totalCount}
               isFiltersOpen={isFiltersOpen}
-              onToggleFilters={() => setIsFiltersOpen((prev) => !prev)}
-              onCloseFilters={() => setIsFiltersOpen(false)}
+              onToggleFilters={toggleFilters}
+              onCloseFilters={closeFilters}
               onUpdateFilters={updateFilters}
-              onResetFilters={() => {
-                setFilters(INITIAL_FILTERS);
-                setIsFiltersOpen(false);
-              }}
+              onResetFilters={resetFilters}
               onOpenItem={openItem}
               onAuthRequired={openAuthModal}
             />
@@ -176,7 +120,7 @@ export function GuestExperience() {
 
       {/* ═══════ Auth Modal ═══════ */}
       <AnimatePresence>
-        {showAuthModal && <GuestAuthModal onClose={() => setShowAuthModal(false)} />}
+        {showAuthModal && <GuestAuthModal onClose={closeAuthModal} />}
       </AnimatePresence>
     </div>
   );

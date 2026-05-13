@@ -1,7 +1,5 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -22,9 +20,8 @@ import {
   Star,
 } from 'lucide-react';
 import { CatalogHeader, CatalogFooter, CatalogCard } from '../Catalog';
-import { MOCK_PUBLIC_USER, MOCK_OWN_PUBLIC_USER, MOCK_PUBLIC_LISTINGS, MOCK_PUBLIC_REVIEWS } from './mockPublicProfileData';
 import clsx from 'clsx';
-import { pluralize, formatDate, getInitials, ROUTES, EASE } from '@/ux/utils';
+import { pluralize, formatDate, ROUTES, EASE } from '@/ux/utils';
 import { ShareModal } from '@/ux/components/ShareModal';
 import {
   VISIBLE_LISTINGS,
@@ -36,63 +33,41 @@ import {
 import { ProfileSkeleton } from './components/ProfileSkeleton';
 import { PublicReviewCard } from './components/PublicReviewCard';
 import { ReportModal } from './components/ReportModal';
+import { usePublicProfile } from './hooks/usePublicProfile';
 import styles from './PublicProfile.module.scss';
-
-type Tab = 'listings' | 'reviews';
 
 /* ═══ Main component ═══ */
 export function PublicProfile() {
-  const { id } = useParams<{ id: string }>();
-  const user = id === 'u-001' ? MOCK_OWN_PUBLIC_USER : MOCK_PUBLIC_USER;
-  const listings = MOCK_PUBLIC_LISTINGS;
-  const reviews = MOCK_PUBLIC_REVIEWS;
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<Tab>('listings');
-  const [showAllListings, setShowAllListings] = useState(false);
-  const [showAllReviews, setShowAllReviews] = useState(false);
-  const [helpfulReviews, setHelpfulReviews] = useState<Set<string>>(new Set());
-  const [showShareModal, setShowShareModal] = useState(false);
-  const [showReportModal, setShowReportModal] = useState(false);
-  const [reported, setReported] = useState(false);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const fromItemId = searchParams.get('from');
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const toggleHelpful = useCallback((id: string) => {
-    setHelpfulReviews((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  }, []);
-
-  const visibleListings = useMemo(
-    () => (showAllListings ? listings : listings.slice(0, VISIBLE_LISTINGS)),
-    [listings, showAllListings],
-  );
-  const visibleReviews = useMemo(
-    () => (showAllReviews ? reviews : reviews.slice(0, VISIBLE_REVIEWS)),
-    [reviews, showAllReviews],
-  );
-
-  const initials = getInitials(user.fullName);
-
-  const memberMonths = useMemo(() => {
-    const diff = Date.now() - new Date(user.memberSince).getTime();
-    return Math.max(1, Math.floor(diff / (1000 * 60 * 60 * 24 * 30)));
-  }, [user.memberSince]);
-
-  const maxDistCount = Math.max(...RATING_DISTRIBUTION.map((r) => r.count));
-
-  const profileUrl = typeof window !== 'undefined'
-    ? window.location.href
-    : `https://arendai.ru/user/${user.id}`;
+  const {
+    user,
+    listings,
+    reviews,
+    isLoading,
+    activeTab,
+    setActiveTab,
+    showAllListings,
+    showAllReviews,
+    helpfulReviews,
+    showShareModal,
+    showReportModal,
+    reported,
+    fromItemId,
+    visibleListings,
+    visibleReviews,
+    initials,
+    memberMonths,
+    maxDistCount,
+    profileUrl,
+    toggleHelpful,
+    openShareModal,
+    closeShareModal,
+    openReportModal,
+    closeReportModal,
+    markReported,
+    showMoreListings,
+    showMoreReviews,
+    navigateToListing,
+  } = usePublicProfile();
 
   if (isLoading) return <ProfileSkeleton />;
 
@@ -177,13 +152,13 @@ export function PublicProfile() {
             </Link>
 
             <div className={styles.secondaryActions}>
-              <button type="button" className={styles.iconBtn} title="Поделиться" onClick={() => setShowShareModal(true)}>
+              <button type="button" className={styles.iconBtn} title="Поделиться" onClick={openShareModal}>
                 <Share2 size={15} />
               </button>
               <button
                 type="button"
                 className={clsx(styles.reportBtn, reported && styles.reportBtnDone)}
-                onClick={() => !reported && setShowReportModal(true)}
+                onClick={openReportModal}
                 disabled={reported}
               >
                 {reported ? <><Check size={14} /> Жалоба отправлена</> : <><Flag size={14} /> Пожаловаться</>}
@@ -322,14 +297,14 @@ export function PublicProfile() {
                           key={item.id}
                           item={publicListingToCatalogItem(item, user)}
                           index={i}
-                          onOpen={(catalogItem) => router.push(`${ROUTES.catalog}?item=${catalogItem.id}`)}
+                          onOpen={(catalogItem) => navigateToListing(catalogItem.id)}
                         />
                       ))}
                     </div>
 
                     {!showAllListings && listings.length > VISIBLE_LISTINGS && (
                       <div className={styles.showMoreWrap}>
-                        <button type="button" className={styles.showMoreBtn} onClick={() => setShowAllListings(true)}>
+                        <button type="button" className={styles.showMoreBtn} onClick={showMoreListings}>
                           Показать все объявления ({listings.length})
                           <ArrowRight size={15} />
                         </button>
@@ -399,7 +374,7 @@ export function PublicProfile() {
 
                     {!showAllReviews && reviews.length > VISIBLE_REVIEWS && (
                       <div className={styles.showMoreWrap}>
-                        <button type="button" className={styles.showMoreBtn} onClick={() => setShowAllReviews(true)}>
+                        <button type="button" className={styles.showMoreBtn} onClick={showMoreReviews}>
                           Показать все отзывы ({reviews.length})
                           <ArrowRight size={15} />
                         </button>
@@ -434,7 +409,7 @@ export function PublicProfile() {
 
       {/* ═══ Share modal ═══ */}
       <AnimatePresence>
-        {showShareModal && <ShareModal url={profileUrl} onClose={() => setShowShareModal(false)} />}
+        {showShareModal && <ShareModal url={profileUrl} onClose={closeShareModal} />}
       </AnimatePresence>
 
       {/* ═══ Report modal ═══ */}
@@ -442,8 +417,8 @@ export function PublicProfile() {
         {showReportModal && (
           <ReportModal
             userName={user.fullName}
-            onClose={() => setShowReportModal(false)}
-            onSubmitted={() => setReported(true)}
+            onClose={closeReportModal}
+            onSubmitted={markReported}
           />
         )}
       </AnimatePresence>

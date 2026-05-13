@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -27,19 +25,16 @@ import {
   Zap,
 } from 'lucide-react';
 import { CatalogHeader, CatalogFooter } from '../Catalog';
-import type { CatalogUiItem } from '../Catalog';
 import clsx from 'clsx';
-import { pluralize, formatDate, getInitials, ROUTES, EASE } from '@/ux/utils';
-import type { ProfileTab, BookingSide } from './types';
-import { MOCK_USER, MOCK_STATS, MOCK_BOOKINGS } from './mockProfileData';
-import { getProfileCompletion } from './profileHelpers';
-import type { ListingFilter, BookingFilter } from './profileHelpers';
+import { pluralize, formatDate, ROUTES, EASE } from '@/ux/utils';
+import { MOCK_USER, MOCK_STATS } from './mockProfileData';
 import { ListingsPanel } from './components/ListingsPanel';
 import { DealsPanel } from './components/DealsPanel';
 import { DashboardSkeleton } from './components/DashboardSkeleton';
 import { VerifyChip } from './components/VerifyChip';
 import { TabBtn } from './components/TabBtn';
 import { ShareModal } from '@/ux/components/ShareModal';
+import { useProfileDashboard } from './hooks/useProfileDashboard';
 import styles from './ProfileDashboard.module.scss';
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -59,33 +54,31 @@ export function ProfileDashboard({
   stats: externalStats,
   isLoading: externalLoading,
 }: ProfileDashboardProps = {}) {
-  const router = useRouter();
-  const [mockLoading, setMockLoading] = useState(!externalUser);
-  const [tab, setTab] = useState<ProfileTab>('listings');
-  const [listingFilter, setListingFilter] = useState<ListingFilter>('all');
-  const [dealSide, setDealSide] = useState<BookingSide>('owner');
-  const [dealFilter, setDealFilter] = useState<BookingFilter>('all');
-  const [showShareModal, setShowShareModal] = useState(false);
-
-  const user = externalUser ?? MOCK_USER;
-  const stats = externalStats ?? MOCK_STATS;
-  const isLoading = externalLoading ?? mockLoading;
-
-  useEffect(() => {
-    if (externalUser) return undefined;
-    const t = setTimeout(() => setMockLoading(false), 800);
-    return () => clearTimeout(t);
-  }, [externalUser]);
-
-  const initials = getInitials(user.fullName);
-  const profileCompletion = getProfileCompletion(user);
-  const profileUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}/dev-ui/user/${user.id}`
-    : `https://arendai.ru/user/${user.id}`;
-
-  const handleOpenItem = (item: CatalogUiItem) => {
-    router.push(ROUTES.listing(item.id));
-  };
+  const {
+    user,
+    stats,
+    isLoading,
+    tab,
+    setTab,
+    listingFilter,
+    setListingFilter,
+    dealSide,
+    setDealSide,
+    dealFilter,
+    setDealFilter,
+    showShareModal,
+    openShareModal,
+    closeShareModal,
+    initials,
+    profileCompletion,
+    profileUrl,
+    handleOpenItem,
+    bookings,
+  } = useProfileDashboard({
+    user: externalUser,
+    stats: externalStats,
+    isLoading: externalLoading,
+  });
 
   if (isLoading) return <DashboardSkeleton />;
 
@@ -161,7 +154,7 @@ export function ProfileDashboard({
               <button
                 type="button"
                 className={styles.btnIcon}
-                onClick={() => setShowShareModal(true)}
+                onClick={openShareModal}
                 title="Поделиться"
               >
                 <Share2 size={16} />
@@ -249,7 +242,7 @@ export function ProfileDashboard({
           transition={{ duration: 0.3, delay: 0.25, ease: EASE }}
         >
           <TabBtn active={tab === 'listings'} label="Мои объявления" count={stats.totalListings} onClick={() => setTab('listings')} />
-          <TabBtn active={tab === 'deals'} label="Мои аренды" count={MOCK_BOOKINGS.length} onClick={() => setTab('deals')} />
+          <TabBtn active={tab === 'deals'} label="Мои аренды" count={bookings.length} onClick={() => setTab('deals')} />
         </motion.nav>
 
         {/* ── Content ── */}
@@ -270,7 +263,7 @@ export function ProfileDashboard({
       <CatalogFooter />
 
       <AnimatePresence>
-        {showShareModal && <ShareModal url={profileUrl} onClose={() => setShowShareModal(false)} />}
+        {showShareModal && <ShareModal url={profileUrl} onClose={closeShareModal} />}
       </AnimatePresence>
     </div>
   );
