@@ -38,7 +38,7 @@ src/test-setup.ts          — настройка тестового окруж�
 
 #### Структура `src/ux/` для анализа:
 
-**src/ux/components/** — 15 shared UI-компонентов:
+**src/ux/components/** — 17 shared UI-компонентов:
 - `AdminPagination/` — пагинация для админ-панели
 - `AdminSelect/` — select для админ-панели
 - `AppInput/` — универсальный инпут (маска телефона +7, toggle пароля, floating labels, forwardRef). Включает `phoneMask.ts`, `usePhoneMask.ts`
@@ -59,15 +59,15 @@ src/test-setup.ts          — настройка тестового окруж�
 
 **src/ux/features/** — 13 фича-модулей:
 - `Admin/` (32 файла) — панель администратора: 8 вкладок (Dashboard, Users, Listings, Deals, Finance, Complaints, ActivityLog, Settings), хуки, компоненты (AdminGallery, AdminListingDetail, AdminUserProfile, MiniBarChart, Skeletons, SortableHeader), helpers, моки, типы
-- `Catalog/` (крупнейший модуль) — каталог товаров: CatalogExperience (основная страница), SearchResultsPage, карточки (CatalogCard, CatalogSkeletonCard), фильтры (CatalogFilters, CatalogSearchBar, CatalogToolbar, CategoryRail, GlassSelect), деталь (ProductDetail, ProductGallery, BookingSidebar, RentalCalendar, ListingReportModal), утилиты, маппёры, типы, моки, 8+ SCSS-файлов стилей
-- `Chat/` — мессенджер (ChatPage, список диалогов, timeline сообщений, управление сделками)
+- `Catalog/` (58 файлов, крупнейший модуль) — каталог товаров: CatalogExperience (основная страница), SearchResultsPage, карточки (CatalogCard, CatalogSkeletonCard), фильтры (CatalogFilters, CatalogSearchBar, CatalogToolbar, CategoryRail, GlassSelect), деталь (ProductDetail, ProductGallery, BookingSidebar, RentalCalendar, ListingReportModal), утилиты, маппёры, типы, моки, 8+ SCSS-файлов стилей
+- `Chat/` (17 файлов) — мессенджер (ChatPage, список диалогов, timeline сообщений, управление сделками, компоненты, хуки, стили)
 - `CreateListing/` (19 файлов) — мастер создания объявления из 4 шагов (StepPhotos, StepInfo, StepPricing, StepReview), компоненты (CitySelect, SpecSelect), хук useCreateListing, categorySpecs, стили с адаптивом
-- `Favorites/` — страница избранного (поиск, сортировка, удаление)
-- `Guest/` — лендинг/гостевой режим (hero, каталог 12 позиций, auth modal, glassmorphism, Framer Motion)
-- `InfoPages/` — layout для статических информационных страниц
+- `Favorites/` (14 файлов) — страница избранного (поиск, сортировка, удаление, компоненты, хуки, стили)
+- `Guest/` (20 файлов) — лендинг/гостевой режим (hero, каталог 12 позиций, auth modal, glassmorphism, Framer Motion, компоненты, хуки, стили)
+- `InfoPages/` (9 файлов) — layout для статических информационных страниц, стили
 - `Moderator/` (15 файлов) — панель модератора: ModerationQueueTab, ComplaintsTab, ReviewsModerationTab, хуки, моки, утилиты, типы
-- `Notifications/` — центр уведомлений с вкладками, 18 типов уведомлений
-- `Profile/` — личный кабинет: ProfileDashboard (статистика, объявления, бронирования), EditListing, DealsPanel, ListingsPanel, AvailabilityCalendar, DashboardSkeleton, VerifyChip, EmptyState, TabBtn
+- `Notifications/` (13 файлов) — центр уведомлений с вкладками, 18 типов уведомлений, компоненты, хуки, стили
+- `Profile/` (26 файлов) — личный кабинет: ProfileDashboard (статистика, объявления, бронирования), EditListing, MyListingDetail, DealsPanel, ListingsPanel, AvailabilityCalendar, DashboardSkeleton, VerifyChip, EmptyState, TabBtn, компоненты, хуки, стили, хелперы, тесты
 - `PublicProfile/` (19 файлов) — публичный профиль пользователя: листинги, отзывы, уровень доверия, UserSidebar, RatingBreakdownPanel, PublicReviewCard, ReportModal, ProfileSkeleton
 - `Reviews/` (13 файлов) — система отзывов: полученные/оставленные, фильтры, рейтинговый breakdown, ReviewCard, RatingSummary
 - `Settings/` (16 файлов) — настройки: 5 вкладок (ProfileSection, SecuritySection, NotificationsSection, PaymentSection, PrivacySection)
@@ -153,6 +153,16 @@ src/test-setup.ts          — настройка тестового окруж�
 Вот package.json проекта:
 ```json
 {
+  "name": "rent-platform-ssr",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
+  },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@reduxjs/toolkit": "^2.11.2",
@@ -166,20 +176,29 @@ src/test-setup.ts          — настройка тестового окруж�
     "react-hook-form": "^7.72.0",
     "react-redux": "^9.2.0",
     "sass": "^1.98.0",
+    "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.2",
     "jsdom": "^29.1.1",
     "msw": "^2.13.0",
     "prettier": "^3.8.1",
+    "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.6",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.2"
+    "vitest": "^4.1.6"
+  },
+  "msw": {
+    "workerDirectory": ["public"]
   }
 }
 ```
@@ -275,19 +294,21 @@ src/test-setup.ts          — настройка тестового окруж�
 
 ### Пункт 5: Метрики проекта (моя зона)
 
-Посчитай и оформи для отчёта:
-- Общее количество файлов: ~391 (373 в src/ux/ + 18 в src/app/dev-ui/)
-- Количество React-компонентов (*.tsx): посчитай
-- Количество файлов стилей (*.scss): посчитай
-- Количество TypeScript-модулей (*.ts): посчитай
-- Количество фича-модулей: 13
-- Количество shared-компонентов: 15
-- Количество layout-модулей: 4 (AuthLayout, AdminLayout, SiteHeader, SiteFooter)
-- Количество кастомных хуков: 3+ (usePagination, useSortable, useInfiniteScroll + хуки в фичах)
-- Количество UI-страниц: 13
-- Количество тестов: 176
-- Количество тестовых файлов: 10
-- Количество строк кода: посчитай приблизительно
+Верифицированные метрики (посчитаны автоматизированно):
+- **Общее количество файлов:** 391 (373 в `src/ux/` + 18 в `src/app/dev-ui/`)
+- **React-компоненты (*.tsx):** 138 (121 в ux + 17 в dev-ui)
+- **Файлы стилей (*.scss):** 132
+- **TypeScript-модули (*.ts):** 117
+- **Общее количество строк кода:** ~64 500 (~64 000 в ux + ~500 в dev-ui)
+- **Фича-модулей:** 13
+- **Shared UI-компонентов:** 17
+- **Layout-модулей:** 4 (AuthLayout, AdminLayout, SiteHeader, SiteFooter)
+- **Кастомных хуков (core):** 5 (usePagination, useSortable, useInfiniteScroll, useFocusTrap, useScrollToTop)
+- **Фича-хуков (в features/):** ~22 (9 в Admin, 3 в Moderator, по 1 в каждой из остальных 10 фич)
+- **UI-страниц (маршрутов):** 15 (13 основных + 2 динамических вложенных)
+- **Тестов:** 176
+- **Тестовых файлов:** 10
+- **Файлов _responsive.scss (адаптив):** 12
 
 ---
 
@@ -397,6 +418,110 @@ src/test-setup.ts          — настройка тестового окруж�
 - ЮKassa, presigned URL, S3
 - P2P-платформа, аренда, бронирование, сделка
 
+**6.15. Подробная архитектура ключевых фича-модулей**
+
+Для отчёта важно показать внутреннюю структуру крупнейших модулей:
+
+**Catalog (58 файлов) — внутренняя структура:**
+- `components/cards/` (10 файлов) — CatalogCard, CatalogSkeletonCard
+- `components/detail/` (10 файлов) — ProductDetail, ProductGallery, BookingSidebar, RentalCalendar, ListingReportModal
+- `components/filters/` (16 файлов) — CatalogFilters, CatalogSearchBar, CatalogToolbar, CategoryRail, GlassSelect + вложенная `styles/`
+- `components/layout/` (2 файла) — компоненты-обёртки каталога
+- `hooks/` — кастомные хуки каталога
+- `styles/` (8 SCSS-файлов) — _base, _catalog-grid-and-cards, _detail-and-booking, _header, _hero-and-category, _responsive, _search-and-filters, _states-and-skeletons
+- `mappers.ts` — маппинг VM в UI-типы
+- `utils.ts` — CATEGORY_OPTIONS, applyCatalogFilters, formatPrice, filtersToSearchParams и др.
+- `__tests__/` (2 файла) — 51 тест (utils + mappers)
+
+**Admin (32 файла) — внутренняя структура:**
+- `tabs/` (8 вкладок) — DashboardTab, UsersTab, ListingsTab, DealsTab, FinanceTab, ComplaintsTab, ActivityLogTab, SettingsTab
+- `hooks/` (9 хуков) — useAdminDashboard, useAdminUsers, useAdminListings, useAdminDeals, useAdminFinance, useAdminActivityLog, useAdminSettings + реэкспорт usePagination, useSortable
+- `components/` (10 файлов) — AdminGallery, AdminListingDetail (24K), AdminUserProfile (19K), MiniBarChart, Skeletons, AdminPagination, AdminSelect, SortableHeader
+- `helpers.ts`, `types.ts`, `mockAdminData.ts`
+
+**AdminLayout (18 файлов) — layout инфраструктура:**
+- `AdminLayout.tsx`, `Sidebar.tsx`, `Topbar.tsx`, `SearchModal.tsx`
+- `types.ts` — NavItem, NavSection, AdminLayoutProps
+- `partials/` (11 SCSS-файлов) — _layout, _dashboard, _features, _feedback, _modal-detail, _shared, _table, _toolbar, _topbar-widgets, _ui-base, _utilities
+
+**Profile (26 файлов) — внутренняя структура:**
+- `ProfileDashboard.tsx` — основной компонент с вкладками
+- `EditListing.tsx` — редактирование объявления
+- `MyListingDetail.tsx` (13K) — детальный просмотр своего объявления
+- `components/` (8 файлов) — DealsPanel, ListingsPanel, AvailabilityCalendar, DashboardSkeleton, VerifyChip, EmptyState, TabBtn
+- `hooks/`, `styles/` (7 SCSS), `profileHelpers.ts`, `__tests__/`
+
+**Moderator (15 файлов) — внутренняя структура:**
+- `ModeratorPanel.tsx` — точка входа
+- `components/` (7 файлов) — ModerationQueueTab, ComplaintsTab, ReviewsModerationTab и др.
+- `hooks/` (3 хука) — хуки модерации
+- `utils.ts`, `types.ts`, `mockModeratorData.ts`
+
+**6.16. Паттерн организации фича-модулей**
+
+Каждый фича-модуль следует единой внутренней структуре:
+```
+Feature/
+├── FeaturePage.tsx          — корневой компонент фичи
+├── FeaturePage.module.scss  — корневые стили
+├── components/              — вложенные компоненты (только для этой фичи)
+├── hooks/                   — кастомные хуки фичи
+├── styles/                  — SCSS-файлы (partials, responsive)
+├── types.ts                 — типы фичи
+├── mock*.ts                 — мок-данные
+├── *Helpers.ts              — вспомогательные функции
+├── __tests__/               — тесты (при наличии)
+└── index.ts                 — barrel export
+```
+
+**6.17. Полная сводка по подструктурам фича-модулей**
+
+| Фича | Файлов | Компонентов (components/) | Хуков (hooks/) | SCSS-стилей (styles/) | Тестов |
+|---|---|---|---|---|---|
+| Admin | 32 | 10 | 9 | — | — |
+| Catalog | 58 | 38 | 1 | 8 | 2 (51 тест) |
+| Chat | 17 | 6 | 1 | 5 | — |
+| CreateListing | 19 | 7 | 1 | 6 | — |
+| Favorites | 14 | 4 | 1 | 5 | — |
+| Guest | 20 | 6 | 1 | 8 | — |
+| InfoPages | 9 | — | — | 6 | — |
+| Moderator | 15 | 7 | 3 | — | — |
+| Notifications | 13 | 2 | 1 | 5 | — |
+| Profile | 26 | 8 | 1 | 7 | 1 (20 тестов) |
+| PublicProfile | 19 | 5 | 1 | 6 | 1 (13 тестов) |
+| Reviews | 13 | 2 | 1 | 5 | — |
+| Settings | 16 | 5 | — | 6 | — |
+
+**6.18. Конфигурация тестирования**
+
+Инфраструктура тестирования (моя зона):
+- `vitest.config.ts` — environment: jsdom, globals: true, css: true, alias @/ → ./src/, include: src/**/*.test.{ts,tsx}
+- `src/test-setup.ts` — импорт @testing-library/jest-dom/vitest
+- npm-скрипты: `test` (watch mode), `test:ci` (single run + coverage)
+- Конвенция: `describe` + `it` с русскоязычными описаниями
+- Паттерн: `__tests__/` рядом с тестируемым кодом
+- Inline моки (не импортируются из mock-файлов фичей)
+
+**6.19. Сводная таблица UI-страниц и ролей доступа**
+
+| Маршрут | Страница | Роль |
+|---|---|---|
+| `/dev-ui` | Каталог | Все |
+| `/dev-ui/guest` | Лендинг | Гость |
+| `/dev-ui/search` | Результаты поиска | Все |
+| `/dev-ui/listing/[id]` | Карточка объявления | Все |
+| `/dev-ui/listing/[id]/edit` | Редактирование объявления | Арендодатель |
+| `/dev-ui/create-listing` | Создание объявления | Арендодатель |
+| `/dev-ui/favorites` | Избранное | Авторизованный |
+| `/dev-ui/chat` | Мессенджер | Авторизованный |
+| `/dev-ui/notifications` | Уведомления | Авторизованный |
+| `/dev-ui/profile` | Личный кабинет | Авторизованный |
+| `/dev-ui/reviews` | Отзывы | Авторизованный |
+| `/dev-ui/settings` | Настройки | Авторизованный |
+| `/dev-ui/user/[id]` | Публичный профиль | Все |
+| `/dev-ui/moderator` | Панель модератора | Модератор |
+| `/dev-ui/admin` | Панель администратора | Администратор |
+
 ---
 
 ## 3. ФОРМАТ ОТВЕТА
@@ -409,6 +534,8 @@ src/test-setup.ts          — настройка тестового окруж�
 
 Пиши в академическом стиле, пригодном для вставки в отчёт по ВКР (но без «воды»). Каждый абзац должен содержать конкретику: имена файлов, компоненты, технологии, цифры.
 
+Для каждого пункта приведи готовый текст, который можно скопировать в Word-документ.
+
 ---
 
 ## 4. ОГРАНИЧЕНИЯ
@@ -417,3 +544,5 @@ src/test-setup.ts          — настройка тестового окруж�
 - НЕ описывай `src/business/` как свою работу — это зона другого разработчика
 - Можно упоминать `src/business/` как зависимость (импорт типов, хуков)
 - Все цифры и факты должны соответствовать реальному содержимому проекта
+- Не придумывай файлы, компоненты или технологии, которых нет в описанной структуре
+- Используй только те версии пакетов, которые указаны в package.json выше
