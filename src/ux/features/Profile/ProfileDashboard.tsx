@@ -24,7 +24,8 @@ import {
   Upload,
   Zap,
 } from 'lucide-react';
-import { CatalogHeader, CatalogFooter } from '../Catalog';
+import { CatalogHeader } from '@/ux/layouts/SiteHeader';
+import { CatalogFooter } from '@/ux/layouts/SiteFooter';
 import clsx from 'clsx';
 import { pluralize, formatDate, ROUTES, EASE } from '@/ux/utils';
 import { MOCK_USER, MOCK_STATS } from './mockProfileData';

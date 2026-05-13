@@ -28,9 +28,7 @@ import clsx from 'clsx';
 import { pluralize, formatDate, getInitials } from '@/ux/utils';
 import { CatalogCard } from '../../Catalog';
 import { MOCK_PUBLIC_LISTINGS, MOCK_PUBLIC_REVIEWS } from '../../PublicProfile/mockPublicProfileData';
-import { RATING_DISTRIBUTION } from '../../PublicProfile/publicProfileHelpers';
-import type { CatalogUiItem } from '../../Catalog';
-import type { PublicListing } from '../../PublicProfile/types';
+import { RATING_DISTRIBUTION, publicListingToCatalogItem } from '../../PublicProfile/publicProfileHelpers';
 import type { AdminUser } from '../types';
 import type { PublicUser, PublicReview } from '../../PublicProfile/types';
 import type { UserRole } from '@/business/auth';
@@ -42,28 +40,6 @@ const MOCK_CREATED_DATES = [
   '2024-10-14', '2025-03-12',
 ];
 
-function adminListingToCatalogItem(listing: PublicListing, user: PublicUser, index: number): CatalogUiItem {
-  return {
-    id: listing.id,
-    title: listing.title,
-    coverImageUrl: listing.image ?? '',
-    images: listing.image ? [listing.image] : [],
-    category: listing.category,
-    pricePerDay: listing.pricePerDay,
-    pricePerHour: null,
-    depositAmount: '',
-    pickupLocation: user.city,
-    status: 'ACTIVE' as const,
-    isAvailable: listing.isAvailable,
-    viewsCount: 0,
-    createdAt: MOCK_CREATED_DATES[index % MOCK_CREATED_DATES.length],
-    nearestAvailableDate: null,
-    ownerName: user.fullName,
-    ownerAvatar: user.avatarUrl,
-    ownerRating: listing.rating,
-    quickFilters: [],
-  } as CatalogUiItem;
-}
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 const VISIBLE_LISTINGS = 6;
@@ -398,7 +374,7 @@ export function AdminUserProfile({ user, onBack, onBan, onChangeRole }: AdminUse
                         {visibleListings.map((item, i) => (
                           <CatalogCard
                             key={item.id}
-                            item={adminListingToCatalogItem(item, publicUser, i)}
+                            item={publicListingToCatalogItem(item, publicUser, { createdAt: MOCK_CREATED_DATES[i % MOCK_CREATED_DATES.length] })}
                             index={i}
                           />
                         ))}

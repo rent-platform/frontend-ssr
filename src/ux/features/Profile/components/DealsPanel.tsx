@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Camera, Shield, ShoppingBag, Upload, User } from 'lucide-react';
 import clsx from 'clsx';
-import { pluralize, formatDate, EASE } from '@/ux/utils';
+import { pluralize, formatDate, formatPriceNum, EASE } from '@/ux/utils';
 import type { ProfileBooking, BookingSide } from '../types';
 import { MOCK_BOOKINGS } from '../mockProfileData';
 import { BOOKING_FILTERS, DEAL_STATUS_MAP } from '../profileHelpers';
@@ -42,13 +42,13 @@ function BookingRow({ booking, counterLabel }: { booking: ProfileBooking; counte
         <div className={styles.bookingChips}>
           <span className={styles.bookingChip}>
             <Shield size={12} />
-            Залог {Number(booking.depositAmount).toLocaleString('ru-RU')} ₽
+            Залог {formatPriceNum(Number(booking.depositAmount))}
           </span>
         </div>
 
         <div className={styles.bookingFooter}>
           <div className={styles.bookingPriceBlock}>
-            <strong>{Number(booking.totalPrice).toLocaleString('ru-RU')} ₽</strong>
+            <strong>{formatPriceNum(Number(booking.totalPrice))}</strong>
             <span>за период</span>
           </div>
         </div>

@@ -8,7 +8,8 @@ import {
   Trash2,
 } from 'lucide-react';
 import { pluralize, ROUTES, EASE } from '@/ux/utils';
-import { CatalogHeader, ProductDetail } from '../Catalog';
+import { CatalogHeader } from '@/ux/layouts/SiteHeader';
+import { ProductDetail } from '../Catalog';
 import { FavoritesToolbar, FavoritesEmptyState, FavoritesGrid } from './components';
 import { useFavorites } from './hooks/useFavorites';
 import styles from './Favorites.module.scss';

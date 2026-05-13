@@ -19,7 +19,11 @@ export const RATING_DISTRIBUTION = [
   { stars: 1, count: 1 },
 ];
 
-export function publicListingToCatalogItem(listing: PublicListing, user: PublicUser): CatalogUiItem {
+export function publicListingToCatalogItem(
+  listing: PublicListing,
+  user: PublicUser,
+  overrides?: Partial<CatalogUiItem>,
+): CatalogUiItem {
   return {
     id: listing.id,
     title: listing.title,
@@ -40,5 +44,6 @@ export function publicListingToCatalogItem(listing: PublicListing, user: PublicU
     ownerAvatar: user.avatarUrl,
     ownerRating: listing.rating,
     quickFilters: [],
+    ...overrides,
   } as CatalogUiItem;
 }

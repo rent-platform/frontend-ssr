@@ -5,10 +5,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowUp,
 } from 'lucide-react';
-import {
-  CatalogFooter,
-  ProductDetail,
-} from '../Catalog';
+import { CatalogFooter } from '@/ux/layouts/SiteFooter';
+import { ProductDetail } from '../Catalog';
 import clsx from 'clsx';
 import { ROUTES } from '@/ux/utils';
 import { GuestAuthModal } from './components/GuestAuthModal';

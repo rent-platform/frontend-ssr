@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { CatalogFooter } from '../Catalog';
+import { CatalogFooter } from '@/ux/layouts/SiteFooter';
 import { ROUTES } from '@/ux/utils';
 import styles from './InfoPage.module.scss';
 import type { PropsWithChildren } from 'react';

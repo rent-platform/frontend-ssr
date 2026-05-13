@@ -19,7 +19,9 @@ import {
   ShieldCheck,
   Star,
 } from 'lucide-react';
-import { CatalogHeader, CatalogFooter, CatalogCard } from '../Catalog';
+import { CatalogHeader } from '@/ux/layouts/SiteHeader';
+import { CatalogFooter } from '@/ux/layouts/SiteFooter';
+import { CatalogCard } from '../Catalog';
 import clsx from 'clsx';
 import { pluralize, formatDate, ROUTES, EASE } from '@/ux/utils';
 import { ShareModal } from '@/ux/components/ShareModal';

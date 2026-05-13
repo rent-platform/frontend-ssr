@@ -22,7 +22,8 @@ import {
   Truck,
 } from 'lucide-react';
 import clsx from 'clsx';
-import { CatalogHeader, CatalogFooter } from '../Catalog';
+import { CatalogHeader } from '@/ux/layouts/SiteHeader';
+import { CatalogFooter } from '@/ux/layouts/SiteFooter';
 import { ProductGallery } from '../Catalog/components/detail/ProductGallery';
 import { formatRelativeDate } from '../Catalog/utils';
 import { MOCK_LISTINGS, MOCK_BOOKINGS } from './mockProfileData';
@@ -30,7 +31,7 @@ import { profileListingToCatalogItem } from './profileHelpers';
 import { AvailabilityCalendar } from './components/AvailabilityCalendar';
 import type { ItemStatus } from '@/business/ads/types';
 import type { UiDealStatus } from '@/ux/types';
-import { pluralize, formatDate, ROUTES } from '@/ux/utils';
+import { pluralize, formatDate, formatPriceNum, formatNumber, ROUTES } from '@/ux/utils';
 import c from '../Catalog/Catalog.module.scss';
 import s from './MyListingDetail.module.scss';
 
@@ -202,18 +203,18 @@ export function MyListingDetail() {
               <div className={s.dashPriceHero}>
                 <div className={s.dashPriceRow}>
                   <span className={s.dashPriceAmount}>
-                    {listing.pricePerDay ? `${Number(listing.pricePerDay).toLocaleString('ru-RU')} ₽` : '—'}
+                    {listing.pricePerDay ? formatPriceNum(Number(listing.pricePerDay)) : '—'}
                   </span>
                   <span className={s.dashPricePeriod}>/ сутки</span>
                   {listing.pricePerHour && (
-                    <span className={s.dashPriceSecondary}>{Number(listing.pricePerHour).toLocaleString('ru-RU')} ₽/час</span>
+                    <span className={s.dashPriceSecondary}>{formatNumber(Number(listing.pricePerHour))} ₽/час</span>
                   )}
                 </div>
                 {listing.depositAmount && (
                   <div className={s.dashDepositRow}>
                     <Shield size={15} />
                     <span className={s.dashDepositLabel}>Залог</span>
-                    <span className={s.dashDepositValue}>{Number(listing.depositAmount).toLocaleString('ru-RU')} ₽</span>
+                    <span className={s.dashDepositValue}>{formatPriceNum(Number(listing.depositAmount))}</span>
                   </div>
                 )}
                 <div className={s.dashServiceFeeRow}>
@@ -321,7 +322,7 @@ export function MyListingDetail() {
                           </div>
                         </div>
                         <span className={clsx(s.bookingStatusBadge, DEAL_CLS[b.status])}>{DEAL_LABEL[b.status]}</span>
-                        <span className={s.bookingPrice}>{Number(b.totalPrice).toLocaleString('ru-RU')} ₽</span>
+                        <span className={s.bookingPrice}>{formatPriceNum(Number(b.totalPrice))}</span>
                       </div>
                     );
                   })}
