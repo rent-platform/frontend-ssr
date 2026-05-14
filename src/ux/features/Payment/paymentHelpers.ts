@@ -1,4 +1,4 @@
-import type { PaymentStatus } from '@/business/payments/types/payments.dto';
+import type { PaymentStatus } from '@/business/payments';
 import type { PaymentUiState } from './types';
 
 const PAYMENT_UI_MAP: Record<PaymentStatus, PaymentUiState> = {

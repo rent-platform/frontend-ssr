@@ -17,7 +17,7 @@ import {
   Zap,
 } from 'lucide-react';
 import type { CatalogUiItem } from '../../types';
-import { useCreateDealRequest } from '@/business/deals/hooks';
+import { useCreateDealRequest } from '@/business/deals';
 import { pluralize, formatPrice, ROUTES } from '@/ux/utils';
 import {
   formatCatalogCardHourSecondary,

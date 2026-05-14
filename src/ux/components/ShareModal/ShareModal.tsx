@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Copy, X } from 'lucide-react';
-import { useFocusTrap, EASE } from '@/ux/utils';
+import { useFocusTrap } from '@/ux/hooks';
+import { EASE } from '@/ux/utils';
 import styles from './ShareModal.module.scss';
 
 type ShareModalProps = {

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import clsx from 'clsx';
-import type { PaymentStatus } from '@/business/payments/types/payments.dto';
+import type { PaymentStatus } from '@/business/payments';
 import type { PaymentPageProps } from './types';
 import { getPaymentUiState } from './paymentHelpers';
 import { usePaymentFlow } from './hooks/usePaymentFlow';

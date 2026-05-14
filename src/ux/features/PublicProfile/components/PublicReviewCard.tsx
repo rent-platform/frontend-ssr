@@ -3,8 +3,7 @@
 import { motion } from 'framer-motion';
 import { ExternalLink, Star, ThumbsUp } from 'lucide-react';
 import clsx from 'clsx';
-import { getInitials, EASE } from '@/ux/utils';
-import { formatDate } from '@/ux/utils';
+import { getInitials, EASE, formatDate } from '@/ux/utils';
 import type { PublicReview } from '../types';
 import styles from '../PublicProfile.module.scss';
 

@@ -4,7 +4,8 @@ import { useCallback, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { pluralize, useFocusTrap } from '@/ux/utils';
+import { useFocusTrap } from '@/ux/hooks';
+import { pluralize } from '@/ux/utils';
 import styles from './RentalCalendar.module.scss';
 
 type RentalCalendarProps = {

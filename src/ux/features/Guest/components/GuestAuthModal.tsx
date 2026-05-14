@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Shield, X, Zap } from 'lucide-react';
-import { ROUTES, useFocusTrap } from '@/ux/utils';
+import { useFocusTrap } from '@/ux/hooks';
+import { ROUTES } from '@/ux/utils';
 import styles from '../GuestExperience.module.scss';
 
 type GuestAuthModalProps = {

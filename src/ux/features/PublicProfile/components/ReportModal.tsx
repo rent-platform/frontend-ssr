@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, Check, ChevronRight, Flag, Send, X } from 'lucide-react';
-import { useFocusTrap, EASE } from '@/ux/utils';
+import { useFocusTrap } from '@/ux/hooks';
+import { EASE } from '@/ux/utils';
 import styles from '../PublicProfile.module.scss';
 
 const REPORT_REASONS = [

@@ -1,4 +1,4 @@
-import type { Payment, PaymentStatus } from '@/business/payments/types/payments.dto';
+import type { Payment, PaymentStatus } from '@/business/payments';
 
 export const MOCK_PAYMENTS: Record<PaymentStatus, Payment> = {
   PENDING: {

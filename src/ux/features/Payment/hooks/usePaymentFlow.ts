@@ -1,10 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
-import { useGetPaymentByDeal } from '@/business/payments/hooks';
-import { useCreatePayment } from '@/business/payments/hooks';
-import { useCancelPayment } from '@/business/payments/hooks';
-import type { Payment, CreatePaymentRequest } from '@/business/payments/types/payments.dto';
+import { useGetPaymentByDeal, useCreatePayment, useCancelPayment } from '@/business/payments';
+import type { Payment, CreatePaymentRequest } from '@/business/payments';
 import { getPaymentUiState, POLLING_INTERVAL_MS, POLLING_STATUSES } from '../paymentHelpers';
 import type { PaymentUiState } from '../types';
 
