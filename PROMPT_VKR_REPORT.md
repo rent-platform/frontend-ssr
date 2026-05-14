@@ -231,7 +231,7 @@ src/test-setup.ts          — настройка тестового окруж�
 - Показать shared-компоненты, используемые в нескольких фичах
 
 **3.2. Диаграмма пакетов (Package Diagram)**
-- Пакеты: components, features (13 модулей), hooks, utils, types, styles, layouts
+- Пакеты: components, features (15 модулей), hooks, utils, types, styles, layouts
 - Зависимости между пакетами
 
 **3.3. Диаграммы состояний (State Diagrams) — ВАЖНО для ВКР**
