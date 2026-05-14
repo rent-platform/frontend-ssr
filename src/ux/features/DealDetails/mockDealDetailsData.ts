@@ -56,6 +56,13 @@ export const MOCK_DEAL_SCENARIOS: DealDetailsData[] = [
   },
   {
     ...BASE_DEAL,
+    id: 'deal-4b',
+    status: 'AWAITING_PAYMENT',
+    viewMode: 'owner',
+    participant: RENTER_PARTICIPANT,
+  },
+  {
+    ...BASE_DEAL,
     id: 'deal-5',
     status: 'ACTIVE',
     viewMode: 'owner',
@@ -98,6 +105,7 @@ export const MOCK_SCENARIO_LABELS: string[] = [
   'Ожидание (владелец)',
   'Подтверждена (владелец)',
   'Ожидает оплаты (арендатор)',
+  'Ожидает оплаты (владелец)',
   'В аренде (владелец)',
   'В аренде (арендатор)',
   'Завершена (арендатор)',

@@ -4,9 +4,9 @@ import type { DealStep, DealViewMode, DealStatusBadgeColor } from './types';
 const STEP_DEFINITIONS: { title: string; description: string }[] = [
   { title: 'Заявка', description: 'Арендатор отправил запрос на аренду.' },
   { title: 'Подтверждение', description: 'Владелец подтверждает возможность аренды.' },
-  { title: 'Оплата', description: 'Создание оплаты и внесение суммы аренды с залогом.' },
-  { title: 'Передача вещи', description: 'Стороны подтверждают старт аренды после передачи вещи.' },
-  { title: 'Завершение', description: 'Возврат вещи, подтверждение завершения и отзыв.' },
+  { title: 'Оплата', description: 'Арендатор оплачивает аренду и залог через платёжную систему.' },
+  { title: 'Передача вещи', description: 'Обе стороны подтверждают старт аренды после передачи вещи.' },
+  { title: 'Завершение', description: 'Обе стороны подтверждают возврат вещи, оставляют отзывы.' },
 ];
 
 const STATUS_TO_ACTIVE_STEP: Record<UiDealStatus, number> = {
@@ -44,8 +44,8 @@ const STATUS_MESSAGES: Record<UiDealStatus, Record<DealViewMode, string>> = {
     owner: 'Ожидаем оплату от арендатора.',
   },
   ACTIVE: {
-    renter: 'Сделка активна. После возврата вещи стороны подтверждают завершение.',
-    owner: 'Сделка активна. После возврата вещи стороны подтверждают завершение.',
+    renter: 'Вещь передана, аренда активна. По окончании срока подтвердите завершение.',
+    owner: 'Вещь передана, аренда активна. По окончании срока подтвердите завершение.',
   },
   COMPLETED: {
     renter: 'Аренда завершена. Теперь можно оставить отзыв по сделке.',
@@ -98,6 +98,12 @@ export function getDealActions(status: UiDealStatus, viewMode: DealViewMode): De
       };
 
     case 'CONFIRMED':
+      if (viewMode === 'owner') {
+        return {
+          secondary: { label: 'Отменить сделку', variant: 'danger' },
+          showChat: true,
+        };
+      }
       return {
         secondary: { label: 'Отменить сделку', variant: 'danger' },
         showChat: true,
@@ -112,13 +118,15 @@ export function getDealActions(status: UiDealStatus, viewMode: DealViewMode): De
         };
       }
       return {
+        primary: { label: 'Подтвердить старт', variant: 'green' },
         secondary: { label: 'Отменить сделку', variant: 'danger' },
         showChat: true,
       };
 
     case 'ACTIVE':
       return {
-        primary: { label: 'Подтвердить возврат', variant: 'green' },
+        primary: { label: 'Подтвердить завершение', variant: 'green' },
+        secondary: { label: 'Досрочная отмена', variant: 'danger' },
         showChat: true,
       };
 
