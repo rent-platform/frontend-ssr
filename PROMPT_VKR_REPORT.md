@@ -57,16 +57,18 @@ src/test-setup.ts          — настройка тестового окруж�
 - `ThemeToggle/` — переключатель темы
 - `Toast/` — уведомления
 
-**src/ux/features/** — 13 фича-модулей:
+**src/ux/features/** — 15 фича-модулей:
 - `Admin/` (32 файла) — панель администратора: 8 вкладок (Dashboard, Users, Listings, Deals, Finance, Complaints, ActivityLog, Settings), хуки, компоненты (AdminGallery, AdminListingDetail, AdminUserProfile, MiniBarChart, Skeletons, SortableHeader), helpers, моки, типы
-- `Catalog/` (58 файлов, крупнейший модуль) — каталог товаров: CatalogExperience (основная страница), SearchResultsPage, карточки (CatalogCard, CatalogSkeletonCard), фильтры (CatalogFilters, CatalogSearchBar, CatalogToolbar, CategoryRail, GlassSelect), деталь (ProductDetail, ProductGallery, BookingSidebar, RentalCalendar, ListingReportModal), утилиты, маппёры, типы, моки, 8+ SCSS-файлов стилей
+- `Catalog/` (58 файлов, крупнейший модуль) — каталог товаров: CatalogExperience (основная страница), SearchResultsPage, карточки (CatalogCard, CatalogSkeletonCard), фильтры (CatalogFilters, CatalogSearchBar, CatalogToolbar, CategoryRail, GlassSelect), деталь (ProductDetail, ProductGallery, BookingSidebar, RentalCalendar, ListingReportModal), утилиты, маппёры, типы, моки, 8+ SCSS-файлов стилей. BookingSidebar интегрирован с бэкендом: кнопка «Отправить запрос» вызывает `useCreateDealRequest`, при успехе — навигация на страницу сделки, при ошибке — fallback на demo-страницу
 - `Chat/` (17 файлов) — мессенджер (ChatPage, список диалогов, timeline сообщений, управление сделками, компоненты, хуки, стили)
 - `CreateListing/` (19 файлов) — мастер создания объявления из 4 шагов (StepPhotos, StepInfo, StepPricing, StepReview), компоненты (CitySelect, SpecSelect), хук useCreateListing, categorySpecs, стили с адаптивом
+- `DealDetails/` (14 файлов) — страница детализации сделки с визуализацией полного жизненного цикла аренды. Включает: DealDetailsPage (корневой компонент, демо-сценарии, Framer Motion анимации), 6 вложенных компонентов (DealImage, DealProcessStepper, DealConditions, DealParticipant, DealReasonBlock, DealActions), dealDetailsHelpers.ts (5-шаговый степпер, статусные сообщения по ролям, контекстные кнопки по статусу/роли, форматирование), types.ts (DealViewMode, DealStep, DealParticipantInfo, DealDetailsData, DealStatusBadgeColor), mockDealDetailsData.ts (10 демо-сценариев по всем статусам и ролям), стили с glassmorphism (styles/_base.scss, styles/_responsive.scss)
 - `Favorites/` (14 файлов) — страница избранного (поиск, сортировка, удаление, компоненты, хуки, стили)
 - `Guest/` (20 файлов) — лендинг/гостевой режим (hero, каталог 12 позиций, auth modal, glassmorphism, Framer Motion, компоненты, хуки, стили)
 - `InfoPages/` (9 файлов) — layout для статических информационных страниц, стили
 - `Moderator/` (15 файлов) — панель модератора: ModerationQueueTab, ComplaintsTab, ReviewsModerationTab, хуки, моки, утилиты, типы
 - `Notifications/` (13 файлов) — центр уведомлений с вкладками, 18 типов уведомлений, компоненты, хуки, стили
+- `Payment/` (13 файлов) — страница оплаты аренды через ЮKassa. Включает: PaymentPage (корневой компонент), 3 вложенных компонента (PaymentStatusCard, PaymentSummary, PaymentActions, PaymentSkeleton), хук usePaymentFlow (RTK Query polling каждые 5 сек для статусов PENDING/AUTHORIZED), paymentHelpers.ts (маппинг PaymentStatus → PaymentUiState с 5 статусами + error, форматирование суммы), types.ts (PaymentUiStatus — 7 UI-статусов: pending/processing/authorized/captured/canceled/refunded/error, PaymentUiColor, PaymentUiState), mockPaymentData.ts, стили (_base.scss, _responsive.scss)
 - `Profile/` (26 файлов) — личный кабинет: ProfileDashboard (статистика, объявления, бронирования), EditListing, MyListingDetail, DealsPanel, ListingsPanel, AvailabilityCalendar, DashboardSkeleton, VerifyChip, EmptyState, TabBtn, компоненты, хуки, стили, хелперы, тесты
 - `PublicProfile/` (19 файлов) — публичный профиль пользователя: листинги, отзывы, уровень доверия, UserSidebar, RatingBreakdownPanel, PublicReviewCard, ReportModal, ProfileSkeleton
 - `Reviews/` (13 файлов) — система отзывов: полученные/оставленные, фильтры, рейтинговый breakdown, ReviewCard, RatingSummary
@@ -112,17 +114,19 @@ src/test-setup.ts          — настройка тестового окруж�
 - `SiteHeader/` (2 файла) — CatalogHeader (201 строка) — глобальная шапка с навигацией, иконками (избранное, уведомления, чат, профиль), выпадающее меню, логотип
 - `SiteFooter/` (2 файла) — CatalogFooter (126 строк) — глобальный футер с навигацией, контактами, ссылками
 
-**src/app/dev-ui/** — 13 маршрутов демо-версии:
+**src/app/dev-ui/** — 15 маршрутов демо-версии:
 - `/dev-ui` → каталог
 - `/dev-ui/admin` → админ-панель
 - `/dev-ui/chat` → чат
 - `/dev-ui/create-listing` → создание объявления
+- `/dev-ui/deal` → детали сделки (DealDetailsPage с 10 демо-сценариями)
 - `/dev-ui/favorites` → избранное
 - `/dev-ui/guest` → гостевой режим
 - `/dev-ui/listing/[id]` → карточка объявления (динамический маршрут)
 - `/dev-ui/listing/[id]/edit` → редактирование объявления (вложенный динамический маршрут)
 - `/dev-ui/moderator` → панель модератора
 - `/dev-ui/notifications` → уведомления
+- `/dev-ui/payment` → страница оплаты (PaymentPage)
 - `/dev-ui/profile` → личный кабинет
 - `/dev-ui/reviews` → отзывы
 - `/dev-ui/search` → результаты поиска
@@ -249,6 +253,10 @@ src/test-setup.ts          — настройка тестового окруж�
 - Процесс создания объявления (4 шага wizard + модерация)
 - Процесс аренды (поиск → бронирование → оплата → старт → завершение)
 - Процесс модерации (очередь → проверка → решение → уведомление)
+- Процесс отправки запроса на аренду: BookingSidebar → выбор дат → расчёт стоимости → «Отправить запрос» → useCreateDealRequest → навигация на DealDetailsPage / fallback на demo
+- Процесс оплаты аренды (UI-перспектива): DealDetailsPage (кнопка «Оплатить») → PaymentPage → usePaymentFlow (polling) → PaymentStatusCard (статусы: pending → authorized → captured / canceled / refunded / error) → навигация обратно на сделку
+- Процесс прохождения сделки арендатором (UI-перспектива): отправка заявки → ожидание подтверждения → оплата → обоюдный старт → аренда → обоюдное завершение → отзыв. Каждый шаг — экран DealDetailsPage с контекстными кнопками
+- Процесс обработки сделки арендодателем (UI-перспектива): входящая заявка → подтвердить/отклонить → ожидание оплаты → подтвердить старт → аренда → подтвердить завершение → отзыв
 
 **3.6. Диаграмма развёртывания (Deployment Diagram)**
 - Клиент (браузер) → Next.js (SSR/CSR) → REST API → БД
@@ -257,12 +265,18 @@ src/test-setup.ts          — настройка тестового окруж�
 **3.7. Диаграмма последовательности (Sequence Diagram)**
 - Сценарий оплаты: пользователь → UI → бизнес-хук → API → ЮKassa → callback → обновление статуса
 - Сценарий создания объявления: форма → валидация → загрузка фото → отправка → модерация
+- Сценарий создания заявки на аренду: BookingSidebar (выбор дат) → useCreateDealRequest → POST /deals → ответ (DealDetailsVM) → router.push(ROUTES.deal(id)) → DealDetailsPage
+- Сценарий оплаты (детальный): DealDetailsPage → кнопка «Оплатить» → router.push(ROUTES.payment(dealId)) → PaymentPage → usePaymentFlow → GET /payments/deal/{id} (polling 5с) → PaymentStatusCard обновляется → при CAPTURED/CANCELED → PaymentActions (кнопки «Вернуться к сделке» / «Повторить оплату»)
+- Сценарий подтверждения/отклонения заявки (owner): DealDetailsPage (status=PENDING) → кнопка «Подтвердить» → useConfirmDeal → PUT /deals/{id}/confirm → обновление UI / кнопка «Отклонить» → useRejectDeal → PUT /deals/{id}/reject → DealReasonBlock
+- Сценарий досрочной отмены (ACTIVE): DealDetailsPage → кнопка «Досрочная отмена» → useCancelDeal → PUT /deals/{id}/cancel → обновление статуса → DealReasonBlock с причиной
 
 **3.8. Wireframe / макеты экранов**
 Снимки экранов или схемы key screens:
 - Главная страница (каталог + фильтры)
-- Карточка товара
+- Карточка товара (ProductDetail + BookingSidebar)
 - Создание объявления (wizard)
+- Детали сделки (DealDetailsPage) — все 7 статусов + оба режима (renter/owner)
+- Страница оплаты (PaymentPage) — все 5 статусов платежа
 - Личный кабинет
 - Чат
 - Панель модератора
@@ -300,12 +314,12 @@ src/test-setup.ts          — настройка тестового окруж�
 - **Файлы стилей (*.scss):** 132
 - **TypeScript-модули (*.ts):** 117
 - **Общее количество строк кода:** ~64 500 (~64 000 в ux + ~500 в dev-ui)
-- **Фича-модулей:** 13
+- **Фича-модулей:** 15
 - **Shared UI-компонентов:** 17
 - **Layout-модулей:** 4 (AuthLayout, AdminLayout, SiteHeader, SiteFooter)
 - **Кастомных хуков (core):** 5 (usePagination, useSortable, useInfiniteScroll, useFocusTrap, useScrollToTop)
-- **Фича-хуков (в features/):** ~22 (9 в Admin, 3 в Moderator, по 1 в каждой из остальных 10 фич)
-- **UI-страниц (маршрутов):** 15 (13 основных + 2 динамических вложенных)
+- **Фича-хуков (в features/):** ~24 (9 в Admin, 3 в Moderator, 1 в Payment, по 1 в каждой из остальных 10 фич)
+- **UI-страниц (маршрутов):** 17 (15 основных + 2 динамических вложенных)
 - **Тестов:** 176
 - **Тестовых файлов:** 10
 - **Файлов _responsive.scss (адаптив):** 12
@@ -375,9 +389,10 @@ src/test-setup.ts          — настройка тестового окруж�
 
 **6.10. Маршрутизация на frontend**
 - Централизованная карта маршрутов `ROUTES` в `src/ux/utils/routes.ts`
-- Все 13+ маршрутов приложения определены в одном месте
-- Динамические маршруты: `listing(id)`, `editListing(id)`, `publicProfile(id)`
+- Все 17+ маршрутов приложения определены в одном месте
+- Динамические маршруты: `listing(id)`, `editListing(id)`, `publicProfile(id)`, `deal(id)`, `payment(dealId)`
 - При интеграции с SSR меняется только один файл
+- Маршруты `deal` и `payment` поддерживают опциональный ID (без ID → demo-режим)
 
 **6.11. Git и контроль версий**
 - Ветка: `feature/predrelase`
@@ -482,11 +497,13 @@ Feature/
 | Catalog | 58 | 38 | 1 | 8 | 2 (51 тест) |
 | Chat | 17 | 6 | 1 | 5 | — |
 | CreateListing | 19 | 7 | 1 | 6 | — |
+| DealDetails | 14 | 6 | — | 2 | — |
 | Favorites | 14 | 4 | 1 | 5 | — |
 | Guest | 20 | 6 | 1 | 8 | — |
 | InfoPages | 9 | — | — | 6 | — |
 | Moderator | 15 | 7 | 3 | — | — |
 | Notifications | 13 | 2 | 1 | 5 | — |
+| Payment | 13 | 4 | 1 | 2 | — |
 | Profile | 26 | 8 | 1 | 7 | 1 (20 тестов) |
 | PublicProfile | 19 | 5 | 1 | 6 | 1 (13 тестов) |
 | Reviews | 13 | 2 | 1 | 5 | — |
@@ -512,6 +529,8 @@ Feature/
 | `/dev-ui/listing/[id]` | Карточка объявления | Все |
 | `/dev-ui/listing/[id]/edit` | Редактирование объявления | Арендодатель |
 | `/dev-ui/create-listing` | Создание объявления | Арендодатель |
+| `/dev-ui/deal` | Детали сделки | Авторизованный |
+| `/dev-ui/payment` | Оплата аренды | Арендатор |
 | `/dev-ui/favorites` | Избранное | Авторизованный |
 | `/dev-ui/chat` | Мессенджер | Авторизованный |
 | `/dev-ui/notifications` | Уведомления | Авторизованный |
@@ -521,6 +540,195 @@ Feature/
 | `/dev-ui/user/[id]` | Публичный профиль | Все |
 | `/dev-ui/moderator` | Панель модератора | Модератор |
 | `/dev-ui/admin` | Панель администратора | Администратор |
+
+**6.20. Подробная архитектура модуля DealDetails (14 файлов)**
+
+Модуль отвечает за визуализацию полного жизненного цикла сделки аренды. Реализует сценарий 15 «Отслеживание статуса сделки» из документации.
+
+**Структура файлов:**
+```
+DealDetails/
+├── DealDetailsPage.tsx           — корневой компонент (122 строки), демо-переключатель сценариев, AnimatePresence
+├── DealDetailsPage.module.scss   — корневой SCSS-модуль (импорт _base + _responsive)
+├── components/
+│   ├── DealImage.tsx             — изображение вещи с overlay-градиентом и бейджем статуса
+│   ├── DealProcessStepper.tsx    — 5-шаговый вертикальный степпер прогресса сделки
+│   ├── DealConditions.tsx        — условия сделки (период, стоимость, залог, город, место передачи)
+│   ├── DealParticipant.tsx       — карточка участника (аватар, роль, имя, ChevronRight)
+│   ├── DealReasonBlock.tsx       — блок причины отклонения/отмены (условный рендеринг)
+│   └── DealActions.tsx           — контекстные кнопки действий (зависят от status × viewMode)
+├── dealDetailsHelpers.ts         — бизнес-логика UI: getDealSteps, getStatusMessage, getDealActions, getStatusBadgeColor, formatDealDate, formatDealPrice
+├── types.ts                      — DealViewMode, DealStep, DealParticipantInfo, DealDetailsData, DealStatusBadgeColor
+├── mockDealDetailsData.ts        — 10 демо-сценариев по всем статусам и ролям
+├── styles/_base.scss             — 530 строк: glassmorphism header, gradient background, image overlay, stepper glow, dashed conditions, elevated actions
+├── styles/_responsive.scss       — мобильная адаптация
+└── index.ts                      — barrel export
+```
+
+**Маппинг статусов на шаги степпера:**
+
+| UiDealStatus | Активный шаг | Кнопки (renter) | Кнопки (owner) |
+|---|---|---|---|
+| PENDING | 1 — Заявка | Отменить | Подтвердить / Отклонить |
+| CONFIRMED | 2 — Подтверждение | Отменить | Отменить |
+| AWAITING_PAYMENT | 3 — Оплата | Оплатить / Отменить | Подтвердить старт / Отменить |
+| ACTIVE | 4 — Передача вещи | Подтвердить завершение / Досрочная отмена | Подтвердить завершение / Досрочная отмена |
+| COMPLETED | 5 — Завершение | Оставить отзыв | Оставить отзыв |
+| REJECTED | 1 (конечное) | — (только чат) | — (только чат) |
+| CANCELLED | 3 (конечное) | — (только чат) | — (только чат) |
+
+**Кнопки → хуки бэкенда (из `src/business/deals/hooks/`):**
+
+| Кнопка UI | Хук бизнес-слоя | API-endpoint |
+|---|---|---|
+| Подтвердить заявку | `useConfirmDeal` | PUT /deals/{id}/confirm |
+| Отклонить заявку | `useRejectDeal` | PUT /deals/{id}/reject |
+| Отменить сделку / Досрочная отмена | `useCancelDeal` | PUT /deals/{id}/cancel |
+| Подтвердить старт | `useStartDeal` | PUT /deals/{id}/start |
+| Подтвердить завершение | `useCompleteDeal` | PUT /deals/{id}/complete |
+| Оплатить | Навигация → PaymentPage | ROUTES.payment(dealId) |
+| Оставить отзыв | Навигация → ReviewsPage | ROUTES.reviews |
+
+**Стилизация:**
+- Glassmorphism header (backdrop-filter blur, sticky)
+- Gradient фон страницы (#f0fdf4 → #f8fafc → #f1f5f9)
+- Карточка с rounded-xl и box-shadow
+- Изображение с gradient overlay и hover-zoom
+- Бейдж статуса — pill с backdrop-filter
+- Степпер: gradient-линии, glowing кружки, fade-эффект
+- Условия: dashed-разделители между строками
+- Кнопки: green-glow shadow, hover-lift, rounded-xl
+
+**6.21. Подробная архитектура модуля Payment (13 файлов)**
+
+Модуль отвечает за UI процесса оплаты аренды через ЮKassa. Реализует сценарий 10 «Внесение арендной платы» из документации.
+
+**Структура файлов:**
+```
+Payment/
+├── PaymentPage.tsx               — корневой компонент
+├── PaymentPage.module.scss       — корневой SCSS-модуль
+├── components/
+│   ├── PaymentStatusCard.tsx     — карточка статуса платежа (иконка, цвет, описание)
+│   ├── PaymentSummary.tsx        — сводка: аренда + залог + сервисный сбор = итого
+│   ├── PaymentActions.tsx        — кнопки действий (оплатить / повторить / вернуться)
+│   └── PaymentSkeleton.tsx       — skeleton загрузки
+├── hooks/usePaymentFlow.ts       — хук с RTK Query polling (5 сек для PENDING/AUTHORIZED)
+├── paymentHelpers.ts             — маппинг PaymentStatus → PaymentUiState, форматирование суммы
+├── types.ts                      — PaymentUiStatus (7), PaymentUiColor, PaymentUiState, PaymentPageProps
+├── mockPaymentData.ts            — мок-данные для демо
+├── styles/_base.scss             — стили
+├── styles/_responsive.scss       — адаптив
+└── index.ts                      — barrel export
+```
+
+**Маппинг статусов платежа (ЮKassa → UI):**
+
+| PaymentStatus (backend) | PaymentUiStatus | Label | Цвет | Retry | Cancel |
+|---|---|---|---|---|---|
+| PENDING | pending | Ожидает оплаты | warning | нет | да |
+| AUTHORIZED | authorized | Средства заморожены | info | нет | нет |
+| CAPTURED | captured | Оплата завершена | success | нет | нет |
+| CANCELED | canceled | Платёж отменён | danger | да | нет |
+| REFUNDED | refunded | Возврат средств | neutral | нет | нет |
+| (ошибка загрузки) | error | Ошибка | danger | да | нет |
+
+**Polling-механизм:** `usePaymentFlow` использует RTK Query с `pollingInterval: 5000` для статусов PENDING и AUTHORIZED. При переходе в конечный статус (CAPTURED, CANCELED, REFUNDED) polling останавливается.
+
+**6.22. Интеграция BookingSidebar с бэкендом**
+
+Компонент `BookingSidebar` в модуле Catalog интегрирован с бизнес-слоем для создания заявки на аренду:
+
+**Флоу:**
+1. Пользователь выбирает даты в RentalCalendar
+2. BookingSidebar рассчитывает стоимость (цена × дни)
+3. Кнопка «Отправить запрос» → `useCreateDealRequest` (RTK Query mutation)
+4. Loading-состояние: кнопка показывает «Отправка...» (isCreating)
+5. При успехе (isSuccess + createdDeal): `router.push(ROUTES.deal(createdDeal.id))`
+6. При успехе без deal: `router.push(ROUTES.deal())` → demo-страница
+7. При ошибке (isError): fallback навигация → `router.push(ROUTES.deal())`
+8. Для гостей: `onAuthRequired?.()` → модальное окно авторизации
+
+**Используемые хуки бизнес-слоя:**
+- `useCreateDealRequest` — создание заявки (createDealRequest, isCreating, isSuccess, isError, deal)
+
+**Параметры запроса:**
+- `itemId` — ID объявления
+- `startDate`, `endDate` — ISO-формат (YYYY-MM-DD)
+- `pricingMode` — 'DAY' | 'HOUR' (определяется по наличию pricePerDay)
+
+**6.23. Соответствие UI сценариям документации**
+
+Таблица покрытия сценариев клиента (18 штук) фича-модулями UI:
+
+| № | Сценарий | Фича-модуль UI | Статус |
+|---|---|---|---|
+| 1 | Регистрация | LoginForm, RegisterForm (components) | ✅ |
+| 2 | Авторизация | LoginForm (components), AuthLayout (layouts) | ✅ |
+| 3 | Управление профилем | Profile (ProfileDashboard) | ✅ |
+| 4 | Поиск и фильтрация | Catalog (CatalogExperience, SearchResultsPage) | ✅ |
+| 5 | Создание объявления | CreateListing (4-шаговый wizard) | ✅ |
+| 6 | Управление объявлениями | Profile (MyListingDetail, EditListing, ListingsPanel) | ✅ |
+| 7 | Просмотр карточки | Catalog (ProductDetail, ProductGallery, BookingSidebar) | ✅ |
+| 8 | Избранное | Favorites | ✅ |
+| 9 | Отправка запроса | Catalog (BookingSidebar → useCreateDealRequest) | ✅ |
+| 10 | Внесение оплаты | Payment (PaymentPage, usePaymentFlow, ЮKassa polling) | ✅ |
+| 11 | Публичные профили | PublicProfile | ✅ |
+| 12 | Подтверждение/отмена | DealDetails (DealActions: confirm/reject/cancel/start/complete) | ✅ |
+| 13 | Чат | Chat (ChatPage) | ✅ |
+| 14 | Уведомления | Notifications (NotificationsPage) | ✅ |
+| 15 | Отслеживание сделки | DealDetails (DealProcessStepper, DealConditions, statuses) | ✅ |
+| 16 | Подтверждение возврата | DealDetails (кнопка «Подтвердить завершение» → useCompleteDeal) | ✅ |
+| 17 | Отзыв | Reviews (ReviewsPage) | ✅ |
+| 18 | Жалоба | Catalog (ListingReportModal), PublicProfile (ReportModal) | ✅ |
+
+**Покрытие сценариев модератора (8 штук):**
+
+| № | Сценарий | Фича-модуль UI |
+|---|---|---|
+| 1-4 | Модерация объявлений | Moderator (ModerationQueueTab) |
+| 5-6 | Жалобы | Moderator (ComplaintsTab) |
+| 7 | История действий | Admin (ActivityLogTab) |
+| 8 | Контроль нарушений | Moderator (ReviewsModerationTab) |
+
+**Покрытие сценариев администратора (9 штук):**
+
+| № | Сценарий | Фича-модуль UI |
+|---|---|---|
+| 1-3 | Пользователи | Admin (UsersTab) |
+| 4 | Права доступа | Admin (SettingsTab) |
+| 5 | Системные параметры | Admin (SettingsTab) |
+| 6 | Логи | Admin (ActivityLogTab) |
+| 7 | Инциденты | Admin (DashboardTab) |
+| 8 | Контроль модераторов | Admin (ActivityLogTab) |
+| 9 | Правила платформы | Admin (SettingsTab) |
+
+**6.24. Подробная архитектура модуля DealDetails — для диаграммы компонентов**
+
+Для построения Component Diagram модуля DealDetails:
+
+```
+DealDetailsPage (корневой)
+├── imports DealImage ─── uses: styles.imageWrap, styles.statusBadge
+├── imports DealProcessStepper ─── uses: getDealSteps(), getStatusMessage()
+├── imports DealConditions ─── uses: formatDealDate(), formatDealPrice()
+├── imports DealParticipant ─── uses: ChevronRight (lucide-react)
+├── imports DealReasonBlock ─── conditional render (REJECTED | CANCELLED)
+├── imports DealActions ─── uses: getDealActions(status, viewMode)
+├── imports types from ./types.ts
+├── imports helpers from ./dealDetailsHelpers.ts
+├── imports mock data from ./mockDealDetailsData.ts
+├── imports AnimatePresence, motion from framer-motion
+├── imports ArrowLeft from lucide-react
+├── imports clsx
+└── imports styles from ./DealDetailsPage.module.scss
+      └── @use styles/_base.scss (530 строк)
+      └── @use styles/_responsive.scss
+
+Зависимости от business-слоя:
+├── types.ts imports UiDealStatus from @/ux/types/deal
+└── (future) DealActions callbacks → useConfirmDeal, useRejectDeal, useCancelDeal, useStartDeal, useCompleteDeal from @/business/deals/hooks
+```
 
 ---
 
