@@ -14,7 +14,7 @@
 ### 1.2. Команда и разделение ответственности
 Проект разрабатывается командой из нескольких человек:
 - **Я (frontend UI/UX разработчик)** — отвечаю за `src/ux/`, `src/app/dev-ui/`, `src/app/(info)/`, `src/app/(auth)/`, тестирование UI, дизайн-систему
-- **Бэкенд-разработчик (frontend business layer)** — отвечает за `src/business/`, `src/app/` (SSR-маршрутизация), API-интеграцию, маппёры, Redux store
+- **Бэкенд-разработчик (frontend business layer)** — отвечает за `src/business/`, `src/app/` (SSR-маршрутизация, кроме `(info)/`, `(auth)/`, `dev-ui/`), API-интеграцию, маппёры, Redux store
 - **Backend (серверная часть)** — REST API, база данных, ЮKassa, S3
 
 ### 1.3. Моя зона ответственности (файлы)
@@ -70,7 +70,7 @@ src/test-setup.ts          — настройка тестового окруж�
 - `InfoPages/` (9 файлов) — layout для статических информационных страниц, стили
 - `Moderator/` (18 файлов) — панель модератора: 4 вкладки (ModerationQueueTab, ComplaintsTab, ReviewsModerationTab, ActivityLogTab), хуки (useModerationQueue, useComplaints, useReviewsModeration, useModeratorActivityLog), моки, утилиты, типы
 - `Notifications/` (13 файлов) — центр уведомлений с вкладками, 18 типов уведомлений, компоненты, хуки, стили
-- `Payment/` (13 файлов) — страница оплаты аренды через ЮKassa. Включает: PaymentPage (корневой компонент), 3 вложенных компонента (PaymentStatusCard, PaymentSummary, PaymentActions, PaymentSkeleton), хук usePaymentFlow (RTK Query polling каждые 5 сек для статусов PENDING/AUTHORIZED), paymentHelpers.ts (маппинг PaymentStatus → PaymentUiState с 5 статусами + error, форматирование суммы), types.ts (PaymentUiStatus — 7 UI-статусов: pending/processing/authorized/captured/canceled/refunded/error, PaymentUiColor, PaymentUiState), mockPaymentData.ts, стили (_base.scss, _responsive.scss)
+- `Payment/` (13 файлов) — страница оплаты аренды через ЮKassa. Включает: PaymentPage (корневой компонент), 4 вложенных компонента (PaymentStatusCard, PaymentSummary, PaymentActions, PaymentSkeleton), хук usePaymentFlow (RTK Query polling каждые 5 сек для статусов PENDING/AUTHORIZED), paymentHelpers.ts (маппинг PaymentStatus → PaymentUiState с 5 статусами + error, форматирование суммы), types.ts (PaymentUiStatus — 7 UI-статусов: pending/processing/authorized/captured/canceled/refunded/error, PaymentUiColor, PaymentUiState), mockPaymentData.ts, стили (_base.scss, _responsive.scss)
 - `Profile/` (26 файлов) — личный кабинет: ProfileDashboard (статистика, объявления, бронирования), EditListing, MyListingDetail, DealsPanel, ListingsPanel, AvailabilityCalendar, DashboardSkeleton, VerifyChip, EmptyState, TabBtn, компоненты, хуки, стили, хелперы, тесты
 - `PublicProfile/` (19 файлов) — публичный профиль пользователя: листинги, отзывы, уровень доверия, UserSidebar, RatingBreakdownPanel, PublicReviewCard, ReportModal, ProfileSkeleton
 - `Reviews/` (13 файлов) — система отзывов: полученные/оставленные, фильтры, рейтинговый breakdown, ReviewCard, RatingSummary
@@ -115,7 +115,7 @@ src/test-setup.ts          — настройка тестового окруж�
 - `SiteHeader/` (2 файла) — CatalogHeader (201 строка) — глобальная шапка с навигацией, иконками (избранное, уведомления, чат, профиль), выпадающее меню, логотип
 - `SiteFooter/` (2 файла) — CatalogFooter (126 строк) — глобальный футер с навигацией, контактами, ссылками
 
-**src/app/dev-ui/** — 15 маршрутов демо-версии:
+**src/app/dev-ui/** — 17 маршрутов демо-версии:
 - `/dev-ui` → каталог
 - `/dev-ui/admin` → админ-панель
 - `/dev-ui/chat` → чат
@@ -136,6 +136,25 @@ src/test-setup.ts          — настройка тестового окруж�
 - `error.tsx` — страница ошибки для всего /dev-ui (Next.js error boundary с кнопкой «Попробовать снова»)
 - `layout.tsx` — layout обёртка (импортирует dev-ui-filters.css)
 - `dev-ui-filters.css` — глобальные CSS-фильтры для dev-ui
+
+**src/app/(info)/** — 11 контентных информационных страниц:
+Все страницы используют `InfoPageLayout` и стили из `@/ux/features/InfoPages/InfoPage.module.scss`, иконки Lucide React.
+- `/about` — О компании (ценности, команда, статистика, экологический вклад)
+- `/business` — Для бизнеса
+- `/careers` — Карьера
+- `/contacts` — Контакты
+- `/cookies` — Политика cookies
+- `/help` — Помощь
+- `/how-it-works` — Как это работает (4 шага аренды)
+- `/pricing` — Тарифы
+- `/privacy` — Политика конфиденциальности
+- `/safety` — Безопасность
+- `/terms` — Условия использования
+
+**src/app/(auth)/** — 3 файла страниц авторизации:
+- `layout.tsx` — обёртка, использует `AuthLayout` из `@/ux/layouts/AuthLayout`
+- `login/page.tsx` — страница входа, рендерит `LoginForm` из `@/ux/components`
+- `register/page.tsx` — страница регистрации, рендерит `RegisterForm` из `@/ux/components`
 
 **Тестирование (10 тестовых файлов, 176 тестов):**
 Все тесты централизованы в `src/ux/__tests__/` с зеркалированием структуры исходного кода:
@@ -236,6 +255,12 @@ src/test-setup.ts          — настройка тестового окруж�
 - Пакеты: components, features (15 модулей), hooks, utils, types, styles, layouts
 - Зависимости между пакетами
 
+**3.2.1. Диаграмма классов UI-компонентов (Class Diagram)**
+- Классы: компоненты React (props-интерфейсы, методы, состояния)
+- Показать иерархию: shared-компоненты (AppInput, Tabs, ErrorBoundary) → фича-компоненты (CatalogCard, DealActions, PaymentStatusCard)
+- Типы данных: UiDealStatus, PaymentUiStatus, CatalogItem, DealDetailsData
+- Связи: композиция (родитель→дочерний), зависимость (импорт типов/хуков)
+
 **3.3. Диаграммы состояний (State Diagrams) — ВАЖНО для ВКР**
 Нужны для следующих сущностей (все отображаются в моём UI):
 - Объявление: DRAFT → MODERATION → ACTIVE/REJECTED → ARCHIVED → DELETED
@@ -311,8 +336,8 @@ src/test-setup.ts          — настройка тестового окруж�
 ### Пункт 5: Метрики проекта (моя зона)
 
 Верифицированные метрики (посчитаны автоматизированно):
-- **Общее количество файлов:** 394 (376 в `src/ux/` + 18 в `src/app/dev-ui/`)
-- **React-компоненты (*.tsx):** 139 (122 в ux + 17 в dev-ui)
+- **Общее количество файлов:** 408 (376 в `src/ux/` + 18 в `src/app/dev-ui/` + 11 в `src/app/(info)/` + 3 в `src/app/(auth)/`)
+- **React-компоненты (*.tsx):** 153 (122 в ux + 17 в dev-ui + 11 в (info) + 3 в (auth))
 - **Файлы стилей (*.scss):** 132
 - **TypeScript-модули (*.ts):** 118
 - **Общее количество строк кода:** ~64 500 (~64 000 в ux + ~500 в dev-ui)
@@ -373,13 +398,12 @@ src/test-setup.ts          — настройка тестового окруж�
 **6.7. Безопасность на frontend**
 - Валидация форм (React Hook Form + Zod)
 - Маска ввода телефона (phoneMask)
-- CSRF-защита через next-auth
-- Разделение ролей в UI (гость/клиент/модератор/админ)
+- Разделение ролей в UI (гость/клиент/модератор/админ) — контекстные кнопки и маршруты по роли пользователя
 
 **6.8. Интеграция с внешними сервисами**
 - ЮKassa (платёжный шлюз) — UI статусов транзакций
 - Amazon S3 — загрузка фото (presigned URLs)
-- Socket.IO — real-time чат
+- Socket.IO — UI чата с подготовкой к real-time интеграции через Socket.IO (сокет-интеграция — зона business-слоя)
 
 **6.9. Темизация (Dark/Light mode)**
 - Реализован `ThemeContext` (React Context API) с `ThemeProvider` и хуком `useTheme`
@@ -412,7 +436,10 @@ src/test-setup.ts          — настройка тестового окруж�
 
 Опиши рекомендуемую структуру отчёта на основе моей работы:
 1. Введение (актуальность, цель, задачи, объект/предмет исследования)
-2. Аналитическая часть (обзор аналогов, выбор технологий с обоснованием)
+   - Задачи работы (5–7 конкретных): напр., анализ предметной области, проектирование архитектуры UI, разработка дизайн-системы, реализация 15 фича-модулей, тестирование, интеграция с бэкендом
+2. Аналитическая часть
+   - Обзор аналогов (Авито, Rentmania, Fat Llama, Getaround — сравнить по функционалу, UX, монетизации)
+   - Выбор технологий с обоснованием (почему React, а не Vue/Angular; почему SCSS Modules, а не Tailwind/styled-components)
 3. Проектная часть (архитектура, диаграммы, дизайн-система, структура компонентов)
 4. Практическая часть (реализация: описание каждого модуля, скриншоты, листинги кода)
 5. Тестирование (стратегия, инструменты, результаты, таблица тестов)
@@ -488,8 +515,8 @@ Feature/
 ├── types.ts                 — типы фичи
 ├── mock*.ts                 — мок-данные
 ├── *Helpers.ts              — вспомогательные функции
-├── __tests__/               — тесты (при наличии)
 └── index.ts                 — barrel export
+Тесты хранятся централизованно в src/ux/__tests__/ с зеркальной структурой.
 ```
 
 **6.17. Полная сводка по подструктурам фича-модулей**
@@ -543,6 +570,19 @@ Feature/
 | `/dev-ui/user/[id]` | Публичный профиль | Все |
 | `/dev-ui/moderator` | Панель модератора | Модератор |
 | `/dev-ui/admin` | Панель администратора | Администратор |
+| `/login` | Вход в систему | Гость |
+| `/register` | Регистрация | Гость |
+| `/about` | О компании | Все |
+| `/how-it-works` | Как это работает | Все |
+| `/terms` | Условия использования | Все |
+| `/privacy` | Политика конфиденциальности | Все |
+| `/safety` | Безопасность | Все |
+| `/help` | Помощь | Все |
+| `/contacts` | Контакты | Все |
+| `/pricing` | Тарифы | Все |
+| `/careers` | Карьера | Все |
+| `/business` | Для бизнеса | Все |
+| `/cookies` | Политика cookies | Все |
 
 **6.20. Подробная архитектура модуля DealDetails (14 файлов)**
 
@@ -707,6 +747,8 @@ Payment/
 | 9 | Правила платформы | Admin (SettingsTab) |
 
 **6.24. Подробная архитектура модуля DealDetails — для диаграммы компонентов**
+
+Примечание: дополняет раздел 6.20 деревом импортов для построения Component Diagram.
 
 Для построения Component Diagram модуля DealDetails:
 
