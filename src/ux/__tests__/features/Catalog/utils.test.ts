@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { CatalogUiItem, CatalogFilterState } from '../types';
+import type { CatalogUiItem, CatalogFilterState } from '@/ux/features/Catalog/types';
 import {
   formatDepositAmount,
   getAnnouncementsLabel,
@@ -12,7 +12,7 @@ import {
   searchParamsToFilters,
   getFilterSummaryItems,
   INITIAL_FILTERS,
-} from '../utils';
+} from '@/ux/features/Catalog/utils';
 
 /* ─── Helpers ─── */
 

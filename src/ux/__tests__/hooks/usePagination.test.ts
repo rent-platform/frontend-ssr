@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { usePagination } from '../usePagination';
+import { usePagination } from '@/ux/hooks/usePagination';
 
 const items = Array.from({ length: 25 }, (_, i) => `item-${i + 1}`);
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { pluralize } from '../pluralize';
+import { pluralize } from '@/ux/utils/pluralize';
 
 describe('pluralize', () => {
   const forms = ['отзыв', 'отзыва', 'отзывов'] as const;

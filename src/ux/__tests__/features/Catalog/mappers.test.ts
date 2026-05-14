@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { CatalogItemCardVM } from '@/business/ads/types';
-import { mapCardVMtoUiItem, mapCardVMsToUiItems } from '../mappers';
+import { mapCardVMtoUiItem, mapCardVMsToUiItems } from '@/ux/features/Catalog/mappers';
 
 const makeVM = (overrides: Partial<CatalogItemCardVM> = {}): CatalogItemCardVM => ({
   id: 'vm-1',

@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import type { PublicListing, PublicUser } from '../types';
+import type { PublicListing, PublicUser } from '@/ux/features/PublicProfile/types';
 import {
   publicListingToCatalogItem,
   TRUST_LABELS,
   RATING_DISTRIBUTION,
-} from '../publicProfileHelpers';
+} from '@/ux/features/PublicProfile/publicProfileHelpers';
 
 const mockUser: PublicUser = {
   id: 'user-1',

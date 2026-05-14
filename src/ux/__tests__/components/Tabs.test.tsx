@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Tabs, type TabsItem } from '../Tabs/Tabs';
+import { Tabs, type TabsItem } from '@/ux/components/Tabs/Tabs';
 
 const items: TabsItem<'one' | 'two' | 'three'>[] = [
   { value: 'one', label: 'Первый' },

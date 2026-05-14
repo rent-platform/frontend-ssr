@@ -10,8 +10,8 @@ import {
   LISTING_FILTERS,
   BOOKING_FILTERS,
   ITEM_STATUS_MAP,
-} from '../profileHelpers';
-import type { ProfileUser, ProfileListing } from '../types';
+} from '@/ux/features/Profile/profileHelpers';
+import type { ProfileUser, ProfileListing } from '@/ux/features/Profile/types';
 
 const makeProfileListing = (overrides: Partial<ProfileListing> = {}): ProfileListing => ({
   id: 'item-001',

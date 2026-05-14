@@ -12,7 +12,7 @@ import {
   formatDateTime,
   formatDateTimeFull,
   getInitials,
-} from '../format';
+} from '@/ux/utils/format';
 
 describe('formatPrice', () => {
   it('возвращает "По запросу" при null', () => {

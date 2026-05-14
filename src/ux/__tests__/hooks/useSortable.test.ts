@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useSortable } from '../useSortable';
+import { useSortable } from '@/ux/hooks/useSortable';
 
 type Item = { name: string; price: number };
 
