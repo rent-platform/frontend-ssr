@@ -1,5 +1,6 @@
 'use client';
 
+import { ChevronRight } from 'lucide-react';
 import type { DealParticipantInfo } from '../types';
 import styles from '../DealDetailsPage.module.scss';
 
@@ -22,6 +23,7 @@ export function DealParticipant({ participant }: DealParticipantProps) {
         <span className={styles.participantRole}>{roleLabel}</span>
         <span className={styles.participantName}>{participant.name}</span>
       </div>
+      <ChevronRight size={18} className={styles.participantArrow} />
     </div>
   );
 }

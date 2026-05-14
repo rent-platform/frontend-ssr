@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import clsx from 'clsx';
 import type { DealDetailsPageProps } from './types';
@@ -45,12 +45,14 @@ export function DealDetailsPage({ dealId }: DealDetailsPageProps) {
         <span className={styles.headerTitle}>Детали сделки</span>
       </header>
 
+      <AnimatePresence mode="wait">
       <motion.div
         key={scenarioIndex}
         className={styles.content}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.25 }}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <DealImage
           imageUrl={deal.imageUrl}
@@ -98,6 +100,7 @@ export function DealDetailsPage({ dealId }: DealDetailsPageProps) {
           onChat={handleChat}
         />
       </motion.div>
+      </AnimatePresence>
 
       <div className={styles.demoSwitcher}>
         <span className={styles.demoSwitcherLabel}>Demo: сценарии сделки</span>

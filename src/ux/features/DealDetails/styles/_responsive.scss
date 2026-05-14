@@ -1,21 +1,6 @@
 @use '../../../styles/vars' as *;
 @use '../../../styles/helpers/mixins' as *;
 
-@include respond-to('md') {
-  .content {
-    margin-top: $space-4;
-    border-radius: $radius-xl;
-    overflow: hidden;
-    box-shadow: $shadow-premium;
-    min-height: auto;
-    margin-bottom: $space-8;
-  }
-
-  .demoSwitcher {
-    margin-bottom: $space-8;
-  }
-}
-
 @include mobile {
   .header {
     padding: $space-3 $space-4;
@@ -23,32 +8,40 @@
 
   .content {
     max-width: 100%;
+    margin-top: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .titleSection {
-    padding: $space-4 $space-4 $space-3;
+    padding: $space-5 $space-5 $space-3;
   }
 
   .section {
-    padding: 0 $space-4 $space-4;
+    padding: $space-4 $space-5;
+  }
+
+  .divider {
+    margin: 0 $space-5;
   }
 
   .participant {
-    padding: $space-3 $space-4;
+    padding: $space-4 $space-5;
   }
 
   .reasonBlock {
-    margin: 0 $space-4 $space-3;
+    margin: 0 $space-5 $space-3;
   }
 
   .actions {
-    padding: $space-3 $space-4 $space-5;
+    padding: $space-4 $space-5 $space-6;
   }
 
   .demoSwitcher {
     max-width: 100%;
-    margin: $space-3 $space-4 0;
+    margin: $space-3 $space-4 $space-6;
     border-radius: $radius-lg;
+    padding: $space-4 $space-5;
   }
 
   .demoGrid {

@@ -33,7 +33,7 @@ export function DealConditions({
       <h3 className={styles.sectionTitle}>Условия сделки</h3>
       <div className={styles.conditionsGrid}>
         {rows.map((row) => (
-          <div key={row.label} style={{ display: 'contents' }}>
+          <div key={row.label} className={styles.conditionRow}>
             <span className={styles.conditionLabel}>{row.label}</span>
             <span className={styles.conditionValue}>{row.value}</span>
           </div>

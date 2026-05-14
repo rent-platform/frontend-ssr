@@ -4,16 +4,21 @@
 // ─── Page ────────────────────────────────────────────────────────────────────
 .page {
   min-height: 100dvh;
-  background: $color-surface-muted;
+  background: linear-gradient(168deg, #f0fdf4 0%, #f8fafc 40%, #f1f5f9 100%);
   font-family: $font-family-base;
 }
 
 // ─── Header ──────────────────────────────────────────────────────────────────
 .header {
   @include flex-between;
-  padding: $space-4 $space-6;
-  background: $color-surface;
-  border-bottom: 1px solid $color-border;
+  padding: $space-3 $space-5;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky;
 }
 
 .backButton {
@@ -24,103 +29,146 @@
   border: none;
   cursor: pointer;
   font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-  color: $color-text;
+  font-weight: $font-weight-600;
+  color: $color-primary;
   padding: $space-2 $space-3;
   border-radius: $radius-md;
-  transition: $transition-base;
+  transition: $transition-smooth;
 
   &:hover {
-    background: $color-surface-muted;
+    background: $color-green-50;
   }
 }
 
 .headerTitle {
   font-family: $font-family-display;
-  font-size: $font-size-base;
-  font-weight: $font-weight-600;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
   color: $color-text;
+  letter-spacing: -0.01em;
 }
 
 // ─── Content ─────────────────────────────────────────────────────────────────
 .content {
   max-width: 480px;
-  margin: 0 auto;
+  margin: $space-4 auto 0;
   background: $color-surface;
-  min-height: calc(100dvh - 57px);
+  border-radius: $radius-xl;
+  overflow: hidden;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 6px 24px rgba(0, 0, 0, 0.06);
 }
 
 // ─── Deal image ──────────────────────────────────────────────────────────────
 .imageWrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: $color-surface-muted;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.35), transparent);
+    pointer-events: none;
+  }
 }
 
 .image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.6s ease;
+
+  .imageWrap:hover & {
+    transform: scale(1.03);
+  }
 }
 
 .statusBadge {
   position: absolute;
-  top: $space-3;
-  left: $space-3;
-  padding: $space-1 $space-3;
-  border-radius: $radius-sm;
+  top: $space-4;
+  left: $space-4;
+  padding: 6px $space-4;
+  border-radius: $radius-full;
   font-size: $font-size-xs;
-  font-weight: $font-weight-600;
+  font-weight: $font-weight-bold;
   color: $color-text-inverse;
-  line-height: 1.4;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  z-index: 2;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .statusBadge--green {
-  background: $color-primary;
+  background: rgba(34, 197, 94, 0.9);
 }
 
 .statusBadge--red {
-  background: $color-secondary;
+  background: rgba(244, 63, 94, 0.9);
 }
 
 // ─── Title section ───────────────────────────────────────────────────────────
 .titleSection {
-  padding: $space-5 $space-5 $space-4;
+  padding: $space-6 $space-6 $space-4;
 }
 
 .dealTitle {
   font-family: $font-family-display;
-  font-size: $font-size-lg;
+  font-size: $font-size-xl;
   font-weight: $font-weight-bold;
   color: $color-text;
   margin: 0 0 $space-1;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
 }
 
 .dealSubtitle {
   font-size: $font-size-sm;
   color: $color-text-secondary;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: $radius-full;
+    background: $color-primary;
+    flex-shrink: 0;
+  }
 }
 
 // ─── Section containers ──────────────────────────────────────────────────────
 .section {
-  padding: 0 $space-5 $space-5;
+  padding: $space-5 $space-6;
 }
 
 .sectionTitle {
   font-family: $font-family-display;
-  font-size: $font-size-sm;
+  font-size: $font-size-xs;
   font-weight: $font-weight-bold;
-  color: $color-text;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   margin: 0 0 $space-4;
 }
 
 .divider {
   border: none;
-  border-top: 1px solid $color-border;
-  margin: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  margin: 0 $space-6;
 }
 
 // ─── Stepper ─────────────────────────────────────────────────────────────────
@@ -132,9 +180,9 @@
 
 .step {
   display: flex;
-  gap: $space-3;
+  gap: $space-4;
   position: relative;
-  padding-bottom: $space-4;
+  padding-bottom: $space-5;
 
   &:last-child {
     padding-bottom: 0;
@@ -150,24 +198,26 @@
 
 .stepCircle {
   @include flex-center;
-  @include square(28px);
+  @include square(32px);
   border-radius: $radius-full;
   font-size: $font-size-xs;
   font-weight: $font-weight-bold;
   flex-shrink: 0;
   position: relative;
   z-index: 1;
+  transition: $transition-smooth;
 }
 
 .stepCircle--active {
-  background: $color-primary;
+  background: $gradient-green;
   color: $color-text-inverse;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
 }
 
 .stepCircle--inactive {
-  background: $color-surface-muted;
-  color: $color-text-secondary;
-  border: 1px solid $color-border;
+  background: $color-surface;
+  color: $color-text-muted;
+  border: 2px solid $color-border;
 }
 
 .stepLine {
@@ -175,10 +225,11 @@
   flex: 1;
   min-height: 8px;
   margin-top: $space-1;
+  border-radius: 1px;
 }
 
 .stepLine--active {
-  background: $color-primary;
+  background: linear-gradient(to bottom, $color-primary, rgba(34, 197, 94, 0.3));
 }
 
 .stepLine--inactive {
@@ -186,7 +237,7 @@
 }
 
 .stepContent {
-  padding-top: $space-1;
+  padding-top: 4px;
   flex: 1;
   min-width: 0;
 }
@@ -196,30 +247,45 @@
   font-weight: $font-weight-600;
   color: $color-text;
   margin: 0 0 2px;
+  line-height: 1.4;
 }
 
 .stepDescription {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: $color-text-muted;
   margin: 0;
-  line-height: $line-height-normal;
+  line-height: $line-height-loose;
 }
 
 // ─── Status message ──────────────────────────────────────────────────────────
 .statusMessage {
+  margin: $space-4 0 0;
+  padding: $space-3 $space-4;
+  background: $color-green-50;
+  border-radius: $radius-md;
   font-size: $font-size-sm;
-  color: $color-text-secondary;
+  color: darken($color-primary, 18%);
   line-height: $line-height-normal;
-  margin: 0;
-  padding: $space-3 0 0;
+  border-left: 3px solid $color-primary;
 }
 
 // ─── Conditions ──────────────────────────────────────────────────────────────
 .conditionsGrid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: $space-2 $space-5;
-  align-items: baseline;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.conditionRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $space-2 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.06);
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .conditionLabel {
@@ -230,7 +296,7 @@
 
 .conditionValue {
   font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
+  font-weight: $font-weight-600;
   color: $color-text;
   text-align: right;
 }
@@ -239,43 +305,59 @@
 .participant {
   display: flex;
   align-items: center;
-  gap: $space-3;
-  padding: $space-4 $space-5;
+  gap: $space-4;
+  padding: $space-5 $space-6;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: rgba($color-primary, 0.03);
+  }
 }
 
 .participantAvatar {
   @include flex-center;
-  @include square(40px);
+  @include square(44px);
   border-radius: $radius-full;
   font-size: $font-size-sm;
   font-weight: $font-weight-bold;
   color: $color-text-inverse;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .participantInfo {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
+  flex: 1;
 }
 
 .participantRole {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: $color-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: $font-weight-medium;
 }
 
 .participantName {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
+  font-size: $font-size-base;
+  font-weight: $font-weight-600;
   color: $color-text;
+}
+
+.participantArrow {
+  color: $color-text-muted;
+  flex-shrink: 0;
 }
 
 // ─── Reason block ────────────────────────────────────────────────────────────
 .reasonBlock {
-  margin: 0 $space-5 $space-4;
-  padding: $space-4;
-  background: rgba($color-secondary, 0.06);
-  border-radius: $radius-md;
+  margin: 0 $space-6 $space-4;
+  padding: $space-4 $space-5;
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.05), rgba(244, 63, 94, 0.02));
+  border-radius: $radius-lg;
   border-left: 3px solid $color-secondary;
 }
 
@@ -284,13 +366,15 @@
   font-weight: $font-weight-bold;
   color: $color-secondary;
   margin: 0 0 $space-2;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .reasonText {
   font-size: $font-size-sm;
   color: $color-text;
   margin: 0;
-  line-height: $line-height-normal;
+  line-height: $line-height-loose;
 }
 
 // ─── Actions ─────────────────────────────────────────────────────────────────
@@ -298,7 +382,7 @@
   display: flex;
   flex-direction: column;
   gap: $space-3;
-  padding: $space-4 $space-5 $space-6;
+  padding: $space-5 $space-6 $space-8;
 }
 
 .btnGreen {
@@ -307,23 +391,27 @@
   justify-content: center;
   gap: $space-2;
   width: 100%;
-  padding: $space-4;
+  padding: 14px $space-5;
   font-size: $font-size-base;
-  font-weight: $font-weight-600;
+  font-weight: $font-weight-bold;
+  font-family: $font-family-base;
   color: $color-text-inverse;
   background: $gradient-green;
   border: none;
-  border-radius: $radius-lg;
+  border-radius: $radius-xl;
   cursor: pointer;
-  transition: $transition-base;
+  transition: $transition-smooth;
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.25);
+  letter-spacing: -0.01em;
 
   &:hover {
-    box-shadow: $shadow-green-md;
-    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35);
+    transform: translateY(-2px);
   }
 
   &:active {
     transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
   }
 }
 
@@ -334,16 +422,17 @@
   width: 100%;
   padding: $space-3;
   font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
+  font-weight: $font-weight-600;
+  font-family: $font-family-base;
   color: $color-secondary;
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: $transition-base;
+  transition: $transition-smooth;
+  border-radius: $radius-lg;
 
   &:hover {
-    background: rgba($color-secondary, 0.05);
-    border-radius: $radius-md;
+    background: rgba($color-secondary, 0.06);
   }
 }
 
@@ -353,39 +442,45 @@
   justify-content: center;
   gap: $space-2;
   width: 100%;
-  padding: $space-3;
+  padding: 12px $space-5;
   font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-  color: $color-text-secondary;
-  background: transparent;
-  border: 1px solid $color-border;
-  border-radius: $radius-lg;
+  font-weight: $font-weight-600;
+  font-family: $font-family-base;
+  color: $color-text;
+  background: $color-surface;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-xl;
   cursor: pointer;
-  transition: $transition-base;
+  transition: $transition-smooth;
 
   &:hover {
-    background: $color-surface-muted;
-    color: $color-text;
+    border-color: rgba(34, 197, 94, 0.3);
+    background: $color-green-50;
+    color: darken($color-primary, 10%);
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
   }
 }
 
 // ─── Demo switcher ───────────────────────────────────────────────────────────
 .demoSwitcher {
   max-width: 480px;
-  margin: $space-4 auto 0;
-  background: $color-surface;
+  margin: $space-5 auto $space-8;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: $radius-xl;
-  padding: $space-4 $space-5;
-  box-shadow: $shadow-card;
+  padding: $space-5 $space-6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .demoSwitcherLabel {
   display: block;
-  font-size: $font-size-xs;
-  font-weight: $font-weight-600;
-  color: $color-text-secondary;
+  font-size: 10px;
+  font-weight: $font-weight-bold;
+  color: $color-text-muted;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   margin-bottom: $space-3;
 }
 
@@ -399,26 +494,29 @@
   padding: $space-2 $space-1;
   font-size: 11px;
   font-weight: $font-weight-medium;
-  border-radius: $radius-sm;
+  font-family: $font-family-base;
+  border-radius: $radius-md;
   border: 1px solid $color-border;
   background: $color-surface;
   color: $color-text-secondary;
   cursor: pointer;
-  transition: $transition-base;
+  transition: $transition-smooth;
   text-align: center;
   line-height: 1.3;
 
   &:hover {
-    border-color: $color-primary;
+    border-color: rgba(34, 197, 94, 0.4);
     color: $color-primary;
+    background: $color-green-50;
   }
 }
 
 .demoBtnActive {
   background: $color-green-50;
   border-color: $color-primary;
-  color: $color-primary;
-  font-weight: $font-weight-600;
+  color: darken($color-primary, 8%);
+  font-weight: $font-weight-bold;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.15);
 }
 
 // ─── Skeleton ────────────────────────────────────────────────────────────────
