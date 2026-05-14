@@ -13,7 +13,7 @@
 
 ### 1.2. Команда и разделение ответственности
 Проект разрабатывается командой из нескольких человек:
-- **Я (frontend UI/UX разработчик)** — отвечаю за `src/ux/`, `src/app/dev-ui/`, тестирование UI, дизайн-систему
+- **Я (frontend UI/UX разработчик)** — отвечаю за `src/ux/`, `src/app/dev-ui/`, `src/app/(info)/`, `src/app/(auth)/`, тестирование UI, дизайн-систему
 - **Бэкенд-разработчик (frontend business layer)** — отвечает за `src/business/`, `src/app/` (SSR-маршрутизация), API-интеграцию, маппёры, Redux store
 - **Backend (серверная часть)** — REST API, база данных, ЮKassa, S3
 
@@ -21,6 +21,8 @@
 ```
 src/ux/                    — 373 файла (компоненты, фичи, стили, утилиты, хуки, типы, тесты)
 src/app/dev-ui/            — 18 файлов (страницы маршрутизации, демо-версия)
+src/app/(info)/            — 11 файлов (контентные информационные страницы)
+src/app/(auth)/            — 3 файла (страницы авторизации: layout, login, register)
 vitest.config.ts           — конфигурация тестов
 src/test-setup.ts          — настройка тестового окружения
 ```
@@ -87,8 +89,7 @@ src/test-setup.ts          — настройка тестового окруж�
 - `pluralize.ts` — русская плюрализация (выбор формы слова по числу, учёт исключений 11-19)
 - `constants.ts` — общие константы (EASE — кривая анимации Framer Motion)
 - `routes.ts` — централизованная карта маршрутов (ROUTES — все пути приложения: catalog, chat, profile, listing(id), publicProfile(id) и др.)
-- `ThemeContext.tsx` — реэкспорт ThemeProvider и useTheme из contexts
-- `useFocusTrap.ts` — реэкспорт useFocusTrap из hooks (для удобства импорта)
+- `ThemeContext.tsx` — реэкспорт ThemeProvider и useTheme из contexts (временная обёртка для совместимости с providers.tsx)
 - `index.ts` — barrel export
 
 **src/ux/contexts/** — React-контексты:
@@ -137,16 +138,17 @@ src/test-setup.ts          — настройка тестового окруж�
 - `dev-ui-filters.css` — глобальные CSS-фильтры для dev-ui
 
 **Тестирование (10 тестовых файлов, 176 тестов):**
-- `src/ux/utils/__tests__/format.test.ts` — 38 тестов
-- `src/ux/utils/__tests__/pluralize.test.ts` — 15 тестов
-- `src/ux/features/Catalog/__tests__/utils.test.ts` — 43 теста
-- `src/ux/features/Catalog/__tests__/mappers.test.ts` — 8 тестов
-- `src/ux/features/PublicProfile/__tests__/publicProfileHelpers.test.ts` — 13 тестов
-- `src/ux/features/Profile/__tests__/profileHelpers.test.ts` — 20 тестов
-- `src/ux/components/__tests__/Tabs.test.tsx` — 7 тестов
-- `src/ux/components/__tests__/ErrorBoundary.test.tsx` — 5 тестов
-- `src/ux/hooks/__tests__/usePagination.test.ts` — 17 тестов
-- `src/ux/hooks/__tests__/useSortable.test.ts` — 10 тестов
+Все тесты централизованы в `src/ux/__tests__/` с зеркалированием структуры исходного кода:
+- `src/ux/__tests__/utils/format.test.ts` — 38 тестов
+- `src/ux/__tests__/utils/pluralize.test.ts` — 15 тестов
+- `src/ux/__tests__/features/Catalog/utils.test.ts` — 43 теста
+- `src/ux/__tests__/features/Catalog/mappers.test.ts` — 8 тестов
+- `src/ux/__tests__/features/PublicProfile/publicProfileHelpers.test.ts` — 13 тестов
+- `src/ux/__tests__/features/Profile/profileHelpers.test.ts` — 20 тестов
+- `src/ux/__tests__/components/Tabs.test.tsx` — 7 тестов
+- `src/ux/__tests__/components/ErrorBoundary.test.tsx` — 5 тестов
+- `src/ux/__tests__/hooks/usePagination.test.ts` — 17 тестов
+- `src/ux/__tests__/hooks/useSortable.test.ts` — 10 тестов
 
 ---
 
@@ -446,7 +448,7 @@ src/test-setup.ts          — настройка тестового окруж�
 - `styles/` (8 SCSS-файлов) — _base, _catalog-grid-and-cards, _detail-and-booking, _header, _hero-and-category, _responsive, _search-and-filters, _states-and-skeletons
 - `mappers.ts` — маппинг VM в UI-типы
 - `utils.ts` — CATEGORY_OPTIONS, applyCatalogFilters, formatPrice, filtersToSearchParams и др.
-- `__tests__/` (2 файла) — 51 тест (utils + mappers)
+- Тесты: 51 тест (utils + mappers) — в `src/ux/__tests__/features/Catalog/`
 
 **Admin (32 файла) — внутренняя структура:**
 - `tabs/` (8 вкладок) — DashboardTab, UsersTab, ListingsTab, DealsTab, FinanceTab, ComplaintsTab, ActivityLogTab, SettingsTab
@@ -464,7 +466,8 @@ src/test-setup.ts          — настройка тестового окруж�
 - `EditListing.tsx` — редактирование объявления
 - `MyListingDetail.tsx` (13K) — детальный просмотр своего объявления
 - `components/` (8 файлов) — DealsPanel, ListingsPanel, AvailabilityCalendar, DashboardSkeleton, VerifyChip, EmptyState, TabBtn
-- `hooks/`, `styles/` (7 SCSS), `profileHelpers.ts`, `__tests__/`
+- `hooks/`, `styles/` (7 SCSS), `profileHelpers.ts`
+- Тесты: 20 тестов — в `src/ux/__tests__/features/Profile/`
 
 **Moderator (18 файлов) — внутренняя структура:**
 - `ModeratorPanel.tsx` — точка входа (4 вкладки: queue, complaints, reviews, activity)
@@ -516,7 +519,7 @@ Feature/
 - `src/test-setup.ts` — импорт @testing-library/jest-dom/vitest
 - npm-скрипты: `test` (watch mode), `test:ci` (single run + coverage)
 - Конвенция: `describe` + `it` с русскоязычными описаниями
-- Паттерн: `__tests__/` рядом с тестируемым кодом
+- Паттерн: централизованная директория `src/ux/__tests__/` с зеркалированием структуры исходного кода
 - Inline моки (не импортируются из mock-файлов фичей)
 
 **6.19. Сводная таблица UI-страниц и ролей доступа**
@@ -577,7 +580,7 @@ DealDetails/
 | REJECTED | 1 (конечное) | — (только чат) | — (только чат) |
 | CANCELLED | 3 (конечное) | — (только чат) | — (только чат) |
 
-**Кнопки → хуки бэкенда (из `src/business/deals/hooks/`):**
+**Кнопки → хуки бэкенда (из `@/business/deals`):**
 
 | Кнопка UI | Хук бизнес-слоя | API-endpoint |
 |---|---|---|
@@ -727,7 +730,7 @@ DealDetailsPage (корневой)
 
 Зависимости от business-слоя:
 ├── types.ts imports UiDealStatus from @/ux/types/deal
-└── (future) DealActions callbacks → useConfirmDeal, useRejectDeal, useCancelDeal, useStartDeal, useCompleteDeal from @/business/deals/hooks
+└── (future) DealActions callbacks → useConfirmDeal, useRejectDeal, useCancelDeal, useStartDeal, useCompleteDeal from @/business/deals
 ```
 
 ---
@@ -748,7 +751,7 @@ DealDetailsPage (корневой)
 
 ## 4. ОГРАНИЧЕНИЯ
 
-- Описывай ТОЛЬКО мою зону ответственности (`src/ux/`, `src/app/dev-ui/`, тесты)
+- Описывай ТОЛЬКО мою зону ответственности (`src/ux/`, `src/app/dev-ui/`, `src/app/(info)/`, `src/app/(auth)/`, тесты)
 - НЕ описывай `src/business/` как свою работу — это зона другого разработчика
 - Можно упоминать `src/business/` как зависимость (импорт типов, хуков)
 - Все цифры и факты должны соответствовать реальному содержимому проекта
