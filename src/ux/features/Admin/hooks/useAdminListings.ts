@@ -93,10 +93,10 @@ export function useAdminListings() {
 
   const restoreFromArchive = useCallback((id: string) => {
     setItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, status: 'ACTIVE' as ItemStatus } : i)),
+      prev.map((i) => (i.id === id ? { ...i, status: 'DRAFT' as ItemStatus } : i)),
     );
     setSelectedItem((prev) =>
-      prev && prev.id === id ? { ...prev, status: 'ACTIVE' as ItemStatus } : prev,
+      prev && prev.id === id ? { ...prev, status: 'DRAFT' as ItemStatus } : prev,
     );
   }, []);
 

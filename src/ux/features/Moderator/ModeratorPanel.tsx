@@ -5,6 +5,7 @@ import { useToast, ToastContainer } from '@/ux/components/Toast';
 import { ModerationQueueTab } from './components/ModerationQueueTab';
 import { ComplaintsTab } from './components/ComplaintsTab';
 import { ReviewsModerationTab } from './components/ReviewsModerationTab';
+import { ActivityLogTab } from './components/ActivityLogTab';
 import type { ModeratorTab } from './types';
 
 export function ModeratorPanel({ activeTab = 'queue' as ModeratorTab }: { activeTab?: ModeratorTab }) {
@@ -25,6 +26,7 @@ export function ModeratorPanel({ activeTab = 'queue' as ModeratorTab }: { active
           {activeTab === 'queue' && <ModerationQueueTab toast={toast.show} />}
           {activeTab === 'complaints' && <ComplaintsTab toast={toast.show} />}
           {activeTab === 'reviews' && <ReviewsModerationTab toast={toast.show} />}
+          {activeTab === 'activity' && <ActivityLogTab />}
         </motion.div>
       </AnimatePresence>
     </div>

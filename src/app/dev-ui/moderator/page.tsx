@@ -5,6 +5,7 @@ import {
   ShieldCheck,
   Flag,
   MessageSquare,
+  ClipboardList,
 } from 'lucide-react';
 import { AdminLayout } from '@/ux/layouts/AdminLayout';
 import type { NavSection } from '@/ux/layouts/AdminLayout';
@@ -18,6 +19,7 @@ const MODERATOR_SECTIONS: NavSection[] = [
       { key: 'queue', label: 'Очередь модерации', icon: ShieldCheck, href: '/dev-ui/moderator', badge: 5 },
       { key: 'complaints', label: 'Жалобы', icon: Flag, href: '/dev-ui/moderator', badge: 3 },
       { key: 'reviews', label: 'Отзывы', icon: MessageSquare, href: '/dev-ui/moderator' },
+      { key: 'activity', label: 'Журнал действий', icon: ClipboardList, href: '/dev-ui/moderator' },
     ],
   },
 ];

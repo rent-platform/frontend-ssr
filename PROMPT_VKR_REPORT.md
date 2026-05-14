@@ -66,7 +66,7 @@ src/test-setup.ts          — настройка тестового окруж�
 - `Favorites/` (14 файлов) — страница избранного (поиск, сортировка, удаление, компоненты, хуки, стили)
 - `Guest/` (20 файлов) — лендинг/гостевой режим (hero, каталог 12 позиций, auth modal, glassmorphism, Framer Motion, компоненты, хуки, стили)
 - `InfoPages/` (9 файлов) — layout для статических информационных страниц, стили
-- `Moderator/` (15 файлов) — панель модератора: ModerationQueueTab, ComplaintsTab, ReviewsModerationTab, хуки, моки, утилиты, типы
+- `Moderator/` (18 файлов) — панель модератора: 4 вкладки (ModerationQueueTab, ComplaintsTab, ReviewsModerationTab, ActivityLogTab), хуки (useModerationQueue, useComplaints, useReviewsModeration, useModeratorActivityLog), моки, утилиты, типы
 - `Notifications/` (13 файлов) — центр уведомлений с вкладками, 18 типов уведомлений, компоненты, хуки, стили
 - `Payment/` (13 файлов) — страница оплаты аренды через ЮKassa. Включает: PaymentPage (корневой компонент), 3 вложенных компонента (PaymentStatusCard, PaymentSummary, PaymentActions, PaymentSkeleton), хук usePaymentFlow (RTK Query polling каждые 5 сек для статусов PENDING/AUTHORIZED), paymentHelpers.ts (маппинг PaymentStatus → PaymentUiState с 5 статусами + error, форматирование суммы), types.ts (PaymentUiStatus — 7 UI-статусов: pending/processing/authorized/captured/canceled/refunded/error, PaymentUiColor, PaymentUiState), mockPaymentData.ts, стили (_base.scss, _responsive.scss)
 - `Profile/` (26 файлов) — личный кабинет: ProfileDashboard (статистика, объявления, бронирования), EditListing, MyListingDetail, DealsPanel, ListingsPanel, AvailabilityCalendar, DashboardSkeleton, VerifyChip, EmptyState, TabBtn, компоненты, хуки, стили, хелперы, тесты
@@ -309,16 +309,16 @@ src/test-setup.ts          — настройка тестового окруж�
 ### Пункт 5: Метрики проекта (моя зона)
 
 Верифицированные метрики (посчитаны автоматизированно):
-- **Общее количество файлов:** 391 (373 в `src/ux/` + 18 в `src/app/dev-ui/`)
-- **React-компоненты (*.tsx):** 138 (121 в ux + 17 в dev-ui)
+- **Общее количество файлов:** 394 (376 в `src/ux/` + 18 в `src/app/dev-ui/`)
+- **React-компоненты (*.tsx):** 139 (122 в ux + 17 в dev-ui)
 - **Файлы стилей (*.scss):** 132
-- **TypeScript-модули (*.ts):** 117
+- **TypeScript-модули (*.ts):** 118
 - **Общее количество строк кода:** ~64 500 (~64 000 в ux + ~500 в dev-ui)
 - **Фича-модулей:** 15
 - **Shared UI-компонентов:** 17
 - **Layout-модулей:** 4 (AuthLayout, AdminLayout, SiteHeader, SiteFooter)
 - **Кастомных хуков (core):** 5 (usePagination, useSortable, useInfiniteScroll, useFocusTrap, useScrollToTop)
-- **Фича-хуков (в features/):** ~24 (9 в Admin, 3 в Moderator, 1 в Payment, по 1 в каждой из остальных 10 фич)
+- **Фича-хуков (в features/):** ~25 (9 в Admin, 4 в Moderator, 1 в Payment, по 1 в каждой из остальных 10 фич)
 - **UI-страниц (маршрутов):** 17 (15 основных + 2 динамических вложенных)
 - **Тестов:** 176
 - **Тестовых файлов:** 10
@@ -466,11 +466,11 @@ src/test-setup.ts          — настройка тестового окруж�
 - `components/` (8 файлов) — DealsPanel, ListingsPanel, AvailabilityCalendar, DashboardSkeleton, VerifyChip, EmptyState, TabBtn
 - `hooks/`, `styles/` (7 SCSS), `profileHelpers.ts`, `__tests__/`
 
-**Moderator (15 файлов) — внутренняя структура:**
-- `ModeratorPanel.tsx` — точка входа
-- `components/` (7 файлов) — ModerationQueueTab, ComplaintsTab, ReviewsModerationTab и др.
-- `hooks/` (3 хука) — хуки модерации
-- `utils.ts`, `types.ts`, `mockModeratorData.ts`
+**Moderator (18 файлов) — внутренняя структура:**
+- `ModeratorPanel.tsx` — точка входа (4 вкладки: queue, complaints, reviews, activity)
+- `components/` (8 файлов) — ModerationQueueTab, ComplaintsTab, ReviewsModerationTab, ActivityLogTab, AdminSelect, Pagination, SortableHeader, TableSkeleton
+- `hooks/` (4 хука) — useModerationQueue, useComplaints (shared с Admin), useReviewsModeration, useModeratorActivityLog
+- `utils.ts`, `types.ts` (ModeratorTab, ModeratorActionType, ModeratorActivityEntry, ModeratorActivityFilter), `mockModeratorData.ts`
 
 **6.16. Паттерн организации фича-модулей**
 
@@ -501,7 +501,7 @@ Feature/
 | Favorites | 14 | 4 | 1 | 5 | — |
 | Guest | 20 | 6 | 1 | 8 | — |
 | InfoPages | 9 | — | — | 6 | — |
-| Moderator | 15 | 7 | 3 | — | — |
+| Moderator | 18 | 8 | 4 | — | — |
 | Notifications | 13 | 2 | 1 | 5 | — |
 | Payment | 13 | 4 | 1 | 2 | — |
 | Profile | 26 | 8 | 1 | 7 | 1 (20 тестов) |
@@ -688,7 +688,7 @@ Payment/
 |---|---|---|
 | 1-4 | Модерация объявлений | Moderator (ModerationQueueTab) |
 | 5-6 | Жалобы | Moderator (ComplaintsTab) |
-| 7 | История действий | Admin (ActivityLogTab) |
+| 7 | История действий | Moderator (ActivityLogTab) |
 | 8 | Контроль нарушений | Moderator (ReviewsModerationTab) |
 
 **Покрытие сценариев администратора (9 штук):**

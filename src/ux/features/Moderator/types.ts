@@ -73,6 +73,36 @@ export type ComplaintComment = {
   createdAt: string;
 };
 
+/* ── Activity log ──────────────────────────────────────────────────────── */
+
+export type ModeratorActionType =
+  | 'listing_approve'
+  | 'listing_reject'
+  | 'complaint_resolve'
+  | 'complaint_dismiss'
+  | 'review_delete'
+  | 'review_clear_flag';
+
+export type ModeratorActivityEntry = {
+  id: string;
+  action: ModeratorActionType;
+  actionLabel: string;
+  targetType: 'listing' | 'complaint' | 'review';
+  targetId: string;
+  targetTitle: string;
+  performedBy: string;
+  performedByName: string;
+  performedAt: string;
+  details?: string;
+};
+
+export type ModeratorActivityFilter = {
+  search: string;
+  action: ModeratorActionType | 'all';
+  dateFrom: string;
+  dateTo: string;
+};
+
 /* ── Moderator tabs ──────────────────────────────────────────────────────── */
 
-export type ModeratorTab = 'queue' | 'complaints' | 'reviews';
+export type ModeratorTab = 'queue' | 'complaints' | 'reviews' | 'activity';
