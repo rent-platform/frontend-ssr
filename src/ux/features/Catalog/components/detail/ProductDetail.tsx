@@ -32,6 +32,7 @@ type ProductDetailProps = {
   onOpenSimilar: (item: CatalogUiItem) => void;
   isGuest?: boolean;
   onAuthRequired?: () => void;
+  initialFavorite?: boolean;
 };
 
 export function ProductDetail({
@@ -41,8 +42,9 @@ export function ProductDetail({
   onOpenSimilar,
   isGuest = false,
   onAuthRequired,
+  initialFavorite = false,
 }: ProductDetailProps) {
-  const [isFav, setIsFav] = useState(false);
+  const [isFav, setIsFav] = useState(initialFavorite);
 
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.createdAt);

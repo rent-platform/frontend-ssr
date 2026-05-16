@@ -18,6 +18,7 @@ export type OwnerShortResponseDto = {
   nickname?: string | null;
   avatarUrl?: string | null;
   rating?: number | null;
+  overallRating?: number | null;
 };
 
 export type CategoryResponseDto = {

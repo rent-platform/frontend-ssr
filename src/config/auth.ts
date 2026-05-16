@@ -1,6 +1,6 @@
 import Credentials from "next-auth/providers/credentials";
 import { loginSchema } from "@/business/auth";
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import type { User } from "next-auth";
 import { decodeJwt } from "jose";
 import { getMeApi, loginApi, logoutApi, refreshApi } from "@/business/auth";
@@ -8,12 +8,21 @@ import type { UserRole } from "@/business/auth";
 
 const SESSION_MAX_AGE = 30 * 24 * 60 * 60;
 
+class InvalidCredentialsError extends CredentialsSignin {
+  code = "invalid_credentials";
+}
+
+class BlockedCredentialsError extends CredentialsSignin {
+  code = "account_blocked";
+}
+
 function normalizeRole(role: string | undefined): UserRole {
   const normalized = role?.toLowerCase();
   if (
     normalized === "user" ||
     normalized === "moderator" ||
-    normalized === "admin"
+    normalized === "admin" ||
+    normalized === "super_admin"
   ) {
     return normalized;
   }
@@ -25,20 +34,41 @@ function getAccessTokenExpiresAt(accessToken: string): number | undefined {
   try {
     return decodeJwt(accessToken).exp;
   } catch (error) {
-    console.error("Не удалось декодировать accessToken:", error);
+    console.error("Failed to decode accessToken:", error);
     return undefined;
   }
 }
 
+function mapAuthorizeError(error: unknown): Error {
+  if (error instanceof CredentialsSignin) {
+    return error;
+  }
+
+  const message = error instanceof Error ? error.message : "";
+
+  if (message === "Invalid login or password") {
+    return new InvalidCredentialsError();
+  }
+
+  if (message.toLowerCase().includes("account blocked")) {
+    return new BlockedCredentialsError();
+  }
+
+  return error instanceof Error ? error : new Error("Authentication failed");
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  trustHost: true,
   providers: [
     Credentials({
       async authorize(credentials): Promise<User | null> {
         try {
-          if (!credentials) throw new Error("Нет данных для входа");
+          // Проверка входных данных
+          if (!credentials) throw new InvalidCredentialsError();
+
           const parsed = loginSchema.safeParse(credentials);
-          if (!parsed.success) throw new Error("Невалидные данные");
+          if (!parsed.success) throw new InvalidCredentialsError();
 
           const { tel, password, rememberMe } = parsed.data;
           const authResponse = await loginApi({
@@ -52,7 +82,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
 
           const profile = await getMeApi(authResponse.accessToken);
-
+          // Токены сохраняются в JWT cookie, но не пробрасываются в клиентскую часть
           return {
             id: profile.id,
             email: profile.email ?? null,
@@ -65,9 +95,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             accessToken: authResponse.accessToken,
             refreshToken: authResponse.refreshToken,
           };
-        } catch (e) {
-          const message = e instanceof Error ? e.message : "Ошибка сервера";
-          throw new Error(message);
+        } catch (error) {
+          throw mapAuthorizeError(error);
         }
       },
     }),
@@ -119,7 +148,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       try {
         const data = await refreshApi(token.refreshToken);
-
         const newDecoded = decodeJwt(data.accessToken);
 
         return {
@@ -129,7 +157,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           refreshToken: data.refreshToken ?? token.refreshToken,
         };
       } catch (error) {
-        console.error("Не удалось обновить токен:", error);
+        console.error("Failed to refresh access token:", error);
         return {
           ...token,
           error: "RefreshAccessTokenError",
@@ -161,7 +189,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       try {
         await logoutApi({ refreshToken });
       } catch (error) {
-        console.error("Не удалось выполнить backend logout:", error);
+        console.error("Failed to call backend logout:", error);
       }
     },
   },

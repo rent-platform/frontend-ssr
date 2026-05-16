@@ -50,7 +50,7 @@ export const useInfiniteScroll = ({
       if (currentObserverRef) {
         observer.unobserve(currentObserverRef); // Снимает наблюдение с элемента.
       }
-    };
-  }, [loadMoreHandler, rootMargin, threshold]); // Пересоздаёт observer при изменении обработчика или настроек.
+    }; // Пересоздаёт observer при изменении обработчика или настроек.
+  }, [loadMoreHandler, rootMargin, threshold]);
   return { observerRef }; // ref для элемента-наблюдателя.
 };

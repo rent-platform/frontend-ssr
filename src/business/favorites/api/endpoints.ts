@@ -73,10 +73,14 @@ export const favoritesApi = baseApi.injectEndpoints({
       query: (itemId) => ({
         url: `api/catalog/favorites/${itemId}/status`,
       }),
-      transformResponse: (isFavorite: boolean, _meta, itemId) => ({
+      transformResponse: (
+        response: boolean | FavoriteStatusResponseDto,
+        _meta,
         itemId,
-        isFavorite,
-      }),
+      ) =>
+        typeof response === "boolean"
+          ? { itemId, isFavorite: response }
+          : { itemId: response.itemId ?? itemId, isFavorite: response.isFavorite },
       providesTags: (_result, _error, itemId) => [
         { type: "Favorites", id: itemId },
       ],

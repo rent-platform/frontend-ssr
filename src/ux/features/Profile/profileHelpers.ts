@@ -36,10 +36,12 @@ export const BOOKING_FILTERS: { value: BookingFilter; label: string; tip: string
 export function profileListingToCatalogItem(listing: ProfileListing): CatalogUiItem {
   return {
     id: listing.id,
+    ownerId: MOCK_USER.id,
     title: listing.title,
     coverImageUrl: listing.image ?? '',
     images: listing.image ? [listing.image] : [],
     category: listing.category,
+    categoryId: null,
     pricePerDay: listing.pricePerDay ?? null,
     pricePerHour: null,
     depositAmount: '',
@@ -52,9 +54,12 @@ export function profileListingToCatalogItem(listing: ProfileListing): CatalogUiI
     ownerName: MOCK_USER.fullName,
     ownerAvatar: MOCK_USER.avatarUrl,
     ownerRating: MOCK_USER.rating,
+    ownerReviewCount: MOCK_USER.reviewCount,
+    itemRating: null,
+    itemReviewCount: null,
     quickFilters: [],
     featured: listing.bookingsCount > 10,
-  } as CatalogUiItem;
+  };
 }
 
 export function getProfileCompletion(user: typeof MOCK_USER): number {

@@ -103,3 +103,19 @@ Complaints admin/moderation:
 
 fetchComplaints
 handleComplaint
+
+
+
+POST	/api/auth/register	Регистрация новой учетной записи	БА
+POST	/api/auth/login	Выполнение входа в систему	БА
+POST	/api/auth/refresh	Обновление access-токена	БА
+GET	/api/users/{userId}/public	Получение публичного профиля пользователя	БА
+GET	/api/catalog/items	Получение списка объявлений каталога	БА
+GET	/api/catalog/items/{itemId}	Получение карточки конкретного объявления	БА
+GET	/api/catalog/categories	Получение списка категорий	БА
+GET	/api/catalog/categories/{categoryId}	Получение данных по выбранной категории	БА
+GET	/api/reviews/items/{itemId}	Получение отзывов по объявлению	БА
+GET	/api/reviews/items/{itemId}/summary	Получение сводки рейтинга объявления	БА
+GET	/api/reviews/users/{userId}	Получение отзывов о пользователе	БА
+GET	/api/reviews/users/{userId}/summary	Получение сводки рейтинга пользователя	БА
+GET	/api/catalog/items/{itemId}/availability	Получение календаря доступности товара	БА

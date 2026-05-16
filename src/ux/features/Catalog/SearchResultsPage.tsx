@@ -10,7 +10,6 @@ import { CatalogSearchBar } from './components/filters/CatalogSearchBar';
 import { CatalogToolbar } from './components/filters/CatalogToolbar';
 import { CatalogCard } from './components/cards/CatalogCard';
 import { ProductDetail } from './components/detail/ProductDetail';
-import { CatalogSkeletonCard } from './components/cards/CatalogSkeletonCard';
 import { CatalogFooter } from './components/layout/CatalogFooter';
 import { mockCatalogItems } from './mockCatalogItems';
 import type { CatalogUiItem } from './types';
@@ -35,11 +34,6 @@ export function SearchResultsPage() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    setFilters(searchParamsToFilters(searchParams));
-    setVisibleCount(BATCH_SIZE);
-  }, [searchParams]);
 
   const filteredItems = useMemo(
     () => applyCatalogFilters(mockCatalogItems, filters),
@@ -99,8 +93,7 @@ export function SearchResultsPage() {
 
   const handleOpenItem = (item: CatalogUiItem) => {
     setIsFiltersOpen(false);
-    setSelectedItem(item);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    router.push(ROUTES.catalogItem(item.id));
   };
 
   const handleBackToCatalog = () => setSelectedItem(null);

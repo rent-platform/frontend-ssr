@@ -1,0 +1,15 @@
+
+> rent-platform-ssr@0.1.0 dev
+> next dev --port 3002
+
+▲ Next.js 16.2.2 (Turbopack)
+- Local:         http://localhost:3002
+- Network:       http://198.18.0.1:3002
+- Environments: .env.development.local, .env.local
+✓ Ready in 550ms
+
+ GET /dev-ui/catalog-csr 200 in 2.8s (next.js: 1667ms, proxy.ts: 323ms, application-code: 841ms)
+ GET /dev-ui/catalog-ssr 200 in 4.7s (next.js: 1123ms, proxy.ts: 325ms, application-code: 3.2s)
+✓ Compiled in 250ms
+✓ Compiled in 231ms
+[?25h

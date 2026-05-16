@@ -616,9 +616,11 @@
 .bookingDateBtn {
   display: grid;
   gap: 2px;
+  border: 0;
   padding: $space-3 $space-4;
   background: #fff;
   text-align: left;
+  cursor: pointer;
 
   &:first-child { border-right: 1px solid $color-border; }
 

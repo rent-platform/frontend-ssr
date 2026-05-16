@@ -22,10 +22,12 @@ export const RATING_DISTRIBUTION = [
 export function publicListingToCatalogItem(listing: PublicListing, user: PublicUser): CatalogUiItem {
   return {
     id: listing.id,
+    ownerId: user.id,
     title: listing.title,
     coverImageUrl: listing.image ?? '',
     images: listing.image ? [listing.image] : [],
     category: listing.category,
+    categoryId: null,
     pricePerDay: listing.pricePerDay,
     pricePerHour: null,
     depositAmount: '',
@@ -38,6 +40,9 @@ export function publicListingToCatalogItem(listing: PublicListing, user: PublicU
     ownerName: user.fullName,
     ownerAvatar: user.avatarUrl,
     ownerRating: listing.rating,
+    ownerReviewCount: user.reviewCount,
+    itemRating: listing.rating,
+    itemReviewCount: listing.reviewCount,
     quickFilters: [],
-  } as CatalogUiItem;
+  };
 }

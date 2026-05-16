@@ -1,7 +1,7 @@
 import { decodeJwt } from "jose";
 import { encode, getToken } from "next-auth/jwt";
 import type { JWT } from "next-auth/jwt";
-import type { NextRequest } from "next/server";
+import { URLPattern, type NextRequest } from "next/server";
 
 // Route Handler работает на Node.js runtime, потому что здесь используется
 // серверная работа с Auth.js JWT cookie и запросы к внешнему Java backend.
@@ -39,25 +39,39 @@ type ProxyRouteContext = {
   }>;
 };
 
-function isPublicBackendRequest(request: NextRequest, path: string[]): boolean {
-  if (request.method !== "GET" && request.method !== "HEAD") {
-    return false;
+const PUBLIC_POST_PATTERNS = [
+  new URLPattern({ pathname: "/api/auth/register" }),
+  new URLPattern({ pathname: "/api/auth/login" }),
+  new URLPattern({ pathname: "/api/auth/refresh" }),
+];
+
+const PUBLIC_GET_PATTERNS = [
+  new URLPattern({ pathname: "/api/users/:id/public" }),
+  new URLPattern({ pathname: "/api/catalog/items" }),
+  new URLPattern({ pathname: "/api/catalog/items/:id" }),
+  new URLPattern({ pathname: "/api/catalog/items/:id/similar" }),
+  new URLPattern({ pathname: "/api/catalog/items/:id/availability" }),
+  new URLPattern({ pathname: "/api/catalog/categories" }),
+  new URLPattern({ pathname: "/api/catalog/categories/:id" }),
+  new URLPattern({ pathname: "/api/reviews/items/:id" }),
+  new URLPattern({ pathname: "/api/reviews/items/:id/summary" }),
+  new URLPattern({ pathname: "/api/reviews/users/:id" }),
+  new URLPattern({ pathname: "/api/reviews/users/:id/summary" }),
+];
+
+export function isPublicBackendRequest(
+  request: NextRequest,
+  path: string[],
+): boolean {
+  const pathname = `/${path.join("/")}`;
+  const method = request.method;
+
+  if (method === "POST") {
+    return PUBLIC_POST_PATTERNS.some((pattern) => pattern.test({ pathname }));
   }
 
-  if (path[0] !== "api") {
-    return false;
-  }
-
-  if (path[1] === "catalog") {
-    return path[2] === "items" || path[2] === "categories";
-  }
-
-  if (path[1] === "reviews") {
-    return path[2] === "items" || path[2] === "users";
-  }
-
-  if (path[1] === "users") {
-    return path[3] === "public";
+  if (method === "GET" || method === "HEAD") {
+    return PUBLIC_GET_PATTERNS.some((pattern) => pattern.test({ pathname }));
   }
 
   return false;

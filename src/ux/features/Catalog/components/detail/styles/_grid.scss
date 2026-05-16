@@ -54,6 +54,28 @@
   cursor: default;
 }
 
+.dayUnavailable {
+  color: rgba(148, 163, 184, 0.55);
+  cursor: not-allowed;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(148, 163, 184, 0.12),
+    rgba(148, 163, 184, 0.12) 4px,
+    rgba(148, 163, 184, 0.2) 4px,
+    rgba(148, 163, 184, 0.2) 8px
+  );
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 25%;
+    right: 25%;
+    top: 50%;
+    height: 1px;
+    background: currentColor;
+  }
+}
+
 .dayToday {
   font-weight: 800;
   color: $color-primary;
