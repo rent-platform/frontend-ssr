@@ -63,7 +63,7 @@ export function UserSidebar({ user, initials, reported, onShareClick, onReportCl
 
         <div className={styles.quickStats}>
           <div className={clsx(styles.quickStat, styles.tooltipWrap)}>
-            <Star size={14} className={styles.starFilled} />
+            <Star size={14} fill="currentColor" className={styles.starFilled} />
             <strong>{user.rating.toFixed(1)}</strong>
             <span className={styles.tooltipBubble}>Средняя оценка от арендаторов</span>
           </div>

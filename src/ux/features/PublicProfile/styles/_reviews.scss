@@ -86,6 +86,7 @@
   text-align: right;
 }
 
+.starWrap { display: inline-flex; position: relative; }
 .starFilled { color: #f59e0b; }
 .starEmpty { color: var(--color-border); }
 

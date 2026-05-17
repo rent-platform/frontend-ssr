@@ -15,9 +15,18 @@ export function RatingBreakdownPanel({ rating, reviewCount, maxDistCount }: Rati
       <div className={styles.ratingBig}>
         <span className={styles.ratingBigValue}>{rating.toFixed(1)}</span>
         <div className={styles.ratingBigStars}>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} size={16} className={i < Math.round(rating) ? styles.starFilled : styles.starEmpty} />
-          ))}
+          {Array.from({ length: 5 }).map((_, i) => {
+            const full = Math.floor(rating);
+            const fraction = rating - full;
+            const isFull = i < full;
+            const isPartial = i === full && fraction > 0;
+
+            return (
+              <span key={i} className={styles.starWrap} style={isPartial ? { clipPath: `inset(0 ${((1 - fraction) * 100).toFixed(0)}% 0 0)` } : undefined}>
+                <Star size={16} fill={isFull || isPartial ? 'currentColor' : 'none'} className={isFull || isPartial ? styles.starFilled : styles.starEmpty} />
+              </span>
+            );
+          })}
         </div>
         <span className={styles.ratingBigCount}>
           {reviewCount} {pluralize(reviewCount, 'отзыв', 'отзыва', 'отзывов')}
@@ -27,7 +36,7 @@ export function RatingBreakdownPanel({ rating, reviewCount, maxDistCount }: Rati
         {RATING_DISTRIBUTION.map((row) => (
           <div key={row.stars} className={styles.ratingBarRow}>
             <span className={styles.ratingBarLabel}>{row.stars}</span>
-            <Star size={11} className={styles.starFilled} />
+            <Star size={11} fill="currentColor" className={styles.starFilled} />
             <div className={styles.ratingBarTrack}>
               <div
                 className={styles.ratingBarFill}

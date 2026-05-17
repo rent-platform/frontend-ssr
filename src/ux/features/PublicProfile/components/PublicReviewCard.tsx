@@ -36,7 +36,7 @@ export function PublicReviewCard({ review, index, isHelpful, onToggleHelpful }: 
           <div className={styles.reviewRight}>
             <div className={styles.reviewStars}>
               {Array.from({ length: 5 }).map((_, si) => (
-                <Star key={si} size={12} className={si < review.rating ? styles.starFilled : styles.starEmpty} />
+                <Star key={si} size={12} fill={si < review.rating ? 'currentColor' : 'none'} className={si < review.rating ? styles.starFilled : styles.starEmpty} />
               ))}
             </div>
             <span className={styles.reviewDate}>{formatDate(review.date)}</span>
