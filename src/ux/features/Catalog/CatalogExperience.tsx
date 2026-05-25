@@ -13,6 +13,8 @@ import { CatalogFooter } from './components/layout/CatalogFooter';
 import type { CatalogUiItem } from './types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS } from './utils';
 import { useCatalogPage } from '@/business/ads';
+import type { FetchAdsArgs } from '@/business/ads';
+import { useAppSelector } from '@/business/shared';
 import { useCatalog } from './hooks/useCatalog';
 import styles from './Catalog.module.scss';
 
@@ -39,9 +41,29 @@ export function CatalogExperience({
   onLoadMore,
   hasMore: externalHasMore,
 }: CatalogExperienceProps = {}) {
+  const catalogFilters = useAppSelector((state) => state.catalog.filters);
+  const catalogQueryArgs: FetchAdsArgs = {
+    pageSize: 20,
+    search: catalogFilters.search || undefined,
+    city: catalogFilters.city || undefined,
+    priceFrom: catalogFilters.minPrice ? Number(catalogFilters.minPrice) : undefined,
+    priceTo: catalogFilters.maxPrice ? Number(catalogFilters.maxPrice) : undefined,
+    sortBy:
+      catalogFilters.sortBy === 'newest'
+        ? 'createdAt'
+        : catalogFilters.sortBy === 'rating'
+          ? 'rating'
+          : catalogFilters.sortBy === 'priceAsc' || catalogFilters.sortBy === 'priceDesc'
+            ? 'pricePerDay'
+            : 'createdAt',
+    sortDirection:
+      catalogFilters.sortBy === 'priceAsc'
+        ? 'asc'
+        : 'desc',
+  };
   const shouldUseBackend = !externalItems;
   const backendCatalog = useCatalogPage(
-    { pageSize: 20 },
+    catalogQueryArgs,
     { skip: !shouldUseBackend },
   );
   const catalogItems = externalItems ?? backendCatalog.products;

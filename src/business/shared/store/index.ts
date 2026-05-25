@@ -1,5 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  useDispatch,
+  useSelector,
+  type TypedUseSelectorHook,
+} from "react-redux";
 import uiReducer from "./features/ui/uiSlice";
 import catalogReducer from "./features/catalog/catalogSlice";
 import createListingDraftReducer from "./features/draft/createItemDraftSlice";
@@ -27,7 +31,14 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 export type RootDispatch = typeof store.dispatch;
 
-export const useAppDispatch = useDispatch.withTypes<RootDispatch>();
-export const useAppSelector = useSelector.withTypes<RootState>();
+export const useAppDispatch: () => RootDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export { default as StoreProvider } from "./StoreProvider";
+export * from "./features/ui/uiSlice";
+export * from "./features/catalog/catalogSlice";
+export * from "./features/draft/createItemDraftSlice";
+export * from "./features/booking/bookingSlice";
+export * from "./features/chat/chatUiSlice";
+export * from "./features/profile/profileUiSlice";
+export * from "./features/reviews/reviewComplaintUiSlice";

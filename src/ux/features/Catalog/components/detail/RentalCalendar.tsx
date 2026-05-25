@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { pluralize, useFocusTrap } from '@/ux/utils';
 import styles from './RentalCalendar.module.scss';
@@ -13,6 +13,7 @@ type RentalCalendarProps = {
   onSelect: (start: Date | null, end: Date | null) => void;
   onConfirm: () => void;
   onClose: () => void;
+  availability?: Array<{ availableDate: string; isAvailable: boolean }>;
 };
 
 const MONTH_NAMES = [
@@ -42,6 +43,7 @@ export function RentalCalendar({
   onSelect,
   onConfirm,
   onClose,
+  availability = [],
 }: RentalCalendarProps) {
   const today = useMemo(() => startOfDay(new Date()), []);
   const [viewDate, setViewDate] = useState(() => startDate ?? today);
@@ -79,9 +81,37 @@ export function RentalCalendar({
     return cells;
   }, [year, month]);
 
+  const unavailableDates = useMemo(
+    () => new Set(
+      availability
+        .filter((slot) => !slot.isAvailable)
+        .map((slot) => slot.availableDate.slice(0, 10)),
+    ),
+    [availability],
+  );
+  const availableDates = useMemo(
+    () => new Set(
+      availability
+        .filter((slot) => slot.isAvailable)
+        .map((slot) => slot.availableDate.slice(0, 10)),
+    ),
+    [availability],
+  );
+
+  const toDateKey = (day: Date) => day.toISOString().slice(0, 10);
+  const isSelectableDate = useCallback(
+    (day: Date) => {
+      if (availableDates.size === 0 && unavailableDates.size === 0) return true;
+      const dateKey = toDateKey(day);
+      return availableDates.has(dateKey) && !unavailableDates.has(dateKey);
+    },
+    [availableDates, unavailableDates],
+  );
+
   const handleDayClick = useCallback(
     (day: Date) => {
       if (day < today) return;
+      if (!isSelectableDate(day)) return;
 
       if (!startDate || (startDate && endDate)) {
         // Start new selection
@@ -97,7 +127,7 @@ export function RentalCalendar({
         }
       }
     },
-    [startDate, endDate, onSelect, today],
+    [startDate, endDate, onSelect, today, isSelectableDate],
   );
 
   const getDayState = useCallback(
@@ -107,10 +137,11 @@ export function RentalCalendar({
       const isStart = startDate ? isSameDay(day, startDate) : false;
       const isEnd = endDate ? isSameDay(day, endDate) : false;
       const inRange = startDate && endDate ? isBetween(day, startDate, endDate) : false;
+      const isUnavailable = !isSelectableDate(day);
 
-      return { isPast, isToday, isStart, isEnd, inRange };
+      return { isPast, isToday, isStart, isEnd, inRange, isUnavailable };
     },
-    [startDate, endDate, today],
+    [startDate, endDate, today, isSelectableDate],
   );
 
   const canGoPrev = !(year === today.getFullYear() && month === today.getMonth());
@@ -181,7 +212,7 @@ export function RentalCalendar({
               return <span key={key} className={styles.emptyCell} />;
             }
 
-            const { isPast, isToday, isStart, isEnd, inRange } = getDayState(date);
+            const { isPast, isToday, isStart, isEnd, inRange, isUnavailable } = getDayState(date);
 
             const cellClass = [
               styles.day,
@@ -190,6 +221,7 @@ export function RentalCalendar({
               isStart && styles.dayStart,
               isEnd && styles.dayEnd,
               inRange && styles.dayInRange,
+              isUnavailable && styles.dayUnavailable,
             ]
               .filter(Boolean)
               .join(' ');
@@ -199,8 +231,9 @@ export function RentalCalendar({
                 key={key}
                 type="button"
                 className={cellClass}
-                disabled={isPast}
+                disabled={isPast || isUnavailable}
                 onClick={() => handleDayClick(date)}
+                title={isUnavailable ? 'Дата занята' : undefined}
               >
                 {date.getDate()}
               </button>

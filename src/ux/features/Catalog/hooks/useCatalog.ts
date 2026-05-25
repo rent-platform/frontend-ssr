@@ -3,6 +3,17 @@ import { useRouter } from 'next/navigation';
 import type { CatalogUiItem } from '../types';
 import { INITIAL_FILTERS, filtersToSearchParams } from '../utils';
 import { ROUTES } from '@/ux/utils';
+import {
+  closeCatalogFilters,
+  patchCatalogFilters,
+  resetCatalogFilters,
+  saveCatalogScrollY,
+  setCatalogFilters,
+  setSelectedCatalogItem,
+  toggleCatalogFilters,
+  useAppDispatch,
+  useAppSelector,
+} from '@/business/shared';
 
 const BATCH_SIZE = 8;
 
@@ -22,9 +33,11 @@ export function useCatalog({
   hasMore: externalHasMore,
 }: UseCatalogOptions = {}) {
   const router = useRouter();
-  const [filters, setFilters] = useState(INITIAL_FILTERS);
+  const dispatch = useAppDispatch();
+  const filters = useAppSelector((state) => state.catalog.filters);
+  const selectedItemId = useAppSelector((state) => state.catalog.selectedItemId);
+  const isFiltersOpen = useAppSelector((state) => state.catalog.isFiltersOpen);
   const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,18 +46,33 @@ export function useCatalog({
   const similarItems: CatalogUiItem[] = [];
   const hasMore = externalHasMore ?? false;
 
-  const onCloseFilters = () => setIsFiltersOpen(false);
-  const onToggleFilters = () => setIsFiltersOpen(!isFiltersOpen);
+  const setFilters = useCallback(
+    (nextFilters: typeof INITIAL_FILTERS) => {
+      dispatch(setCatalogFilters(nextFilters));
+    },
+    [dispatch],
+  );
+
+  const setSelectedCatalogItemState = useCallback(
+    (item: CatalogUiItem | null) => {
+      setSelectedItem(item);
+      dispatch(setSelectedCatalogItem(item?.id ?? null));
+    },
+    [dispatch],
+  );
+
+  const onCloseFilters = () => dispatch(closeCatalogFilters());
+  const onToggleFilters = () => dispatch(toggleCatalogFilters());
 
   const updateFilters = (patch: Partial<typeof filters>) => {
-    setFilters((prev) => ({ ...prev, ...patch }));
+    dispatch(patchCatalogFilters(patch));
   };
 
   const navigateToSearch = useCallback(() => {
-    if (isFiltersOpen) setIsFiltersOpen(false);
+    if (isFiltersOpen) dispatch(closeCatalogFilters());
     const qs = filtersToSearchParams(filters);
     router.push(`${ROUTES.search}${qs ? `?${qs}` : ''}`);
-  }, [filters, isFiltersOpen, router]);
+  }, [dispatch, filters, isFiltersOpen, router]);
 
   useEffect(() => {
     if (!hasMore || !sentinelRef.current || selectedItem) {
@@ -67,12 +95,14 @@ export function useCatalog({
   }, [hasMore, onLoadMore, selectedItem]);
 
   const handleOpenItem = (item: CatalogUiItem) => {
-    setIsFiltersOpen(false);
+    dispatch(closeCatalogFilters());
+    dispatch(setSelectedCatalogItem(item.id));
+    dispatch(saveCatalogScrollY(window.scrollY));
     router.push(ROUTES.catalogItem(item.id));
   };
 
   const handleBackToCatalog = () => {
-    setSelectedItem(null);
+    setSelectedCatalogItemState(null);
   };
 
   useEffect(() => {
@@ -89,7 +119,8 @@ export function useCatalog({
     filters,
     setFilters,
     selectedItem,
-    setSelectedItem,
+    selectedItemId,
+    setSelectedItem: setSelectedCatalogItemState,
     isFiltersOpen,
     isInitialLoading: externalLoading ?? false,
     showScrollTop,
@@ -104,6 +135,7 @@ export function useCatalog({
     onCloseFilters,
     onToggleFilters,
     updateFilters,
+    resetFilters: () => dispatch(resetCatalogFilters()),
     navigateToSearch,
     handleOpenItem,
     handleBackToCatalog,

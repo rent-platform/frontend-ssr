@@ -3,7 +3,12 @@ import type { ItemStatus } from "@/business/ads/types";
 import type { DealStatus } from "@/business/deals/types";
 
 export type ProfileTab = "listings" | "deals" | "reviews";
-export type SettingsTab = "profile" | "security" | "notifications" | "privacy";
+export type SettingsTab =
+  | "profile"
+  | "security"
+  | "notifications"
+  | "payment"
+  | "privacy";
 export type ListingFilter = "all" | ItemStatus;
 export type DealFilter = "all" | DealStatus;
 

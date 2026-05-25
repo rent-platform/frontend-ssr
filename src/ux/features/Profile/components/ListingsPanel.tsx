@@ -1,25 +1,37 @@
 'use client';
 
-import { useMemo } from 'react';
+import { mapCatalogShortItemToCardVM, useFetchMyAdsQuery } from '@/business/ads';
 import { Package } from 'lucide-react';
 import { CatalogCard } from '../../Catalog';
 import clsx from 'clsx';
 import { pluralize } from '@/ux/utils';
-import { MOCK_LISTINGS } from '../mockProfileData';
-import { LISTING_FILTERS, profileListingToCatalogItem } from '../profileHelpers';
+import { LISTING_FILTERS } from '../profileHelpers';
 import type { ListingFilter } from '../profileHelpers';
 import { EmptyState } from './EmptyState';
 import styles from '../ProfileDashboard.module.scss';
 
 export function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilter; onFilterChange: (f: ListingFilter) => void }) {
-  const filtered = useMemo(() => (filter === 'all' ? MOCK_LISTINGS : MOCK_LISTINGS.filter((l) => l.status === filter)), [filter]);
+  const { data, isLoading, isFetching, isError } = useFetchMyAdsQuery({
+    pageSize: 50,
+    status: filter === 'all' ? undefined : filter,
+    sortBy: 'createdAt',
+    sortDirection: 'desc',
+  });
+
+  const listings = (data?.content ?? []).map((item) => ({
+    ...mapCatalogShortItemToCardVM(item),
+    isFavorite: item.isFavorite ?? false,
+    city: item.city ?? undefined,
+  }));
+  const total = data?.totalElements ?? listings.length;
+  const isPending = isLoading || isFetching;
 
   return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <div>
           <h2 className={styles.panelTitle}>Мои объявления</h2>
-          <p className={styles.panelSubtitle}>{filtered.length} {pluralize(filtered.length, 'объявление', 'объявления', 'объявлений')}</p>
+          <p className={styles.panelSubtitle}>{total} {pluralize(total, 'объявление', 'объявления', 'объявлений')}</p>
         </div>
         <div className={styles.filterPills}>
           {LISTING_FILTERS.map((f) => (
@@ -31,14 +43,18 @@ export function ListingsPanel({ filter, onFilterChange }: { filter: ListingFilte
         </div>
       </div>
 
-      {filtered.length === 0 ? (
+      {isPending ? (
+        <EmptyState icon={<Package />} title="Загружаем объявления" text="Получаем ваши объявления с backend" />
+      ) : isError ? (
+        <EmptyState icon={<Package />} title="Не удалось загрузить объявления" text="Проверьте авторизацию и backend" />
+      ) : listings.length === 0 ? (
         <EmptyState icon={<Package />} title="Нет объявлений" text="По этому фильтру ничего не найдено" />
       ) : (
         <div className={styles.listingsGrid}>
-          {filtered.map((item, i) => (
+          {listings.map((item, i) => (
             <CatalogCard
               key={item.id}
-              item={profileListingToCatalogItem(item)}
+              item={item}
               index={i}
             />
           ))}

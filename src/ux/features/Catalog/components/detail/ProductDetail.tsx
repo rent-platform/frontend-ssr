@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import {
@@ -20,6 +20,8 @@ import {
   formatCatalogCardLocation,
   formatRelativeDate,
 } from '../../utils';
+import { useToggleFavorite } from '@/business/favorites';
+import { showToast, useAppDispatch } from '@/business/shared';
 import { CatalogCard } from '../cards/CatalogCard';
 import { ProductGallery } from './ProductGallery';
 import { BookingSidebar } from './BookingSidebar';
@@ -44,18 +46,36 @@ export function ProductDetail({
   onAuthRequired,
   initialFavorite = false,
 }: ProductDetailProps) {
-  const [isFav, setIsFav] = useState(initialFavorite);
+  const dispatch = useAppDispatch();
+  const [isFav, setIsFav] = useState(item.isFavorite ?? initialFavorite);
+  const { toggleFavorite, isLoading: isFavoriteLoading } = useToggleFavorite({
+    adId: item.id,
+    isFavorite: isFav,
+  });
 
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.createdAt);
 
-  const handleFavoriteToggle = useCallback(() => {
+  useEffect(() => {
+    setIsFav(item.isFavorite ?? initialFavorite);
+  }, [initialFavorite, item.id, item.isFavorite]);
+
+  const handleFavoriteToggle = useCallback(async () => {
     if (isGuest) {
       onAuthRequired?.();
       return;
     }
-    setIsFav((v) => !v);
-  }, [isGuest, onAuthRequired]);
+    if (isFavoriteLoading) return;
+
+    const next = !isFav;
+    setIsFav(next);
+    try {
+      await toggleFavorite();
+    } catch {
+      setIsFav(!next);
+      dispatch(showToast({ type: "error", message: "Не удалось обновить избранное" }));
+    }
+  }, [dispatch, isFav, isFavoriteLoading, isGuest, onAuthRequired, toggleFavorite]);
 
   return (
     <motion.div
@@ -80,6 +100,7 @@ export function ProductDetail({
               type="button"
               className={clsx(styles.detailActionBtn, styles.detailActionBtnDanger)}
               onClick={handleFavoriteToggle}
+              disabled={isFavoriteLoading}
             >
               <Heart size={16} fill={isFav ? 'currentColor' : 'none'} />
               {isFav ? 'В избранном' : 'Сохранить'}

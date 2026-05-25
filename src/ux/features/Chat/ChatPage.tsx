@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   MessageCircle,
   Paperclip,
@@ -9,16 +9,26 @@ import {
 import type { ChatListTab } from './types';
 import { MOCK_CHATS, MOCK_TIMELINES, QUICK_ACTIONS } from './mockChatData';
 import { ChatSidebar, ConversationHeader, DealContextBar, QuickActionsBar, TypingIndicator, TimelineItem } from './components';
+import {
+  clearChatDraft,
+  setActiveChat,
+  setChatDraft,
+  setChatSearch,
+  setChatTab,
+  useAppDispatch,
+  useAppSelector,
+} from '@/business/shared';
 import styles from './ChatPage.module.scss';
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    ChatPage
    ═══════════════════════════════════════════════════════════════════════════════ */
 export function ChatPage() {
-  const [activeChatId, setActiveChatId] = useState<string | null>(null);
-  const [search, setSearch] = useState('');
-  const [tab, setTab] = useState<ChatListTab>('all');
-  const [inputText, setInputText] = useState('');
+  const dispatch = useAppDispatch();
+  const { activeChatId, search, tab, draftByChatId } = useAppSelector(
+    (state) => state.chatUi,
+  );
+  const inputText = activeChatId ? draftByChatId[activeChatId] ?? '' : '';
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -77,15 +87,17 @@ export function ChatPage() {
   }, [activeChatId, timeline.length]);
 
   const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputText(e.target.value);
+    if (activeChatId) {
+      dispatch(setChatDraft({ chatId: activeChatId, text: e.target.value }));
+    }
     const el = e.target;
     el.style.height = 'auto';
     el.style.height = `${Math.min(el.scrollHeight, 140)}px`;
-  }, []);
+  }, [activeChatId, dispatch]);
 
   const handleSend = () => {
-    if (!inputText.trim()) return;
-    setInputText('');
+    if (!activeChatId || !inputText.trim()) return;
+    dispatch(clearChatDraft(activeChatId));
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
   };
 
@@ -97,14 +109,14 @@ export function ChatPage() {
     <div className={styles.page}>
       {/* ═══ Sidebar ═══ */}
       <ChatSidebar
-        tab={tab}
-        onTabChange={setTab}
+        tab={tab as ChatListTab}
+        onTabChange={(nextTab) => dispatch(setChatTab(nextTab))}
         tabCounts={tabCounts}
         search={search}
-        onSearchChange={setSearch}
+        onSearchChange={(nextSearch) => dispatch(setChatSearch(nextSearch))}
         filteredChats={filteredChats}
         activeChatId={activeChatId}
-        onSelectChat={setActiveChatId}
+        onSelectChat={(chatId) => dispatch(setActiveChat(chatId))}
       />
 
       {/* ═══ Conversation ═══ */}

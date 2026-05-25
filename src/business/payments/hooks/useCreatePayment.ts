@@ -6,7 +6,7 @@ import { type ApiUiError } from "@/business/shared";
 import type { CreatePaymentRequest, PaymentConfirmationResponse } from "../types";
 
 export interface UseCreatePaymentResult {
-  createPayment: (payload: CreatePaymentRequest) => Promise<unknown>;
+  createPayment: (payload: CreatePaymentRequest) => Promise<PaymentConfirmationResponse>;
   payment: PaymentConfirmationResponse | null;
   isCreating: boolean;
   isError: boolean;
@@ -22,7 +22,7 @@ export function useCreatePayment(): UseCreatePaymentResult {
   ] = useCreatePaymentMutation();
 
   return {
-    createPayment: (payload) => createPaymentMutation(payload),
+    createPayment: (payload) => createPaymentMutation(payload).unwrap(),
     payment: data ?? null,
     isCreating: isLoading,
     isError,

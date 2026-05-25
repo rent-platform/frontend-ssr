@@ -7,7 +7,7 @@ import { type ApiUiError } from "@/business/shared";
 import type { CreateDealRequestDto, DealDetailsVM } from "../types";
 
 export interface UseCreateDealRequestResult {
-  createDealRequest: (payload: CreateDealRequestDto) => Promise<unknown>;
+  createDealRequest: (payload: CreateDealRequestDto) => Promise<DealDetailsVM>;
   deal: DealDetailsVM | null;
   isCreating: boolean;
   isError: boolean;
@@ -23,7 +23,8 @@ export function useCreateDealRequest(): UseCreateDealRequestResult {
   ] = useCreateDealRequestMutation();
 
   return {
-    createDealRequest: (payload) => createDealRequestMutation(payload),
+    createDealRequest: async (payload) =>
+      mapDealToVM(await createDealRequestMutation(payload).unwrap()),
     deal: data ? mapDealToVM(data) : null,
     isCreating: isLoading,
     isError,

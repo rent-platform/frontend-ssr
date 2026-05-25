@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type {
   ReviewsTab,
   ReceivedFilter,
@@ -12,6 +12,14 @@ import {
   MOCK_REVIEWS_GIVEN,
   MOCK_RATING_BREAKDOWN,
 } from '../mockReviewsData';
+import {
+  setReviewsReceivedFilter,
+  setReviewsSort,
+  setReviewsStarFilter,
+  setReviewsTab,
+  useAppDispatch,
+  useAppSelector,
+} from '@/business/shared';
 
 export type UseReviewsOptions = {
   received?: ProfileReview[];
@@ -24,10 +32,10 @@ export function useReviews({
   given: externalGiven,
   breakdown: externalBreakdown,
 }: UseReviewsOptions = {}) {
-  const [tab, setTab] = useState<ReviewsTab>('received');
-  const [receivedFilter, setReceivedFilter] = useState<ReceivedFilter>('all');
-  const [starFilter, setStarFilter] = useState<StarFilter>(0);
-  const [sort, setSort] = useState<ReviewSort>('newest');
+  const dispatch = useAppDispatch();
+  const { tab, receivedFilter, starFilter, sort } = useAppSelector(
+    (state) => state.reviewComplaintUi,
+  );
 
   const receivedReviews = externalReceived ?? MOCK_REVIEWS_RECEIVED;
   const givenReviews = externalGiven ?? MOCK_REVIEWS_GIVEN;
@@ -68,13 +76,14 @@ export function useReviews({
 
   return {
     tab,
-    setTab,
+    setTab: (nextTab: ReviewsTab) => dispatch(setReviewsTab(nextTab)),
     receivedFilter,
-    setReceivedFilter,
+    setReceivedFilter: (filter: ReceivedFilter) =>
+      dispatch(setReviewsReceivedFilter(filter)),
     starFilter,
-    setStarFilter,
+    setStarFilter: (filter: StarFilter) => dispatch(setReviewsStarFilter(filter)),
     sort,
-    setSort,
+    setSort: (nextSort: ReviewSort) => dispatch(setReviewsSort(nextSort)),
     receivedReviews,
     givenReviews,
     breakdown,

@@ -1,10 +1,5 @@
-import { Suspense } from 'react';
-import { SearchResultsPage } from '@/ux/features';
+import { CatalogExperience } from "@/ux/features";
 
 export default function SearchPage() {
-  return (
-    <Suspense>
-      <SearchResultsPage />
-    </Suspense>
-  );
+  return <CatalogExperience />;
 }

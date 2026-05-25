@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Bell, CreditCard, Lock, Shield, User } from 'lucide-react';
 import type { SettingsTab } from './types';
@@ -11,6 +10,11 @@ import { SecuritySection } from './components/SecuritySection';
 import { NotificationsSection } from './components/NotificationsSection';
 import { PaymentSection } from './components/PaymentSection';
 import { PrivacySection } from './components/PrivacySection';
+import {
+  setSettingsTab,
+  useAppDispatch,
+  useAppSelector,
+} from '@/business/shared';
 import styles from './SettingsPage.module.scss';
 
 /* ─── Sidebar items ─── */
@@ -27,7 +31,8 @@ const SIDEBAR_ITEMS: { tab: SettingsTab; icon: React.ReactNode; label: string }[
    SettingsPage
    ═══════════════════════════════════════════════════════════════════════════════ */
 export function SettingsPage() {
-  const [tab, setTab] = useState<SettingsTab>('profile');
+  const dispatch = useAppDispatch();
+  const tab = useAppSelector((state) => state.profileUi.settingsTab) as SettingsTab;
 
   return (
     <div className={styles.page}>
@@ -48,7 +53,7 @@ export function SettingsPage() {
                 key={item.tab}
                 type="button"
                 className={clsx(styles.sidebarItem, tab === item.tab && styles.sidebarItemActive)}
-                onClick={() => setTab(item.tab)}
+                onClick={() => dispatch(setSettingsTab(item.tab))}
               >
                 {item.icon}
                 <span>{item.label}</span>

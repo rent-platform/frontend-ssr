@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import {
@@ -23,6 +23,18 @@ import {
   formatPrice,
 } from '../../utils';
 import { RentalCalendar } from './RentalCalendar';
+import { useCreateDealRequest } from '@/business/deals';
+import { useCreatePayment } from '@/business/payments';
+import {
+  setBookingDates,
+  setBookingDealId,
+  setBookingPriceBreakdown,
+  setBookingStep,
+  showToast,
+  startBookingForItem,
+  useAppDispatch,
+  useAppSelector,
+} from '@/business/shared';
 import styles from '../../Catalog.module.scss';
 
 type BookingSidebarProps = {
@@ -32,9 +44,14 @@ type BookingSidebarProps = {
 };
 
 export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebarProps) {
+  const dispatch = useAppDispatch();
+  const booking = useAppSelector((state) => state.booking);
+  const { createDealRequest, isCreating: isCreatingDeal } = useCreateDealRequest();
+  const { createPayment, isCreating: isCreatingPayment } = useCreatePayment();
   const [calendarOpen, setCalendarOpen] = useState(false);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const startDate = booking.startDate ? new Date(booking.startDate) : null;
+  const endDate = booking.endDate ? new Date(booking.endDate) : null;
+  const isSubmittingPayment = isCreatingDeal || isCreatingPayment;
 
   const primaryPrice = formatCatalogCardPrimaryPrice(item);
   const hourPrice = formatCatalogCardHourSecondary(item);
@@ -48,17 +65,46 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
   }, [startDate, endDate]);
   const subtotal = dailyPrice * (rentalDays || 1);
 
+  useEffect(() => {
+    if (booking.itemId !== item.id) {
+      dispatch(startBookingForItem(item.id));
+    }
+  }, [booking.itemId, dispatch, item.id]);
+
+  useEffect(() => {
+    dispatch(
+      setBookingPriceBreakdown({
+        rentAmount: subtotal,
+        depositAmount,
+        serviceFee: 0,
+        total: subtotal + depositAmount,
+      }),
+    );
+  }, [depositAmount, dispatch, subtotal]);
+
   const formatDateShort = (d: Date) =>
     d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 
   const handleDateSelect = useCallback((start: Date | null, end: Date | null) => {
-    setStartDate(start);
-    setEndDate(end);
-  }, []);
+    const nextRentalDays = start && end
+      ? Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)))
+      : 0;
+
+    dispatch(
+      setBookingDates({
+        startDate: start?.toISOString() ?? null,
+        endDate: end?.toISOString() ?? null,
+        rentalDays: nextRentalDays,
+      }),
+    );
+  }, [dispatch]);
 
   const handleCalendarConfirm = useCallback(() => {
     setCalendarOpen(false);
-  }, []);
+    if (startDate && endDate) {
+      dispatch(setBookingStep("confirm_request"));
+    }
+  }, [dispatch, endDate, startDate]);
 
   const handleProtectedAction = useCallback(() => {
     if (isGuest) {
@@ -67,6 +113,59 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
     }
     setCalendarOpen(true);
   }, [isGuest, onAuthRequired]);
+
+  const handlePayment = useCallback(async () => {
+    if (isGuest) {
+      onAuthRequired?.();
+      return;
+    }
+
+    if (!booking.startDate || !booking.endDate) {
+      setCalendarOpen(true);
+      return;
+    }
+
+    try {
+      const deal = booking.currentDealId
+        ? { id: booking.currentDealId }
+        : await createDealRequest({
+          itemId: item.id,
+          startDate: booking.startDate,
+          endDate: booking.endDate,
+          pricingMode: "PER_DAY",
+        });
+
+      dispatch(setBookingDealId(deal.id));
+      dispatch(setBookingStep("payment"));
+
+      const payment = await createPayment({
+        dealId: deal.id,
+        rentalAmount: booking.priceBreakdown?.rentAmount,
+        depositAmount: booking.priceBreakdown?.depositAmount,
+      });
+
+      if (payment.confirmationUrl) {
+        window.location.href = payment.confirmationUrl;
+        return;
+      }
+
+      dispatch(showToast({ type: "success", message: "Запрос на оплату создан" }));
+    } catch {
+      dispatch(showToast({ type: "error", message: "Не удалось перейти к оплате" }));
+    }
+  }, [
+    booking.currentDealId,
+    booking.endDate,
+    booking.priceBreakdown?.depositAmount,
+    booking.priceBreakdown?.rentAmount,
+    booking.startDate,
+    createDealRequest,
+    createPayment,
+    dispatch,
+    isGuest,
+    item.id,
+    onAuthRequired,
+  ]);
 
   return (
     <aside className={styles.detailSidebar}>
@@ -140,7 +239,12 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.22 }}
             >
-              <button type="button" className={styles.primaryAction} onClick={isGuest ? onAuthRequired : undefined}>
+              <button
+                type="button"
+                className={styles.primaryAction}
+                disabled={isSubmittingPayment}
+                onClick={handlePayment}
+              >
                 <CreditCard size={18} />
                 Перейти к оплате
               </button>

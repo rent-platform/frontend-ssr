@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
@@ -24,6 +24,8 @@ import {
   formatDepositAmount,
   formatRelativeDate,
 } from '../../utils';
+import { useToggleFavorite } from '@/business/favorites';
+import { showToast, useAppDispatch } from '@/business/shared';
 import styles from './CatalogCard.module.scss';
 
 type CatalogCardProps = {
@@ -140,7 +142,12 @@ export function CatalogCard({
   onFavoriteChange,
   isGuest = false,
 }: CatalogCardProps) {
-  const [isFavorite, setIsFavorite] = useState(initialFavorite);
+  const dispatch = useAppDispatch();
+  const [isFavorite, setIsFavorite] = useState(item.isFavorite ?? initialFavorite);
+  const { toggleFavorite, isLoading: isFavoriteLoading } = useToggleFavorite({
+    adId: item.id,
+    isFavorite,
+  });
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.createdAt);
   const hourPrice = formatCatalogCardHourSecondary(item);
@@ -149,6 +156,31 @@ export function CatalogCard({
     : null;
   const highlightItems = (item.quickFilters ?? []).slice(0, 2);
   const allImages = item.images?.length > 0 ? item.images : (item.coverImageUrl ? [item.coverImageUrl] : []);
+
+  useEffect(() => {
+    setIsFavorite(item.isFavorite ?? initialFavorite);
+  }, [initialFavorite, item.id, item.isFavorite]);
+
+  const handleFavoriteClick = useCallback(async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    if (isGuest) {
+      onFavoriteChange?.(item.id, true);
+      return;
+    }
+    if (isFavoriteLoading) return;
+
+    const next = !isFavorite;
+    setIsFavorite(next);
+    onFavoriteChange?.(item.id, next);
+
+    try {
+      await toggleFavorite();
+    } catch {
+      setIsFavorite(!next);
+      onFavoriteChange?.(item.id, !next);
+      dispatch(showToast({ type: "error", message: "Не удалось обновить избранное" }));
+    }
+  }, [dispatch, isFavorite, isFavoriteLoading, isGuest, item.id, onFavoriteChange, toggleFavorite]);
 
   return (
     <motion.article
@@ -163,7 +195,8 @@ export function CatalogCard({
           type="button"
           className={clsx(styles.cardFavorite, isFavorite && styles.cardFavoriteActive)}
           aria-label={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
-          onClick={(e) => { e.stopPropagation(); if (isGuest) { onFavoriteChange?.(item.id, true); return; } const next = !isFavorite; setIsFavorite(next); onFavoriteChange?.(item.id, next); }}
+          disabled={isFavoriteLoading}
+          onClick={handleFavoriteClick}
         >
           <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
         </button>

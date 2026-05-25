@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { CatalogFilterState } from "@/ux/features/Catalog";
+import { INITIAL_FILTERS } from "@/ux/features/Catalog";
 
 export type CatalogViewMode = "grid" | "list";
 
@@ -13,17 +14,7 @@ export interface CatalogState {
   };
 }
 
-const initialFilters: CatalogFilterState = {
-  search: "",
-  city: "Новосибирск",
-  category: "Все категории",
-  minPrice: "",
-  maxPrice: "",
-  onlyAvailable: true,
-  sortBy: "popular",
-  quickFilter: null,
-  hasDeposit: "all",
-};
+const initialFilters: CatalogFilterState = INITIAL_FILTERS;
 
 const initialState: CatalogState = {
   filters: initialFilters,

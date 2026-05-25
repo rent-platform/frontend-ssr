@@ -17,6 +17,14 @@ import type { CreateListingFormData, ImagePreview } from "./types";
 import { StepPhotos, StepInfo, StepPricing, StepReview } from "./components";
 import clsx from "clsx";
 import { ROUTES } from "@/ux/utils";
+import {
+  patchCreateListingDraft,
+  resetCreateListingDraft,
+  setCreateListingStep,
+  useAppDispatch,
+  useAppSelector,
+} from "@/business/shared";
+import type { CreateListingStep } from "@/business/shared/store/features/draft/createItemDraftSlice";
 import styles from "./CreateListing.module.scss";
 
 /* ─── Constants ─── */
@@ -27,21 +35,16 @@ const STEPS = [
   { id: "review", label: "Публикация", Icon: Eye },
 ] as const;
 
-const INITIAL: CreateListingFormData = {
-  title: "",
-  category: "",
-  categoryId: "",
-  condition: "good",
-  description: "",
-  images: [],
-  pricePerDay: "",
-  pricePerHour: "",
-  depositAmount: "",
-  noDeposit: false,
-  pickupLocation: "",
-};
-
 const MAX_IMAGES = 10;
+const STEP_IDS = STEPS.map((step) => step.id);
+
+function getStepIndex(step: CreateListingStep) {
+  return STEP_IDS.indexOf(step);
+}
+
+function getStepId(index: number): CreateListingStep {
+  return STEP_IDS[index] ?? "photos";
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    CreateListing — 4-step wizard
@@ -58,8 +61,11 @@ export function CreateListing({
   onSubmit,
   isSubmitting = false,
 }: CreateListingProps = {}) {
-  const [step, setStep] = useState(0);
-  const [form, setForm] = useState<CreateListingFormData>(INITIAL);
+  const dispatch = useAppDispatch();
+  const { step: stepId, form } = useAppSelector(
+    (state) => state.createListingDraft,
+  );
+  const step = getStepIndex(stepId);
   const [published, setPublished] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
@@ -69,8 +75,8 @@ export function CreateListing({
   /* ─── Helpers ─── */
   const patch = useCallback(
     (updates: Partial<CreateListingFormData>) =>
-      setForm((prev) => ({ ...prev, ...updates })),
-    [],
+      dispatch(patchCreateListingDraft(updates)),
+    [dispatch],
   );
 
   const addImages = useCallback(
@@ -96,16 +102,14 @@ export function CreateListing({
 
   const reorderImages = useCallback((fromId: string, toId: string) => {
     if (fromId === toId) return;
-    setForm((prev) => {
-      const from = prev.images.findIndex((img) => img.id === fromId);
-      const to = prev.images.findIndex((img) => img.id === toId);
-      if (from === -1 || to === -1) return prev;
-      const next = [...prev.images];
-      const [moved] = next.splice(from, 1);
-      next.splice(to, 0, moved);
-      return { ...prev, images: next };
-    });
-  }, []);
+    const from = form.images.findIndex((img) => img.id === fromId);
+    const to = form.images.findIndex((img) => img.id === toId);
+    if (from === -1 || to === -1) return;
+    const next = [...form.images];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    patch({ images: next });
+  }, [form.images, patch]);
 
   const isStepValid = useCallback(
     (s: number): boolean => {
@@ -135,9 +139,11 @@ export function CreateListing({
 
   const goNext = () => {
     if (!canAdvance) return;
-    setStep((s) => Math.min(s + 1, STEPS.length - 1));
+    dispatch(setCreateListingStep(getStepId(Math.min(step + 1, STEPS.length - 1))));
   };
-  const goBack = () => setStep((s) => Math.max(s - 1, 0));
+  const goBack = () => {
+    dispatch(setCreateListingStep(getStepId(Math.max(step - 1, 0))));
+  };
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -173,8 +179,7 @@ export function CreateListing({
                 className={styles.navNext}
                 onClick={() => {
                   setPublished(false);
-                  setStep(0);
-                  setForm(INITIAL);
+                  dispatch(resetCreateListingDraft());
                 }}
               >
                 <Plus size={16} />
@@ -225,7 +230,7 @@ export function CreateListing({
                       : undefined,
                 )}
                 onClick={() => {
-                  if (i < step) setStep(i);
+                  if (i < step) dispatch(setCreateListingStep(getStepId(i)));
                 }}
               >
                 {i < step ? <Check size={15} /> : <s.Icon size={15} />}

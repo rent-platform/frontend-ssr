@@ -31,6 +31,15 @@ import { DashboardSkeleton } from './components/DashboardSkeleton';
 import { VerifyChip } from './components/VerifyChip';
 import { TabBtn } from './components/TabBtn';
 import { ShareModal } from '@/ux/components/ShareModal';
+import {
+  closeModal,
+  openModal,
+  setActiveProfileTab,
+  setProfileDealFilter,
+  setProfileListingFilter,
+  useAppDispatch,
+  useAppSelector,
+} from '@/business/shared';
 import styles from './ProfileDashboard.module.scss';
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -50,12 +59,14 @@ export function ProfileDashboard({
   stats: externalStats,
   isLoading: externalLoading,
 }: ProfileDashboardProps = {}) {
+  const dispatch = useAppDispatch();
+  const profileUi = useAppSelector((state) => state.profileUi);
+  const modal = useAppSelector((state) => state.ui.modal);
   const [mockLoading, setMockLoading] = useState(!externalUser);
-  const [tab, setTab] = useState<ProfileTab>('listings');
-  const [listingFilter, setListingFilter] = useState<ListingFilter>('all');
+  const tab = profileUi.activeProfileTab as ProfileTab;
+  const listingFilter = profileUi.listingFilter as ListingFilter;
   const [dealSide, setDealSide] = useState<BookingSide>('owner');
-  const [dealFilter, setDealFilter] = useState<BookingFilter>('all');
-  const [showShareModal, setShowShareModal] = useState(false);
+  const dealFilter = profileUi.dealFilter as BookingFilter;
 
   const user = externalUser ?? MOCK_USER;
   const stats = externalStats ?? MOCK_STATS;
@@ -121,7 +132,7 @@ export function ProfileDashboard({
               <Link href={ROUTES.settings} className={styles.btnPrimary}>
                 <Edit3 size={15} /> Редактировать
               </Link>
-              <button type="button" className={styles.btnIcon} onClick={() => setShowShareModal(true)} title="Поделиться">
+              <button type="button" className={styles.btnIcon} onClick={() => dispatch(openModal({ type: 'share', payload: { url: profileUrl } }))} title="Поделиться">
                 <Share2 size={17} />
               </button>
               <Link href={ROUTES.publicProfile(user.id)} className={styles.btnIcon} title="Публичный профиль">
@@ -194,8 +205,8 @@ export function ProfileDashboard({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.1, ease: EASE }}
         >
-          <TabBtn active={tab === 'listings'} label="Мои объявления" count={stats.totalListings} onClick={() => setTab('listings')} tooltip="Вещи, которые вы выставили на аренду" />
-          <TabBtn active={tab === 'deals'} label="Мои аренды" count={MOCK_BOOKINGS.length} onClick={() => setTab('deals')} tooltip="История сдачи и аренды вещей" />
+          <TabBtn active={tab === 'listings'} label="Мои объявления" count={stats.totalListings} onClick={() => dispatch(setActiveProfileTab('listings'))} tooltip="Вещи, которые вы выставили на аренду" />
+          <TabBtn active={tab === 'deals'} label="Мои аренды" count={MOCK_BOOKINGS.length} onClick={() => dispatch(setActiveProfileTab('deals'))} tooltip="История сдачи и аренды вещей" />
         </motion.nav>
 
         {/* ── Content ── */}
@@ -207,8 +218,8 @@ export function ProfileDashboard({
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.25, ease: EASE }}
           >
-            {tab === 'listings' && <ListingsPanel filter={listingFilter} onFilterChange={setListingFilter} />}
-            {tab === 'deals' && <DealsPanel side={dealSide} onSideChange={setDealSide} filter={dealFilter} onFilterChange={setDealFilter} />}
+            {tab === 'listings' && <ListingsPanel filter={listingFilter} onFilterChange={(filter) => dispatch(setProfileListingFilter(filter))} />}
+            {tab === 'deals' && <DealsPanel side={dealSide} onSideChange={setDealSide} filter={dealFilter} onFilterChange={(filter) => dispatch(setProfileDealFilter(filter))} />}
           </motion.div>
         </AnimatePresence>
       </main>
@@ -216,7 +227,7 @@ export function ProfileDashboard({
       <CatalogFooter />
 
       <AnimatePresence>
-        {showShareModal && <ShareModal url={profileUrl} onClose={() => setShowShareModal(false)} />}
+        {modal.type === 'share' && typeof modal.payload?.url === 'string' && <ShareModal url={modal.payload.url} onClose={() => dispatch(closeModal())} />}
       </AnimatePresence>
     </div>
   );

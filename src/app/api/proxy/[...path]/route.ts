@@ -254,6 +254,7 @@ async function proxyToBackend(
   headers.delete("host");
   headers.delete("cookie");
   headers.delete("authorization");
+  headers.delete("expect");
 
   // Тело запроса считывается один раз из входящего Request и сохраняется,
   // чтобы обеспечить возможность повторного выполнения запроса

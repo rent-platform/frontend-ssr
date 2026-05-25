@@ -1,14 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Camera, Mail, Phone, Trash2 } from 'lucide-react';
 import clsx from 'clsx';
 import type { ProfileFormData } from '../types';
 import { MOCK_PROFILE } from '../mockSettingsData';
+import { useProfile } from '@/business/profile';
+import { showToast, useAppDispatch } from '@/business/shared';
 import styles from '../SettingsPage.module.scss';
 
 export function ProfileSection() {
+  const dispatch = useAppDispatch();
+  const { profile, updateProfile, isUpdating } = useProfile();
   const [form, setForm] = useState<ProfileFormData>(MOCK_PROFILE);
+
+  useEffect(() => {
+    if (!profile) return;
+    setForm({
+      fullName: profile.fullName,
+      nickname: profile.nickname ?? '',
+      email: profile.email ?? '',
+      phone: profile.phone,
+      bio: profile.bio ?? '',
+      avatarUrl: profile.avatarUrl,
+    });
+  }, [profile]);
 
   const set = <K extends keyof ProfileFormData>(key: K, value: ProfileFormData[K]) =>
     setForm((p) => ({ ...p, [key]: value }));
@@ -114,8 +130,31 @@ export function ProfileSection() {
       </div>
 
       <div className={styles.btnRow}>
-        <button type="button" className={styles.btnPrimary}>Сохранить изменения</button>
-        <button type="button" className={styles.btnSecondary} onClick={() => setForm(MOCK_PROFILE)}>
+        <button
+          type="button"
+          className={styles.btnPrimary}
+          disabled={isUpdating}
+          onClick={() => {
+            updateProfile({
+              fullName: form.fullName,
+              nickname: form.nickname,
+              email: form.email,
+              bio: form.bio,
+              avatarUrl: form.avatarUrl ?? undefined,
+            });
+            dispatch(showToast({ type: 'success', message: 'Профиль обновляется' }));
+          }}
+        >
+          {isUpdating ? 'Сохраняем...' : 'Сохранить изменения'}
+        </button>
+        <button type="button" className={styles.btnSecondary} onClick={() => setForm(profile ? {
+          fullName: profile.fullName,
+          nickname: profile.nickname ?? '',
+          email: profile.email ?? '',
+          phone: profile.phone,
+          bio: profile.bio ?? '',
+          avatarUrl: profile.avatarUrl,
+        } : MOCK_PROFILE)}>
           Отменить
         </button>
       </div>

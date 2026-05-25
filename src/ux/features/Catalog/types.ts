@@ -15,6 +15,7 @@ export type CatalogUiItem = CatalogItemCardVM & {
   availability?: Array<{ availableDate: string; isAvailable: boolean }>;
   featured?: boolean;
   quickFilters?: string[];
+  isFavorite?: boolean;
 };
 
 export type CatalogSortKey =

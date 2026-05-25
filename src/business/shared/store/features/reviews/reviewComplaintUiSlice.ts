@@ -1,5 +1,11 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { ComplaintTargetType } from "@/business/complaints/types";
+import type {
+  ReceivedFilter,
+  ReviewsTab,
+  ReviewSort,
+  StarFilter,
+} from "@/ux/features/Reviews/types";
 
 export type ReviewRatingDraft = 0 | 1 | 2 | 3 | 4 | 5;
 
@@ -17,6 +23,10 @@ export interface ComplaintDraftState {
 }
 
 export interface ReviewComplaintUiState {
+  tab: ReviewsTab;
+  receivedFilter: ReceivedFilter;
+  starFilter: StarFilter;
+  sort: ReviewSort;
   reviewDraft: ReviewDraftState;
   complaintDraft: ComplaintDraftState;
 }
@@ -35,6 +45,10 @@ const initialComplaintDraft: ComplaintDraftState = {
 };
 
 const initialState: ReviewComplaintUiState = {
+  tab: "received",
+  receivedFilter: "all",
+  starFilter: 0,
+  sort: "newest",
   reviewDraft: initialReviewDraft,
   complaintDraft: initialComplaintDraft,
 };
@@ -43,6 +57,18 @@ const reviewComplaintUiSlice = createSlice({
   name: "reviewComplaintUi",
   initialState,
   reducers: {
+    setReviewsTab(state, action: PayloadAction<ReviewsTab>) {
+      state.tab = action.payload;
+    },
+    setReviewsReceivedFilter(state, action: PayloadAction<ReceivedFilter>) {
+      state.receivedFilter = action.payload;
+    },
+    setReviewsStarFilter(state, action: PayloadAction<StarFilter>) {
+      state.starFilter = action.payload;
+    },
+    setReviewsSort(state, action: PayloadAction<ReviewSort>) {
+      state.sort = action.payload;
+    },
     patchReviewDraft(
       state,
       action: PayloadAction<Partial<ReviewDraftState>>,
@@ -65,6 +91,10 @@ const reviewComplaintUiSlice = createSlice({
 });
 
 export const {
+  setReviewsTab,
+  setReviewsReceivedFilter,
+  setReviewsStarFilter,
+  setReviewsSort,
   patchReviewDraft,
   resetReviewDraft,
   patchComplaintDraft,
