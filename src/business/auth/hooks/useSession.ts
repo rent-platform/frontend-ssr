@@ -12,6 +12,7 @@ import { registerApi } from "../api";
 export type AuthResult = {
   ok: boolean;
   error: string | null;
+  code?: string | null;
   redirectTo?: string;
 };
 
@@ -34,9 +35,10 @@ export function useSession() {
         redirect: false,
       });
       const error = res?.error ?? null;
+      const code = res?.code ?? null;
 
       if (error) {
-        return { ok: false, error };
+        return { ok: false, error, code };
       }
 
       // Read the freshly issued session to redirect users by their stored role.

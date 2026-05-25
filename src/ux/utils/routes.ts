@@ -14,6 +14,7 @@ export const ROUTES = {
   howItWorks: '/how-it-works',
   safety: '/safety',
   search: `${BASE}/search`,
+  catalogItem: (id: string) => `${BASE}/catalog/${encodeURIComponent(id)}`,
   chat: `${BASE}/chat`,
   createListing: `${BASE}/create-listing`,
   favorites: `${BASE}/favorites`,

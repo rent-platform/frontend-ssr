@@ -12,6 +12,7 @@ export type CatalogUiItem = CatalogItemCardVM & {
   rentalTerms?: string[];
   specs?: Array<{ label: string; value: string }>;
   description?: string[];
+  availability?: Array<{ availableDate: string; isAvailable: boolean }>;
   featured?: boolean;
   quickFilters?: string[];
 };

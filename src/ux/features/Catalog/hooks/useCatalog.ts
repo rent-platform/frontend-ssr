@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { mockCatalogItems } from '../mockCatalogItems';
 import type { CatalogUiItem } from '../types';
-import { INITIAL_FILTERS, applyCatalogFilters, filtersToSearchParams } from '../utils';
+import { INITIAL_FILTERS, filtersToSearchParams } from '../utils';
 import { ROUTES } from '@/ux/utils';
 
 const BATCH_SIZE = 8;
@@ -25,43 +24,20 @@ export function useCatalog({
   const router = useRouter();
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [selectedItem, setSelectedItem] = useState<CatalogUiItem | null>(null);
-  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [isInitialLoading, setIsInitialLoading] = useState(!externalItems);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  const useMockMode = !externalItems;
-
-  useEffect(() => {
-    if (!useMockMode) return undefined;
-    const timer = setTimeout(() => setIsInitialLoading(false), 800);
-    return () => clearTimeout(timer);
-  }, [useMockMode]);
-
-  const filteredItems = useMemo(
-    () => useMockMode ? applyCatalogFilters(mockCatalogItems, filters) : externalItems!,
-    [useMockMode, externalItems, filters],
-  );
-
-  const visibleItems = useMockMode ? filteredItems.slice(0, visibleCount) : filteredItems;
-
-  const similarItems = selectedItem
-    ? mockCatalogItems
-        .filter((item) => item.id !== selectedItem.id && item.category === selectedItem.category)
-        .slice(0, 4)
-    : [];
-
-  const hasMore = useMockMode
-    ? visibleCount < filteredItems.length
-    : (externalHasMore ?? false);
+  const filteredItems = useMemo(() => externalItems ?? [], [externalItems]);
+  const visibleItems = filteredItems;
+  const similarItems: CatalogUiItem[] = [];
+  const hasMore = externalHasMore ?? false;
 
   const onCloseFilters = () => setIsFiltersOpen(false);
   const onToggleFilters = () => setIsFiltersOpen(!isFiltersOpen);
 
   const updateFilters = (patch: Partial<typeof filters>) => {
     setFilters((prev) => ({ ...prev, ...patch }));
-    setVisibleCount(BATCH_SIZE);
   };
 
   const navigateToSearch = useCallback(() => {
@@ -79,11 +55,7 @@ export function useCatalog({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
-          if (useMockMode) {
-            setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length));
-          } else {
-            onLoadMore?.();
-          }
+          onLoadMore?.();
         }
       },
       { rootMargin: '360px 0px' },
@@ -92,12 +64,11 @@ export function useCatalog({
     observer.observe(node);
 
     return () => observer.disconnect();
-  }, [filteredItems.length, hasMore, selectedItem]);
+  }, [hasMore, onLoadMore, selectedItem]);
 
   const handleOpenItem = (item: CatalogUiItem) => {
     setIsFiltersOpen(false);
-    setSelectedItem(item);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    router.push(ROUTES.catalogItem(item.id));
   };
 
   const handleBackToCatalog = () => {
@@ -120,10 +91,10 @@ export function useCatalog({
     selectedItem,
     setSelectedItem,
     isFiltersOpen,
-    isInitialLoading,
+    isInitialLoading: externalLoading ?? false,
     showScrollTop,
     sentinelRef,
-    useMockMode,
+    useMockMode: false,
     externalLoading,
     externalTotal,
     filteredItems,

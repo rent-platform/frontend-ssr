@@ -12,6 +12,7 @@ import { CatalogSkeletonCard } from './components/cards/CatalogSkeletonCard';
 import { CatalogFooter } from './components/layout/CatalogFooter';
 import type { CatalogUiItem } from './types';
 import { CATEGORY_OPTIONS, INITIAL_FILTERS } from './utils';
+import { useCatalogPage } from '@/business/ads';
 import { useCatalog } from './hooks/useCatalog';
 import styles from './Catalog.module.scss';
 
@@ -38,6 +39,18 @@ export function CatalogExperience({
   onLoadMore,
   hasMore: externalHasMore,
 }: CatalogExperienceProps = {}) {
+  const shouldUseBackend = !externalItems;
+  const backendCatalog = useCatalogPage(
+    { pageSize: 20 },
+    { skip: !shouldUseBackend },
+  );
+  const catalogItems = externalItems ?? backendCatalog.products;
+  const catalogTotal = externalTotal ?? backendCatalog.total;
+  const catalogLoading = externalLoading ?? backendCatalog.isLoading;
+  const catalogError = isError || backendCatalog.isError;
+  const catalogHasMore = externalHasMore ?? backendCatalog.hasNextPage;
+  const loadMore = onLoadMore ?? backendCatalog.fetchNextPage;
+
   const {
     filters,
     setFilters,
@@ -61,14 +74,14 @@ export function CatalogExperience({
     scrollToTop,
     BATCH_SIZE,
   } = useCatalog({
-    items: externalItems,
-    total: externalTotal,
-    isLoading: externalLoading,
-    onLoadMore,
-    hasMore: externalHasMore,
+    items: catalogItems,
+    total: catalogTotal,
+    isLoading: catalogLoading,
+    onLoadMore: loadMore,
+    hasMore: catalogHasMore,
   });
 
-  if (externalLoading || isInitialLoading) {
+  if (catalogLoading || isInitialLoading) {
     return (
       <div className={styles.page}>
         <CatalogHeader cityLabel={filters.city} />
@@ -86,7 +99,7 @@ export function CatalogExperience({
     );
   }
 
-  if (isError) {
+  if (catalogError) {
     return (
       <div className={styles.page}>
         <CatalogHeader cityLabel={filters.city} />
@@ -202,7 +215,7 @@ export function CatalogExperience({
                   filters={filters}
                   onChange={updateFilters}
                   visibleCount={useMockMode ? visibleItems.length : filteredItems.length}
-                  totalCount={externalTotal ?? filteredItems.length}
+                  totalCount={catalogTotal ?? filteredItems.length}
                 />
 
                 {visibleItems.length > 0 ? (

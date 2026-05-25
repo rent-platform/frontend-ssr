@@ -95,18 +95,18 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
 
         {/* Date Selector */}
         <div className={styles.bookingDates}>
-          <div className={styles.bookingDateBtn}>
+          <button type="button" className={styles.bookingDateBtn} onClick={handleProtectedAction}>
             <span className={styles.dateLabel}>Начало</span>
             <span className={startDate ? styles.dateValueActive : styles.dateValue}>
               <Calendar size={14} /> {startDate ? formatDateShort(startDate) : 'Не выбрано'}
             </span>
-          </div>
-          <div className={styles.bookingDateBtn}>
+          </button>
+          <button type="button" className={styles.bookingDateBtn} onClick={handleProtectedAction}>
             <span className={styles.dateLabel}>Конец</span>
             <span className={endDate ? styles.dateValueActive : styles.dateValue}>
               <Calendar size={14} /> {endDate ? formatDateShort(endDate) : 'Не выбрано'}
             </span>
-          </div>
+          </button>
         </div>
 
         {/* Pricing Breakdown */}
@@ -178,6 +178,7 @@ export function BookingSidebar({ item, isGuest, onAuthRequired }: BookingSidebar
               onSelect={handleDateSelect}
               onConfirm={handleCalendarConfirm}
               onClose={() => setCalendarOpen(false)}
+              availability={item.availability}
             />
           ) : null}
         </AnimatePresence>

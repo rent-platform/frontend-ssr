@@ -29,7 +29,7 @@ export function useLoginForm() {
 
   const onSubmit = async (data: LoginFormValues) => {
     setApiError(null);
-    const { ok, error, redirectTo } = await login(
+    const { ok, error, code, redirectTo } = await login(
       data.tel,
       data.password,
       data.rememberMe,
@@ -40,11 +40,16 @@ export function useLoginForm() {
       return;
     }
 
-    setApiError(
-      error === "CredentialsSignin"
-        ? "Неверный телефон или пароль. Попробуйте снова."
-        : getApiErrorMessage(error),
-    );
+    if (error === "CredentialsSignin") {
+      setApiError(
+        code === "account_blocked"
+          ? "Аккаунт заблокирован. Обратитесь в поддержку."
+          : "Неверный телефон или пароль. Попробуйте снова.",
+      );
+      return;
+    }
+
+    setApiError(getApiErrorMessage(error));
   };
 
   return {
