@@ -9,6 +9,19 @@ const PUBLIC_ROUTES = [
   // Страницы входа и регистрации не требуют активной сессии.
   ROUTE_PATHS.LOGIN,
   ROUTE_PATHS.REGISTER,
+  ROUTE_PATHS.devUi, // Dev-UI страницы доступны без авторизации.
+  // Информационные страницы платформы открыты для всех.
+  "/about",
+  "/business",
+  "/careers",
+  "/contacts",
+  "/cookies",
+  "/help",
+  "/how-it-works",
+  "/pricing",
+  "/privacy",
+  "/safety",
+  "/terms",
 ];
 // Проверяет совпадение текущего URL с публичным маршрутом.
 // Для главной страницы разрешается только точное совпадение "/".
