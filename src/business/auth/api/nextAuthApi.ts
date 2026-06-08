@@ -36,6 +36,13 @@ export async function fetchApi<T = unknown>({
     headers.set("Authorization", `Bearer ${accessToken}`);
   }
 
+  const method = options?.method ?? "POST";
+  console.log("[TRACE][AUTH][BACKEND_API] request", {
+    endpoint,
+    method,
+    hasAccessToken: Boolean(accessToken),
+  });
+
   const res = await fetch(`${getBackendBaseUrl()}${endpoint}`, {
     method: "POST",
     ...options,
@@ -43,8 +50,17 @@ export async function fetchApi<T = unknown>({
   });
 
   const data = await res.json().catch(() => null);
+  console.log("[TRACE][AUTH][BACKEND_API] response", {
+    endpoint,
+    status: res.status,
+    ok: res.ok,
+  });
 
   if (!res.ok) {
+    console.log("[TRACE][AUTH][BACKEND_API] error payload", {
+      endpoint,
+      data,
+    });
     throw new Error(getApiErrorMessage({ status: res.status, data }));
   }
 
@@ -56,6 +72,10 @@ export function loginApi(payload: {
   password: string;
   rememberMe?: boolean;
 }) {
+  console.log("[TRACE][AUTH][BACKEND_API] loginApi payload", {
+    login: payload.login,
+    rememberMe: payload.rememberMe,
+  });
   return fetchApi<AuthResponseDTO>({
     endpoint: "/api/auth/login",
     options: {
@@ -76,6 +96,9 @@ export function refreshApi(refreshToken: string) {
 }
 
 export function getMeApi(accessToken: string) {
+  console.log("[TRACE][AUTH][BACKEND_API] getMeApi with access token", {
+    hasAccessToken: Boolean(accessToken),
+  });
   return fetchApi<UserResponseDTO>({
     endpoint: "/api/users/me",
     options: {

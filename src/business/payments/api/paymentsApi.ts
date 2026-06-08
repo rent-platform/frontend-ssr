@@ -1,15 +1,7 @@
 ﻿import { baseApi } from "@/business/shared";
-import type {
-  CapturePaymentRequest,
-  CreatePaymentRequest,
-  Payment,
-  PaymentConfirmationResponse,
-} from "../types";
+import type { CreatePaymentRequest, PaymentConfirmationResponse } from "../types";
 
 const PAYMENTS_LIST_TAG_ID = "LIST";
-
-const getPaymentTags = (payment?: Payment) =>
-  payment ? [{ type: "Payment" as const, id: payment.paymentId }] : [];
 
 const getPaymentInvalidationTags = (paymentId?: string, dealId?: string) => [
   { type: "Payment" as const, id: PAYMENTS_LIST_TAG_ID },
@@ -31,12 +23,12 @@ export const paymentsApi = baseApi.injectEndpoints({
         getPaymentInvalidationTags(result?.paymentId, dealId),
     }),
 
-    capturePayment: build.mutation<
+    /* capturePayment: build.mutation<
       Payment,
       { paymentId: string; body: CapturePaymentRequest; dealId?: string }
     >({
       query: ({ paymentId, body }) => ({
-        url: `payments/${paymentId}/capture`,
+        url: `api/payments/${paymentId}/capture`,
         method: "POST",
         body,
       }),
@@ -49,7 +41,7 @@ export const paymentsApi = baseApi.injectEndpoints({
       { paymentId: string; dealId?: string }
     >({
       query: ({ paymentId }) => ({
-        url: `payments/${paymentId}/cancel`,
+        url: `api/payments/${paymentId}/cancel`,
         method: "POST",
       }),
       invalidatesTags: (result, _error, { paymentId, dealId }) =>
@@ -58,7 +50,7 @@ export const paymentsApi = baseApi.injectEndpoints({
 
     fetchPaymentByDeal: build.query<Payment, string>({
       query: (dealId) => ({
-        url: "payments",
+        url: "api/payments",
         params: { dealId },
       }),
       providesTags: (result, _error, dealId) => [
@@ -70,24 +62,21 @@ export const paymentsApi = baseApi.injectEndpoints({
 
     fetchPaymentById: build.query<Payment, string>({
       query: (paymentId) => ({
-        url: `payments/${paymentId}`,
+        url: `api/payments/${paymentId}`,
       }),
       providesTags: (result, _error, paymentId) => [
         { type: "Payment", id: paymentId },
         ...getPaymentTags(result),
       ],
     }),
+  **/
   }),
 });
 
 export const {
   useCreatePaymentMutation,
-  useCapturePaymentMutation,
-  useCancelPaymentMutation,
-  useFetchPaymentByDealQuery,
-  useFetchPaymentByIdQuery,
+  // useCapturePaymentMutation,
+  // useCancelPaymentMutation,
+  // useFetchPaymentByDealQuery,
+  // useFetchPaymentByIdQuery,
 } = paymentsApi;
-
-
-
-

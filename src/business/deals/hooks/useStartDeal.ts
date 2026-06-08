@@ -7,7 +7,7 @@ import { type ApiUiError } from "@/business/shared";
 import type { DealDetailsVM } from "../types";
 
 export interface UseStartDealResult {
-  startDeal: (dealId: string) => Promise<unknown>;
+  startDeal: (dealId: string) => Promise<DealDetailsVM>;
   deal: DealDetailsVM | null;
   isStarting: boolean;
   isError: boolean;
@@ -23,7 +23,9 @@ export function useStartDeal(): UseStartDealResult {
   ] = useStartDealMutation();
 
   return {
-    startDeal: (dealId) => startDealMutation(dealId),
+    startDeal: (dealId) => startDealMutation(dealId)
+      .unwrap()
+      .then(mapDealToVM),
     deal: data ? mapDealToVM(data) : null,
     isStarting: isLoading,
     isError,

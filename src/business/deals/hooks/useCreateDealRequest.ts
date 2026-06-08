@@ -23,8 +23,19 @@ export function useCreateDealRequest(): UseCreateDealRequestResult {
   ] = useCreateDealRequestMutation();
 
   return {
-    createDealRequest: async (payload) =>
-      mapDealToVM(await createDealRequestMutation(payload).unwrap()),
+    createDealRequest: async (payload) => {
+      console.log("[TRACE][RENT_PAYMENT][DEAL] create rent request start", payload);
+      const deal = await createDealRequestMutation(payload).unwrap();
+      const vm = mapDealToVM(deal);
+      console.log("[TRACE][RENT_PAYMENT][DEAL] create rent request success", {
+        dealId: vm.id,
+        itemId: vm.itemId,
+        status: vm.status,
+        totalPrice: vm.totalPrice,
+        depositAmount: vm.depositAmount,
+      });
+      return vm;
+    },
     deal: data ? mapDealToVM(data) : null,
     isCreating: isLoading,
     isError,

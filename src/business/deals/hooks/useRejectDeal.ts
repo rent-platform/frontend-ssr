@@ -7,7 +7,7 @@ import { type ApiUiError } from "@/business/shared";
 import type { DealDetailsVM, RejectDealRequestDto } from "../types";
 
 export interface UseRejectDealResult {
-  rejectDeal: (dealId: string, body?: RejectDealRequestDto) => Promise<unknown>;
+  rejectDeal: (dealId: string, body?: RejectDealRequestDto) => Promise<DealDetailsVM>;
   deal: DealDetailsVM | null;
   isRejecting: boolean;
   isError: boolean;
@@ -23,8 +23,12 @@ export function useRejectDeal(): UseRejectDealResult {
   ] = useRejectDealMutation();
 
   return {
-    rejectDeal: (dealId, body) =>
-      rejectDealMutation({ id: dealId, body: body ?? { reason: "" } }),
+    rejectDeal: (dealId, body) => {
+      const requestBody = body ?? { reason: "" };
+      return rejectDealMutation({ id: dealId, body: requestBody })
+        .unwrap()
+        .then(mapDealToVM);
+    },
     deal: data ? mapDealToVM(data) : null,
     isRejecting: isLoading,
     isError,

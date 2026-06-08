@@ -20,6 +20,12 @@ function toNullableString(value: number | string | null | undefined) {
   return value === null || value === undefined ? null : String(value);
 }
 
+function toCreatedAt(value: string | null | undefined) {
+  return value && Number.isFinite(new Date(value).getTime())
+    ? value
+    : new Date().toISOString();
+}
+
 function mapCatalogItemToBaseVM(dto: AdsItemResponseDto): CatalogItemBaseVM {
   return {
     id: dto.id,
@@ -33,7 +39,7 @@ function mapCatalogItemToBaseVM(dto: AdsItemResponseDto): CatalogItemBaseVM {
     pickupLocation: dto.pickupLocation ?? dto.city ?? null,
     status: dto.status,
     viewsCount: dto.viewsCount ?? 0,
-    createdAt: dto.createdAt ?? "",
+    createdAt: toCreatedAt(dto.createdAt),
     isAvailable: dto.isAvailable ?? dto.status === "ACTIVE",
     nearestAvailableDate: dto.nearestAvailableDate ?? null,
   };
@@ -54,7 +60,7 @@ function mapCatalogShortItemToBaseVM(
     pickupLocation: dto.city ?? null,
     status: dto.status,
     viewsCount: 0,
-    createdAt: "",
+    createdAt: toCreatedAt(undefined),
     isAvailable: dto.status === "ACTIVE",
     nearestAvailableDate: null,
   };

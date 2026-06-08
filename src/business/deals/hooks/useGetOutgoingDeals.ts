@@ -1,10 +1,11 @@
 ﻿"use client";
 
 import { useFetchMyOutgoingDealsQuery } from "../api";
+import { useMemo } from "react";
 import { mapDealToVM } from "../mappers";
 import { getApiError } from "@/business/shared";
 import { type ApiUiError } from "@/business/shared";
-import type { DealCardVM } from "../types";
+import type { DealCardVM, FetchDealsArgs } from "../types";
 
 export interface UseGetOutgoingDealsResult {
   deals: DealCardVM[];
@@ -15,16 +16,21 @@ export interface UseGetOutgoingDealsResult {
   refetch: () => void;
 }
 
-export function useGetOutgoingDeals(): UseGetOutgoingDealsResult {
+export function useGetOutgoingDeals(params: FetchDealsArgs = {}): UseGetOutgoingDealsResult {
   const { data, isLoading, isFetching, isError, error, refetch } =
-    useFetchMyOutgoingDealsQuery();
+    useFetchMyOutgoingDealsQuery(params);
+  const deals = useMemo(
+    () => (data?.content ?? []).map(mapDealToVM),
+    [data?.content],
+  );
+  const uiError = useMemo(() => getApiError(error), [error]);
 
   return {
-    deals: (data?.content ?? []).map(mapDealToVM),
+    deals,
     isLoading,
     isFetching,
     isError,
-    error: getApiError(error),
+    error: uiError,
     refetch,
   };
 }

@@ -125,16 +125,6 @@ export const dealsApi = baseApi.injectEndpoints({
       ],
     }),
 
-    fetchDealById: build.query<Deal, string>({
-      query: (id) => ({
-        url: `${DEALS_URL}/${id}`,
-      }),
-      providesTags: (result, _error, id) => [
-        { type: "Deals", id },
-        ...(result?.history ? [getDealHistoryTag(id)] : []),
-      ],
-    }),
-
     confirmDeal: build.mutation<Deal, string>({
       query: (id) => ({
         url: `${DEALS_URL}/${id}/confirm`,
@@ -179,13 +169,24 @@ export const dealsApi = baseApi.injectEndpoints({
         getDealMutationInvalidationTags(id),
     }),
 
-    completeDeal: build.mutation<Deal, string>({
-      query: (id) => ({
+    completeDeal: build.mutation<Deal, { id: string; itemOk?: boolean }>({
+      query: ({ id, itemOk = true }) => ({
         url: `${DEALS_URL}/${id}/confirm-complete`,
         method: "POST",
+        params: { itemOk },
       }),
-      invalidatesTags: (_result, _error, id) =>
+      invalidatesTags: (_result, _error, { id }) =>
         getDealMutationInvalidationTags(id),
+    }),
+
+    fetchDealById: build.query<Deal, string>({
+      query: (id) => ({
+        url: `${DEALS_URL}/${id}`,
+      }),
+      providesTags: (result, _error, id) => [
+        { type: "Deals", id },
+        ...(result?.history ? [getDealHistoryTag(id)] : []),
+      ],
     }),
 
     fetchMyIncomingDeals: build.query<

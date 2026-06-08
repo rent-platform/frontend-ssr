@@ -11,7 +11,10 @@ export function useCreateAd() {
   const createError: ApiUiError | null = getApiError(error);
 
   return {
-    createAd,
+    createAd: (payload: Parameters<typeof createAd>[0]) => {
+      console.log("[TRACE][CREATE_LISTING][HOOK] createAd mutation start", payload);
+      return createAd(payload);
+    },
     isCreating,
     isError,
     createError,

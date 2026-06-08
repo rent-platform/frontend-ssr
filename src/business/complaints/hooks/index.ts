@@ -1,0 +1,1 @@
+export { useCreateComplaint } from "./useCreateComplaint";

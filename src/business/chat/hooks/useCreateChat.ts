@@ -20,7 +20,25 @@ export function useCreateChat(): UseCreateChatResult {
     useCreateChatMutation();
 
   const createChat = useCallback(
-    (payload: CreateChatRequestDto) => createChatMutation(payload).unwrap(),
+    async (payload: CreateChatRequestDto) => {
+      console.log("[TRACE][CHAT][REST] create chat start", {
+        itemId: payload.itemId,
+      });
+      try {
+        const chat = await createChatMutation(payload).unwrap();
+        console.log("[TRACE][CHAT][REST] create chat success", {
+          chatId: chat.id,
+          itemId: payload.itemId,
+        });
+        return chat;
+      } catch (error) {
+        console.log("[TRACE][CHAT][REST] create chat failed", {
+          itemId: payload.itemId,
+          error,
+        });
+        throw error;
+      }
+    },
     [createChatMutation],
   );
 

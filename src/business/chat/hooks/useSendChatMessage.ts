@@ -20,7 +20,27 @@ export function useSendChatMessage(): UseSendChatMessageResult {
     useSendMessageMutation();
 
   const sendMessage = useCallback(
-    (payload: SendMessageRequestDto) => sendMessageMutation(payload).unwrap(),
+    async (payload: SendMessageRequestDto) => {
+      console.log("[TRACE][CHAT][REST] send message start", {
+        chatId: payload.chatId,
+        textLength: payload.text.length,
+      });
+      try {
+        const message = await sendMessageMutation(payload).unwrap();
+        console.log("[TRACE][CHAT][REST] send message success", {
+          chatId: payload.chatId,
+          messageId: message.id,
+          messageType: message.messageType ?? "USER",
+        });
+        return message;
+      } catch (error) {
+        console.log("[TRACE][CHAT][REST] send message failed", {
+          chatId: payload.chatId,
+          error,
+        });
+        throw error;
+      }
+    },
     [sendMessageMutation],
   );
 

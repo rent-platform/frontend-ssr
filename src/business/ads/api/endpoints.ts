@@ -411,6 +411,7 @@ export const {
   useFetchAdsInfiniteQuery,
   useFetchMyAdsQuery,
   useFetchModerationAdsQuery,
+  useLazyFetchModerationAdsQuery,
   useFetchSimilarAdsQuery,
   useFetchItemStatsQuery,
   useFetchItemDealInfoQuery,

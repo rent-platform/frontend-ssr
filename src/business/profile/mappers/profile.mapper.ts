@@ -1,4 +1,11 @@
-﻿import type { ProfileResponseDto, ProfileVM } from "../types";
+import type {
+  ProfileDashboardStatsVM,
+  ProfileDashboardUserVM,
+  ProfileDashboardVM,
+  ProfileResponseDto,
+  ProfileVM,
+} from "../types";
+import type { UserRatingSummaryDTO } from "@/business/reviews";
 
 export function mapProfileToVM(dto: ProfileResponseDto): ProfileVM {
   return {
@@ -12,6 +19,7 @@ export function mapProfileToVM(dto: ProfileResponseDto): ProfileVM {
     role: dto.role,
   };
 }
+
 // временная тема
 export function mapSessionUserToProfileVM(user: {
   id: string;
@@ -31,5 +39,28 @@ export function mapSessionUserToProfileVM(user: {
     avatarUrl: user.avatarUrl ?? null,
     bio: null,
     role: user.role as ProfileVM["role"], // пока так
+  };
+}
+
+export function mapProfileToDashboardUserVM(
+  profile: ProfileVM,
+  ratingSummary?: UserRatingSummaryDTO | null,
+): ProfileDashboardUserVM {
+  return {
+    ...profile,
+    rating: ratingSummary?.overallRating ?? 0,
+    reviewCount: ratingSummary?.totalReviews ?? 0,
+    memberSince: null,
+  };
+}
+
+export function mapProfileDashboardVM(
+  profile: ProfileVM,
+  stats: ProfileDashboardStatsVM,
+  ratingSummary?: UserRatingSummaryDTO | null,
+): ProfileDashboardVM {
+  return {
+    user: mapProfileToDashboardUserVM(profile, ratingSummary),
+    stats,
   };
 }

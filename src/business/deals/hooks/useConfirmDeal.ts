@@ -7,7 +7,7 @@ import { type ApiUiError } from "@/business/shared";
 import type { DealDetailsVM } from "../types";
 
 export interface UseConfirmDealResult {
-  confirmDeal: (dealId: string) => Promise<unknown>;
+  confirmDeal: (dealId: string) => Promise<DealDetailsVM>;
   deal: DealDetailsVM | null;
   isConfirming: boolean;
   isError: boolean;
@@ -23,7 +23,9 @@ export function useConfirmDeal(): UseConfirmDealResult {
   ] = useConfirmDealMutation();
 
   return {
-    confirmDeal: (dealId) => confirmDealMutation(dealId),
+    confirmDeal: (dealId) => confirmDealMutation(dealId)
+      .unwrap()
+      .then(mapDealToVM),
     deal: data ? mapDealToVM(data) : null,
     isConfirming: isLoading,
     isError,

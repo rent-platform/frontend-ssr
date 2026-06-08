@@ -11,9 +11,8 @@ export const LoadingTrigger = ({ observerRef, isFetchingNextPage }: Props) => {
       {isFetchingNextPage ? (
         <div>Loading more tracks...</div>
       ) : (
-        <div style={{ height: "20px" }} />
+        <div style={{ height: "1px" }} />
       )}
     </div>
   );
 };
-

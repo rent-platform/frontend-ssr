@@ -6,7 +6,7 @@ import { type ApiUiError } from "@/business/shared";
 import type { CreateReviewRequest, ReviewDTO } from "../types";
 
 export interface UseCreateReviewResult {
-  createReview: (payload: CreateReviewRequest) => Promise<unknown>; // Запускает mutation создания отзыва.
+  createReview: (payload: CreateReviewRequest) => Promise<ReviewDTO>; // Запускает mutation создания отзыва.
   review: ReviewDTO | null; // Созданный отзыв из успешного ответа.
   isCreating: boolean; // Активно ли сейчас создание отзыва.
   isError: boolean; // Завершилась ли mutation ошибкой.
@@ -22,7 +22,7 @@ export function useCreateReview(): UseCreateReviewResult {
   ] = useCreateReviewMutation();
 
   return {
-    createReview: (payload) => createReviewMutation(payload), // Передаём payload в RTK Query mutation.
+    createReview: (payload) => createReviewMutation(payload).unwrap(), // Передаём payload в RTK Query mutation.
     review: data ?? null, // Если ответа ещё нет, UI получает null.
     isCreating: isLoading, // Переименовываем isLoading в предметное состояние.
     isError, // Оставляем стандартный флаг ошибки.

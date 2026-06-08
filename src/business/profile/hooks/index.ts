@@ -1,2 +1,2 @@
-export { useProfile } from "./useProfile";
+export { useProfile, useProfileDashboard } from "./useProfile";
 export { useDeleteCurrentProfile } from "./useDeleteCurrentProfile";

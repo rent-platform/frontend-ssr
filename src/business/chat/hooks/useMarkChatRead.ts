@@ -22,8 +22,25 @@ export function useMarkChatRead(): UseMarkChatReadResult {
   ] = useMarkChatReadMutation();
 
   const markChatRead = useCallback(
-    (payload: MarkChatReadRequestDto) =>
-      markChatReadMutation(payload).unwrap(),
+    async (payload: MarkChatReadRequestDto) => {
+      console.log("[TRACE][CHAT][REST] mark chat read start", {
+        chatId: payload.chatId,
+      });
+      try {
+        const event = await markChatReadMutation(payload).unwrap();
+        console.log("[TRACE][CHAT][REST] mark chat read success", {
+          chatId: payload.chatId,
+          readAt: event.readAt,
+        });
+        return event;
+      } catch (error) {
+        console.log("[TRACE][CHAT][REST] mark chat read failed", {
+          chatId: payload.chatId,
+          error,
+        });
+        throw error;
+      }
+    },
     [markChatReadMutation],
   );
 

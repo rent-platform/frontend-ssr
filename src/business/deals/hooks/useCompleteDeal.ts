@@ -7,7 +7,7 @@ import { type ApiUiError } from "@/business/shared";
 import type { DealDetailsVM } from "../types";
 
 export interface UseCompleteDealResult {
-  completeDeal: (dealId: string) => Promise<unknown>;
+  completeDeal: (dealId: string, itemOk?: boolean) => Promise<DealDetailsVM>;
   deal: DealDetailsVM | null;
   isCompleting: boolean;
   isError: boolean;
@@ -23,7 +23,9 @@ export function useCompleteDeal(): UseCompleteDealResult {
   ] = useCompleteDealMutation();
 
   return {
-    completeDeal: (dealId) => completeDealMutation(dealId),
+    completeDeal: (dealId, itemOk = true) => completeDealMutation({ id: dealId, itemOk })
+      .unwrap()
+      .then(mapDealToVM),
     deal: data ? mapDealToVM(data) : null,
     isCompleting: isLoading,
     isError,

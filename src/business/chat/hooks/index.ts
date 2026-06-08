@@ -4,3 +4,6 @@ export * from "./useCreateChat";
 export * from "./useSendChatMessage";
 export * from "./useMarkChatRead";
 export * from "./useChatTyping";
+export * from "./useChatTopic";
+export * from "./useRealtimeChatMessages";
+export * from "./useChatPageModel";

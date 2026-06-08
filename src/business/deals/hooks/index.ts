@@ -9,6 +9,7 @@ export { useRejectDeal } from "./useRejectDeal";
 export { useCancelDeal } from "./useCancelDeal";
 export { useStartDeal } from "./useStartDeal";
 export { useCompleteDeal } from "./useCompleteDeal";
+export { useRentalBooking } from "./useRentalBooking";
 
 
 

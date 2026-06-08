@@ -1,8 +1,27 @@
-﻿const ROUTE_PATHS = {
+const ROUTE_PATHS = {
   HOME: "/",
+  ABOUT: "/about",
+  BUSINESS: "/business",
+  CAREERS: "/careers",
   CATALOG: "/catalog",
+  CHAT: "/chat",
+  CONTACTS: "/contacts",
+  COOKIES: "/cookies",
+  CREATE_LISTING: "/create-listing",
   FAVORITES: "/favorites",
+  GUEST: "/guest",
+  HELP: "/help",
+  HOW_IT_WORKS: "/how-it-works",
+  NOTIFICATIONS: "/notifications",
+  PRICING: "/pricing",
+  PRIVACY: "/privacy",
   PROFILE: "/profile",
+  PUBLIC_PROFILE: "/user",
+  REVIEWS: "/reviews",
+  SAFETY: "/safety",
+  SEARCH: "/search",
+  SETTINGS: "/settings",
+  TERMS: "/terms",
   ORDERS: "/orders",
   CART: "/cart",
   LOGIN: "/login",
@@ -11,5 +30,6 @@
   MODERATOR: "/moderator",
   DEV_UI: "/dev-ui",
   authorization: "/api/auth",
-};
+} as const;
+
 export default ROUTE_PATHS;

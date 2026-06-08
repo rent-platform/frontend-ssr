@@ -1,6 +1,7 @@
 "use client";
 
 import { getApiError, type ApiUiError } from "@/business/shared";
+import { skipToken } from "@reduxjs/toolkit/query";
 import { useFetchChatMessagesQuery } from "../api";
 import type { ChatMessage, FetchChatMessagesArgs } from "../types";
 
@@ -15,10 +16,10 @@ export type UseChatMessagesResult = {
 };
 
 export function useChatMessages(
-  params: FetchChatMessagesArgs,
+  params: FetchChatMessagesArgs | null | undefined,
 ): UseChatMessagesResult {
   const { data, isLoading, isFetching, isError, error, refetch } =
-    useFetchChatMessagesQuery(params);
+    useFetchChatMessagesQuery(params ?? skipToken);
 
   return {
     messages: data?.items ?? [],

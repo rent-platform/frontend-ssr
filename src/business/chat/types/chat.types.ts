@@ -18,10 +18,18 @@ export type ChatLastMessage = {
 export type Chat = {
   id: string;
   itemId: string | null;
+  itemTitle?: string | null;
+  imageUrl?: string | null;
+  otherUserId?: string | null;
+  otherUserNickname?: string | null;
+  otherUserAvatarUrl?: string | null;
   dealId: string | null;
   participants: ChatParticipant[];
   lastMessage: ChatLastMessage | null;
+  lastMessageTime?: ISODateString | null;
   unreadCount: number;
+  dealStatus?: string | null;
+  role?: string | null;
   createdAt: ISODateString;
   updatedAt: ISODateString;
 };
@@ -31,10 +39,12 @@ export type ChatMessage = {
   chatId: string;
   senderId: string;
   text: string;
+  messageType?: string | null;
+  systemPayload?: Record<string, unknown> | null;
   attachments: ChatMessageAttachment[];
   readBy: ChatMessageReadReceipt[];
   createdAt: ISODateString;
-  updatedAt: ISODateString;
+  updatedAt?: ISODateString;
 };
 
 export type ChatMessageAttachment = {
@@ -52,6 +62,7 @@ export type ChatMessageReadReceipt = {
 export type FetchChatsArgs = {
   search?: string;
   archived?: boolean;
+  role?: "OWNER" | "RENTER";
   cursor?: string;
   limit?: number;
 };
@@ -69,7 +80,7 @@ export type ChatPageResponse<T> = {
 
 export type CreateChatRequestDto = {
   itemId: string;
-  message: string;
+  message?: string;
   recipientId?: string;
 };
 

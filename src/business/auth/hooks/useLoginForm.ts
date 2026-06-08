@@ -28,6 +28,10 @@ export function useLoginForm() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
+    console.log("[TRACE][AUTH][UI] login form submit", {
+      tel: data.tel,
+      rememberMe: data.rememberMe,
+    });
     setApiError(null);
     const { ok, error, code, redirectTo } = await login(
       data.tel,
@@ -36,11 +40,15 @@ export function useLoginForm() {
     );
 
     if (ok) {
+      console.log("[TRACE][AUTH][UI] login success, redirect by role", {
+        redirectTo: redirectTo ?? ROUTE_PATHS.HOME,
+      });
       router.replace(redirectTo ?? ROUTE_PATHS.HOME);
       return;
     }
 
     if (error === "CredentialsSignin") {
+      console.log("[TRACE][AUTH][UI] login credentials error", { code });
       setApiError(
         code === "account_blocked"
           ? "Аккаунт заблокирован. Обратитесь в поддержку."
@@ -49,6 +57,7 @@ export function useLoginForm() {
       return;
     }
 
+    console.log("[TRACE][AUTH][UI] login unexpected error", { error });
     setApiError(getApiErrorMessage(error));
   };
 

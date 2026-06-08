@@ -1,6 +1,8 @@
 ﻿"use client";
 
+import { useMemo } from "react";
 import { useFetchDealStatusHistoryQuery } from "../api";
+import { skipToken } from "@reduxjs/toolkit/query";
 import { mapDealStatusHistoryToVM } from "../mappers";
 import { getApiError } from "@/business/shared";
 import { type ApiUiError } from "@/business/shared";
@@ -16,17 +18,22 @@ export interface UseGetDealStatusHistoryResult {
 }
 
 export function useGetDealStatusHistory(
-  dealId: string,
+  dealId: string | null | undefined,
 ): UseGetDealStatusHistoryResult {
   const { data, isLoading, isFetching, isError, error, refetch } =
-    useFetchDealStatusHistoryQuery(dealId);
+    useFetchDealStatusHistoryQuery(dealId ?? skipToken);
+  const history = useMemo(
+    () => (data ?? []).map(mapDealStatusHistoryToVM),
+    [data],
+  );
+  const uiError = getApiError(error);
 
   return {
-    history: (data ?? []).map(mapDealStatusHistoryToVM),
+    history,
     isLoading,
     isFetching,
     isError,
-    error: getApiError(error),
+    error: uiError,
     refetch,
   };
 }

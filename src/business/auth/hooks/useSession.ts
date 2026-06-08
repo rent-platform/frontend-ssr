@@ -26,6 +26,10 @@ export function useSession() {
     rememberMe = false,
   ): Promise<AuthResult> => {
     try {
+      console.log("[TRACE][AUTH][HOOK] signIn(credentials) start", {
+        tel,
+        rememberMe,
+      });
       // Credentials sign-in delegates validation to Auth.js authorize().
       // redirect: false lets the form handle errors and route selection.
       const res = await signIn("credentials", {
@@ -36,13 +40,24 @@ export function useSession() {
       });
       const error = res?.error ?? null;
       const code = res?.code ?? null;
+      console.log("[TRACE][AUTH][HOOK] Auth.js signIn result", {
+        ok: !error,
+        error,
+        code,
+      });
 
       if (error) {
         return { ok: false, error, code };
       }
 
       // Read the freshly issued session to redirect users by their stored role.
+      console.log("[TRACE][AUTH][HOOK] getSession after signIn");
       const session = await getSession();
+      console.log("[TRACE][AUTH][HOOK] session created", {
+        userId: session?.user?.id,
+        role: session?.user?.role,
+        redirectTo: getDefaultRouteForRole(session?.user?.role),
+      });
       return {
         ok: true,
         error: null,
@@ -50,6 +65,7 @@ export function useSession() {
       };
     } catch (e) {
       const message = e instanceof Error ? e.message : "MyCredentialsSignin";
+      console.log("[TRACE][AUTH][HOOK] signIn threw", { message });
       return { ok: false, error: message };
     }
   };

@@ -1,16 +1,21 @@
 ﻿"use client";
 
+import { useMemo } from "react";
 import { useGetAds } from "./useGetAds";
 import { useInfiniteScroll } from "@/business/shared";
-import { useDebouncedValue } from "@/business/shared";
 import type { FetchAdsArgs } from "../types";
 
 export function useCatalogPage(
   params: FetchAdsArgs = {},
   options: { skip?: boolean } = {},
 ) {
-  const search = params.search ?? "";
-  const debouncedSearch = useDebouncedValue(search, 400); // Не отправляем запрос на каждый ввод символа.
+  const queryParams = useMemo(
+    () => ({
+      ...params,
+      pageSize: params.pageSize ?? 20,
+    }),
+    [params],
+  );
 
   const {
     products,
@@ -23,14 +28,7 @@ export function useCatalogPage(
     hasNextPage,
     fetchNextPage,
     refetch,
-  } = useGetAds(
-    {
-      ...params,
-      search: debouncedSearch || undefined,
-      pageSize: params.pageSize ?? 20,
-    },
-    options,
-  );
+  } = useGetAds(queryParams, options);
 
   const { observerRef } = useInfiniteScroll({
     hasNextPage, // Запускаем observer только если есть следующая страница.

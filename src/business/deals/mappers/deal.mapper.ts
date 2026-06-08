@@ -6,9 +6,11 @@ import type {
   DealStatusHistoryItemVM,
 } from "../types";
 
-const DEAL_STATUS_LABELS: Record<DealStatus, string> = {
+const DEAL_STATUS_LABELS: Partial<Record<DealStatus, string>> = {
   PENDING: "Ожидает подтверждения",
   CONFIRMED: "Подтверждена",
+  PAYMENT_PENDING: "Ожидает оплаты",
+  PAID: "Оплачено",
   ACTIVE: "Активна",
   COMPLETED: "Завершена",
   REJECTED: "Отклонена",
