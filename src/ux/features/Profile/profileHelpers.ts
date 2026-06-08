@@ -1,60 +1,73 @@
-import type { ItemStatus } from '@/business/ads/types';
-import type { DealStatus } from '@/business/deals/types';
-import type { CatalogUiItem } from '../Catalog';
-import type { ProfileListing } from './types';
-import { MOCK_USER } from './mockProfileData';
-import styles from './ProfileDashboard.module.scss';
+import type { ItemStatus } from "@/business/ads/types";
+import type { DealStatus } from "@/business/deals/types";
+import type { ProfileVM } from "@/business/profile";
+import type { CatalogUiItem } from "../Catalog";
+import type { ProfileListing } from "./types";
+import styles from "./ProfileDashboard.module.scss";
 
-export type ListingFilter = 'all' | ItemStatus;
-export type BookingFilter = 'all' | DealStatus;
+type ProfileCompletionUser = Pick<
+  ProfileVM,
+  "avatarUrl" | "bio" | "phone" | "email" | "nickname"
+>;
 
-export const DEAL_STATUS_MAP: Record<DealStatus, { label: string; cls: string }> = {
-  PENDING:   { label: 'Ожидает',     cls: styles.statusNew },
-  CONFIRMED: { label: 'Подтверждена', cls: styles.statusConfirmed },
-  ACTIVE:    { label: 'Активна',     cls: styles.statusActive },
-  COMPLETED: { label: 'Завершена',   cls: styles.statusCompleted },
-  REJECTED:  { label: 'Отклонена',   cls: styles.statusRejected },
-  CANCELLED: { label: 'Отменена',    cls: styles.statusArchived },
+export type ListingFilter = "all" | ItemStatus;
+export type BookingFilter = "all" | DealStatus;
+
+export const DEAL_STATUS_MAP: Partial<Record<DealStatus, { label: string; cls: string }>> = {
+  PENDING: { label: "Ожидает", cls: styles.statusNew },
+  CONFIRMED: { label: "Подтверждена", cls: styles.statusConfirmed },
+  PAYMENT_PENDING: { label: "Ожидает оплаты", cls: styles.statusConfirmed },
+  PAID: { label: "Оплачена", cls: styles.statusConfirmed },
+  ACTIVE: { label: "Активна", cls: styles.statusActive },
+  COMPLETED: { label: "Завершена", cls: styles.statusCompleted },
+  REJECTED: { label: "Отклонена", cls: styles.statusRejected },
+  CANCELLED: { label: "Отменена", cls: styles.statusArchived },
 };
 
 export const LISTING_FILTERS: { value: ListingFilter; label: string; tip: string }[] = [
-  { value: 'all', label: 'Все', tip: 'Показать все объявления' },
-  { value: 'ACTIVE', label: 'Активные', tip: 'Опубликованы и доступны для аренды' },
-  { value: 'MODERATION', label: 'Модерация', tip: 'На проверке модератором' },
-  { value: 'DRAFT', label: 'Черновики', tip: 'Незавершённые объявления' },
-  { value: 'ARCHIVED', label: 'Архив', tip: 'Снятые с публикации' },
+  { value: "all", label: "Все", tip: "Показать все объявления" },
+  { value: "ACTIVE", label: "Активные", tip: "Опубликованы и доступны для аренды" },
+  { value: "MODERATION", label: "Модерация", tip: "На проверке модератором" },
+  { value: "DRAFT", label: "Черновики", tip: "Можно отправить на модерацию" },
+  { value: "REJECTED", label: "Отклоненные", tip: "Можно вернуть в черновик и исправить" },
+  { value: "ARCHIVED", label: "Архив", tip: "Сняты с публикации" },
 ];
 
 export const BOOKING_FILTERS: { value: BookingFilter; label: string; tip: string }[] = [
-  { value: 'all', label: 'Все', tip: 'Показать все аренды' },
-  { value: 'ACTIVE', label: 'Активные', tip: 'Вещь сейчас у арендатора' },
-  { value: 'CONFIRMED', label: 'Подтверждённые', tip: 'Ожидают начала аренды' },
-  { value: 'COMPLETED', label: 'Завершённые', tip: 'Аренда успешно завершена' },
-  { value: 'REJECTED', label: 'Отклонённые', tip: 'Запрос на аренду отклонён' },
+  { value: "all", label: "Все", tip: "Показать все аренды" },
+  { value: "ACTIVE", label: "Активные", tip: "Вещь сейчас у арендатора" },
+  { value: "PAID", label: "Оплаченные", tip: "Ожидают подтверждения старта аренды" },
+  { value: "PAYMENT_PENDING", label: "Ожидают оплаты", tip: "Счет выставлен, арендатор еще не оплатил" },
+  { value: "CONFIRMED", label: "Подтвержденные", tip: "Ожидают начала аренды" },
+  { value: "COMPLETED", label: "Завершенные", tip: "Аренда успешно завершена" },
+  { value: "REJECTED", label: "Отклоненные", tip: "Запрос на аренду отклонен" },
 ];
 
-export function profileListingToCatalogItem(listing: ProfileListing): CatalogUiItem {
+export function profileListingToCatalogItem(
+  listing: ProfileListing,
+  owner?: ProfileVM | null,
+): CatalogUiItem {
   return {
     id: listing.id,
-    ownerId: MOCK_USER.id,
+    ownerId: owner?.id ?? null,
     title: listing.title,
-    coverImageUrl: listing.image ?? '',
+    coverImageUrl: listing.image ?? "",
     images: listing.image ? [listing.image] : [],
     category: listing.category,
     categoryId: null,
     pricePerDay: listing.pricePerDay ?? null,
     pricePerHour: null,
-    depositAmount: '',
-    pickupLocation: 'Новосибирск',
+    depositAmount: "",
+    pickupLocation: "Новосибирск",
     status: listing.status,
-    isAvailable: listing.status === 'ACTIVE',
+    isAvailable: listing.status === "ACTIVE",
     viewsCount: listing.viewsCount,
     createdAt: listing.createdAt,
     nearestAvailableDate: null,
-    ownerName: MOCK_USER.fullName,
-    ownerAvatar: MOCK_USER.avatarUrl,
-    ownerRating: MOCK_USER.rating,
-    ownerReviewCount: MOCK_USER.reviewCount,
+    ownerName: owner?.nickname ?? owner?.fullName ?? "",
+    ownerAvatar: owner?.avatarUrl ?? null,
+    ownerRating: null,
+    ownerReviewCount: null,
     itemRating: null,
     itemReviewCount: null,
     quickFilters: [],
@@ -62,7 +75,7 @@ export function profileListingToCatalogItem(listing: ProfileListing): CatalogUiI
   };
 }
 
-export function getProfileCompletion(user: typeof MOCK_USER): number {
+export function getProfileCompletion(user: ProfileCompletionUser): number {
   let score = 0;
   if (user.avatarUrl) score += 20;
   if (user.bio) score += 20;

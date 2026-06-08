@@ -18,6 +18,7 @@ import styles from '../../Catalog.module.scss';
 type CategoryRailProps = {
   categories: readonly string[];
   activeCategory: string;
+  allCategoryLabel?: string;
   onCategoryChange: (category: string) => void;
 };
 
@@ -32,7 +33,14 @@ const categoryVisualMap: Record<string, { icon: LucideIcon; hint: string }> = {
   'Мероприятия': { icon: PartyPopper, hint: 'Проекторы и декор' },
 };
 
-export function CategoryRail({ categories, activeCategory, onCategoryChange }: CategoryRailProps) {
+export function CategoryRail({
+  categories,
+  activeCategory,
+  allCategoryLabel,
+  onCategoryChange,
+}: CategoryRailProps) {
+  const resetCategory = allCategoryLabel ?? categories[0] ?? activeCategory;
+
   return (
     <nav className={styles.categoryRail} aria-label="Категории товаров">
       <div className={styles.categoryRailInner}>
@@ -46,19 +54,20 @@ export function CategoryRail({ categories, activeCategory, onCategoryChange }: C
               key={category}
               type="button"
               className={isActive ? styles.categoryCardActive : styles.categoryCard}
-              onClick={() => onCategoryChange(isActive ? 'Все категории' : category)}
+              onClick={() => onCategoryChange(isActive ? resetCategory : category)}
               aria-pressed={isActive}
+              title={visual.hint}
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.96 }}
             >
               <div className={styles.categoryEmojiWrap}>
-                <Icon 
-                  size={24} 
-                  className={styles.categoryIcon} 
+                <Icon
+                  size={24}
+                  className={styles.categoryIcon}
                   strokeWidth={isActive ? 2.5 : 2}
                 />
                 {isActive && (
-                  <motion.div 
+                  <motion.div
                     className={styles.categoryGlow}
                     layoutId="categoryGlow"
                     initial={{ opacity: 0 }}
@@ -67,11 +76,11 @@ export function CategoryRail({ categories, activeCategory, onCategoryChange }: C
                   />
                 )}
               </div>
-              
+
               <span className={styles.categoryLabel}>{category}</span>
-              
+
               {isActive && (
-                <motion.div 
+                <motion.div
                   className={styles.categoryActiveIndicator}
                   layoutId="activeCategoryUnderline"
                   transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}

@@ -1,136 +1,76 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { MessageCircle, Paperclip, Send } from "lucide-react";
 import {
-  MessageCircle,
-  Paperclip,
-  Send,
-} from 'lucide-react';
-import type { ChatListTab } from './types';
-import { MOCK_CHATS, MOCK_TIMELINES, QUICK_ACTIONS } from './mockChatData';
-import { ChatSidebar, ConversationHeader, DealContextBar, QuickActionsBar, TypingIndicator, TimelineItem } from './components';
-import {
-  clearChatDraft,
-  setActiveChat,
-  setChatDraft,
-  setChatSearch,
-  setChatTab,
-  useAppDispatch,
-  useAppSelector,
-} from '@/business/shared';
-import styles from './ChatPage.module.scss';
+  ChatSidebar,
+  ConversationHeader,
+  DealContextBar,
+  QuickActionsBar,
+  TimelineItem,
+  TypingIndicator,
+} from "./components";
+import { useChatPageModel } from "@/business/chat";
+import styles from "./ChatPage.module.scss";
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   ChatPage
-   ═══════════════════════════════════════════════════════════════════════════════ */
 export function ChatPage() {
-  const dispatch = useAppDispatch();
-  const { activeChatId, search, tab, draftByChatId } = useAppSelector(
-    (state) => state.chatUi,
-  );
-  const inputText = activeChatId ? draftByChatId[activeChatId] ?? '' : '';
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const activeChat = useMemo(
-    () => MOCK_CHATS.find((c) => c.id === activeChatId) ?? null,
-    [activeChatId],
-  );
-
-  const timeline = useMemo(
-    () => (activeChatId ? MOCK_TIMELINES[activeChatId] ?? [] : []),
-    [activeChatId],
-  );
-
-  const quickActions = useMemo(() => {
-    if (!activeChat?.dealStatus || activeChat.myRole !== 'owner') return [];
-    return QUICK_ACTIONS[activeChat.dealStatus] ?? [];
-  }, [activeChat]);
-
-  const filteredChats = useMemo(() => {
-    const q = search.toLowerCase().trim();
-    let list = MOCK_CHATS.filter((c) => !c.archived);
-
-    if (tab === 'renting_out') list = list.filter((c) => c.myRole === 'owner');
-    else if (tab === 'renting_in') list = list.filter((c) => c.myRole === 'renter');
-    else if (tab === 'inquiries') list = list.filter((c) => c.myRole === 'inquiry');
-
-    if (q) {
-      list = list.filter(
-        (c) =>
-          c.counterpartyName.toLowerCase().includes(q) ||
-          c.itemTitle.toLowerCase().includes(q) ||
-          c.lastMessage?.text.toLowerCase().includes(q),
-      );
-    }
-
-    return list.sort((a, b) => {
-      if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
-      const ta = a.lastMessage?.createdAt ?? a.createdAt;
-      const tb = b.lastMessage?.createdAt ?? b.createdAt;
-      return new Date(tb).getTime() - new Date(ta).getTime();
-    });
-  }, [search, tab]);
-
-  const tabCounts = useMemo(() => {
-    const active = MOCK_CHATS.filter((c) => !c.archived);
-    return {
-      all: active.length,
-      renting_out: active.filter((c) => c.myRole === 'owner').length,
-      renting_in: active.filter((c) => c.myRole === 'renter').length,
-      inquiries: active.filter((c) => c.myRole === 'inquiry').length,
-    };
-  }, []);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [activeChatId, timeline.length]);
-
-  const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (activeChatId) {
-      dispatch(setChatDraft({ chatId: activeChatId, text: e.target.value }));
-    }
-    const el = e.target;
-    el.style.height = 'auto';
-    el.style.height = `${Math.min(el.scrollHeight, 140)}px`;
-  }, [activeChatId, dispatch]);
-
-  const handleSend = () => {
-    if (!activeChatId || !inputText.trim()) return;
-    dispatch(clearChatDraft(activeChatId));
-    if (textareaRef.current) textareaRef.current.style.height = 'auto';
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
-  };
+  const {
+    activeChat,
+    activeChatId,
+    filteredChats,
+    handleInput,
+    handleKeyDown,
+    handleQuickAction,
+    handleSearchChange,
+    handleSelectChat,
+    handleSend,
+    handleTabChange,
+    inputText,
+    isChatsLoading,
+    isDealActionBusy,
+    isSending,
+    messagesEndRef,
+    quickActions,
+    search,
+    tab,
+    tabCounts,
+    textareaRef,
+    timeline,
+  } = useChatPageModel();
 
   return (
     <div className={styles.page}>
-      {/* ═══ Sidebar ═══ */}
       <ChatSidebar
-        tab={tab as ChatListTab}
-        onTabChange={(nextTab) => dispatch(setChatTab(nextTab))}
+        tab={tab}
+        onTabChange={handleTabChange}
         tabCounts={tabCounts}
         search={search}
-        onSearchChange={(nextSearch) => dispatch(setChatSearch(nextSearch))}
+        onSearchChange={handleSearchChange}
         filteredChats={filteredChats}
         activeChatId={activeChatId}
-        onSelectChat={(chatId) => dispatch(setActiveChat(chatId))}
+        onSelectChat={handleSelectChat}
       />
 
-      {/* ═══ Conversation ═══ */}
       <main className={styles.conversation}>
         {activeChat ? (
           <>
             <ConversationHeader chat={activeChat} />
             {activeChat.itemTitle && <DealContextBar chat={activeChat} />}
-            {quickActions.length > 0 && <QuickActionsBar actions={quickActions} />}
+            {quickActions.length > 0 && (
+              <QuickActionsBar
+                actions={quickActions}
+                isBusy={isDealActionBusy}
+                onAction={handleQuickAction}
+              />
+            )}
 
             <div className={styles.messagesArea}>
               {timeline.map((entry) => (
                 <TimelineItem
-                  key={entry.kind === 'date' ? `date-${entry.label}` : entry.data.id}
+                  key={
+                    entry.kind === "date"
+                      ? `date-${entry.label}`
+                      : entry.data.id
+                  }
                   entry={entry}
                 />
               ))}
@@ -139,7 +79,11 @@ export function ChatPage() {
             </div>
 
             <div className={styles.inputArea}>
-              <button type="button" className={styles.attachBtn} aria-label="Прикрепить файл">
+              <button
+                type="button"
+                className={styles.attachBtn}
+                aria-label="Прикрепить файл"
+              >
                 <Paperclip />
               </button>
               <div className={styles.inputWrap}>
@@ -156,8 +100,8 @@ export function ChatPage() {
               <button
                 type="button"
                 className={styles.sendBtn}
-                onClick={handleSend}
-                disabled={!inputText.trim()}
+                onClick={() => void handleSend()}
+                disabled={!inputText.trim() || isSending}
               >
                 <Send />
               </button>
@@ -165,10 +109,16 @@ export function ChatPage() {
           </>
         ) : (
           <div className={styles.emptyConversation}>
-            <div className={styles.emptyIcon}><MessageCircle /></div>
-            <h3 className={styles.emptyTitle}>Выберите диалог</h3>
+            <div className={styles.emptyIcon}>
+              <MessageCircle />
+            </div>
+            <h3 className={styles.emptyTitle}>
+              {isChatsLoading ? "Загружаем диалоги" : "Выберите диалог"}
+            </h3>
             <p className={styles.emptyText}>
-              Выберите чат из списка слева, чтобы начать общение
+              {isChatsLoading
+                ? "Получаем список чатов с backend"
+                : "Выберите чат из списка слева, чтобы начать общение"}
             </p>
           </div>
         )}

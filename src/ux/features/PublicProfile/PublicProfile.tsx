@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
@@ -20,7 +20,11 @@ import {
   Star,
 } from 'lucide-react';
 import { CatalogHeader, CatalogFooter, CatalogCard } from '../Catalog';
-import { MOCK_PUBLIC_USER, MOCK_PUBLIC_LISTINGS, MOCK_PUBLIC_REVIEWS } from './mockPublicProfileData';
+import { useGetPublicProfileQuery } from '@/business/profile/api';
+import { useCreateComplaint } from '@/business/complaints';
+import { useFetchReviewsByUserQuery, useFetchUserReviewSummaryQuery } from '@/business/reviews/api';
+import { showToast, useAppDispatch } from '@/business/shared';
+import { MOCK_PUBLIC_USER } from './mockPublicProfileData';
 import clsx from 'clsx';
 import { pluralize, formatDate, getInitials, ROUTES, EASE } from '@/ux/utils';
 import { ShareModal } from '@/ux/components/ShareModal';
@@ -33,15 +37,39 @@ import {
 } from './publicProfileHelpers';
 import { ProfileSkeleton } from './components/ProfileSkeleton';
 import { PublicReviewCard } from './components/PublicReviewCard';
+import type { PublicListing, PublicReview } from './types';
 import styles from './PublicProfile.module.scss';
 
 type Tab = 'listings' | 'reviews';
 
-/* ═══ Main component ═══ */
-export function PublicProfile() {
-  const user = MOCK_PUBLIC_USER;
-  const listings = MOCK_PUBLIC_LISTINGS;
-  const reviews = MOCK_PUBLIC_REVIEWS;
+export function PublicProfile({ userId = MOCK_PUBLIC_USER.id }: { userId?: string }) {
+  const dispatch = useAppDispatch();
+  const { data: publicProfile, isLoading: isProfileLoading } = useGetPublicProfileQuery(userId);
+  const { data: backendReviews = [], isLoading: isReviewsLoading } = useFetchReviewsByUserQuery(userId);
+  const { data: ratingSummary } = useFetchUserReviewSummaryQuery(userId);
+  const { createComplaint, isCreating: isCreatingComplaint } = useCreateComplaint();
+  const user = {
+    ...MOCK_PUBLIC_USER,
+    id: publicProfile?.id ?? userId,
+    fullName: publicProfile?.nickname ?? MOCK_PUBLIC_USER.fullName,
+    nickname: publicProfile?.nickname ?? MOCK_PUBLIC_USER.nickname,
+    avatarUrl: publicProfile?.avatarUrl ?? MOCK_PUBLIC_USER.avatarUrl,
+    rating: ratingSummary?.overallRating ?? publicProfile?.overallRating ?? 0,
+    reviewCount: ratingSummary?.totalReviews ?? 0,
+  };
+  const listings = useMemo<PublicListing[]>(() => [], []);
+  const reviews = useMemo<PublicReview[]>(
+    () => backendReviews.map((review) => ({
+      id: review.id,
+      authorName: review.reviewerId,
+      authorAvatar: null,
+      rating: review.rating,
+      text: review.text ?? '',
+      date: review.createdAt,
+      itemTitle: `Объявление ${review.itemId}`,
+    })),
+    [backendReviews],
+  );
 
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('listings');
@@ -58,7 +86,8 @@ export function PublicProfile() {
   const toggleHelpful = useCallback((id: string) => {
     setHelpfulReviews((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   }, []);
@@ -74,25 +103,34 @@ export function PublicProfile() {
 
   const initials = getInitials(user.fullName);
 
-  const memberMonths = useMemo(() => {
-    const diff = Date.now() - new Date(user.memberSince).getTime();
-    return Math.max(1, Math.floor(diff / (1000 * 60 * 60 * 24 * 30)));
-  }, [user.memberSince]);
-
   const maxDistCount = Math.max(...RATING_DISTRIBUTION.map((r) => r.count));
 
   const profileUrl = typeof window !== 'undefined'
     ? window.location.href
     : `https://arendai.ru/user/${user.id}`;
 
-  if (isLoading) return <ProfileSkeleton />;
+  const handleComplaint = async () => {
+    const reason = window.prompt('Опишите причину жалобы');
+    if (!reason?.trim()) return;
+
+    try {
+      await createComplaint({
+        targetType: 'USER',
+        targetId: user.id,
+        reason: reason.trim(),
+      });
+      dispatch(showToast({ type: 'success', message: 'Жалоба отправлена' }));
+    } catch {
+      dispatch(showToast({ type: 'error', message: 'Не удалось отправить жалобу' }));
+    }
+  };
+
+  if (isLoading || isProfileLoading || isReviewsLoading) return <ProfileSkeleton />;
 
   return (
     <div className={styles.page}>
-      {/* ═══ Site header ═══ */}
       <CatalogHeader cityLabel={user.city} />
 
-      {/* ── Breadcrumb bar ── */}
       <div className={styles.topBar}>
         <div className={styles.topBarInner}>
           <Link href={ROUTES.home} className={styles.backLink}>
@@ -106,9 +144,7 @@ export function PublicProfile() {
         </div>
       </div>
 
-      {/* ═══ Two-column layout ═══ */}
       <div className={styles.layout}>
-        {/* ── Sidebar ── */}
         <aside className={styles.sidebar}>
           <motion.div
             className={styles.userCard}
@@ -137,7 +173,7 @@ export function PublicProfile() {
               <div className={clsx(styles.trustBadge, styles.tooltipWrap)}>
                 <Award size={14} />
                 {TRUST_LABELS[user.trustLevel]}
-                <span className={styles.tooltipBubble}>Надёжный арендодатель с высоким рейтингом</span>
+                <span className={styles.tooltipBubble}>Надежный арендодатель с высоким рейтингом</span>
               </div>
             )}
 
@@ -164,7 +200,7 @@ export function PublicProfile() {
               <button type="button" className={styles.iconBtn} title="Поделиться" onClick={() => setShowShareModal(true)}>
                 <Share2 size={15} />
               </button>
-              <button type="button" className={clsx(styles.iconBtn, styles.iconBtnDanger)} title="Пожаловаться">
+              <button type="button" className={clsx(styles.iconBtn, styles.iconBtnDanger)} title="Пожаловаться" onClick={handleComplaint} disabled={isCreatingComplaint}>
                 <Flag size={14} />
               </button>
             </div>
@@ -191,12 +227,12 @@ export function PublicProfile() {
               <li className={clsx(styles.verifyItem, styles.tooltipWrap)}>
                 <CheckCircle2 size={15} />
                 Номер телефона
-                <span className={styles.tooltipBubble}>Телефон подтверждён по SMS</span>
+                <span className={styles.tooltipBubble}>Телефон подтвержден по SMS</span>
               </li>
               <li className={clsx(styles.verifyItem, styles.tooltipWrap)}>
                 <CheckCircle2 size={15} />
                 Электронная почта
-                <span className={styles.tooltipBubble}>Email подтверждён</span>
+                <span className={styles.tooltipBubble}>Email подтвержден</span>
               </li>
             </ul>
           </motion.div>
@@ -222,7 +258,6 @@ export function PublicProfile() {
 
         </aside>
 
-        {/* ── Main ── */}
         <main className={styles.main}>
           {user.bio && (
             <motion.div
@@ -249,8 +284,8 @@ export function PublicProfile() {
             </div>
             <div className={clsx(styles.statCard, styles.tooltipWrap)}>
               <span className={styles.statVal}>{user.completedDeals}</span>
-              <span className={styles.statLabel}>Завершённых аренд</span>
-              <span className={styles.tooltipBubble}>Успешно завершённых аренд</span>
+              <span className={styles.statLabel}>Завершенных аренд</span>
+              <span className={styles.tooltipBubble}>Успешно завершенных аренд</span>
             </div>
             <div className={clsx(styles.statCard, styles.tooltipWrap)}>
               <span className={clsx(styles.statVal, styles.statValAccent)}>{user.rating.toFixed(1)}</span>
@@ -388,7 +423,7 @@ export function PublicProfile() {
                   <div className={styles.emptyState}>
                     <Star size={32} />
                     <h3>Пока нет отзывов</h3>
-                    <p>Отзывы появятся после завершённых аренд</p>
+                    <p>Отзывы появятся после завершенных аренд</p>
                   </div>
                 )}
               </motion.div>
@@ -397,7 +432,6 @@ export function PublicProfile() {
         </main>
       </div>
 
-      {/* ═══ Safety banner ═══ */}
       <div className={styles.safetyBanner}>
         <div className={styles.safetyInner}>
           <Shield size={20} />
@@ -410,10 +444,10 @@ export function PublicProfile() {
 
       <CatalogFooter />
 
-      {/* ═══ Share modal ═══ */}
       <AnimatePresence>
         {showShareModal && <ShareModal url={profileUrl} onClose={() => setShowShareModal(false)} />}
       </AnimatePresence>
     </div>
   );
 }
+

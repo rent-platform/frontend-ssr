@@ -65,12 +65,16 @@ export function useCatalog({
   const onToggleFilters = () => dispatch(toggleCatalogFilters());
 
   const updateFilters = (patch: Partial<typeof filters>) => {
+    console.log('[TRACE][CATALOG][STORE] patch catalog filters', {
+      patch,
+      previousFilters: filters,
+    });
     dispatch(patchCatalogFilters(patch));
   };
 
-  const navigateToSearch = useCallback(() => {
+  const navigateToSearch = useCallback((nextFilters: typeof INITIAL_FILTERS = filters) => {
     if (isFiltersOpen) dispatch(closeCatalogFilters());
-    const qs = filtersToSearchParams(filters);
+    const qs = filtersToSearchParams(nextFilters);
     router.push(`${ROUTES.search}${qs ? `?${qs}` : ''}`);
   }, [dispatch, filters, isFiltersOpen, router]);
 
@@ -83,16 +87,20 @@ export function useCatalog({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
+          console.log('[TRACE][CATALOG][UI] infinite scroll sentinel reached', {
+            hasMore,
+            currentItems: visibleItems.length,
+          });
           onLoadMore?.();
         }
       },
-      { rootMargin: '360px 0px' },
+      { rootMargin: '0px 0px -120px 0px' },
     );
 
     observer.observe(node);
 
     return () => observer.disconnect();
-  }, [hasMore, onLoadMore, selectedItem]);
+  }, [hasMore, onLoadMore, selectedItem, visibleItems.length]);
 
   const handleOpenItem = (item: CatalogUiItem) => {
     dispatch(closeCatalogFilters());

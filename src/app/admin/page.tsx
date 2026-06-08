@@ -1,17 +1,20 @@
-﻿import Link from "next/link";
 import { requireRole } from "@/business/auth/utils/serverAuth";
-import { ROUTE_PATHS } from "@/business/shared/utils";
+import { StaffDashboard } from "@/ux/features";
+import { ChatRealtimeTraceButton } from "./ChatRealtimeTraceButton";
 
 export default async function AdminPage() {
   const session = await requireRole("admin");
 
   return (
-    <main style={{ padding: "32px" }}>
-      <h1>Admin dashboard</h1>
-      <p>User: {session.user.full_name ?? session.user.phone}</p>
-      <p>Role: {session.user.role}</p>
-      <Link href={ROUTE_PATHS.HOME}>Home</Link>
-    </main>
+    <div>
+      <ChatRealtimeTraceButton />
+      <StaffDashboard
+        mode="admin"
+        role={session.user.role}
+        userLabel={
+          session.user.full_name ?? session.user.phone ?? session.user.id
+        }
+      />
+    </div>
   );
 }
-

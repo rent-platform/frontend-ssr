@@ -64,17 +64,36 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Credentials({
       async authorize(credentials): Promise<User | null> {
         try {
+          console.log("[TRACE][AUTH][AUTHJS] authorize start", {
+            hasCredentials: Boolean(credentials),
+          });
           // Проверка входных данных
-          if (!credentials) throw new InvalidCredentialsError();
+          if (!credentials) {
+            console.log("[TRACE][AUTH][AUTHJS] missing credentials");
+            throw new InvalidCredentialsError();
+          }
 
           const parsed = loginSchema.safeParse(credentials);
-          if (!parsed.success) throw new InvalidCredentialsError();
+          if (!parsed.success) {
+            console.log("[TRACE][AUTH][AUTHJS] credentials schema failed", {
+              issues: parsed.error.issues.map((issue) => issue.path.join(".")),
+            });
+            throw new InvalidCredentialsError();
+          }
 
           const { tel, password, rememberMe } = parsed.data;
+          console.log("[TRACE][AUTH][AUTHJS] credentials parsed", {
+            tel,
+            rememberMe,
+          });
           const authResponse = await loginApi({
             login: tel,
             password,
             rememberMe,
+          });
+          console.log("[TRACE][AUTH][AUTHJS] backend login returned tokens", {
+            hasAccessToken: Boolean(authResponse.accessToken),
+            hasRefreshToken: Boolean(authResponse.refreshToken),
           });
 
           if (!authResponse.accessToken || !authResponse.refreshToken) {
@@ -82,6 +101,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
 
           const profile = await getMeApi(authResponse.accessToken);
+          console.log("[TRACE][AUTH][AUTHJS] profile received", {
+            userId: profile.id,
+            role: profile.role,
+            isActive: profile.isActive,
+            blockedAt: profile.blockedAt,
+          });
           // Токены сохраняются в JWT cookie, но не пробрасываются в клиентскую часть
           return {
             id: profile.id,
@@ -96,6 +121,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             refreshToken: authResponse.refreshToken,
           };
         } catch (error) {
+          console.log("[TRACE][AUTH][AUTHJS] authorize error mapped", {
+            message: error instanceof Error ? error.message : String(error),
+          });
           throw mapAuthorizeError(error);
         }
       },
@@ -122,6 +150,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        console.log("[TRACE][AUTH][AUTHJS] jwt created from authorized user");
         return {
           ...token,
           id: user.id,
@@ -143,12 +172,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (now <= token.exp - bufferTime) return token;
 
       if (!token.refreshToken) {
+        console.log(
+          "[TRACE][AUTH][AUTHJS] jwt refresh skipped: no refresh token",
+        );
         return { ...token, error: "NoRefreshToken" };
       }
 
       try {
+        console.log("[TRACE][AUTH][AUTHJS] jwt refresh start");
         const data = await refreshApi(token.refreshToken);
         const newDecoded = decodeJwt(data.accessToken);
+        console.log("[TRACE][AUTH][AUTHJS] jwt refresh success", {
+          exp: newDecoded.exp,
+        });
 
         return {
           ...token,
@@ -166,6 +202,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     async session({ session, token }) {
+      console.log("[TRACE][AUTH][AUTHJS] session callback exposes user", {
+        userId: token.id,
+        role: token.role,
+      });
       session.user.id = token.id;
       session.user.phone = token.phone;
       session.user.role = token.role;

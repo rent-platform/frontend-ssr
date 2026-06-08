@@ -1,22 +1,26 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp, PackageSearch } from 'lucide-react';
-import { CatalogHeader } from './components/layout/CatalogHeader';
-import { CatalogSearchBar } from './components/filters/CatalogSearchBar';
-import { CategoryRail } from './components/filters/CategoryRail';
-import { CatalogToolbar } from './components/filters/CatalogToolbar';
-import { CatalogCard } from './components/cards/CatalogCard';
-import { ProductDetail } from './components/detail/ProductDetail';
-import { CatalogSkeletonCard } from './components/cards/CatalogSkeletonCard';
-import { CatalogFooter } from './components/layout/CatalogFooter';
-import type { CatalogUiItem } from './types';
-import { CATEGORY_OPTIONS, INITIAL_FILTERS } from './utils';
-import { useCatalogPage } from '@/business/ads';
-import type { FetchAdsArgs } from '@/business/ads';
-import { useAppSelector } from '@/business/shared';
-import { useCatalog } from './hooks/useCatalog';
-import styles from './Catalog.module.scss';
+import { motion, AnimatePresence } from "framer-motion";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowUp, PackageSearch } from "lucide-react";
+import { CatalogHeader } from "./components/layout/CatalogHeader";
+import { CatalogSearchBar } from "./components/filters/CatalogSearchBar";
+import { CategoryRail } from "./components/filters/CategoryRail";
+import { CatalogToolbar } from "./components/filters/CatalogToolbar";
+import { CatalogCard } from "./components/cards/CatalogCard";
+import { ProductDetail } from "./components/detail/ProductDetail";
+import { CatalogSkeletonCard } from "./components/cards/CatalogSkeletonCard";
+import { CatalogFooter } from "./components/layout/CatalogFooter";
+import type { CatalogUiItem } from "./types";
+import { CATEGORY_OPTIONS, INITIAL_FILTERS } from "./utils";
+import { useCatalogPage } from "@/business/ads";
+import { useFetchCategoriesQuery } from "@/business/ads/api";
+import type { FetchAdsArgs } from "@/business/ads";
+import { useAppSelector } from "@/business/shared";
+import { useCatalog } from "./hooks/useCatalog";
+import styles from "./Catalog.module.scss";
+
+let lastBackendQueryTraceKey: string | null = null;
 
 export type CatalogExperienceProps = {
   /** External items from API hook (e.g. useGetAds). Falls back to mock data. */
@@ -42,36 +46,85 @@ export function CatalogExperience({
   hasMore: externalHasMore,
 }: CatalogExperienceProps = {}) {
   const catalogFilters = useAppSelector((state) => state.catalog.filters);
-  const catalogQueryArgs: FetchAdsArgs = {
-    pageSize: 20,
-    search: catalogFilters.search || undefined,
-    city: catalogFilters.city || undefined,
-    priceFrom: catalogFilters.minPrice ? Number(catalogFilters.minPrice) : undefined,
-    priceTo: catalogFilters.maxPrice ? Number(catalogFilters.maxPrice) : undefined,
-    sortBy:
-      catalogFilters.sortBy === 'newest'
-        ? 'createdAt'
-        : catalogFilters.sortBy === 'rating'
-          ? 'rating'
-          : catalogFilters.sortBy === 'priceAsc' || catalogFilters.sortBy === 'priceDesc'
-            ? 'pricePerDay'
-            : 'createdAt',
-    sortDirection:
-      catalogFilters.sortBy === 'priceAsc'
-        ? 'asc'
-        : 'desc',
-  };
-  const shouldUseBackend = !externalItems;
-  const backendCatalog = useCatalogPage(
-    catalogQueryArgs,
-    { skip: !shouldUseBackend },
+  const [draftFilters, setDraftFilters] = useState(catalogFilters);
+  const { data: backendCategories = [] } = useFetchCategoriesQuery();
+  const allCategoryLabel = CATEGORY_OPTIONS[0];
+  const categoryOptions =
+    backendCategories.length > 0
+      ? [
+          allCategoryLabel,
+          ...backendCategories
+            .map((category) => category.categoryName)
+            .filter((categoryName): categoryName is string =>
+              Boolean(categoryName),
+            ),
+        ]
+      : CATEGORY_OPTIONS;
+  const selectedCategory = backendCategories.find(
+    (category) => category.categoryName === catalogFilters.category,
   );
+  const catalogQueryArgs: FetchAdsArgs = useMemo(
+    () => ({
+      pageSize: 5,
+      categoryId: selectedCategory?.id,
+      search: catalogFilters.search || undefined,
+      city: catalogFilters.city || undefined,
+      priceFrom: catalogFilters.minPrice
+        ? Number(catalogFilters.minPrice)
+        : undefined,
+      priceTo: catalogFilters.maxPrice
+        ? Number(catalogFilters.maxPrice)
+        : undefined,
+      sortBy:
+        catalogFilters.sortBy === "newest"
+          ? "createdAt"
+          : catalogFilters.sortBy === "rating"
+            ? "rating"
+            : catalogFilters.sortBy === "priceAsc" ||
+                catalogFilters.sortBy === "priceDesc"
+              ? "pricePerDay"
+              : "createdAt",
+      sortDirection: catalogFilters.sortBy === "priceAsc" ? "asc" : "desc",
+    }),
+    [
+      catalogFilters.city,
+      catalogFilters.maxPrice,
+      catalogFilters.minPrice,
+      catalogFilters.search,
+      catalogFilters.sortBy,
+      selectedCategory?.id,
+    ],
+  );
+  const shouldUseBackend = !externalItems;
+  const backendCatalog = useCatalogPage(catalogQueryArgs, {
+    skip: !shouldUseBackend,
+  });
   const catalogItems = externalItems ?? backendCatalog.products;
   const catalogTotal = externalTotal ?? backendCatalog.total;
   const catalogLoading = externalLoading ?? backendCatalog.isLoading;
   const catalogError = isError || backendCatalog.isError;
   const catalogHasMore = externalHasMore ?? backendCatalog.hasNextPage;
   const loadMore = onLoadMore ?? backendCatalog.fetchNextPage;
+  const backendQueryTraceKey = useMemo(
+    () => JSON.stringify({ catalogQueryArgs, shouldUseBackend }),
+    [catalogQueryArgs, shouldUseBackend],
+  );
+
+  useEffect(() => {
+    if (!shouldUseBackend) {
+      return;
+    }
+    if (lastBackendQueryTraceKey === backendQueryTraceKey) {
+      return;
+    }
+
+    lastBackendQueryTraceKey = backendQueryTraceKey;
+    console.log("[TRACE][CATALOG][UI] backend query args prepared", {
+      catalogQueryArgs,
+      appliedFilters: catalogFilters,
+      shouldUseBackend,
+    });
+  }, [backendQueryTraceKey, catalogFilters, catalogQueryArgs, shouldUseBackend]);
 
   const {
     filters,
@@ -89,7 +142,6 @@ export function CatalogExperience({
     hasMore,
     onCloseFilters,
     onToggleFilters,
-    updateFilters,
     navigateToSearch,
     handleOpenItem,
     handleBackToCatalog,
@@ -102,6 +154,57 @@ export function CatalogExperience({
     onLoadMore: loadMore,
     hasMore: catalogHasMore,
   });
+
+  useEffect(() => {
+    setDraftFilters(catalogFilters);
+  }, [catalogFilters]);
+
+  const updateDraftFilters = useCallback(
+    (patch: Partial<typeof draftFilters>) => {
+      const nextFilters = { ...draftFilters, ...patch };
+      console.log("[TRACE][CATALOG][UI] draft filters changed", {
+        patch,
+        previousFilters: draftFilters,
+        nextFilters,
+      });
+      setDraftFilters(nextFilters);
+    },
+    [draftFilters],
+  );
+
+  const applyDraftFilters = useCallback(
+    (nextDraftFilters = draftFilters) => {
+      console.log("[TRACE][CATALOG][UI] apply filters submitted", {
+        draftFilters: nextDraftFilters,
+        previousAppliedFilters: catalogFilters,
+      });
+      setFilters(nextDraftFilters);
+      navigateToSearch(nextDraftFilters);
+    },
+    [catalogFilters, draftFilters, navigateToSearch, setFilters],
+  );
+
+  const resetDraftFilters = useCallback(() => {
+    console.log("[TRACE][CATALOG][UI] draft filters reset", {
+      previousDraftFilters: draftFilters,
+    });
+    setDraftFilters(INITIAL_FILTERS);
+  }, [draftFilters]);
+
+  useEffect(() => {
+    if (!catalogLoading && !catalogError && visibleItems.length === 0) {
+      console.log("[TRACE][CATALOG][UI] empty result rendered", {
+        filters,
+        total: catalogTotal,
+      });
+    }
+  }, [
+    catalogError,
+    catalogLoading,
+    catalogTotal,
+    filters,
+    visibleItems.length,
+  ]);
 
   if (catalogLoading || isInitialLoading) {
     return (
@@ -122,6 +225,9 @@ export function CatalogExperience({
   }
 
   if (catalogError) {
+    console.log("[TRACE][CATALOG][UI] catalog error state rendered", {
+      error: backendCatalog.error,
+    });
     return (
       <div className={styles.page}>
         <CatalogHeader cityLabel={filters.city} />
@@ -148,39 +254,43 @@ export function CatalogExperience({
 
   return (
     <div className={styles.page}>
-      <CatalogHeader cityLabel={filters.city} isHidden={isFiltersOpen} onBrandClick={() => setSelectedItem(null)} />
+      <CatalogHeader
+        cityLabel={filters.city}
+        isHidden={isFiltersOpen}
+        onBrandClick={() => setSelectedItem(null)}
+      />
 
       <main className={styles.main}>
         <CatalogSearchBar
-          filters={filters}
+          filters={draftFilters}
           resultsCount={filteredItems.length}
           isFiltersOpen={isFiltersOpen}
           onToggleFilters={onToggleFilters}
           onCloseFilters={onCloseFilters}
-          onChange={updateFilters}
-          onResetFilters={() => setFilters(INITIAL_FILTERS)}
-          onSearch={navigateToSearch}
-          onFiltersConfirm={navigateToSearch}
+          onChange={updateDraftFilters}
+          onResetFilters={resetDraftFilters}
+          onSearch={applyDraftFilters}
+          onFiltersConfirm={applyDraftFilters}
         />
 
         {selectedItem ? null : (
           <>
             <header className={styles.hero}>
-              <motion.div 
+              <motion.div
                 className={styles.heroGlassCard}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5 }}
               >
                 <div className={styles.heroContent}>
-                  <span className={styles.eyebrow}>
-                    ВАШ — АРЕНДАЙ
-                  </span>
-                  <h1 className={styles.title}>Берите в аренду то, что нужно сейчас</h1>
+                  <span className={styles.eyebrow}>ВАШ — АРЕНДАЙ</span>
+                  <h1 className={styles.title}>
+                    Берите в аренду то, что нужно сейчас
+                  </h1>
                   <p className={styles.subtitle}>
                     Инструменты, техника и товары для досуга в вашем городе.
                   </p>
-                  
+
                   <div className={styles.stats}>
                     <div className={styles.statCard}>
                       <strong>1 000+</strong>
@@ -200,82 +310,96 @@ export function CatalogExperience({
             </header>
 
             <CategoryRail
-              categories={CATEGORY_OPTIONS}
-              activeCategory={filters.category}
-              onCategoryChange={(category) => updateFilters({ category })}
+              categories={categoryOptions}
+              activeCategory={draftFilters.category}
+              allCategoryLabel={allCategoryLabel}
+              onCategoryChange={(category) => updateDraftFilters({ category })}
             />
           </>
         )}
 
-      <AnimatePresence mode="wait">
-        {selectedItem ? (
-          <motion.div
-            key="product-detail"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <ProductDetail
-              item={selectedItem}
-              similarItems={similarItems}
-              onBack={handleBackToCatalog}
-              onOpenSimilar={handleOpenItem}
-            />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="catalog-list"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <section id="catalog-results" className={styles.catalogLayoutClosed}>
-              <div className={styles.content}>
-                <CatalogToolbar
-                  filters={filters}
-                  onChange={updateFilters}
-                  visibleCount={useMockMode ? visibleItems.length : filteredItems.length}
-                  totalCount={catalogTotal ?? filteredItems.length}
-                />
+        <AnimatePresence mode="wait">
+          {selectedItem ? (
+            <motion.div
+              key="product-detail"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ProductDetail
+                item={selectedItem}
+                similarItems={similarItems}
+                onBack={handleBackToCatalog}
+                onOpenSimilar={handleOpenItem}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="catalog-list"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <section
+                id="catalog-results"
+                className={styles.catalogLayoutClosed}
+              >
+                <div className={styles.content}>
+                  <CatalogToolbar
+                    filters={draftFilters}
+                    onChange={updateDraftFilters}
+                    visibleCount={
+                      useMockMode ? visibleItems.length : filteredItems.length
+                    }
+                    totalCount={catalogTotal ?? filteredItems.length}
+                  />
 
-                {visibleItems.length > 0 ? (
-                  <div className={styles.resultsGrid}>
-                    {visibleItems.map((item) => (
-                      <CatalogCard
-                        key={item.id}
-                        item={item}
-                        onOpen={handleOpenItem}
-                      />
-                    ))}
-                    {hasMore ? (
-                      <div ref={sentinelRef} className={styles.infiniteSentinel} />
-                    ) : visibleItems.length > BATCH_SIZE ? (
-                      <div className={styles.endCap}>Вы просмотрели все объявления</div>
-                    ) : null}
-                  </div>
-                ) : (
-                  <div className={styles.emptyState}>
-                    <div className={styles.emptyStateIcon}>
-                      <PackageSearch size={28} />
+                  {visibleItems.length > 0 ? (
+                    <div className={styles.resultsGrid}>
+                      {visibleItems.map((item) => (
+                        <CatalogCard
+                          key={item.id}
+                          item={item}
+                          onOpen={handleOpenItem}
+                        />
+                      ))}
+                      {hasMore ? (
+                        <div
+                          ref={sentinelRef}
+                          className={styles.infiniteSentinel}
+                        />
+                      ) : visibleItems.length > BATCH_SIZE ? (
+                        <div className={styles.endCap}>
+                          Вы просмотрели все объявления
+                        </div>
+                      ) : null}
                     </div>
-                    <h3>Ничего не нашли</h3>
-                    <p>Попробуйте изменить параметры поиска или фильтры</p>
-                    <button
-                      type="button"
-                      className={styles.emptyStateBtn}
-                      onClick={() => updateFilters({ search: '', category: 'Все категории' })}
-                    >
-                      Сбросить всё
-                    </button>
-                  </div>
-                )}
-              </div>
-            </section>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  ) : (
+                    <div className={styles.emptyState}>
+                      <div className={styles.emptyStateIcon}>
+                        <PackageSearch size={28} />
+                      </div>
+                      <h3>Ничего не нашли</h3>
+                      <p>Попробуйте изменить параметры поиска или фильтры</p>
+                      <button
+                        type="button"
+                        className={styles.emptyStateBtn}
+                        onClick={() => {
+                          setFilters(INITIAL_FILTERS);
+                          navigateToSearch(INITIAL_FILTERS);
+                        }}
+                      >
+                        Сбросить всё
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </section>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
 
       <CatalogFooter />

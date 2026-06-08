@@ -13,6 +13,7 @@ type RentalCalendarProps = {
   onSelect: (start: Date | null, end: Date | null) => void;
   onConfirm: () => void;
   onClose: () => void;
+  onMonthChange?: (monthStart: Date, monthEnd: Date) => void;
   availability?: Array<{ availableDate: string; isAvailable: boolean }>;
 };
 
@@ -37,12 +38,20 @@ function startOfDay(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
+function toDateKey(day: Date) {
+  const year = day.getFullYear();
+  const month = String(day.getMonth() + 1).padStart(2, '0');
+  const date = String(day.getDate()).padStart(2, '0');
+  return `${year}-${month}-${date}`;
+}
+
 export function RentalCalendar({
   startDate,
   endDate,
   onSelect,
   onConfirm,
   onClose,
+  onMonthChange,
   availability = [],
 }: RentalCalendarProps) {
   const today = useMemo(() => startOfDay(new Date()), []);
@@ -52,12 +61,16 @@ export function RentalCalendar({
   const month = viewDate.getMonth();
 
   const prevMonth = useCallback(() => {
-    setViewDate(new Date(year, month - 1, 1));
-  }, [year, month]);
+    const nextViewDate = new Date(year, month - 1, 1);
+    setViewDate(nextViewDate);
+    onMonthChange?.(nextViewDate, new Date(nextViewDate.getFullYear(), nextViewDate.getMonth() + 1, 0));
+  }, [onMonthChange, year, month]);
 
   const nextMonth = useCallback(() => {
-    setViewDate(new Date(year, month + 1, 1));
-  }, [year, month]);
+    const nextViewDate = new Date(year, month + 1, 1);
+    setViewDate(nextViewDate);
+    onMonthChange?.(nextViewDate, new Date(nextViewDate.getFullYear(), nextViewDate.getMonth() + 1, 0));
+  }, [onMonthChange, year, month]);
 
   const calendarDays = useMemo(() => {
     const firstDay = new Date(year, month, 1);
@@ -98,7 +111,6 @@ export function RentalCalendar({
     [availability],
   );
 
-  const toDateKey = (day: Date) => day.toISOString().slice(0, 10);
   const isSelectableDate = useCallback(
     (day: Date) => {
       if (availableDates.size === 0 && unavailableDates.size === 0) return true;
@@ -107,11 +119,37 @@ export function RentalCalendar({
     },
     [availableDates, unavailableDates],
   );
+  const hasUnavailableInRange = useCallback(
+    (rangeStart: Date, rangeEnd: Date) => {
+      const cursor = startOfDay(rangeStart);
+      const lastDay = startOfDay(rangeEnd);
+
+      while (cursor <= lastDay) {
+        if (!isSelectableDate(cursor)) {
+          return true;
+        }
+        cursor.setDate(cursor.getDate() + 1);
+      }
+
+      return false;
+    },
+    [isSelectableDate],
+  );
 
   const handleDayClick = useCallback(
     (day: Date) => {
-      if (day < today) return;
-      if (!isSelectableDate(day)) return;
+      if (day < today) {
+        console.log('[TRACE][RENT_PAYMENT][CALENDAR] past date rejected', {
+          date: toDateKey(day),
+        });
+        return;
+      }
+      if (!isSelectableDate(day)) {
+        console.log('[TRACE][RENT_PAYMENT][CALENDAR] unavailable date rejected', {
+          date: toDateKey(day),
+        });
+        return;
+      }
 
       if (!startDate || (startDate && endDate)) {
         // Start new selection
@@ -122,12 +160,17 @@ export function RentalCalendar({
           onSelect(day, null);
         } else if (isSameDay(day, startDate)) {
           return;
+        } else if (hasUnavailableInRange(startDate, day)) {
+          console.log('[TRACE][RENT_PAYMENT][CALENDAR] unavailable range rejected', {
+            startDate: toDateKey(startDate),
+            endDate: toDateKey(day),
+          });
         } else {
           onSelect(startDate, day);
         }
       }
     },
-    [startDate, endDate, onSelect, today, isSelectableDate],
+    [startDate, endDate, onSelect, today, isSelectableDate, hasUnavailableInRange],
   );
 
   const getDayState = useCallback(

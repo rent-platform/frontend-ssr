@@ -10,7 +10,6 @@ import { CatalogSearchBar } from './components/filters/CatalogSearchBar';
 import { CatalogToolbar } from './components/filters/CatalogToolbar';
 import { CatalogCard } from './components/cards/CatalogCard';
 import { ProductDetail } from './components/detail/ProductDetail';
-import { CatalogSkeletonCard } from './components/cards/CatalogSkeletonCard';
 import { CatalogFooter } from './components/layout/CatalogFooter';
 import { mockCatalogItems } from './mockCatalogItems';
 import type { CatalogUiItem } from './types';
@@ -37,6 +36,7 @@ export function SearchResultsPage() {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- legacy mock page syncs local filters from URL params.
     setFilters(searchParamsToFilters(searchParams));
     setVisibleCount(BATCH_SIZE);
   }, [searchParams]);
@@ -91,7 +91,7 @@ export function SearchResultsPage() {
           setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredItems.length));
         }
       },
-      { rootMargin: '360px 0px' },
+      { rootMargin: '0px 0px -120px 0px' },
     );
     observer.observe(node);
     return () => observer.disconnect();

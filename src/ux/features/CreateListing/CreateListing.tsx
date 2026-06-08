@@ -51,7 +51,7 @@ function getStepId(index: number): CreateListingStep {
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 export type CreateListingProps = {
-  /** Called with form data on publish. Wire to useCreateAd + useUploadAdPhotos. */
+  /** Called with form data on publish. Wire to create ad backend mutation. */
   onSubmit?: (data: CreateListingFormData) => void | Promise<void>;
   /** True while API is processing the submission. */
   isSubmitting?: boolean;
@@ -74,18 +74,31 @@ export function CreateListing({
 
   /* ─── Helpers ─── */
   const patch = useCallback(
-    (updates: Partial<CreateListingFormData>) =>
-      dispatch(patchCreateListingDraft(updates)),
-    [dispatch],
+    (updates: Partial<CreateListingFormData>) => {
+      console.log("[TRACE][CREATE_LISTING][STORE] patch draft", {
+        step: stepId,
+        updates,
+      });
+      dispatch(patchCreateListingDraft(updates));
+    },
+    [dispatch, stepId],
   );
 
   const addImages = useCallback(
     (files: FileList | null) => {
       if (!files) return;
+      console.log("[TRACE][CREATE_LISTING][UI] photos selected", {
+        filesCount: files.length,
+        currentImagesCount: form.images.length,
+        maxImages: MAX_IMAGES,
+      });
       const newImages: ImagePreview[] = Array.from(files)
         .filter((f) => f.type.startsWith("image/"))
         .slice(0, MAX_IMAGES - form.images.length)
         .map((f) => ({ id: crypto.randomUUID(), url: URL.createObjectURL(f) }));
+      console.log("[TRACE][CREATE_LISTING][UI] photos accepted for draft", {
+        acceptedCount: newImages.length,
+      });
       if (newImages.length) patch({ images: [...form.images, ...newImages] });
     },
     [form.images, patch],
@@ -93,6 +106,7 @@ export function CreateListing({
 
   const removeImage = useCallback(
     (id: string) => {
+      console.log("[TRACE][CREATE_LISTING][UI] remove photo", { id });
       const img = form.images.find((i) => i.id === id);
       if (img) URL.revokeObjectURL(img.url);
       patch({ images: form.images.filter((i) => i.id !== id) });
@@ -100,16 +114,23 @@ export function CreateListing({
     [form.images, patch],
   );
 
-  const reorderImages = useCallback((fromId: string, toId: string) => {
-    if (fromId === toId) return;
-    const from = form.images.findIndex((img) => img.id === fromId);
-    const to = form.images.findIndex((img) => img.id === toId);
-    if (from === -1 || to === -1) return;
-    const next = [...form.images];
-    const [moved] = next.splice(from, 1);
-    next.splice(to, 0, moved);
-    patch({ images: next });
-  }, [form.images, patch]);
+  const reorderImages = useCallback(
+    (fromId: string, toId: string) => {
+      if (fromId === toId) return;
+      console.log("[TRACE][CREATE_LISTING][UI] reorder photos", {
+        fromId,
+        toId,
+      });
+      const from = form.images.findIndex((img) => img.id === fromId);
+      const to = form.images.findIndex((img) => img.id === toId);
+      if (from === -1 || to === -1) return;
+      const next = [...form.images];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      patch({ images: next });
+    },
+    [form.images, patch],
+  );
 
   const isStepValid = useCallback(
     (s: number): boolean => {
@@ -138,24 +159,64 @@ export function CreateListing({
   const canAdvance = isStepValid(step);
 
   const goNext = () => {
+    console.log("[TRACE][CREATE_LISTING][VALIDATION] step validation", {
+      step: stepId,
+      valid: canAdvance,
+      fields: {
+        imagesCount: form.images.length,
+        hasTitle: Boolean(form.title.trim()),
+        category: form.category,
+        categoryId: form.categoryId,
+        hasDescription: Boolean(form.description.trim()),
+        pricePerDay: form.pricePerDay,
+        noDeposit: form.noDeposit,
+        depositAmount: form.depositAmount,
+        pickupLocation: form.pickupLocation,
+      },
+    });
     if (!canAdvance) return;
-    dispatch(setCreateListingStep(getStepId(Math.min(step + 1, STEPS.length - 1))));
+    const nextStep = getStepId(Math.min(step + 1, STEPS.length - 1));
+    console.log("[TRACE][CREATE_LISTING][UI] go next step", {
+      from: stepId,
+      to: nextStep,
+    });
+    dispatch(setCreateListingStep(nextStep));
   };
   const goBack = () => {
-    dispatch(setCreateListingStep(getStepId(Math.max(step - 1, 0))));
+    const previousStep = getStepId(Math.max(step - 1, 0));
+    console.log("[TRACE][CREATE_LISTING][UI] go previous step", {
+      from: stepId,
+      to: previousStep,
+    });
+    dispatch(setCreateListingStep(previousStep));
   };
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
       setDragging(false);
+      console.log("[TRACE][CREATE_LISTING][UI] photos dropped", {
+        filesCount: e.dataTransfer.files.length,
+      });
       addImages(e.dataTransfer.files);
     },
-    [addImages],
+    [addImages, setDragging],
   );
 
   const handlePublish = async () => {
+    console.log("[TRACE][CREATE_LISTING][UI] publish clicked", {
+      title: form.title,
+      category: form.category,
+      categoryId: form.categoryId,
+      imagesCount: form.images.length,
+      pricePerDay: form.pricePerDay,
+      pricePerHour: form.pricePerHour,
+      noDeposit: form.noDeposit,
+      depositAmount: form.depositAmount,
+      pickupLocation: form.pickupLocation,
+    });
     if (onSubmit) await onSubmit(form);
+
     setPublished(true);
   };
 
@@ -230,7 +291,16 @@ export function CreateListing({
                       : undefined,
                 )}
                 onClick={() => {
-                  if (i < step) dispatch(setCreateListingStep(getStepId(i)));
+                  if (i < step) {
+                    console.log(
+                      "[TRACE][CREATE_LISTING][UI] stepper navigate back",
+                      {
+                        from: stepId,
+                        to: s.id,
+                      },
+                    );
+                    dispatch(setCreateListingStep(getStepId(i)));
+                  }
                 }}
               >
                 {i < step ? <Check size={15} /> : <s.Icon size={15} />}

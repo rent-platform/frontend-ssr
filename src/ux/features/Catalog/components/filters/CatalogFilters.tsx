@@ -27,6 +27,7 @@ import {
   getAnnouncementsLabel,
 } from '../../utils';
 import { pluralize } from '@/ux/utils';
+import { useDebouncedValue } from '@/business/shared';
 import type { RussianCityOption } from '../../russianCities';
 import { GlassSelect, type GlassSelectOption } from './GlassSelect';
 import styles from './CatalogFilters.module.scss';
@@ -37,7 +38,7 @@ type CatalogFiltersProps = {
   onChange: (patch: Partial<CatalogFilterState>) => void;
   onReset: () => void;
   onClose: () => void;
-  onConfirm?: () => void;
+  onConfirm?: (nextFilters?: CatalogFilterState) => void;
 };
 
 const EASE = [0.23, 1, 0.32, 1] as const;
@@ -101,11 +102,50 @@ function ToggleSwitch({ checked, onChange: onToggle, label, hint }: { checked: b
 export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClose, onConfirm }: CatalogFiltersProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  const lastCommittedPriceRef = useRef({
+    minPrice: filters.minPrice,
+    maxPrice: filters.maxPrice,
+  });
+  const [priceValues, setPriceValues] = useState({
+    minPrice: filters.minPrice,
+    maxPrice: filters.maxPrice,
+  });
+  const debouncedPriceValues = useDebouncedValue(priceValues, 400);
 
   const [cities, setCities] = useState<RussianCityOption[]>([]);
   useEffect(() => {
     import('../../russianCities').then((m) => setCities(m.RUSSIAN_CITY_OPTIONS));
   }, []);
+
+  useEffect(() => {
+    if (
+      filters.minPrice === lastCommittedPriceRef.current.minPrice &&
+      filters.maxPrice === lastCommittedPriceRef.current.maxPrice
+    ) {
+      return;
+    }
+
+    lastCommittedPriceRef.current = {
+      minPrice: filters.minPrice,
+      maxPrice: filters.maxPrice,
+    };
+    setPriceValues({
+      minPrice: filters.minPrice,
+      maxPrice: filters.maxPrice,
+    });
+  }, [filters.maxPrice, filters.minPrice]);
+
+  useEffect(() => {
+    if (
+      debouncedPriceValues.minPrice === lastCommittedPriceRef.current.minPrice &&
+      debouncedPriceValues.maxPrice === lastCommittedPriceRef.current.maxPrice
+    ) {
+      return;
+    }
+
+    lastCommittedPriceRef.current = debouncedPriceValues;
+    onChange(debouncedPriceValues);
+  }, [debouncedPriceValues, onChange]);
 
   const cityOptions = useMemo<GlassSelectOption[]>(
     () => [
@@ -119,26 +159,30 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
     let n = 0;
     if (filters.category !== INITIAL_FILTERS.category) n++;
     if (filters.city !== INITIAL_FILTERS.city) n++;
-    if (filters.minPrice) n++;
-    if (filters.maxPrice) n++;
+    if (priceValues.minPrice) n++;
+    if (priceValues.maxPrice) n++;
     if (filters.quickFilter !== INITIAL_FILTERS.quickFilter) n++;
     if (filters.onlyAvailable !== INITIAL_FILTERS.onlyAvailable) n++;
     if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit) n++;
     return n;
-  }, [filters]);
+  }, [filters, priceValues.maxPrice, priceValues.minPrice]);
 
   const hasPriceError = useMemo(() => {
-    if (!filters.minPrice || !filters.maxPrice) return false;
-    return Number(filters.minPrice) > Number(filters.maxPrice);
-  }, [filters.maxPrice, filters.minPrice]);
+    if (!priceValues.minPrice || !priceValues.maxPrice) return false;
+    return Number(priceValues.minPrice) > Number(priceValues.maxPrice);
+  }, [priceValues.maxPrice, priceValues.minPrice]);
 
   const chips = useMemo(() => {
     const list: Array<{ key: string; label: string; icon: LucideIcon; onRemove: () => void }> = [];
     if (filters.city !== INITIAL_FILTERS.city) list.push({ key: 'city', label: filters.city, icon: MapPin, onRemove: () => onChange({ city: INITIAL_FILTERS.city }) });
     if (filters.category !== INITIAL_FILTERS.category) list.push({ key: 'cat', label: filters.category, icon: LayoutGrid, onRemove: () => onChange({ category: INITIAL_FILTERS.category }) });
-    if (filters.minPrice || filters.maxPrice) {
-      const parts = [filters.minPrice ? `от ${formatPriceDisplay(filters.minPrice)} ₽` : '', filters.maxPrice ? `до ${formatPriceDisplay(filters.maxPrice)} ₽` : ''].filter(Boolean);
-      list.push({ key: 'price', label: parts.join(' – '), icon: Wallet, onRemove: () => onChange({ minPrice: '', maxPrice: '' }) });
+    if (priceValues.minPrice || priceValues.maxPrice) {
+      const parts = [priceValues.minPrice ? `от ${formatPriceDisplay(priceValues.minPrice)} ₽` : '', priceValues.maxPrice ? `до ${formatPriceDisplay(priceValues.maxPrice)} ₽` : ''].filter(Boolean);
+      list.push({ key: 'price', label: parts.join(' – '), icon: Wallet, onRemove: () => {
+        lastCommittedPriceRef.current = { minPrice: '', maxPrice: '' };
+        setPriceValues({ minPrice: '', maxPrice: '' });
+        onChange({ minPrice: '', maxPrice: '' });
+      } });
     }
     if (filters.onlyAvailable !== INITIAL_FILTERS.onlyAvailable) list.push({ key: 'avail', label: 'Доступно сейчас', icon: CalendarCheck, onRemove: () => onChange({ onlyAvailable: INITIAL_FILTERS.onlyAvailable }) });
     if (filters.hasDeposit !== INITIAL_FILTERS.hasDeposit) list.push({ key: 'dep', label: filters.hasDeposit === 'no' ? 'Без залога' : 'С залогом', icon: ShieldCheck, onRemove: () => onChange({ hasDeposit: INITIAL_FILTERS.hasDeposit }) });
@@ -147,7 +191,7 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
       list.push({ key: 'qf', label: QUICK_FILTER_META[qf]?.label ?? filters.quickFilter, icon: QUICK_FILTER_META[qf]?.icon ?? Sparkles, onRemove: () => onChange({ quickFilter: null }) });
     }
     return list;
-  }, [filters, onChange]);
+  }, [filters, onChange, priceValues.maxPrice, priceValues.minPrice]);
 
   const handleReset = useCallback(() => {
     onReset();
@@ -235,11 +279,11 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
           <div className={styles.section}>
             <div className={styles.sectionTopline}>
               <SectionLabel icon={Wallet}>Цена за сутки</SectionLabel>
-              {(filters.minPrice || filters.maxPrice) && (
+              {(priceValues.minPrice || priceValues.maxPrice) && (
                 <button
                   type="button"
                   className={styles.inlineReset}
-                  onClick={() => onChange({ minPrice: '', maxPrice: '' })}
+                  onClick={() => { lastCommittedPriceRef.current = { minPrice: '', maxPrice: '' }; setPriceValues({ minPrice: '', maxPrice: '' }); onChange({ minPrice: '', maxPrice: '' }); }}
                 >
                   Очистить
                 </button>
@@ -248,13 +292,13 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
             <div className={styles.priceRow}>
               <label className={hasPriceError ? styles.priceInputError : styles.priceInput}>
                 <span className={styles.pricePrefix}>от</span>
-                <input type="text" value={filters.minPrice} onChange={(e) => onChange({ minPrice: normalizePriceValue(e.target.value) })} placeholder="0" inputMode="numeric" autoComplete="off" aria-label="Минимальная цена" />
+                <input type="text" value={priceValues.minPrice} onChange={(e) => setPriceValues((current) => ({ ...current, minPrice: normalizePriceValue(e.target.value) }))} placeholder="0" inputMode="numeric" autoComplete="off" aria-label="Минимальная цена" />
                 <span className={styles.priceSuffix}>₽</span>
               </label>
               <span className={styles.priceDash}>—</span>
               <label className={hasPriceError ? styles.priceInputError : styles.priceInput}>
                 <span className={styles.pricePrefix}>до</span>
-                <input type="text" value={filters.maxPrice} onChange={(e) => onChange({ maxPrice: normalizePriceValue(e.target.value) })} placeholder="∞" inputMode="numeric" autoComplete="off" aria-label="Максимальная цена" aria-invalid={hasPriceError} />
+                <input type="text" value={priceValues.maxPrice} onChange={(e) => setPriceValues((current) => ({ ...current, maxPrice: normalizePriceValue(e.target.value) }))} placeholder="∞" inputMode="numeric" autoComplete="off" aria-label="Максимальная цена" aria-invalid={hasPriceError} />
                 <span className={styles.priceSuffix}>₽</span>
               </label>
             </div>
@@ -308,7 +352,21 @@ export function CatalogFilters({ filters, resultsCount, onChange, onReset, onClo
             </span>
             <span className={styles.footerHint}>по выбранным условиям</span>
           </span>
-          <motion.button type="button" className={styles.applyBtn} onClick={onConfirm ?? onClose} disabled={hasPriceError} whileTap={{ scale: hasPriceError ? 1 : 0.98 }}>
+          <motion.button
+            type="button"
+            className={styles.applyBtn}
+            onClick={() => {
+              const nextFilters = { ...filters, ...priceValues };
+              lastCommittedPriceRef.current = priceValues;
+              if (onConfirm) {
+                onConfirm(nextFilters);
+              } else {
+                onClose();
+              }
+            }}
+            disabled={hasPriceError}
+            whileTap={{ scale: hasPriceError ? 1 : 0.98 }}
+          >
             <Search size={13} />
             {hasPriceError ? 'Исправьте цену' : 'Показать результаты'}
           </motion.button>

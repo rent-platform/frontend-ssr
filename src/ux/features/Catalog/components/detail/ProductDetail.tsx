@@ -1,12 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import {
   ArrowLeft,
   ChevronRight,
   Clock3,
+  Flag,
   Heart,
   MapPin,
   Package,
@@ -20,6 +21,7 @@ import {
   formatCatalogCardLocation,
   formatRelativeDate,
 } from '../../utils';
+import { useCreateComplaint } from '@/business/complaints';
 import { useToggleFavorite } from '@/business/favorites';
 import { showToast, useAppDispatch } from '@/business/shared';
 import { CatalogCard } from '../cards/CatalogCard';
@@ -47,18 +49,24 @@ export function ProductDetail({
   initialFavorite = false,
 }: ProductDetailProps) {
   const dispatch = useAppDispatch();
-  const [isFav, setIsFav] = useState(item.isFavorite ?? initialFavorite);
+  const [favoriteState, setFavoriteState] = useState({
+    itemId: item.id,
+    value: item.isFavorite ?? initialFavorite,
+  });
+  const { createComplaint, isCreating: isCreatingComplaint } = useCreateComplaint();
   const { toggleFavorite, isLoading: isFavoriteLoading } = useToggleFavorite({
     adId: item.id,
-    isFavorite: isFav,
+    isFavorite: favoriteState.itemId === item.id
+      ? favoriteState.value
+      : item.isFavorite ?? initialFavorite,
   });
 
   const locationLabel = formatCatalogCardLocation(item);
   const publishedLabel = formatRelativeDate(item.createdAt);
 
-  useEffect(() => {
-    setIsFav(item.isFavorite ?? initialFavorite);
-  }, [initialFavorite, item.id, item.isFavorite]);
+  const isFav = favoriteState.itemId === item.id
+    ? favoriteState.value
+    : item.isFavorite ?? initialFavorite;
 
   const handleFavoriteToggle = useCallback(async () => {
     if (isGuest) {
@@ -68,14 +76,50 @@ export function ProductDetail({
     if (isFavoriteLoading) return;
 
     const next = !isFav;
-    setIsFav(next);
+    setFavoriteState({ itemId: item.id, value: next });
     try {
       await toggleFavorite();
     } catch {
-      setIsFav(!next);
+      setFavoriteState({ itemId: item.id, value: !next });
       dispatch(showToast({ type: "error", message: "Не удалось обновить избранное" }));
     }
-  }, [dispatch, isFav, isFavoriteLoading, isGuest, onAuthRequired, toggleFavorite]);
+  }, [dispatch, isFav, isFavoriteLoading, isGuest, item.id, onAuthRequired, toggleFavorite]);
+
+  const handleItemComplaint = useCallback(async () => {
+    if (isGuest) {
+      onAuthRequired?.();
+      return;
+    }
+
+    const reason = window.prompt('Опишите причину жалобы');
+    if (!reason?.trim()) return;
+
+    console.log('[TRACE][COMPLAINT][UI] item complaint submitted', {
+      itemId: item.id,
+      targetType: 'ITEM',
+      reasonLength: reason.trim().length,
+    });
+
+    try {
+      const complaint = await createComplaint({
+        targetType: 'ITEM',
+        targetId: item.id,
+        reason: reason.trim(),
+      });
+      console.log('[TRACE][COMPLAINT][REST] item complaint created', {
+        complaintId: complaint.id,
+        itemId: item.id,
+        status: complaint.status,
+      });
+      dispatch(showToast({ type: 'success', message: 'Жалоба отправлена' }));
+    } catch (error) {
+      console.log('[TRACE][COMPLAINT][REST] item complaint failed', {
+        itemId: item.id,
+        error,
+      });
+      dispatch(showToast({ type: 'error', message: 'Не удалось отправить жалобу' }));
+    }
+  }, [createComplaint, dispatch, isGuest, item.id, onAuthRequired]);
 
   return (
     <motion.div
@@ -104,6 +148,14 @@ export function ProductDetail({
             >
               <Heart size={16} fill={isFav ? 'currentColor' : 'none'} />
               {isFav ? 'В избранном' : 'Сохранить'}
+            </button>
+            <button
+              type="button"
+              className={styles.detailActionBtn}
+              onClick={handleItemComplaint}
+              disabled={isCreatingComplaint}
+            >
+              <Flag size={16} /> Жалоба
             </button>
           </div>
         </nav>

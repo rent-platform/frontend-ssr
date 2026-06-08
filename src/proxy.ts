@@ -1,19 +1,32 @@
 ﻿import { auth } from "@/config/auth";
-import { getDefaultRouteForRole, hasRequiredRole } from "@/business/auth/utils/roles";
+import {
+  getDefaultRouteForRole,
+  hasRequiredRole,
+} from "@/business/auth/utils/roles";
 import { ROUTE_PATHS } from "@/business/shared/utils";
 
 const PUBLIC_ROUTES = [
-  ROUTE_PATHS.HOME, // Главная страница
-  ROUTE_PATHS.CATALOG, // Каталог и вложенные страницы каталога открыты без авторизации.
-  ROUTE_PATHS.FAVORITES, // Раздел избранного.
-  // Страницы входа и регистрации не требуют активной сессии.
+  ROUTE_PATHS.HOME,
+  ROUTE_PATHS.ABOUT,
+  ROUTE_PATHS.BUSINESS,
+  ROUTE_PATHS.CAREERS,
+  ROUTE_PATHS.CATALOG,
+  ROUTE_PATHS.CONTACTS,
+  ROUTE_PATHS.COOKIES,
+  ROUTE_PATHS.GUEST,
+  ROUTE_PATHS.HELP,
+  ROUTE_PATHS.HOW_IT_WORKS,
+  ROUTE_PATHS.PRICING,
+  ROUTE_PATHS.PRIVACY,
+  ROUTE_PATHS.PUBLIC_PROFILE,
+  ROUTE_PATHS.REVIEWS,
+  ROUTE_PATHS.SAFETY,
+  ROUTE_PATHS.SEARCH,
+  ROUTE_PATHS.TERMS,
   ROUTE_PATHS.LOGIN,
   ROUTE_PATHS.REGISTER,
   ROUTE_PATHS.DEV_UI,
 ];
-// Проверяет совпадение текущего URL с публичным маршрутом.
-// Для главной страницы разрешается только точное совпадение "/".
-// Для разделов разрешаются и вложенные страницы: /catalog и /catalog/123.
 function isRouteMatch(pathname: string, route: string): boolean {
   if (route === ROUTE_PATHS.HOME) {
     return pathname === route;
@@ -33,16 +46,16 @@ export const proxy = auth((req) => {
   const role = req.auth?.user?.role;
   // Служебные Auth.js API routes не должны проходить frontend-защиту.
   const isApiAuthRoute = pathname.startsWith(ROUTE_PATHS.authorization);
-  // Dev UI — публичный каталог разработки Next.js: его должны видеть все.
-  const isDevUiRoute = isRouteMatch(pathname, ROUTE_PATHS.DEV_UI);
+  // // Dev UI — публичный каталог разработки Next.js: его должны видеть все.
+  // const isDevUiRoute = isRouteMatch(pathname, ROUTE_PATHS.DEV_UI);
   const isPublicRoute = PUBLIC_ROUTES.some((route) =>
     isRouteMatch(pathname, route),
   );
   // Auth pages обрабатываются отдельно: для гостя они открыты,
   // а авторизованный пользователь перенаправляется на свою стартовую страницу.
-  const isAuthRoute = [ROUTE_PATHS.LOGIN, ROUTE_PATHS.REGISTER].includes(
-    pathname,
-  );
+  const isAuthRoute = (
+    [ROUTE_PATHS.LOGIN, ROUTE_PATHS.REGISTER] as readonly string[]
+  ).includes(pathname);
   // Административный раздел требует роль admin.
   const isAdminRoute =
     pathname === ROUTE_PATHS.ADMIN ||
@@ -56,8 +69,8 @@ export const proxy = auth((req) => {
   // чтобы Auth.js мог выполнить sign in/out.
   if (isApiAuthRoute) return;
 
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!DEV
-  if (isDevUiRoute) return;
+  // // !!!!!!!!!!!!!!!!!!!!!!!!!!DEV
+  // if (isDevUiRoute) return;
 
   // Страницы входа и регистрации не показываются пользователю,
   // если он уже вошел в систему.

@@ -1,7 +1,9 @@
 'use client';
 
 import clsx from 'clsx';
+import { useEffect, useRef, useState } from 'react';
 import type { ListingCondition, CreateListingFormData } from '../types';
+import { useDebouncedValue } from '@/business/shared';
 import styles from '../CreateListing.module.scss';
 
 const CONDITIONS: { value: ListingCondition; label: string; desc: string }[] = [
@@ -26,7 +28,75 @@ type StepInfoProps = {
   onPatch: (updates: Partial<CreateListingFormData>) => void;
 };
 
+type InfoLocalFields = Pick<CreateListingFormData, 'title' | 'description'>;
+
+const INFO_LOCAL_FIELD_KEYS: (keyof InfoLocalFields)[] = ['title', 'description'];
+
+function getChangedInfoFields(
+  nextFields: InfoLocalFields,
+  previousFields: InfoLocalFields,
+): Partial<InfoLocalFields> {
+  const updates: Partial<InfoLocalFields> = {};
+
+  INFO_LOCAL_FIELD_KEYS.forEach((key) => {
+    if (nextFields[key] !== previousFields[key]) {
+      updates[key] = nextFields[key];
+    }
+  });
+
+  return updates;
+}
+
 export function StepInfo({ form, onPatch }: StepInfoProps) {
+  const lastCommittedRef = useRef<InfoLocalFields>({
+    title: form.title,
+    description: form.description,
+  });
+  const [localFields, setLocalFields] = useState<InfoLocalFields>({
+    title: form.title,
+    description: form.description,
+  });
+  const debouncedLocalFields = useDebouncedValue(localFields, 400);
+
+  useEffect(() => {
+    if (
+      form.title === lastCommittedRef.current.title &&
+      form.description === lastCommittedRef.current.description
+    ) {
+      return;
+    }
+
+    lastCommittedRef.current = {
+      title: form.title,
+      description: form.description,
+    };
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync local debounced fields when draft is reset externally.
+    setLocalFields({
+      title: form.title,
+      description: form.description,
+    });
+  }, [form.description, form.title]);
+
+  useEffect(() => {
+    const updates = getChangedInfoFields(debouncedLocalFields, lastCommittedRef.current);
+    if (!Object.keys(updates).length) {
+      return;
+    }
+
+    lastCommittedRef.current = debouncedLocalFields;
+    onPatch(updates);
+  }, [debouncedLocalFields, onPatch]);
+
+  const flushLocalFields = () => {
+    const updates = getChangedInfoFields(localFields, lastCommittedRef.current);
+    if (!Object.keys(updates).length) {
+      return;
+    }
+
+    lastCommittedRef.current = localFields;
+    onPatch(updates);
+  };
+
   return (
     <>
       <h2 className={styles.sectionTitle}>Описание вещи</h2>
@@ -40,8 +110,9 @@ export function StepInfo({ form, onPatch }: StepInfoProps) {
           <input
             className={styles.input}
             placeholder="Например: Canon EOS R5 с объективом 24-70mm"
-            value={form.title}
-            onChange={(e) => onPatch({ title: e.target.value })}
+            value={localFields.title}
+            onChange={(e) => setLocalFields((current) => ({ ...current, title: e.target.value }))}
+            onBlur={flushLocalFields}
           />
         </div>
 
@@ -84,8 +155,9 @@ export function StepInfo({ form, onPatch }: StepInfoProps) {
           <textarea
             className={styles.textarea}
             placeholder="Расскажите о вещи: что входит в комплект, особенности, правила использования..."
-            value={form.description}
-            onChange={(e) => onPatch({ description: e.target.value })}
+            value={localFields.description}
+            onChange={(e) => setLocalFields((current) => ({ ...current, description: e.target.value }))}
+            onBlur={flushLocalFields}
             rows={5}
           />
         </div>

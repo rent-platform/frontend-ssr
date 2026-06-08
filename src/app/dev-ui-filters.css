@@ -1,0 +1,174 @@
+/*
+  Dev-ui scoped density tuning for the catalog filters dialog.
+  The source component lives outside the dev-ui ownership zone, so this file
+  intentionally targets only the stable dialog id exposed by that component.
+*/
+
+#catalog-filters-panel {
+  width: min(550px, calc(100vw - 34px)) !important;
+  max-height: calc(100dvh - 20px) !important;
+}
+
+#catalog-filters-panel > div:first-child {
+  padding: clamp(12px, 1.75dvh, 18px) 24px clamp(10px, 1.45dvh, 16px) !important;
+}
+
+#catalog-filters-panel > div:first-child h3 {
+  font-size: clamp(18px, 2.45dvh, 19px) !important;
+  line-height: 1.12 !important;
+}
+
+#catalog-filters-panel > div:first-child p {
+  font-size: clamp(11px, 1.55dvh, 12px) !important;
+  line-height: 1.15 !important;
+}
+
+#catalog-filters-panel > div:nth-last-child(2) {
+  overflow: visible !important;
+  padding: clamp(12px, 1.85dvh, 18px) 24px clamp(10px, 1.65dvh, 16px) !important;
+  scrollbar-width: none !important;
+}
+
+#catalog-filters-panel > div:nth-last-child(2)::-webkit-scrollbar {
+  display: none !important;
+}
+
+#catalog-filters-panel > div:nth-last-child(2) > div {
+  margin-bottom: clamp(10px, 1.65dvh, 16px) !important;
+}
+
+#catalog-filters-panel > div:nth-last-child(2) > hr {
+  margin: clamp(1px, 0.5dvh, 4px) 0 clamp(10px, 1.65dvh, 16px) !important;
+}
+
+#catalog-filters-panel [aria-haspopup='listbox'],
+#catalog-filters-panel label:has(input[aria-label='Минимальная цена']),
+#catalog-filters-panel label:has(input[aria-label='Максимальная цена']) {
+  min-height: clamp(38px, 5.25dvh, 44px) !important;
+  border-radius: 15px !important;
+}
+
+#catalog-filters-panel label:has(input[aria-label='Минимальная цена']),
+#catalog-filters-panel label:has(input[aria-label='Максимальная цена']) {
+  padding-inline: 13px !important;
+}
+
+#catalog-filters-panel input {
+  padding-block: clamp(6px, 1.15dvh, 10px) !important;
+}
+
+#catalog-filters-panel [role='switch'] {
+  padding: clamp(10px, 1.65dvh, 13px) 14px !important;
+  border-radius: 17px !important;
+}
+
+#catalog-filters-panel [role='switch'] > span:last-child {
+  width: clamp(40px, 5.8dvh, 44px) !important;
+  height: clamp(24px, 3.55dvh, 26px) !important;
+}
+
+#catalog-filters-panel [role='switch'] > span:last-child > span {
+  width: clamp(20px, 3.05dvh, 22px) !important;
+  height: clamp(20px, 3.05dvh, 22px) !important;
+}
+
+#catalog-filters-panel button[aria-pressed] {
+  min-height: clamp(30px, 4.55dvh, 38px) !important;
+}
+
+#catalog-filters-panel > div:last-child {
+  padding: clamp(10px, 1.55dvh, 14px) 24px clamp(10px, 1.7dvh, 16px) !important;
+}
+
+#catalog-filters-panel > div:last-child button {
+  min-height: clamp(38px, 5.45dvh, 44px) !important;
+}
+
+@media (height <= 760px) and (width >= 560px) {
+  #catalog-filters-panel {
+    max-height: calc(100dvh - 14px) !important;
+  }
+
+  #catalog-filters-panel > div:first-child {
+    padding: 11px 24px !important;
+  }
+
+  #catalog-filters-panel > div:first-child > div:first-child > div:first-child {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  #catalog-filters-panel > div:first-child > div:last-child button {
+    width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+  }
+
+  #catalog-filters-panel > div:nth-last-child(2) {
+    padding: 12px 24px 10px !important;
+  }
+
+  #catalog-filters-panel > div:nth-last-child(2) > div {
+    margin-bottom: 11px !important;
+  }
+
+  #catalog-filters-panel > div:nth-last-child(2) > hr {
+    margin: 0 0 11px !important;
+  }
+
+  #catalog-filters-panel > div:nth-last-child(2) > div > div:first-child {
+    margin-bottom: 6px !important;
+  }
+
+  #catalog-filters-panel [aria-haspopup='listbox'],
+  #catalog-filters-panel label:has(input[aria-label='Минимальная цена']),
+  #catalog-filters-panel label:has(input[aria-label='Максимальная цена']) {
+    min-height: 38px !important;
+  }
+
+  #catalog-filters-panel [role='switch'] {
+    padding: 10px 14px !important;
+  }
+
+  #catalog-filters-panel button[aria-pressed] {
+    min-height: 31px !important;
+  }
+
+  #catalog-filters-panel > div:last-child {
+    padding: 10px 24px 11px !important;
+  }
+
+  #catalog-filters-panel > div:last-child button {
+    min-height: 38px !important;
+  }
+}
+
+@media (height <= 690px) and (width >= 560px) {
+  #catalog-filters-panel {
+    transform: scale(0.95) !important;
+    transform-origin: center center !important;
+  }
+}
+
+@media (width < 560px) {
+  #catalog-filters-panel {
+    max-height: calc(100dvh - 12px) !important;
+    transform-origin: bottom center !important;
+  }
+
+  #catalog-filters-panel > div:nth-last-child(2) {
+    overflow: visible !important;
+  }
+}
+
+@media (width < 560px) and (height <= 760px) {
+  #catalog-filters-panel {
+    transform: scale(0.92) !important;
+  }
+}
+
+@media (width < 560px) and (height <= 680px) {
+  #catalog-filters-panel {
+    transform: scale(0.86) !important;
+  }
+}

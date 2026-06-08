@@ -207,11 +207,18 @@ export const QUICK_ACTIONS: Record<string, QuickAction[]> = {
     { id: 'qa-reject', label: 'Отклонить', variant: 'danger' },
   ],
   CONFIRMED: [
-    { id: 'qa-start', label: 'Передать вещь', variant: 'primary' },
+    { id: 'qa-cancel', label: 'Отменить', variant: 'danger' },
+  ],
+  PAYMENT_PENDING: [
+    { id: 'qa-cancel', label: 'Отменить', variant: 'danger' },
+  ],
+  PAID: [
+    { id: 'qa-confirm-start', label: 'Confirm start', variant: 'primary' },
     { id: 'qa-cancel', label: 'Отменить', variant: 'danger' },
   ],
   ACTIVE: [
-    { id: 'qa-complete', label: 'Завершить аренду', variant: 'primary' },
+    { id: 'qa-complete-ok', label: 'Complete OK', variant: 'primary' },
+    { id: 'qa-complete-damaged', label: 'Damaged', variant: 'danger' },
   ],
   COMPLETED: [
     { id: 'qa-review', label: 'Оставить отзыв', variant: 'secondary' },

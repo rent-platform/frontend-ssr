@@ -1,11 +1,12 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import type { CatalogFilterState } from '../../types';
 import { INITIAL_FILTERS } from '../../utils';
 import { CatalogFilters } from './CatalogFilters';
+import { useDebouncedValue } from '@/business/shared';
 import styles from './CatalogSearchBar.module.scss';
 
 type CatalogSearchBarProps = {
@@ -16,8 +17,8 @@ type CatalogSearchBarProps = {
   onCloseFilters: () => void;
   onChange: (patch: Partial<CatalogFilterState>) => void;
   onResetFilters: () => void;
-  onSearch?: () => void;
-  onFiltersConfirm?: () => void;
+  onSearch?: (nextFilters?: CatalogFilterState) => void;
+  onFiltersConfirm?: (nextFilters?: CatalogFilterState) => void;
 };
 
 export function CatalogSearchBar({
@@ -32,6 +33,32 @@ export function CatalogSearchBar({
   onFiltersConfirm,
 }: CatalogSearchBarProps) {
   const shellRef = useRef<HTMLElement | null>(null);
+  const lastCommittedSearchRef = useRef(filters.search);
+  const [searchValue, setSearchValue] = useState(filters.search);
+  const debouncedSearchValue = useDebouncedValue(searchValue, 400);
+
+  useEffect(() => {
+    if (filters.search === lastCommittedSearchRef.current) {
+      return;
+    }
+
+    lastCommittedSearchRef.current = filters.search;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync local input when parent resets/applies filters.
+    setSearchValue(filters.search);
+  }, [filters.search]);
+
+  useEffect(() => {
+    if (debouncedSearchValue === lastCommittedSearchRef.current) {
+      return;
+    }
+
+    lastCommittedSearchRef.current = debouncedSearchValue;
+    console.log('[TRACE][CATALOG][UI] search debounced', {
+      value: debouncedSearchValue,
+      debounceMs: 400,
+    });
+    onChange({ search: debouncedSearchValue });
+  }, [debouncedSearchValue, onChange]);
 
   useEffect(() => {
     if (!isFiltersOpen) {
@@ -112,8 +139,18 @@ export function CatalogSearchBar({
   }, [filters]);
 
   const handleSearchAction = () => {
+    const submittedFilters = { ...filters, search: searchValue };
+    if (searchValue !== lastCommittedSearchRef.current) {
+      lastCommittedSearchRef.current = searchValue;
+    }
+
+    console.log('[TRACE][CATALOG][UI] search submitted', {
+      search: searchValue,
+      activeFiltersCount,
+      draftFilters: submittedFilters,
+    });
     if (onSearch) {
-      onSearch();
+      onSearch(submittedFilters);
       return;
     }
 
@@ -140,9 +177,19 @@ export function CatalogSearchBar({
           <div className={styles.searchInputWrap}>
             <Search size={20} className={styles.searchIcon} />
             <input
-              value={filters.search}
-              onChange={(event) => onChange({ search: event.target.value })}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearchAction()}
+              value={searchValue}
+              onChange={(event) => {
+                console.log('[TRACE][CATALOG][UI] search input changed', {
+                  value: event.target.value,
+                });
+                setSearchValue(event.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  console.log('[TRACE][CATALOG][UI] search submitted by Enter');
+                  handleSearchAction();
+                }
+              }}
               className={styles.searchInput}
               placeholder="Что вы хотите арендовать?"
             />
@@ -153,7 +200,12 @@ export function CatalogSearchBar({
           <motion.button
             type="button"
             className={isFiltersOpen ? styles.searchButtonActive : styles.searchButton}
-            onClick={onToggleFilters}
+            onClick={() => {
+              console.log('[TRACE][CATALOG][UI] filters toggle clicked', {
+                nextOpen: !isFiltersOpen,
+              });
+              onToggleFilters();
+            }}
             aria-expanded={isFiltersOpen}
             aria-controls="catalog-filters-panel"
             whileHover={{ scale: 1.02, y: -1 }}
@@ -211,7 +263,9 @@ export function CatalogSearchBar({
             onChange={onChange}
             onReset={onResetFilters}
             onClose={onCloseFilters}
-            onConfirm={onFiltersConfirm}
+            onConfirm={(nextFilters) =>
+              onFiltersConfirm?.({ ...(nextFilters ?? filters), search: searchValue })
+            }
           />
         )}
       </AnimatePresence>

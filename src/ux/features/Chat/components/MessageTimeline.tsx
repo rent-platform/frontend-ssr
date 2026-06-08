@@ -8,7 +8,7 @@ import styles from '../ChatPage.module.scss';
 
 /* ═══ Quick Actions Bar ═══ */
 
-export function QuickActionsBar({ actions }: QuickActionsBarProps) {
+export function QuickActionsBar({ actions, onAction, isBusy = false }: QuickActionsBarProps) {
   const variantCls: Record<string, string> = {
     primary: styles.qaBtnPrimary,
     secondary: styles.qaBtnSecondary,
@@ -22,6 +22,8 @@ export function QuickActionsBar({ actions }: QuickActionsBarProps) {
           key={a.id}
           type="button"
           className={clsx(styles.qaBtn, variantCls[a.variant])}
+          disabled={isBusy}
+          onClick={() => onAction?.(a.id)}
         >
           {a.label}
         </button>

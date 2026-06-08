@@ -9,3 +9,4 @@ export { ProfileDashboard } from './Profile';
 export { PublicProfile } from './PublicProfile';
 export { ReviewsPage } from './Reviews';
 export { SettingsPage } from './Settings';
+export { StaffDashboard } from './Staff';

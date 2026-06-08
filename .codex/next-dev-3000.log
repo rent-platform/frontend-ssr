@@ -1,0 +1,63 @@
+
+> rent-platform-ssr@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+▲ Next.js 16.2.2 (Turbopack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+- Environments: .env.development.local, .env.local
+✓ Ready in 684ms
+○ Compiling proxy ...
+
+ GET /search 200 in 1725ms (next.js: 295ms, proxy.ts: 442ms, application-code: 988ms)
+ GET /login 200 in 1276ms (next.js: 1119ms, proxy.ts: 13ms, application-code: 144ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET / 200 in 169ms (next.js: 60ms, proxy.ts: 35ms, application-code: 75ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 1053ms (next.js: 1021ms, application-code: 32ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 20ms (next.js: 9ms, application-code: 10ms)
+ GET /api/proxy/api/catalog/categories 200 in 1906ms (next.js: 716ms, application-code: 1189ms)
+ GET /api/proxy/api/catalog/items?city=%D0%9D%D0%BE%D0%B2%D0%BE%D1%81%D0%B8%D0%B1%D0%B8%D1%80%D1%81%D0%BA&page=0&size=5&sortBy=createdAt&sortDirection=desc 200 in 1908ms (next.js: 714ms, application-code: 1193ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /create-listing 200 in 80ms (next.js: 41ms, proxy.ts: 13ms, application-code: 27ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET / 200 in 62ms (next.js: 4ms, proxy.ts: 14ms, application-code: 45ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 20ms (next.js: 10ms, application-code: 11ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 24ms (next.js: 2ms, application-code: 21ms)
+ GET /api/proxy/api/catalog/categories 200 in 88ms (next.js: 11ms, application-code: 77ms)
+ GET /api/proxy/api/catalog/items?city=%D0%9D%D0%BE%D0%B2%D0%BE%D1%81%D0%B8%D0%B1%D0%B8%D1%80%D1%81%D0%BA&page=0&size=5&sortBy=createdAt&sortDirection=desc 200 in 105ms (next.js: 17ms, application-code: 88ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /create-listing 200 in 28ms (next.js: 3ms, proxy.ts: 9ms, application-code: 16ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /eda1825a-70f2-4e87-ba42-ed6574a8f619 404 in 91ms (next.js: 47ms, proxy.ts: 8ms, application-code: 35ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 15ms (next.js: 7ms, application-code: 8ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 9ms (next.js: 1326µs, application-code: 7ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 8ms (next.js: 1504µs, application-code: 7ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 18ms (next.js: 9ms, application-code: 9ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 10ms (next.js: 1696µs, application-code: 8ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /create-listing 200 in 193ms (next.js: 3ms, proxy.ts: 9ms, application-code: 181ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 20ms (next.js: 11ms, application-code: 9ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 8ms (next.js: 1515µs, application-code: 6ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 18ms (next.js: 8ms, application-code: 10ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 8ms (next.js: 1413µs, application-code: 7ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 16ms (next.js: 8ms, application-code: 8ms)
+[TRACE][AUTH][AUTHJS] session callback exposes user { userId: '10000000-0000-0000-0000-000000000001', role: 'super_admin' }
+ GET /api/auth/session 200 in 9ms (next.js: 1403µs, application-code: 7ms)
+[?25h
